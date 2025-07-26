@@ -250,18 +250,18 @@ const PropertyValuation = () => {
       'mala': 0.7
     };
     
-    // Factores por estado general (actualizados con nuevas categorías)
+    // Factores por estado general (valores exactos proporcionados)
     const factorEstado = {
-      'nuevo': 1.4,
-      'bueno': 1.2,
-      'medio': 1.0,
-      'regular': 0.9,
-      'reparaciones-sencillas': 0.8,
-      'reparaciones-medias': 0.7,
-      'reparaciones-importantes': 0.6,
-      'danos-graves': 0.4,
-      'en-desecho': 0.2,
-      'inservibles': 0.1
+      'nuevo': 1.0000,
+      'bueno': 0.9968,
+      'medio': 0.9748,
+      'regular': 0.9191,
+      'reparaciones-sencillas': 0.8190,
+      'reparaciones-medias': 0.6680,
+      'reparaciones-importantes': 0.4740,
+      'danos-graves': 0.2480,
+      'en-desecho': 0.1350,
+      'inservibles': 0.0000
     };
     
     // Factor por antigüedad
