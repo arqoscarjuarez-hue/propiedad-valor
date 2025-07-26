@@ -303,8 +303,7 @@ const PropertyValuation = () => {
       'inservibles': 0.0000
     };
     
-    // Depreciación por antigüedad usando fórmula de Ross-Heindecke
-    // D = (V² / VU²) donde V = vida útil restante, VU = vida útil total
+    // Depreciación por antigüedad usando método lineal
     const getVidaUtilSegunTipo = (tipo: string): number => {
       const vidasUtiles = {
         'casa': 100,        // 100 años
@@ -317,11 +316,10 @@ const PropertyValuation = () => {
     };
 
     const vidaUtilTotal = getVidaUtilSegunTipo(propertyData.tipoPropiedad);
-    const vidaUtilRestante = Math.max(0, vidaUtilTotal - propertyData.antiguedad);
     
-    // Factor de Ross-Heindecke: (Vida útil restante)² / (Vida útil total)²
+    // Factor de depreciación lineal: 1 - (antigüedad / vida útil total)
     const factorAntiguedad = vidaUtilTotal > 0 
-      ? Math.pow(vidaUtilRestante, 2) / Math.pow(vidaUtilTotal, 2)
+      ? Math.max(0, 1 - (propertyData.antiguedad / vidaUtilTotal))
       : 1; // Para terrenos sin depreciación
     
     // Bonificación por espacios (convertido a USD)
