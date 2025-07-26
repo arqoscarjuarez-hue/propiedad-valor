@@ -344,7 +344,10 @@ const PropertyValuation = () => {
   };
 
   const generatePDF = async () => {
+    console.log('generatePDF called, valuation:', valuation);
+    
     if (!valuation) {
+      console.log('No valuation found, showing error toast');
       toast({
         title: "Error",
         description: "Primero debes calcular la valuación para generar el PDF",
@@ -354,6 +357,7 @@ const PropertyValuation = () => {
     }
 
     try {
+      console.log('Starting PDF generation...');
       toast({
         title: "Generando PDF...",
         description: "Por favor espera mientras se genera el reporte",
