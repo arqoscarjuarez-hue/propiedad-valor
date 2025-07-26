@@ -825,55 +825,136 @@ const PropertyValuation = () => {
         }
       }
 
-      // Fotografías del inmueble
+      // Fotografías del inmueble - Diseño profesional en máximo 2 hojas
       if (propertyImages.length > 0) {
-        // Verificar si necesitamos una nueva página
-        if (yPosition > pageHeight - 100) {
-          doc.addPage();
-          yPosition = 20;
-        }
+        // Nueva página dedicada para fotografías
+        doc.addPage();
+        yPosition = 20;
 
-        doc.setFontSize(14);
+        // Título principal centrado
+        doc.setFillColor(30, 41, 59);
+        doc.rect(0, 0, pageWidth, 30, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
         doc.setFont("helvetica", "bold");
-        doc.text("FOTOGRAFÍAS DEL INMUEBLE", 20, yPosition);
-        yPosition += 15;
+        doc.text("FOTOGRAFÍAS DEL INMUEBLE", pageWidth / 2, 18, { align: "center" });
+        
+        doc.setTextColor(0, 0, 0);
+        yPosition = 40;
 
-        let imageCount = 0;
-        const imagesPerRow = 2;
-        const imageWidth = (pageWidth - 60) / imagesPerRow;
-        const imageHeight = 50;
+        // Configuración de layout profesional
+        const maxImagesPage1 = 6; // 3x2 en primera página
+        const maxImagesPage2 = 6; // 3x2 en segunda página
+        const maxTotalImages = Math.min(propertyImages.length, 12); // Máximo 12 fotos
+        
+        // Primera página: 3 columnas x 2 filas
+        const imagesPerRowPage1 = 3;
+        const imageWidthPage1 = (pageWidth - 80) / imagesPerRowPage1;
+        const imageHeightPage1 = 60;
+        const spacingX = 20;
+        const spacingY = 15;
 
-        for (let i = 0; i < propertyImages.length; i++) {
+        // Procesar imágenes de la primera página
+        const imagesPage1 = Math.min(maxImagesPage1, maxTotalImages);
+        
+        for (let i = 0; i < imagesPage1; i++) {
           const image = propertyImages[i];
-          const col = i % imagesPerRow;
-          const row = Math.floor(i / imagesPerRow);
+          const col = i % imagesPerRowPage1;
+          const row = Math.floor(i / imagesPerRowPage1);
           
-          const xPos = 20 + (col * (imageWidth + 20));
-          const currentYPos = yPosition + (row * (imageHeight + 15));
-
-          // Verificar si necesitamos una nueva página
-          if (currentYPos + imageHeight > pageHeight - 20) {
-            doc.addPage();
-            yPosition = 20;
-            const newRow = row - Math.floor(i / imagesPerRow);
-            yPosition = 20 + (newRow * (imageHeight + 15));
-          }
+          const xPos = 20 + (col * (imageWidthPage1 + spacingX));
+          const currentYPos = yPosition + (row * (imageHeightPage1 + spacingY + 20)); // +20 para el caption
 
           try {
-            // Agregar imagen al PDF
-            doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidth, imageHeight);
-          } catch (error) {
-            // Si hay error con la imagen, agregar placeholder
-            doc.setFillColor(240, 240, 240);
-            doc.rect(xPos, currentYPos, imageWidth, imageHeight, 'F');
+            // Agregar imagen con marco
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineWidth(0.5);
+            doc.rect(xPos - 1, currentYPos - 1, imageWidthPage1 + 2, imageHeightPage1 + 2);
+            
+            // Imagen
+            doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+            
+            // Caption numerado
             doc.setFontSize(8);
-            doc.text(`Imagen ${i + 1}`, xPos + imageWidth/2, currentYPos + imageHeight/2, { align: "center" });
+            doc.setFont("helvetica", "normal");
+            doc.text(`Foto ${i + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1 + 8, { align: "center" });
+            
+          } catch (error) {
+            // Placeholder en caso de error
+            doc.setFillColor(240, 240, 240);
+            doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1, 'F');
+            doc.setDrawColor(180, 180, 180);
+            doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+            doc.setFontSize(8);
+            doc.text(`Imagen ${i + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1/2, { align: "center" });
           }
-
-          imageCount++;
         }
 
-        yPosition += Math.ceil(propertyImages.length / imagesPerRow) * (imageHeight + 15);
+        // Si hay más de 6 imágenes, crear segunda página
+        if (maxTotalImages > maxImagesPage1) {
+          doc.addPage();
+          yPosition = 20;
+          
+          // Título de continuación
+          doc.setFontSize(14);
+          doc.setFont("helvetica", "bold");
+          doc.text("FOTOGRAFÍAS DEL INMUEBLE (Continuación)", pageWidth / 2, yPosition, { align: "center" });
+          yPosition += 25;
+
+          // Segunda página: 3 columnas x 2 filas
+          const remainingImages = Math.min(maxImagesPage2, maxTotalImages - maxImagesPage1);
+          
+          for (let i = 0; i < remainingImages; i++) {
+            const imageIndex = maxImagesPage1 + i;
+            const image = propertyImages[imageIndex];
+            const col = i % imagesPerRowPage1;
+            const row = Math.floor(i / imagesPerRowPage1);
+            
+            const xPos = 20 + (col * (imageWidthPage1 + spacingX));
+            const currentYPos = yPosition + (row * (imageHeightPage1 + spacingY + 20));
+
+            try {
+              // Marco y imagen
+              doc.setDrawColor(200, 200, 200);
+              doc.setLineWidth(0.5);
+              doc.rect(xPos - 1, currentYPos - 1, imageWidthPage1 + 2, imageHeightPage1 + 2);
+              doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+              
+              // Caption
+              doc.setFontSize(8);
+              doc.setFont("helvetica", "normal");
+              doc.text(`Foto ${imageIndex + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1 + 8, { align: "center" });
+              
+            } catch (error) {
+              doc.setFillColor(240, 240, 240);
+              doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1, 'F');
+              doc.setDrawColor(180, 180, 180);
+              doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+              doc.setFontSize(8);
+              doc.text(`Imagen ${imageIndex + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1/2, { align: "center" });
+            }
+          }
+
+          // Nota si hay más de 12 fotos
+          if (propertyImages.length > 12) {
+            yPosition += Math.ceil(remainingImages / imagesPerRowPage1) * (imageHeightPage1 + spacingY + 20) + 20;
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "italic");
+            doc.text(`Nota: Se muestran las primeras 12 de ${propertyImages.length} fotografías disponibles.`, pageWidth / 2, yPosition, { align: "center" });
+          }
+        }
+
+        // Información adicional al final de las fotos
+        let finalImages = maxTotalImages > maxImagesPage1 ? maxTotalImages - maxImagesPage1 : imagesPage1;
+        const lastPageY = yPosition + Math.ceil(finalImages / imagesPerRowPage1) * (imageHeightPage1 + spacingY + 20) + 30;
+        
+        if (lastPageY < pageHeight - 40) {
+          doc.setFontSize(9);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(100, 100, 100);
+          doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, lastPageY, { align: "center" });
+          doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, lastPageY + 10, { align: "center" });
+        }
       }
 
       // Guardar PDF
