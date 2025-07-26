@@ -462,7 +462,55 @@ const PropertyValuation = () => {
       }
     }
 
-    // Sección: Fotos del Inmueble (si existen)
+    // Sección: Ubicación y Coordenadas
+    yPosition += 15;
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("UBICACIÓN Y COORDENADAS", 20, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    
+    if (propertyData.direccionCompleta) {
+      doc.text(`Dirección: ${propertyData.direccionCompleta}`, 20, yPosition);
+      yPosition += 6;
+    }
+    
+    doc.text(`Coordenadas: ${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}`, 20, yPosition);
+    yPosition += 6;
+    doc.text(`Latitud: ${propertyData.latitud?.toFixed(6)}°`, 20, yPosition);
+    yPosition += 6;
+    doc.text(`Longitud: ${propertyData.longitud?.toFixed(6)}°`, 20, yPosition);
+    yPosition += 10;
+
+    // Croquis de ubicación usando un mapa estático
+    try {
+      const mapWidth = 150;
+      const mapHeight = 100;
+      
+      // Crear URL para mapa estático de OpenStreetMap
+      const zoom = 15;
+      const mapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+ff0000(${propertyData.longitud},${propertyData.latitud})/${propertyData.longitud},${propertyData.latitud},${zoom}/${mapWidth}x${mapHeight}?access_token=pk.eyJ1IjoidGVzdCIsImEiOiJjazB6MHVhMm4wMDNhM29xbHE1YXRqOTY1In0.fakeToken`;
+      
+      // Como alternativa, usar un marcador de posición para el mapa
+      doc.setFillColor(240, 240, 240);
+      doc.rect(20, yPosition, mapWidth, mapHeight, 'F');
+      doc.setDrawColor(200, 200, 200);
+      doc.rect(20, yPosition, mapWidth, mapHeight);
+      
+      // Agregar texto indicativo del mapa
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "italic");
+      doc.text("Croquis de Ubicación", 20 + mapWidth/2, yPosition + mapHeight/2 - 10, { align: "center" });
+      doc.text(`Lat: ${propertyData.latitud?.toFixed(4)}°`, 20 + mapWidth/2, yPosition + mapHeight/2, { align: "center" });
+      doc.text(`Lng: ${propertyData.longitud?.toFixed(4)}°`, 20 + mapWidth/2, yPosition + mapHeight/2 + 10, { align: "center" });
+      
+      yPosition += mapHeight + 15;
+    } catch (error) {
+      console.warn('No se pudo agregar el mapa al PDF:', error);
+      yPosition += 10;
+    }
     if (propertyImages.length > 0) {
       if (yPosition > 200) {
         doc.addPage();
