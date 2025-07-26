@@ -250,13 +250,18 @@ const PropertyValuation = () => {
       'mala': 0.7
     };
     
-    // Factores por estado general
+    // Factores por estado general (actualizados con nuevas categorías)
     const factorEstado = {
-      'excelente': 1.3,
-      'bueno': 1.1,
-      'regular': 1.0,
-      'malo': 0.6,
-      'muy-malo': 0.4
+      'nuevo': 1.4,
+      'bueno': 1.2,
+      'medio': 1.0,
+      'regular': 0.9,
+      'reparaciones-sencillas': 0.8,
+      'reparaciones-medias': 0.7,
+      'reparaciones-importantes': 0.6,
+      'danos-graves': 0.4,
+      'en-desecho': 0.2,
+      'inservibles': 0.1
     };
     
     // Factor por antigüedad
@@ -491,11 +496,16 @@ const PropertyValuation = () => {
                           <SelectValue placeholder="Califica el estado de la propiedad" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="excelente">Excelente</SelectItem>
-                          <SelectItem value="bueno">Bueno</SelectItem>
-                          <SelectItem value="regular">Regular</SelectItem>
-                          <SelectItem value="malo">Malo</SelectItem>
-                          <SelectItem value="muy-malo">Muy Malo</SelectItem>
+                          <SelectItem value="nuevo">NUEVO</SelectItem>
+                          <SelectItem value="bueno">BUENO</SelectItem>
+                          <SelectItem value="medio">MEDIO</SelectItem>
+                          <SelectItem value="regular">REGULAR</SelectItem>
+                          <SelectItem value="reparaciones-sencillas">REPARACIONES SENCILLAS</SelectItem>
+                          <SelectItem value="reparaciones-medias">REPARACIONES MEDIAS</SelectItem>
+                          <SelectItem value="reparaciones-importantes">REPARACIONES IMPORTANTES</SelectItem>
+                          <SelectItem value="danos-graves">DAÑOS GRAVES</SelectItem>
+                          <SelectItem value="en-desecho">EN DESECHO</SelectItem>
+                          <SelectItem value="inservibles">INSERVIBLES</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
