@@ -30,9 +30,11 @@ import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
 interface PropertyData {
   // Áreas
+  areaSotano: number;
   areaPrimerNivel: number;
   areaSegundoNivel: number;
   areaTercerNivel: number;
+  areaCuartoNivel: number;
   areaTerreno: number;
   
   // Tipo de propiedad
@@ -78,9 +80,11 @@ interface ComparativeProperty {
 const PropertyValuation = () => {
   const { toast } = useToast();
   const [propertyData, setPropertyData] = useState<PropertyData>({
+    areaSotano: 0,
     areaPrimerNivel: 0,
     areaSegundoNivel: 0,
     areaTercerNivel: 0,
+    areaCuartoNivel: 0,
     areaTerreno: 0,
     tipoPropiedad: '',
     recamaras: 0,
@@ -174,7 +178,7 @@ const PropertyValuation = () => {
   };
 
   const generateComparativeProperties = async (baseValue: number): Promise<ComparativeProperty[]> => {
-    const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+    const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
     
     // Generar ubicaciones cercanas basadas en las coordenadas de la propiedad
     const nearbyAddresses = await generateNearbyAddresses(
@@ -263,7 +267,7 @@ const PropertyValuation = () => {
   };
 
   const calculateValuation = () => {
-    const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+    const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
     
     // Precio base por m² según tipo de propiedad (convertido a USD)
     const precioBase = {
@@ -392,7 +396,7 @@ const PropertyValuation = () => {
       doc.text("INFORMACIÓN GENERAL", 20, yPosition);
       yPosition += 10;
 
-      const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
@@ -459,7 +463,7 @@ const PropertyValuation = () => {
     }
 
     try {
-      const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
       const doc = new DocxDocument({
         sections: [{
@@ -596,51 +600,71 @@ const PropertyValuation = () => {
                    <TabsTrigger value="fotos">Fotos</TabsTrigger>
                  </TabsList>
 
-                <TabsContent value="areas" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Áreas de Construcción (m²)</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="areaPrimerNivel">Primer Nivel</Label>
-                      <Input
-                        id="areaPrimerNivel"
-                        type="number"
-                        value={propertyData.areaPrimerNivel || ''}
-                        onChange={(e) => handleInputChange('areaPrimerNivel', Number(e.target.value))}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="areaSegundoNivel">Segundo Nivel</Label>
-                      <Input
-                        id="areaSegundoNivel"
-                        type="number"
-                        value={propertyData.areaSegundoNivel || ''}
-                        onChange={(e) => handleInputChange('areaSegundoNivel', Number(e.target.value))}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="areaTercerNivel">Tercer Nivel</Label>
-                      <Input
-                        id="areaTercerNivel"
-                        type="number"
-                        value={propertyData.areaTercerNivel || ''}
-                        onChange={(e) => handleInputChange('areaTercerNivel', Number(e.target.value))}
-                        placeholder="0"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="areaTerreno">Área del Terreno</Label>
-                      <Input
-                        id="areaTerreno"
-                        type="number"
-                        value={propertyData.areaTerreno || ''}
-                        onChange={(e) => handleInputChange('areaTerreno', Number(e.target.value))}
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
+                 <TabsContent value="areas" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">Áreas de Construcción (m²)</h3>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                       <Label htmlFor="areaSotano">Sótano</Label>
+                       <Input
+                         id="areaSotano"
+                         type="number"
+                         value={propertyData.areaSotano || ''}
+                         onChange={(e) => handleInputChange('areaSotano', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="areaPrimerNivel">Primer Nivel</Label>
+                       <Input
+                         id="areaPrimerNivel"
+                         type="number"
+                         value={propertyData.areaPrimerNivel || ''}
+                         onChange={(e) => handleInputChange('areaPrimerNivel', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="areaSegundoNivel">Segundo Nivel</Label>
+                       <Input
+                         id="areaSegundoNivel"
+                         type="number"
+                         value={propertyData.areaSegundoNivel || ''}
+                         onChange={(e) => handleInputChange('areaSegundoNivel', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="areaTercerNivel">Tercer Nivel</Label>
+                       <Input
+                         id="areaTercerNivel"
+                         type="number"
+                         value={propertyData.areaTercerNivel || ''}
+                         onChange={(e) => handleInputChange('areaTercerNivel', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="areaCuartoNivel">Cuarto Nivel</Label>
+                       <Input
+                         id="areaCuartoNivel"
+                         type="number"
+                         value={propertyData.areaCuartoNivel || ''}
+                         onChange={(e) => handleInputChange('areaCuartoNivel', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="areaTerreno">Área del Terreno</Label>
+                       <Input
+                         id="areaTerreno"
+                         type="number"
+                         value={propertyData.areaTerreno || ''}
+                         onChange={(e) => handleInputChange('areaTerreno', Number(e.target.value))}
+                         placeholder="0"
+                       />
+                     </div>
+                   </div>
+                 </TabsContent>
 
                 <TabsContent value="tipo" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">Tipo de Propiedad</h3>
@@ -863,12 +887,12 @@ const PropertyValuation = () => {
                   </div>
                   
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Área Total Construida:</span>
-                      <span className="font-medium">
-                        {(propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel).toLocaleString()} m²
-                      </span>
-                    </div>
+                     <div className="flex justify-between">
+                       <span>Área Total Construida:</span>
+                       <span className="font-medium">
+                         {(propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel).toLocaleString()} m²
+                       </span>
+                     </div>
                     <div className="flex justify-between">
                       <span>Área de Terreno:</span>
                       <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
@@ -887,10 +911,10 @@ const PropertyValuation = () => {
                     <div className="flex justify-between">
                       <span>Precio por m² construido:</span>
                       <span className="font-medium">
-                        {formatCurrency(
-                          valuation / (propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel || 1), 
-                          selectedCurrency
-                        )}
+                         {formatCurrency(
+                           valuation / (propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel || 1), 
+                           selectedCurrency
+                         )}
                       </span>
                     </div>
                     {comparativeProperties.length > 0 && (() => {
