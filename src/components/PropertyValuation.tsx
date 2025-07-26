@@ -734,8 +734,9 @@ const PropertyValuation = () => {
           yPosition += 10;
           
           doc.setFontSize(10);
-          doc.setFont("helvetica", "normal");
+          doc.setFont("helvetica", "bold");
           doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
+          doc.setFont("helvetica", "normal");
           yPosition += 7;
           doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
           yPosition += 7;
@@ -1359,7 +1360,7 @@ const PropertyValuation = () => {
                   new Paragraph({
                     children: [
                       new TextRun({ text: "Precio Promedio: ", bold: true }),
-                      new TextRun({ text: formatCurrency(analysis.avgPrice, selectedCurrency) })
+                      new TextRun({ text: formatCurrency(analysis.avgPrice, selectedCurrency), bold: true })
                     ]
                   }),
                   new Paragraph({
