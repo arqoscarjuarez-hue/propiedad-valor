@@ -730,10 +730,24 @@ const PropertyValuation = () => {
         
         // Primera página: 3 columnas x 2 filas
         const imagesPerRowPage1 = 3;
-        const imageWidthPage1 = (pageWidth - 80) / imagesPerRowPage1;
-        const imageHeightPage1 = 60;
+        const maxImageWidthPage1 = (pageWidth - 80) / imagesPerRowPage1;
+        const maxImageHeightPage1 = 60;
         const spacingX = 20;
         const spacingY = 15;
+
+        // Función para calcular dimensiones proporcionales
+        const calculateProportionalDimensions = (imgElement: HTMLImageElement, maxWidth: number, maxHeight: number) => {
+          const aspectRatio = imgElement.naturalWidth / imgElement.naturalHeight;
+          let width = maxWidth;
+          let height = width / aspectRatio;
+          
+          if (height > maxHeight) {
+            height = maxHeight;
+            width = height * aspectRatio;
+          }
+          
+          return { width, height };
+        };
 
         // Procesar imágenes de la primera página
         const imagesPage1 = Math.min(maxImagesPage1, maxTotalImages);
@@ -743,31 +757,69 @@ const PropertyValuation = () => {
           const col = i % imagesPerRowPage1;
           const row = Math.floor(i / imagesPerRowPage1);
           
-          const xPos = 20 + (col * (imageWidthPage1 + spacingX));
-          const currentYPos = yPosition + (row * (imageHeightPage1 + spacingY + 20)); // +20 para el caption
+          const xPos = 20 + (col * (maxImageWidthPage1 + spacingX));
+          const currentYPos = yPosition + (row * (maxImageHeightPage1 + spacingY + 20)); // +20 para el caption
 
           try {
-            // Agregar imagen con marco
+            // Crear elemento de imagen temporal para obtener dimensiones naturales
+            const imgElement = new Image();
+            imgElement.onload = () => {
+              const { width: imageWidth, height: imageHeight } = calculateProportionalDimensions(
+                imgElement, 
+                maxImageWidthPage1, 
+                maxImageHeightPage1
+              );
+              
+              // Centrar imagen en el espacio disponible
+              const centeredX = xPos + (maxImageWidthPage1 - imageWidth) / 2;
+              const centeredY = currentYPos + (maxImageHeightPage1 - imageHeight) / 2;
+              
+              // Marco alrededor del área completa
+              doc.setDrawColor(200, 200, 200);
+              doc.setLineWidth(0.5);
+              doc.rect(xPos - 1, currentYPos - 1, maxImageWidthPage1 + 2, maxImageHeightPage1 + 2);
+              
+              // Imagen con proporciones correctas
+              doc.addImage(image.preview, 'JPEG', centeredX, centeredY, imageWidth, imageHeight);
+            };
+            imgElement.src = image.preview;
+            
+            // Para asegurar que el código continúe, usamos las proporciones estimadas
+            // basándonos en una proporción común de 4:3
+            const estimatedAspectRatio = 4/3;
+            let imageWidth = maxImageWidthPage1;
+            let imageHeight = imageWidth / estimatedAspectRatio;
+            
+            if (imageHeight > maxImageHeightPage1) {
+              imageHeight = maxImageHeightPage1;
+              imageWidth = imageHeight * estimatedAspectRatio;
+            }
+            
+            // Centrar imagen en el espacio disponible
+            const centeredX = xPos + (maxImageWidthPage1 - imageWidth) / 2;
+            const centeredY = currentYPos + (maxImageHeightPage1 - imageHeight) / 2;
+            
+            // Marco alrededor del área completa
             doc.setDrawColor(200, 200, 200);
             doc.setLineWidth(0.5);
-            doc.rect(xPos - 1, currentYPos - 1, imageWidthPage1 + 2, imageHeightPage1 + 2);
+            doc.rect(xPos - 1, currentYPos - 1, maxImageWidthPage1 + 2, maxImageHeightPage1 + 2);
             
-            // Imagen
-            doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+            // Imagen con proporciones estimadas
+            doc.addImage(image.preview, 'JPEG', centeredX, centeredY, imageWidth, imageHeight);
             
             // Caption numerado
             doc.setFontSize(8);
             doc.setFont("helvetica", "normal");
-            doc.text(`Foto ${i + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1 + 8, { align: "center" });
+            doc.text(`Foto ${i + 1}`, xPos + maxImageWidthPage1/2, currentYPos + maxImageHeightPage1 + 8, { align: "center" });
             
           } catch (error) {
             // Placeholder en caso de error
             doc.setFillColor(240, 240, 240);
-            doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1, 'F');
+            doc.rect(xPos, currentYPos, maxImageWidthPage1, maxImageHeightPage1, 'F');
             doc.setDrawColor(180, 180, 180);
-            doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+            doc.rect(xPos, currentYPos, maxImageWidthPage1, maxImageHeightPage1);
             doc.setFontSize(8);
-            doc.text(`Imagen ${i + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1/2, { align: "center" });
+            doc.text(`Imagen ${i + 1}`, xPos + maxImageWidthPage1/2, currentYPos + maxImageHeightPage1/2, { align: "center" });
           }
         }
 
@@ -791,34 +843,48 @@ const PropertyValuation = () => {
             const col = i % imagesPerRowPage1;
             const row = Math.floor(i / imagesPerRowPage1);
             
-            const xPos = 20 + (col * (imageWidthPage1 + spacingX));
-            const currentYPos = yPosition + (row * (imageHeightPage1 + spacingY + 20));
+            const xPos = 20 + (col * (maxImageWidthPage1 + spacingX));
+            const currentYPos = yPosition + (row * (maxImageHeightPage1 + spacingY + 20));
 
             try {
+              // Calcular dimensiones proporcionales para la imagen
+              const estimatedAspectRatio = 4/3;
+              let imageWidth = maxImageWidthPage1;
+              let imageHeight = imageWidth / estimatedAspectRatio;
+              
+              if (imageHeight > maxImageHeightPage1) {
+                imageHeight = maxImageHeightPage1;
+                imageWidth = imageHeight * estimatedAspectRatio;
+              }
+              
+              // Centrar imagen en el espacio disponible
+              const centeredX = xPos + (maxImageWidthPage1 - imageWidth) / 2;
+              const centeredY = currentYPos + (maxImageHeightPage1 - imageHeight) / 2;
+              
               // Marco y imagen
               doc.setDrawColor(200, 200, 200);
               doc.setLineWidth(0.5);
-              doc.rect(xPos - 1, currentYPos - 1, imageWidthPage1 + 2, imageHeightPage1 + 2);
-              doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+              doc.rect(xPos - 1, currentYPos - 1, maxImageWidthPage1 + 2, maxImageHeightPage1 + 2);
+              doc.addImage(image.preview, 'JPEG', centeredX, centeredY, imageWidth, imageHeight);
               
               // Caption
               doc.setFontSize(8);
               doc.setFont("helvetica", "normal");
-              doc.text(`Foto ${imageIndex + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1 + 8, { align: "center" });
+              doc.text(`Foto ${imageIndex + 1}`, xPos + maxImageWidthPage1/2, currentYPos + maxImageHeightPage1 + 8, { align: "center" });
               
             } catch (error) {
               doc.setFillColor(240, 240, 240);
-              doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1, 'F');
+              doc.rect(xPos, currentYPos, maxImageWidthPage1, maxImageHeightPage1, 'F');
               doc.setDrawColor(180, 180, 180);
-              doc.rect(xPos, currentYPos, imageWidthPage1, imageHeightPage1);
+              doc.rect(xPos, currentYPos, maxImageWidthPage1, maxImageHeightPage1);
               doc.setFontSize(8);
-              doc.text(`Imagen ${imageIndex + 1}`, xPos + imageWidthPage1/2, currentYPos + imageHeightPage1/2, { align: "center" });
+              doc.text(`Imagen ${imageIndex + 1}`, xPos + maxImageWidthPage1/2, currentYPos + maxImageHeightPage1/2, { align: "center" });
             }
           }
 
           // Nota si hay más de 12 fotos
           if (propertyImages.length > 12) {
-            yPosition += Math.ceil(remainingImages / imagesPerRowPage1) * (imageHeightPage1 + spacingY + 20) + 20;
+            yPosition += Math.ceil(remainingImages / imagesPerRowPage1) * (maxImageHeightPage1 + spacingY + 20) + 20;
             doc.setFontSize(10);
             doc.setFont("helvetica", "italic");
             doc.text(`Nota: Se muestran las primeras 12 de ${propertyImages.length} fotografías disponibles.`, pageWidth / 2, yPosition, { align: "center" });
@@ -827,7 +893,7 @@ const PropertyValuation = () => {
 
         // Información adicional al final de las fotos
         let finalImages = maxTotalImages > maxImagesPage1 ? maxTotalImages - maxImagesPage1 : imagesPage1;
-        const lastPageY = yPosition + Math.ceil(finalImages / imagesPerRowPage1) * (imageHeightPage1 + spacingY + 20) + 30;
+        const lastPageY = yPosition + Math.ceil(finalImages / imagesPerRowPage1) * (maxImageHeightPage1 + spacingY + 20) + 30;
         
         if (lastPageY < pageHeight - 40) {
           doc.setFontSize(9);
