@@ -186,13 +186,14 @@ const PropertyValuation = () => {
     });
   };
 
-  const generateComparativeProperties = async (baseValue: number): Promise<ComparativeProperty[]> => {
+  const generateComparativeProperties = async (baseValue: number, numComparables: number = 3): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
     
     // Generar ubicaciones cercanas basadas en las coordenadas de la propiedad
     const nearbyAddresses = await generateNearbyAddresses(
       propertyData.latitud || 19.4326, 
-      propertyData.longitud || -99.1332
+      propertyData.longitud || -99.1332,
+      numComparables
     );
     
     return Promise.all(nearbyAddresses.map(async (addressInfo, index) => {
@@ -221,11 +222,11 @@ const PropertyValuation = () => {
   };
 
   // Función para generar direcciones cercanas usando geocodificación inversa
-  const generateNearbyAddresses = async (lat: number, lng: number) => {
+  const generateNearbyAddresses = async (lat: number, lng: number, numComparables: number = 3) => {
     const addresses = [];
     const radiusKm = 2; // Radio de 2 km para buscar comparativos
     
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < numComparables; i++) {
       // Generar coordenadas aleatorias dentro del radio
       const randomBearing = Math.random() * 2 * Math.PI;
       const randomDistance = Math.random() * radiusKm;
@@ -347,40 +348,26 @@ const PropertyValuation = () => {
                        (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
                        factorAntiguedad) + bonificacionEspacios;
     
-    // Realizar múltiples valuaciones con diferentes comparables
-    const valuations = [];
+    // Convertir a la moneda seleccionada
+    const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
+    
+    setValuation(valorFinalEnMonedaSeleccionada);
     
     toast({
-      title: "Calculando Valuaciones",
-      description: "Generando múltiples avalúos con diferentes comparables...",
+      title: "Calculando Valuación",
+      description: "Generando avalúo con 3 comparables...",
     });
 
-    for (let i = 1; i <= 4; i++) {
-      const comparatives = await generateComparativeProperties(valorFinal);
-      const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
-      
-      valuations.push({
-        id: i,
-        valor: valorFinalEnMonedaSeleccionada,
-        comparatives: comparatives
-      });
-      
-      // Pequeña pausa entre cada generación para mayor variabilidad
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
+    // Generar comparativas con solo 3 comparables
+    const comparatives = await generateComparativeProperties(valorFinal, 3);
+    setComparativeProperties(comparatives);
     
-    setMultipleValuations(valuations);
-    
-    // Calcular promedio de las valuaciones
-    const promedioValuacion = valuations.reduce((sum, val) => sum + val.valor, 0) / valuations.length;
-    setValuation(promedioValuacion);
-    
-    // Usar los comparativos del primer avalúo para la vista principal
-    setComparativeProperties(valuations[0].comparatives);
+    // Limpiar múltiples valuaciones ya que ahora solo hacemos una
+    setMultipleValuations([]);
     
     toast({
-      title: "Valuaciones Completadas",
-      description: `Se realizaron 4 avalúos. Valor promedio: ${formatCurrency(promedioValuacion, selectedCurrency)}`,
+      title: "Valuación Completada",
+      description: `Valor estimado: ${formatCurrency(valorFinalEnMonedaSeleccionada, selectedCurrency)} (3 comparables)`,
     });
   };
 
@@ -437,7 +424,7 @@ const PropertyValuation = () => {
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
       doc.text("Análisis Profesional de Valor de Mercado", pageWidth / 2, 28, { align: "center" });
-      doc.text("Basado en 4 Avalúos Independientes", pageWidth / 2, 32, { align: "center" });
+      doc.text("Basado en 3 Comparables", pageWidth / 2, 32, { align: "center" });
       
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
@@ -528,34 +515,16 @@ const PropertyValuation = () => {
       
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text(`Valor Promedio Final: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition + 8);
+      doc.text(`Valor Estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition + 8);
       
       doc.setFontSize(12);
       doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition + 18);
       
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
-      doc.text("Basado en 4 avalúos independientes con diferentes comparables", 20, yPosition + 28);
+      doc.text("Basado en 3 comparables", 20, yPosition + 28);
       
-      yPosition += 45;
-
-      // Mostrar múltiples valuaciones
-      if (multipleValuations.length > 0) {
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text("AVALÚOS INDIVIDUALES", 20, yPosition);
-        yPosition += 10;
-
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        
-        multipleValuations.forEach((val, index) => {
-          doc.text(`Avalúo #${val.id}: ${formatCurrency(val.valor, selectedCurrency)} (${val.comparatives.length} comparables)`, 20, yPosition);
-          yPosition += 6;
-        });
-        
-        yPosition += 10;
-      }
+      yPosition += 35;
 
       // Ubicación
       if (propertyData.direccionCompleta) {
@@ -924,32 +893,10 @@ const PropertyValuation = () => {
               alignment: "center"
             }),
             new Paragraph({
-              text: "Basado en 4 Avalúos Independientes",
+              text: "Basado en 3 Comparables",
               alignment: "center"
             }),
             new Paragraph({ text: "" }), // Espacio
-            ...(multipleValuations.length > 0 ? [
-              new Paragraph({
-                text: "AVALÚOS INDIVIDUALES",
-                heading: HeadingLevel.HEADING_1
-              }),
-              ...multipleValuations.map(val => 
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: `Avalúo #${val.id}: `, bold: true }),
-                    new TextRun({ text: `${formatCurrency(val.valor, selectedCurrency)} (${val.comparatives.length} comparables utilizados)` })
-                  ]
-                })
-              ),
-              new Paragraph({ text: "" }), // Espacio
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Valor Promedio Final: ", bold: true }),
-                  new TextRun({ text: formatCurrency(valuation, selectedCurrency), size: 28, bold: true })
-                ]
-              }),
-              new Paragraph({ text: "" }) // Espacio
-            ] : []),
             new Paragraph({
               text: "INFORMACIÓN GENERAL",
               heading: HeadingLevel.HEADING_1
@@ -1741,33 +1688,13 @@ const PropertyValuation = () => {
               {valuation ? (
                 <div className="space-y-4">
                   <div className="text-center">
-                    <h3 className="text-lg font-semibold text-muted-foreground">Valor Promedio Final</h3>
+                    <h3 className="text-lg font-semibold text-muted-foreground">Valor Estimado</h3>
                     <p className="text-3xl font-bold text-primary">
                       {formatCurrency(valuation, selectedCurrency)}
                     </p>
                     <Badge variant="secondary" className="mt-2">{selectedCurrency.code}</Badge>
-                    <p className="text-xs text-muted-foreground mt-1">Basado en 4 avalúos independientes</p>
+                    <p className="text-xs text-muted-foreground mt-1">Basado en 3 comparables</p>
                   </div>
-
-                  {/* Mostrar múltiples valuaciones */}
-                  {multipleValuations.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-foreground">Avalúos Individuales:</h4>
-                      {multipleValuations.map((val, index) => (
-                        <div key={val.id} className="bg-muted p-3 rounded-lg">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium">Avalúo #{val.id}</span>
-                            <span className="font-bold text-primary">
-                              {formatCurrency(val.valor, selectedCurrency)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {val.comparatives.length} comparables utilizados
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                   
                   <div className="space-y-2 text-sm">
                      <div className="flex justify-between">
