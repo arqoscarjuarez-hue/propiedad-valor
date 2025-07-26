@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import LocationMap from './LocationMap';
 
 interface PropertyData {
   // Áreas
@@ -35,6 +36,11 @@ interface PropertyData {
   antiguedad: number;
   ubicacion: string;
   estadoGeneral: string;
+  
+  // Ubicación geográfica
+  latitud?: number;
+  longitud?: number;
+  direccionCompleta?: string;
 }
 
 interface ComparativeProperty {
@@ -70,7 +76,10 @@ const PropertyValuation = () => {
     otros: 0,
     antiguedad: 0,
     ubicacion: '',
-    estadoGeneral: ''
+    estadoGeneral: '',
+    latitud: 19.4326,
+    longitud: -99.1332,
+    direccionCompleta: ''
   });
   
   const [valuation, setValuation] = useState<number | null>(null);
@@ -81,6 +90,15 @@ const PropertyValuation = () => {
     setPropertyData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleLocationChange = (lat: number, lng: number, address: string) => {
+    setPropertyData(prev => ({
+      ...prev,
+      latitud: lat,
+      longitud: lng,
+      direccionCompleta: address
     }));
   };
 
@@ -217,11 +235,12 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-6">
                   <TabsTrigger value="areas">Áreas</TabsTrigger>
                   <TabsTrigger value="tipo">Tipo</TabsTrigger>
                   <TabsTrigger value="espacios">Espacios</TabsTrigger>
                   <TabsTrigger value="caracteristicas">Características</TabsTrigger>
+                  <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
                   <TabsTrigger value="comparativas">Comparativas</TabsTrigger>
                 </TabsList>
 
@@ -371,6 +390,33 @@ const PropertyValuation = () => {
                   </div>
                 </TabsContent>
 
+                <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
+                  </p>
+                  <LocationMap
+                    onLocationChange={handleLocationChange}
+                    initialLat={propertyData.latitud}
+                    initialLng={propertyData.longitud}
+                    initialAddress={propertyData.direccionCompleta}
+                  />
+                  {propertyData.direccionCompleta && (
+                    <div className="p-3 bg-muted rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Dirección Registrada:</p>
+                          <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </TabsContent>
+
                 <TabsContent value="comparativas" className="space-y-4 mt-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-foreground">Propiedades Comparativas</h3>
@@ -494,6 +540,17 @@ const PropertyValuation = () => {
                       <span>Área de Terreno:</span>
                       <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
                     </div>
+                    {propertyData.direccionCompleta && (
+                      <div className="flex justify-between">
+                        <span>Ubicación:</span>
+                        <span className="font-medium text-xs">
+                          {propertyData.direccionCompleta.length > 30 
+                            ? `${propertyData.direccionCompleta.substring(0, 30)}...` 
+                            : propertyData.direccionCompleta
+                          }
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span>Precio por m² construido:</span>
                       <span className="font-medium">
