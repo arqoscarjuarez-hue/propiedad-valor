@@ -587,90 +587,10 @@ const PropertyValuation = () => {
         doc.text("PROPIEDADES COMPARABLES", 20, yPosition);
         yPosition += 15;
 
-        // Información detallada de cada comparable
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "normal");
-        
-        for (let i = 0; i < Math.min(comparativeProperties.length, 5); i++) {
-          const comp = comparativeProperties[i];
-          
-          // Verificar si necesitamos nueva página
-          if (yPosition > pageHeight - 50) {
-            doc.addPage();
-            yPosition = 20;
-          }
-          
-          // Título del comparable
-          doc.setFontSize(11);
-          doc.setFont("helvetica", "bold");
-          doc.text(`COMPARABLE ${i + 1}`, 20, yPosition);
-          yPosition += 10;
-          
-          // Información detallada
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
-          
-          // Dirección
-          doc.text(`Dirección: ${comp.address}`, 25, yPosition);
-          yPosition += 6;
-          
-          // Características
-          doc.text(`Área Construida: ${comp.areaConstruida}m² | Terreno: ${comp.areaTerreno}m²`, 25, yPosition);
-          yPosition += 6;
-          
-          doc.text(`Recámaras: ${comp.recamaras} | Baños: ${comp.banos} | Antigüedad: ${comp.antiguedad} años`, 25, yPosition);
-          yPosition += 6;
-          
-          doc.text(`Estado: ${comp.estadoGeneral} | Ubicación: ${comp.ubicacion}`, 25, yPosition);
-          yPosition += 6;
-          
-          // Precio
-          doc.setFont("helvetica", "bold");
-          doc.text(`Precio: ${formatCurrency(comp.precio, selectedCurrency)}`, 25, yPosition);
-          yPosition += 6;
-          
-          // Distancia
-          if (comp.distancia) {
-            doc.setFont("helvetica", "normal");
-            doc.text(`Distancia: ${(comp.distancia / 1000).toFixed(2)} km`, 25, yPosition);
-            yPosition += 6;
-          }
-          
-          // Descripción
-          if (comp.descripcion) {
-            const descripcionLines = doc.splitTextToSize(comp.descripcion, pageWidth - 50);
-            doc.text(`Descripción: ${descripcionLines[0]}`, 25, yPosition);
-            if (descripcionLines.length > 1) {
-              yPosition += 6;
-              doc.text(descripcionLines.slice(1).join(' '), 25, yPosition);
-            }
-            yPosition += 6;
-          }
-          
-          // URL
-          if (comp.url) {
-            doc.setTextColor(0, 100, 200);
-            doc.text(`Ver detalles: ${comp.url}`, 25, yPosition);
-            doc.setTextColor(0, 0, 0);
-            yPosition += 8;
-          }
-          
-          // Coordenadas
-          if (comp.latitud && comp.longitud) {
-            doc.text(`Coordenadas: ${comp.latitud.toFixed(6)}, ${comp.longitud.toFixed(6)}`, 25, yPosition);
-            yPosition += 8;
-          }
-          
-          // Línea separadora
-          doc.setDrawColor(200, 200, 200);
-          doc.line(20, yPosition, pageWidth - 20, yPosition);
-          yPosition += 8;
-        }
-
         // Resumen de tabla comparativa
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text("RESUMEN COMPARATIVO", 20, yPosition);
+        doc.text("PROPIEDADES COMPARABLES", 20, yPosition);
         yPosition += 10;
         const colWidths = [40, 25, 25, 25, 30, 35];
         const colPositions = [20, 60, 85, 110, 135, 165];
@@ -1116,72 +1036,7 @@ const PropertyValuation = () => {
             ...(comparativeProperties.length > 0 ? [
               new Paragraph({ text: "" }), // Espacio
               new Paragraph({
-                text: "INFORMACIÓN DETALLADA DE COMPARABLES",
-                heading: HeadingLevel.HEADING_1
-              }),
-              ...comparativeProperties.slice(0, 5).flatMap((comp, index) => [
-                new Paragraph({
-                  text: `COMPARABLE ${index + 1}`,
-                  heading: HeadingLevel.HEADING_2
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Dirección: ", bold: true }),
-                    new TextRun({ text: comp.address })
-                  ]
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Características: ", bold: true }),
-                    new TextRun({ text: `${comp.areaConstruida}m² construidos, ${comp.areaTerreno}m² terreno, ${comp.recamaras} recámaras, ${comp.banos} baños` })
-                  ]
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Antigüedad: ", bold: true }),
-                    new TextRun({ text: `${comp.antiguedad} años` })
-                  ]
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Estado: ", bold: true }),
-                    new TextRun({ text: `${comp.estadoGeneral} - Ubicación ${comp.ubicacion}` })
-                  ]
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Precio: ", bold: true }),
-                    new TextRun({ text: formatCurrency(comp.precio, selectedCurrency) })
-                  ]
-                }),
-                ...(comp.distancia ? [new Paragraph({
-                  children: [
-                    new TextRun({ text: "Distancia: ", bold: true }),
-                    new TextRun({ text: `${(comp.distancia / 1000).toFixed(2)} km` })
-                  ]
-                })] : []),
-                ...(comp.descripcion ? [new Paragraph({
-                  children: [
-                    new TextRun({ text: "Descripción: ", bold: true }),
-                    new TextRun({ text: comp.descripcion })
-                  ]
-                })] : []),
-                ...(comp.url ? [new Paragraph({
-                  children: [
-                    new TextRun({ text: "Ver más información: ", bold: true }),
-                    new TextRun({ text: comp.url })
-                  ]
-                })] : []),
-                ...(comp.latitud && comp.longitud ? [new Paragraph({
-                  children: [
-                    new TextRun({ text: "Coordenadas: ", bold: true }),
-                    new TextRun({ text: `${comp.latitud.toFixed(6)}, ${comp.longitud.toFixed(6)}` })
-                  ]
-                })] : []),
-                new Paragraph({ text: "" }) // Espacio entre comparables
-              ]),
-              new Paragraph({
-                text: "RESUMEN COMPARATIVO",
+                text: "PROPIEDADES COMPARABLES",
                 heading: HeadingLevel.HEADING_1
               }),
               new Paragraph({ text: "" }), // Espacio
