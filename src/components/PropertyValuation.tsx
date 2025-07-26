@@ -597,6 +597,96 @@ const PropertyValuation = () => {
         yPosition += 70;
       }
 
+      // Tabla de comparables
+      if (comparativeProperties.length > 0) {
+        // Verificar si necesitamos una nueva página
+        if (yPosition > pageHeight - 120) {
+          doc.addPage();
+          yPosition = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("PROPIEDADES COMPARABLES", 20, yPosition);
+        yPosition += 15;
+
+        // Encabezados de la tabla
+        const colWidths = [40, 25, 25, 25, 30, 35];
+        const colPositions = [20, 60, 85, 110, 135, 165];
+        
+        doc.setFillColor(240, 240, 240);
+        doc.rect(20, yPosition - 2, pageWidth - 40, 15, 'F');
+        
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("Dirección", colPositions[0], yPosition + 8);
+        doc.text("Área (m²)", colPositions[1], yPosition + 8);
+        doc.text("Rec.", colPositions[2], yPosition + 8);
+        doc.text("Baños", colPositions[3], yPosition + 8);
+        doc.text("Antigüedad", colPositions[4], yPosition + 8);
+        doc.text("Precio", colPositions[5], yPosition + 8);
+        
+        yPosition += 15;
+
+        // Datos de los comparables
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        
+        for (let i = 0; i < Math.min(comparativeProperties.length, 8); i++) {
+          const comp = comparativeProperties[i];
+          
+          // Verificar si necesitamos nueva página
+          if (yPosition > pageHeight - 20) {
+            doc.addPage();
+            yPosition = 20;
+          }
+          
+          // Alternar color de fila
+          if (i % 2 === 0) {
+            doc.setFillColor(250, 250, 250);
+            doc.rect(20, yPosition - 2, pageWidth - 40, 12, 'F');
+          }
+          
+          // Truncar dirección si es muy larga
+          const shortAddress = comp.address.length > 25 ? comp.address.substring(0, 22) + "..." : comp.address;
+          
+          doc.text(shortAddress, colPositions[0], yPosition + 6);
+          doc.text(comp.areaConstruida.toString(), colPositions[1], yPosition + 6);
+          doc.text(comp.recamaras.toString(), colPositions[2], yPosition + 6);
+          doc.text(comp.banos.toString(), colPositions[3], yPosition + 6);
+          doc.text(comp.antiguedad.toString(), colPositions[4], yPosition + 6);
+          doc.text(formatCurrency(comp.precio, selectedCurrency), colPositions[5], yPosition + 6);
+          
+          yPosition += 12;
+        }
+        
+        yPosition += 10;
+
+        // Análisis de mercado
+        const analysis = getMarketAnalysis();
+        if (analysis) {
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.text("ANÁLISIS DE MERCADO", 20, yPosition);
+          yPosition += 10;
+          
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
+          yPosition += 7;
+          doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
+          yPosition += 7;
+          doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 20, yPosition);
+          yPosition += 7;
+          
+          const variationText = analysis.difference > 0 ? 
+            `+${analysis.difference.toFixed(1)}% sobre el promedio` : 
+            `${analysis.difference.toFixed(1)}% bajo el promedio`;
+          doc.text(`Variación vs. Mercado: ${variationText}`, 20, yPosition);
+          yPosition += 15;
+        }
+      }
+
       // Fotografías del inmueble
       if (propertyImages.length > 0) {
         // Verificar si necesitamos una nueva página
@@ -862,6 +952,113 @@ const PropertyValuation = () => {
                   new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
                 ]
               })
+            ] : []),
+            ...(comparativeProperties.length > 0 ? [
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                text: "PROPIEDADES COMPARABLES",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new DocxTable({
+                rows: [
+                  new DocxTableRow({
+                    children: [
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Dirección", bold: true })]
+                        })]
+                      }),
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Área (m²)", bold: true })]
+                        })]
+                      }),
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Rec.", bold: true })]
+                        })]
+                      }),
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Baños", bold: true })]
+                        })]
+                      }),
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Antigüedad", bold: true })]
+                        })]
+                      }),
+                      new DocxTableCell({
+                        children: [new Paragraph({ 
+                          children: [new TextRun({ text: "Precio", bold: true })]
+                        })]
+                      })
+                    ]
+                  }),
+                  ...comparativeProperties.slice(0, 8).map(comp => 
+                    new DocxTableRow({
+                      children: [
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: comp.address.length > 30 ? comp.address.substring(0, 27) + "..." : comp.address })]
+                        }),
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: comp.areaConstruida.toString() })]
+                        }),
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: comp.recamaras.toString() })]
+                        }),
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: comp.banos.toString() })]
+                        }),
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: comp.antiguedad.toString() })]
+                        }),
+                        new DocxTableCell({
+                          children: [new Paragraph({ text: formatCurrency(comp.precio, selectedCurrency) })]
+                        })
+                      ]
+                    })
+                  )
+                ]
+              }),
+              ...((() => {
+                const analysis = getMarketAnalysis();
+                return analysis ? [
+                  new Paragraph({ text: "" }), // Espacio
+                  new Paragraph({
+                    text: "ANÁLISIS DE MERCADO",
+                    heading: HeadingLevel.HEADING_2
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Promedio: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.avgPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Mínimo: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.minPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Máximo: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.maxPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Variación vs. Mercado: ", bold: true }),
+                      new TextRun({ 
+                        text: analysis.difference > 0 ? 
+                          `+${analysis.difference.toFixed(1)}% sobre el promedio` : 
+                          `${analysis.difference.toFixed(1)}% bajo el promedio`
+                      })
+                    ]
+                  })
+                ] : [];
+              })())
             ] : []),
             ...(propertyImages.length > 0 ? [
               new Paragraph({ text: "" }), // Espacio
