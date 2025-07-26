@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
+import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
 interface PropertyData {
@@ -442,7 +443,7 @@ const PropertyValuation = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
                   </p>
-                  <SupabaseGoogleLocationMap
+                  <SimpleLocationMap
                     onLocationChange={handleLocationChange}
                     initialLat={propertyData.latitud}
                     initialLng={propertyData.longitud}
