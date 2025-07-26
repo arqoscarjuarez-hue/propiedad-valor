@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, Home, MapPin, Calendar, Star } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PropertyData {
@@ -36,6 +37,20 @@ interface PropertyData {
   estadoGeneral: string;
 }
 
+interface ComparativeProperty {
+  id: string;
+  address: string;
+  areaConstruida: number;
+  areaTerreno: number;
+  tipoPropiedad: string;
+  recamaras: number;
+  banos: number;
+  antiguedad: number;
+  ubicacion: string;
+  estadoGeneral: string;
+  precio: number;
+}
+
 const PropertyValuation = () => {
   const { toast } = useToast();
   const [propertyData, setPropertyData] = useState<PropertyData>({
@@ -59,6 +74,7 @@ const PropertyValuation = () => {
   });
   
   const [valuation, setValuation] = useState<number | null>(null);
+  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
   const [activeTab, setActiveTab] = useState('areas');
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
@@ -68,20 +84,49 @@ const PropertyValuation = () => {
     }));
   };
 
+  const generateComparativeProperties = (baseValue: number): ComparativeProperty[] => {
+    const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+    
+    const addresses = [
+      "Av. Revolución 1234, Zona Centro",
+      "Calle Hidalgo 567, Colonia Norte",
+      "Blvd. Independencia 890, Residencial Sur"
+    ];
+    
+    return addresses.map((address, index) => {
+      const variation = (Math.random() - 0.5) * 0.3; // ±15% variation
+      const areaVariation = 1 + (Math.random() - 0.5) * 0.4; // ±20% area variation
+      
+      return {
+        id: `comp-${index + 1}`,
+        address,
+        areaConstruida: Math.round(areaTotal * areaVariation),
+        areaTerreno: Math.round(propertyData.areaTerreno * areaVariation),
+        tipoPropiedad: propertyData.tipoPropiedad,
+        recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
+        banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
+        antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 10)),
+        ubicacion: propertyData.ubicacion,
+        estadoGeneral: propertyData.estadoGeneral,
+        precio: Math.round(baseValue * (1 + variation))
+      };
+    });
+  };
+
   const calculateValuation = () => {
     const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
     
-    // Precio base por m² según tipo de propiedad
+    // Precio base por m² según tipo de propiedad (convertido a USD)
     const precioBase = {
-      'casa': 15000,
-      'departamento': 12000,
-      'terreno': 8000,
-      'comercial': 18000,
-      'bodega': 10000
+      'casa': 800,      // ~$800 USD per m²
+      'departamento': 650,  // ~$650 USD per m²
+      'terreno': 400,   // ~$400 USD per m²
+      'comercial': 950,  // ~$950 USD per m²
+      'bodega': 550     // ~$550 USD per m²
     };
     
-    let valorBase = (areaTotal * (precioBase[propertyData.tipoPropiedad as keyof typeof precioBase] || 12000)) +
-                    (propertyData.areaTerreno * 5000);
+    let valorBase = (areaTotal * (precioBase[propertyData.tipoPropiedad as keyof typeof precioBase] || 650)) +
+                    (propertyData.areaTerreno * 250); // $250 USD per m² for land
     
     // Factores de multiplicación por ubicación
     const factorUbicacion = {
@@ -103,12 +148,12 @@ const PropertyValuation = () => {
     // Factor por antigüedad
     const factorAntiguedad = Math.max(0.5, 1 - (propertyData.antiguedad * 0.015));
     
-    // Bonificación por espacios
-    const bonificacionEspacios = (propertyData.recamaras * 50000) +
-                                (propertyData.banos * 30000) +
-                                (propertyData.cochera * 40000) +
-                                (propertyData.salas * 25000) +
-                                (propertyData.cocina * 35000);
+    // Bonificación por espacios (convertido a USD)
+    const bonificacionEspacios = (propertyData.recamaras * 2800) +   // $2,800 per bedroom
+                                (propertyData.banos * 1600) +        // $1,600 per bathroom
+                                (propertyData.cochera * 2200) +      // $2,200 per garage
+                                (propertyData.salas * 1300) +        // $1,300 per living room
+                                (propertyData.cocina * 1900);        // $1,900 per kitchen
     
     const valorFinal = (valorBase * 
                        (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
@@ -116,11 +161,36 @@ const PropertyValuation = () => {
                        factorAntiguedad) + bonificacionEspacios;
     
     setValuation(valorFinal);
+    const comparatives = generateComparativeProperties(valorFinal);
+    setComparativeProperties(comparatives);
     
     toast({
       title: "Valuación Calculada",
-      description: `El valor estimado de la propiedad es $${valorFinal.toLocaleString('es-MX')} MXN`,
+      description: `El valor estimado de la propiedad es $${valorFinal.toLocaleString('en-US')} USD`,
     });
+  };
+
+  const regenerateComparatives = () => {
+    if (valuation) {
+      const newComparatives = generateComparativeProperties(valuation);
+      setComparativeProperties(newComparatives);
+      toast({
+        title: "Comparativas Actualizadas",
+        description: "Se han generado nuevas propiedades comparativas",
+      });
+    }
+  };
+
+  const getMarketAnalysis = () => {
+    if (comparativeProperties.length === 0) return null;
+    
+    const prices = [...comparativeProperties.map(p => p.precio), valuation || 0];
+    const avgPrice = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const difference = valuation ? ((valuation - avgPrice) / avgPrice) * 100 : 0;
+    
+    return { avgPrice, minPrice, maxPrice, difference };
   };
 
   return (
@@ -147,11 +217,12 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="areas">Áreas</TabsTrigger>
                   <TabsTrigger value="tipo">Tipo</TabsTrigger>
                   <TabsTrigger value="espacios">Espacios</TabsTrigger>
                   <TabsTrigger value="caracteristicas">Características</TabsTrigger>
+                  <TabsTrigger value="comparativas">Comparativas</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="areas" className="space-y-4 mt-6">
@@ -299,6 +370,86 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 </TabsContent>
+
+                <TabsContent value="comparativas" className="space-y-4 mt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-foreground">Propiedades Comparativas</h3>
+                    {comparativeProperties.length > 0 && (
+                      <Button variant="outline" size="sm" onClick={regenerateComparatives}>
+                        <Shuffle className="h-4 w-4 mr-2" />
+                        Regenerar
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {comparativeProperties.length > 0 ? (
+                    <div className="space-y-4">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Dirección</TableHead>
+                            <TableHead>m² Const.</TableHead>
+                            <TableHead>Recámaras</TableHead>
+                            <TableHead>Baños</TableHead>
+                            <TableHead>Precio USD</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {comparativeProperties.map((property) => (
+                            <TableRow key={property.id}>
+                              <TableCell className="font-medium">{property.address}</TableCell>
+                              <TableCell>{property.areaConstruida.toLocaleString()}</TableCell>
+                              <TableCell>{property.recamaras}</TableCell>
+                              <TableCell>{property.banos}</TableCell>
+                              <TableCell className="font-bold">
+                                ${property.precio.toLocaleString('en-US')}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                      
+                      {(() => {
+                        const analysis = getMarketAnalysis();
+                        return analysis ? (
+                          <div className="bg-muted/50 p-4 rounded-lg">
+                            <h4 className="font-semibold mb-2 flex items-center gap-2">
+                              <BarChart3 className="h-4 w-4" />
+                              Análisis de Mercado
+                            </h4>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="text-muted-foreground">Precio Promedio:</span>
+                                <span className="ml-2 font-medium">
+                                  ${analysis.avgPrice.toLocaleString('en-US')}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Rango:</span>
+                                <span className="ml-2 font-medium">
+                                  ${analysis.minPrice.toLocaleString('en-US')} - ${analysis.maxPrice.toLocaleString('en-US')}
+                                </span>
+                              </div>
+                              <div className="col-span-2">
+                                <span className="text-muted-foreground">Diferencia con promedio:</span>
+                                <span className={`ml-2 font-medium ${analysis.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                  {analysis.difference > 0 ? '+' : ''}{analysis.difference.toFixed(1)}%
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null;
+                      })()}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        Calcula primero la valuación para ver propiedades comparativas similares en el mercado.
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
               </Tabs>
               
               <div className="mt-8 pt-4 border-t">
@@ -327,9 +478,9 @@ const PropertyValuation = () => {
                   <div className="text-center">
                     <h3 className="text-lg font-semibold text-muted-foreground">Valor Estimado</h3>
                     <p className="text-3xl font-bold text-primary">
-                      ${valuation.toLocaleString('es-MX')}
+                      ${valuation.toLocaleString('en-US')}
                     </p>
-                    <Badge variant="secondary" className="mt-2">MXN</Badge>
+                    <Badge variant="secondary" className="mt-2">USD</Badge>
                   </div>
                   
                   <div className="space-y-2 text-sm">
@@ -346,9 +497,20 @@ const PropertyValuation = () => {
                     <div className="flex justify-between">
                       <span>Precio por m² construido:</span>
                       <span className="font-medium">
-                        ${Math.round(valuation / (propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel || 1)).toLocaleString()}
+                        ${Math.round(valuation / (propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel || 1)).toLocaleString()} USD
                       </span>
                     </div>
+                    {comparativeProperties.length > 0 && (() => {
+                      const analysis = getMarketAnalysis();
+                      return analysis ? (
+                        <div className="flex justify-between">
+                          <span>Comparación mercado:</span>
+                          <span className={`font-medium ${analysis.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {analysis.difference > 0 ? '+' : ''}{analysis.difference.toFixed(1)}%
+                          </span>
+                        </div>
+                      ) : null;
+                    })()}
                   </div>
                   
                   <div className="pt-4 border-t">
