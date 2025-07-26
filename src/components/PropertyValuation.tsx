@@ -732,10 +732,10 @@ const PropertyValuation = () => {
                   <h3 className="text-lg font-semibold text-foreground mb-4">Características Generales</h3>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="antiguedad" className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        Antigüedad (años)
-                      </Label>
+                       <Label htmlFor="antiguedad" className="flex items-center gap-2">
+                         <Calendar className="h-4 w-4" />
+                         Antigüedad de la Construcción (años)
+                       </Label>
                       <Input
                         id="antiguedad"
                         type="number"
