@@ -7,8 +7,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, Camera, Trash2 } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2 } from 'lucide-react';
 
+import jsPDF from 'jspdf';
+import { 
+  Document as DocxDocument, 
+  Packer, 
+  Paragraph, 
+  TextRun, 
+  HeadingLevel, 
+  Table as DocxTable, 
+  TableCell as DocxTableCell, 
+  TableRow as DocxTableRow 
+} from 'docx';
+import { saveAs } from 'file-saver';
 import { useToast } from '@/hooks/use-toast';
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
@@ -343,6 +355,205 @@ const PropertyValuation = () => {
     return { avgPrice, minPrice, maxPrice, difference };
   };
 
+  const generatePDF = async () => {
+    if (!valuation) {
+      toast({
+        title: "Error",
+        description: "Primero debes calcular la valuación para generar el PDF",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.width;
+      let yPosition = 20;
+
+      // Header principal
+      doc.setFillColor(30, 41, 59);
+      doc.rect(0, 0, pageWidth, 35, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.setFont("helvetica", "bold");
+      doc.text("REPORTE DE VALUACIÓN INMOBILIARIA", pageWidth / 2, 20, { align: "center" });
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Análisis Profesional de Valor de Mercado", pageWidth / 2, 28, { align: "center" });
+      
+      doc.setTextColor(0, 0, 0);
+      yPosition = 50;
+
+      // Información general
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("INFORMACIÓN GENERAL", 20, yPosition);
+      yPosition += 10;
+
+      const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Área Total: ${areaTotal.toLocaleString()} m²`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, 20, yPosition);
+      yPosition += 15;
+
+      // Resultado de valuación
+      doc.setFillColor(220, 252, 231);
+      doc.rect(15, yPosition - 5, pageWidth - 30, 25, 'F');
+      
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text(`Valor Estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition + 8);
+      
+      doc.setFontSize(12);
+      doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition + 18);
+      
+      yPosition += 35;
+
+      // Ubicación
+      if (propertyData.direccionCompleta) {
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("UBICACIÓN", 20, yPosition);
+        yPosition += 10;
+        
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, pageWidth - 40);
+        doc.text(addressLines, 20, yPosition);
+        yPosition += (addressLines.length * 6) + 10;
+      }
+
+      // Guardar PDF
+      const fileName = `reporte-valuacion-${Date.now()}.pdf`;
+      doc.save(fileName);
+
+      toast({
+        title: "PDF Generado",
+        description: "El reporte PDF se ha descargado correctamente",
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo generar el PDF",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const generateWord = async () => {
+    if (!valuation) {
+      toast({
+        title: "Error",
+        description: "Primero debes calcular la valuación para generar el documento Word",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+      
+      const doc = new DocxDocument({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "REPORTE DE VALUACIÓN INMOBILIARIA",
+              heading: HeadingLevel.TITLE,
+              alignment: "center"
+            }),
+            new Paragraph({
+              text: "Análisis Profesional de Valor de Mercado",
+              alignment: "center"
+            }),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "INFORMACIÓN GENERAL",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Tipo de Propiedad: ", bold: true }),
+                new TextRun({ text: propertyData.tipoPropiedad.toUpperCase() })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área Total Construida: ", bold: true }),
+                new TextRun({ text: `${areaTotal.toLocaleString()} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área de Terreno: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} m²` })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "RESULTADO DE VALUACIÓN",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Valor Estimado: ", bold: true }),
+                new TextRun({ text: formatCurrency(valuation, selectedCurrency), size: 28, bold: true })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Precio por m² construido: ", bold: true }),
+                new TextRun({ text: formatCurrency(valuation / areaTotal, selectedCurrency) })
+              ]
+            }),
+            ...(propertyData.direccionCompleta ? [
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                text: "UBICACIÓN",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Dirección: ", bold: true }),
+                  new TextRun({ text: propertyData.direccionCompleta })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Coordenadas: ", bold: true }),
+                  new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
+                ]
+              })
+            ] : [])
+          ]
+        }]
+      });
+
+      const buffer = await Packer.toBlob(doc);
+      const fileName = `reporte-valuacion-${Date.now()}.docx`;
+      saveAs(buffer, fileName);
+
+      toast({
+        title: "Documento Word Generado",
+        description: "El reporte Word se ha descargado correctamente",
+      });
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo generar el documento Word",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -696,6 +907,26 @@ const PropertyValuation = () => {
                   </div>
                    
                    <div className="pt-4 border-t space-y-3">
+                     <Button 
+                       onClick={generatePDF} 
+                       variant="outline" 
+                       className="w-full"
+                       size="sm"
+                     >
+                       <FileText className="mr-2 h-4 w-4" />
+                       Descargar Reporte PDF
+                     </Button>
+                     
+                     <Button 
+                       onClick={generateWord} 
+                       variant="secondary" 
+                       className="w-full"
+                       size="sm"
+                     >
+                       <Download className="mr-2 h-4 w-4" />
+                       Descargar Reporte Word
+                     </Button>
+                     
                      <p className="text-xs text-muted-foreground text-center">
                        * Esta valuación es un estimado basado en los datos proporcionados. 
                        Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
