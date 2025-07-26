@@ -59,6 +59,7 @@ interface ComparativeProperty {
   ubicacion: string;
   estadoGeneral: string;
   precio: number;
+  distancia?: number; // en metros
 }
 
 const PropertyValuation = () => {
@@ -137,33 +138,93 @@ const PropertyValuation = () => {
     }));
   };
 
-  const generateComparativeProperties = (baseValue: number): ComparativeProperty[] => {
+  const generateComparativeProperties = async (baseValue: number): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
     
-    const addresses = [
-      "Av. Revolución 1234, Zona Centro",
-      "Calle Hidalgo 567, Colonia Norte",
-      "Blvd. Independencia 890, Residencial Sur"
-    ];
+    // Generar ubicaciones cercanas basadas en las coordenadas de la propiedad
+    const nearbyAddresses = await generateNearbyAddresses(
+      propertyData.latitud || 19.4326, 
+      propertyData.longitud || -99.1332
+    );
     
-    return addresses.map((address, index) => {
-      const variation = (Math.random() - 0.5) * 0.3; // ±15% variation
-      const areaVariation = 1 + (Math.random() - 0.5) * 0.4; // ±20% area variation
+    return Promise.all(nearbyAddresses.map(async (addressInfo, index) => {
+      const variation = (Math.random() - 0.5) * 0.2; // ±10% variation (más cercano al valor base)
+      const areaVariation = 1 + (Math.random() - 0.5) * 0.3; // ±15% area variation
       
       return {
         id: `comp-${index + 1}`,
-        address,
+        address: addressInfo.address,
         areaConstruida: Math.round(areaTotal * areaVariation),
         areaTerreno: Math.round(propertyData.areaTerreno * areaVariation),
         tipoPropiedad: propertyData.tipoPropiedad,
         recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
         banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
-        antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 10)),
+        antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
         ubicacion: propertyData.ubicacion,
         estadoGeneral: propertyData.estadoGeneral,
-        precio: convertCurrency(baseValue * (1 + variation), selectedCurrency)
+        precio: convertCurrency(baseValue * (1 + variation), selectedCurrency),
+        distancia: addressInfo.distance
       };
-    });
+    }));
+  };
+
+  // Función para generar direcciones cercanas usando geocodificación inversa
+  const generateNearbyAddresses = async (lat: number, lng: number) => {
+    const addresses = [];
+    const radiusKm = 2; // Radio de 2 km para buscar comparativos
+    
+    for (let i = 0; i < 3; i++) {
+      // Generar coordenadas aleatorias dentro del radio
+      const randomBearing = Math.random() * 2 * Math.PI;
+      const randomDistance = Math.random() * radiusKm;
+      
+      // Convertir a coordenadas geográficas
+      const earthRadius = 6371; // Radio de la Tierra en km
+      const deltaLat = (randomDistance / earthRadius) * (180 / Math.PI);
+      const deltaLng = (randomDistance / earthRadius) * (180 / Math.PI) / Math.cos(lat * Math.PI / 180);
+      
+      const newLat = lat + (deltaLat * Math.cos(randomBearing));
+      const newLng = lng + (deltaLng * Math.sin(randomBearing));
+      
+      try {
+        // Intentar obtener la dirección real usando geocodificación inversa
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${newLat}&lon=${newLng}&addressdetails=1`
+        );
+        const data = await response.json();
+        
+        if (data && data.display_name) {
+          addresses.push({
+            address: data.display_name,
+            distance: Math.round(randomDistance * 1000), // en metros
+            lat: newLat,
+            lng: newLng
+          });
+        } else {
+          // Fallback si no se encuentra dirección
+          addresses.push({
+            address: `Propiedad cercana ${i + 1} (${newLat.toFixed(4)}, ${newLng.toFixed(4)})`,
+            distance: Math.round(randomDistance * 1000),
+            lat: newLat,
+            lng: newLng
+          });
+        }
+      } catch (error) {
+        console.error('Error getting nearby address:', error);
+        // Fallback en caso de error
+        addresses.push({
+          address: `Propiedad cercana ${i + 1} (${randomDistance.toFixed(1)} km)`,
+          distance: Math.round(randomDistance * 1000),
+          lat: newLat,
+          lng: newLng
+        });
+      }
+      
+      // Delay para evitar rate limiting de Nominatim
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    return addresses;
   };
 
   const calculateValuation = () => {
@@ -217,8 +278,11 @@ const PropertyValuation = () => {
     const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
     
     setValuation(valorFinalEnMonedaSeleccionada);
-    const comparatives = generateComparativeProperties(valorFinal); // Generar comparativas en USD base
-    setComparativeProperties(comparatives);
+    
+    // Generar comparativas de forma asíncrona
+    generateComparativeProperties(valorFinal).then(comparatives => {
+      setComparativeProperties(comparatives);
+    });
     
     toast({
       title: "Valuación Calculada",
@@ -226,15 +290,15 @@ const PropertyValuation = () => {
     });
   };
 
-  const regenerateComparatives = () => {
+  const regenerateComparatives = async () => {
     if (valuation) {
       // Convertir valuación actual de vuelta a USD base para generar comparativas
       const valuationInUSD = selectedCurrency.code === 'USD' ? valuation : valuation / (selectedCurrency.rate || 1);
-      const newComparatives = generateComparativeProperties(valuationInUSD);
+      const newComparatives = await generateComparativeProperties(valuationInUSD);
       setComparativeProperties(newComparatives);
       toast({
         title: "Comparativas Actualizadas",
-        description: "Se han generado nuevas propiedades comparativas",
+        description: "Se han generado nuevas propiedades cercanas",
       });
     }
   };
@@ -467,7 +531,10 @@ const PropertyValuation = () => {
 
                 <TabsContent value="comparativas" className="space-y-4 mt-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-foreground">Propiedades Comparativas</h3>
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">Propiedades Comparativas Cercanas</h3>
+                      <p className="text-sm text-muted-foreground">Propiedades similares en un radio de 2 km</p>
+                    </div>
                     {comparativeProperties.length > 0 && (
                       <Button variant="outline" size="sm" onClick={regenerateComparatives}>
                         <Shuffle className="h-4 w-4 mr-2" />
@@ -482,16 +549,36 @@ const PropertyValuation = () => {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Dirección</TableHead>
+                            <TableHead>Distancia</TableHead>
                             <TableHead>m² Const.</TableHead>
-                            <TableHead>Recámaras</TableHead>
+                            <TableHead>Rec.</TableHead>
                             <TableHead>Baños</TableHead>
-                            <TableHead>Precio USD</TableHead>
+                            <TableHead>Precio</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {comparativeProperties.map((property) => (
                             <TableRow key={property.id}>
-                              <TableCell className="font-medium">{property.address}</TableCell>
+                              <TableCell className="font-medium max-w-[200px]">
+                                <div className="truncate" title={property.address}>
+                                  {property.address.length > 40 
+                                    ? `${property.address.substring(0, 40)}...` 
+                                    : property.address
+                                  }
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {property.distancia ? (
+                                  <span className="text-sm">
+                                    {property.distancia < 1000 
+                                      ? `${property.distancia}m` 
+                                      : `${(property.distancia / 1000).toFixed(1)}km`
+                                    }
+                                  </span>
+                                ) : (
+                                  <span className="text-muted-foreground">-</span>
+                                )}
+                              </TableCell>
                               <TableCell>{property.areaConstruida.toLocaleString()}</TableCell>
                               <TableCell>{property.recamaras}</TableCell>
                               <TableCell>{property.banos}</TableCell>
@@ -538,8 +625,11 @@ const PropertyValuation = () => {
                   ) : (
                     <div className="text-center py-8">
                       <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground">
-                        Calcula primero la valuación para ver propiedades comparativas similares en el mercado.
+                      <p className="text-muted-foreground mb-2">
+                        Primero establece la ubicación exacta de la propiedad en la pestaña "Ubicación".
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Luego calcula la valuación para generar comparativos cercanos automáticamente.
                       </p>
                     </div>
                   )}
