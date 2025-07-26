@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import LocationMap from './LocationMap';
+import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
 interface PropertyData {
   // Áreas
@@ -84,6 +85,12 @@ const PropertyValuation = () => {
   
   const [valuation, setValuation] = useState<number | null>(null);
   const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>({
+    code: 'USD',
+    name: 'Dólar Estadounidense',
+    symbol: '$',
+    rate: 1
+  });
   const [activeTab, setActiveTab] = useState('areas');
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
@@ -91,6 +98,31 @@ const PropertyValuation = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  const convertCurrency = (amountInUSD: number, targetCurrency: Currency): number => {
+    if (targetCurrency.code === 'USD') {
+      return amountInUSD;
+    }
+    return amountInUSD * (targetCurrency.rate || 1);
+  };
+
+  const handleCurrencyChange = (currency: Currency) => {
+    setSelectedCurrency(currency);
+    
+    // Si hay una valuación existente, recalcular las comparativas con la nueva moneda
+    if (valuation && comparativeProperties.length > 0) {
+      const newComparatives = comparativeProperties.map(prop => ({
+        ...prop,
+        precio: convertCurrency(prop.precio / (selectedCurrency.rate || 1), currency)
+      }));
+      setComparativeProperties(newComparatives);
+    }
+    
+    toast({
+      title: "Moneda Cambiada",
+      description: `Valuación ahora se muestra en ${currency.name} (${currency.code})`,
+    });
   };
 
   const handleLocationChange = (lat: number, lng: number, address: string) => {
@@ -126,7 +158,7 @@ const PropertyValuation = () => {
         antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 10)),
         ubicacion: propertyData.ubicacion,
         estadoGeneral: propertyData.estadoGeneral,
-        precio: Math.round(baseValue * (1 + variation))
+        precio: convertCurrency(baseValue * (1 + variation), selectedCurrency)
       };
     });
   };
@@ -178,19 +210,24 @@ const PropertyValuation = () => {
                        (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
                        factorAntiguedad) + bonificacionEspacios;
     
-    setValuation(valorFinal);
-    const comparatives = generateComparativeProperties(valorFinal);
+    // Convertir a la moneda seleccionada
+    const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
+    
+    setValuation(valorFinalEnMonedaSeleccionada);
+    const comparatives = generateComparativeProperties(valorFinal); // Generar comparativas en USD base
     setComparativeProperties(comparatives);
     
     toast({
       title: "Valuación Calculada",
-      description: `El valor estimado de la propiedad es $${valorFinal.toLocaleString('en-US')} USD`,
+      description: `El valor estimado es ${formatCurrency(valorFinalEnMonedaSeleccionada, selectedCurrency)}`,
     });
   };
 
   const regenerateComparatives = () => {
     if (valuation) {
-      const newComparatives = generateComparativeProperties(valuation);
+      // Convertir valuación actual de vuelta a USD base para generar comparativas
+      const valuationInUSD = selectedCurrency.code === 'USD' ? valuation : valuation / (selectedCurrency.rate || 1);
+      const newComparatives = generateComparativeProperties(valuationInUSD);
       setComparativeProperties(newComparatives);
       toast({
         title: "Comparativas Actualizadas",
@@ -223,7 +260,15 @@ const PropertyValuation = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Selector de Moneda */}
+        <div className="lg:col-span-1">
+          <CurrencySelector
+            selectedCurrency={selectedCurrency}
+            onCurrencyChange={handleCurrencyChange}
+          />
+        </div>
+
         {/* Formulario Principal */}
         <div className="lg:col-span-2">
           <Card className="shadow-lg">
@@ -448,7 +493,7 @@ const PropertyValuation = () => {
                               <TableCell>{property.recamaras}</TableCell>
                               <TableCell>{property.banos}</TableCell>
                               <TableCell className="font-bold">
-                                ${property.precio.toLocaleString('en-US')}
+                                {formatCurrency(property.precio, selectedCurrency)}
                               </TableCell>
                             </TableRow>
                           ))}
@@ -467,13 +512,13 @@ const PropertyValuation = () => {
                               <div>
                                 <span className="text-muted-foreground">Precio Promedio:</span>
                                 <span className="ml-2 font-medium">
-                                  ${analysis.avgPrice.toLocaleString('en-US')}
+                                  {formatCurrency(analysis.avgPrice, selectedCurrency)}
                                 </span>
                               </div>
                               <div>
                                 <span className="text-muted-foreground">Rango:</span>
                                 <span className="ml-2 font-medium">
-                                  ${analysis.minPrice.toLocaleString('en-US')} - ${analysis.maxPrice.toLocaleString('en-US')}
+                                  {formatCurrency(analysis.minPrice, selectedCurrency)} - {formatCurrency(analysis.maxPrice, selectedCurrency)}
                                 </span>
                               </div>
                               <div className="col-span-2">
@@ -524,9 +569,9 @@ const PropertyValuation = () => {
                   <div className="text-center">
                     <h3 className="text-lg font-semibold text-muted-foreground">Valor Estimado</h3>
                     <p className="text-3xl font-bold text-primary">
-                      ${valuation.toLocaleString('en-US')}
+                      {formatCurrency(valuation, selectedCurrency)}
                     </p>
-                    <Badge variant="secondary" className="mt-2">USD</Badge>
+                    <Badge variant="secondary" className="mt-2">{selectedCurrency.code}</Badge>
                   </div>
                   
                   <div className="space-y-2 text-sm">
@@ -554,7 +599,10 @@ const PropertyValuation = () => {
                     <div className="flex justify-between">
                       <span>Precio por m² construido:</span>
                       <span className="font-medium">
-                        ${Math.round(valuation / (propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel || 1)).toLocaleString()} USD
+                        {formatCurrency(
+                          valuation / (propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel || 1), 
+                          selectedCurrency
+                        )}
                       </span>
                     </div>
                     {comparativeProperties.length > 0 && (() => {
