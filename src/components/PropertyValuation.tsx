@@ -509,26 +509,64 @@ const PropertyValuation = () => {
       }
       yPosition += 10;
 
-      // Espacios adicionales
+      // Espacios habitacionales y de servicio
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("ESPACIOS Y CARACTERÍSTICAS", 20, yPosition);
+      doc.text("DISTRIBUCIÓN COMPLETA DE ESPACIOS", 20, yPosition);
       yPosition += 10;
       
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text(`Salas: ${propertyData.salas}`, 20, yPosition);
+      
+      // Espacios habitacionales
+      doc.setFont("helvetica", "bold");
+      doc.text("Espacios Habitacionales:", 20, yPosition);
       yPosition += 7;
-      doc.text(`Comedor: ${propertyData.comedor}`, 20, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`• Recámaras/Dormitorios: ${propertyData.recamaras}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Salas/Estancias: ${propertyData.salas}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Comedor: ${propertyData.comedor}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Baños Completos: ${propertyData.banos}`, 25, yPosition);
+      yPosition += 10;
+      
+      // Espacios de servicio
+      doc.setFont("helvetica", "bold");
+      doc.text("Espacios de Servicio:", 20, yPosition);
       yPosition += 7;
-      doc.text(`Cocina: ${propertyData.cocina}`, 20, yPosition);
-      yPosition += 7;
-      doc.text(`Bodega: ${propertyData.bodega}`, 20, yPosition);
-      yPosition += 7;
-      doc.text(`Área de Servicio: ${propertyData.areaServicio}`, 20, yPosition);
-      yPosition += 7;
-      doc.text(`Otros: ${propertyData.otros}`, 20, yPosition);
-      yPosition += 15;
+      doc.setFont("helvetica", "normal");
+      doc.text(`• Cocina: ${propertyData.cocina}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Área de Servicio/Lavado: ${propertyData.areaServicio}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Bodegas/Trasteros: ${propertyData.bodega}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Cocheras/Garajes: ${propertyData.cochera}`, 25, yPosition);
+      yPosition += 10;
+      
+      // Espacios adicionales
+      if (propertyData.otros > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.text("Espacios Adicionales:", 20, yPosition);
+        yPosition += 7;
+        doc.setFont("helvetica", "normal");
+        doc.text(`• Otros Espacios (estudios, oficinas, patios techados): ${propertyData.otros}`, 25, yPosition);
+        yPosition += 10;
+      }
+      
+      // Resumen total de espacios
+      const totalEspacios = propertyData.recamaras + propertyData.salas + propertyData.comedor + 
+                           propertyData.banos + propertyData.cocina + propertyData.areaServicio + 
+                           propertyData.bodega + propertyData.cochera + propertyData.otros;
+      
+      doc.setFillColor(245, 245, 245);
+      doc.rect(20, yPosition, pageWidth - 40, 15, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`TOTAL DE ESPACIOS IDENTIFICADOS: ${totalEspacios}`, 25, yPosition + 10);
+      yPosition += 20;
 
       // Resultado de valuación
       doc.setFillColor(220, 252, 231);
@@ -944,43 +982,89 @@ const PropertyValuation = () => {
             })] : []),
             new Paragraph({ text: "" }), // Espacio
             new Paragraph({
-              text: "ESPACIOS Y CARACTERÍSTICAS",
+              text: "DISTRIBUCIÓN COMPLETA DE ESPACIOS",
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
+              text: "Espacios Habitacionales:",
+              heading: HeadingLevel.HEADING_2
+            }),
+            new Paragraph({
               children: [
-                new TextRun({ text: "Salas: ", bold: true }),
+                new TextRun({ text: "• Recámaras/Dormitorios: ", bold: true }),
+                new TextRun({ text: `${propertyData.recamaras}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Salas/Estancias: ", bold: true }),
                 new TextRun({ text: `${propertyData.salas}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Comedor: ", bold: true }),
+                new TextRun({ text: "• Comedor: ", bold: true }),
                 new TextRun({ text: `${propertyData.comedor}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Cocina: ", bold: true }),
+                new TextRun({ text: "• Baños Completos: ", bold: true }),
+                new TextRun({ text: `${propertyData.banos}` })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "Espacios de Servicio:",
+              heading: HeadingLevel.HEADING_2
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Cocina: ", bold: true }),
                 new TextRun({ text: `${propertyData.cocina}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Bodega: ", bold: true }),
-                new TextRun({ text: `${propertyData.bodega}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Área de Servicio: ", bold: true }),
+                new TextRun({ text: "• Área de Servicio/Lavado: ", bold: true }),
                 new TextRun({ text: `${propertyData.areaServicio}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Otros: ", bold: true }),
-                new TextRun({ text: `${propertyData.otros}` })
+                new TextRun({ text: "• Bodegas/Trasteros: ", bold: true }),
+                new TextRun({ text: `${propertyData.bodega}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Cocheras/Garajes: ", bold: true }),
+                new TextRun({ text: `${propertyData.cochera}` })
+              ]
+            }),
+            ...(propertyData.otros > 0 ? [
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                text: "Espacios Adicionales:",
+                heading: HeadingLevel.HEADING_2
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "• Otros Espacios (estudios, oficinas, patios techados): ", bold: true }),
+                  new TextRun({ text: `${propertyData.otros}` })
+                ]
+              })
+            ] : []),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              children: [
+                new TextRun({ text: "TOTAL DE ESPACIOS IDENTIFICADOS: ", bold: true }),
+                new TextRun({ 
+                  text: `${propertyData.recamaras + propertyData.salas + propertyData.comedor + 
+                          propertyData.banos + propertyData.cocina + propertyData.areaServicio + 
+                          propertyData.bodega + propertyData.cochera + propertyData.otros}`,
+                  bold: true
+                })
               ]
             }),
             new Paragraph({ text: "" }), // Espacio
