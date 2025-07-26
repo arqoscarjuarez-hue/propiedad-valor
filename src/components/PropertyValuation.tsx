@@ -503,13 +503,12 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="areas">Áreas</TabsTrigger>
                   <TabsTrigger value="tipo">Tipo</TabsTrigger>
                   <TabsTrigger value="espacios">Espacios</TabsTrigger>
                   <TabsTrigger value="caracteristicas">Características</TabsTrigger>
                   <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
-                  <TabsTrigger value="comparativas">Comparativas</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="areas" className="space-y-4 mt-6">
@@ -690,111 +689,6 @@ const PropertyValuation = () => {
                   )}
                 </TabsContent>
 
-                <TabsContent value="comparativas" className="space-y-4 mt-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">Propiedades Comparativas Cercanas</h3>
-                      <p className="text-sm text-muted-foreground">Propiedades similares en un radio de 2 km</p>
-                    </div>
-                    {comparativeProperties.length > 0 && (
-                      <Button variant="outline" size="sm" onClick={regenerateComparatives}>
-                        <Shuffle className="h-4 w-4 mr-2" />
-                        Regenerar
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {comparativeProperties.length > 0 ? (
-                    <div className="space-y-4">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Dirección</TableHead>
-                            <TableHead>Distancia</TableHead>
-                            <TableHead>m² Const.</TableHead>
-                            <TableHead>Rec.</TableHead>
-                            <TableHead>Baños</TableHead>
-                            <TableHead>Precio</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {comparativeProperties.map((property) => (
-                            <TableRow key={property.id}>
-                              <TableCell className="font-medium max-w-[200px]">
-                                <div className="truncate" title={property.address}>
-                                  {property.address.length > 40 
-                                    ? `${property.address.substring(0, 40)}...` 
-                                    : property.address
-                                  }
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {property.distancia ? (
-                                  <span className="text-sm">
-                                    {property.distancia < 1000 
-                                      ? `${property.distancia}m` 
-                                      : `${(property.distancia / 1000).toFixed(1)}km`
-                                    }
-                                  </span>
-                                ) : (
-                                  <span className="text-muted-foreground">-</span>
-                                )}
-                              </TableCell>
-                              <TableCell>{property.areaConstruida.toLocaleString()}</TableCell>
-                              <TableCell>{property.recamaras}</TableCell>
-                              <TableCell>{property.banos}</TableCell>
-                              <TableCell className="font-bold">
-                                {formatCurrency(property.precio, selectedCurrency)}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                      
-                      {(() => {
-                        const analysis = getMarketAnalysis();
-                        return analysis ? (
-                          <div className="bg-muted/50 p-4 rounded-lg">
-                            <h4 className="font-semibold mb-2 flex items-center gap-2">
-                              <BarChart3 className="h-4 w-4" />
-                              Análisis de Mercado
-                            </h4>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div>
-                                <span className="text-muted-foreground">Precio Promedio:</span>
-                                <span className="ml-2 font-medium">
-                                  {formatCurrency(analysis.avgPrice, selectedCurrency)}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Rango:</span>
-                                <span className="ml-2 font-medium">
-                                  {formatCurrency(analysis.minPrice, selectedCurrency)} - {formatCurrency(analysis.maxPrice, selectedCurrency)}
-                                </span>
-                              </div>
-                              <div className="col-span-2">
-                                <span className="text-muted-foreground">Diferencia con promedio:</span>
-                                <span className={`ml-2 font-medium ${analysis.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                  {analysis.difference > 0 ? '+' : ''}{analysis.difference.toFixed(1)}%
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ) : null;
-                      })()}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-2">
-                        Primero establece la ubicación exacta de la propiedad en la pestaña "Ubicación".
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Luego calcula la valuación para generar comparativos cercanos automáticamente.
-                      </p>
-                    </div>
-                  )}
-                </TabsContent>
               </Tabs>
               
               <div className="mt-8 pt-4 border-t">
