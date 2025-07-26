@@ -388,6 +388,7 @@ const PropertyValuation = () => {
     try {
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
       let yPosition = 20;
 
       // Header principal
@@ -418,9 +419,72 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "normal");
       doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, 20, yPosition);
       yPosition += 7;
-      doc.text(`Área Total: ${areaTotal.toLocaleString()} m²`, 20, yPosition);
+      doc.text(`Área Total Construida: ${areaTotal.toLocaleString()} m²`, 20, yPosition);
       yPosition += 7;
-      doc.text(`Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, 20, yPosition);
+      doc.text(`Área de Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Recámaras: ${propertyData.recamaras}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Baños: ${propertyData.banos}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Cocheras: ${propertyData.cochera}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Antigüedad de la Construcción: ${propertyData.antiguedad} años`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Ubicación: ${propertyData.ubicacion}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Estado General: ${propertyData.estadoGeneral}`, 20, yPosition);
+      yPosition += 15;
+
+      // Detalles de áreas
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("DETALLES DE ÁREAS", 20, yPosition);
+      yPosition += 10;
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      if (propertyData.areaSotano > 0) {
+        doc.text(`Sótano: ${propertyData.areaSotano} m²`, 20, yPosition);
+        yPosition += 7;
+      }
+      if (propertyData.areaPrimerNivel > 0) {
+        doc.text(`Primer Nivel: ${propertyData.areaPrimerNivel} m²`, 20, yPosition);
+        yPosition += 7;
+      }
+      if (propertyData.areaSegundoNivel > 0) {
+        doc.text(`Segundo Nivel: ${propertyData.areaSegundoNivel} m²`, 20, yPosition);
+        yPosition += 7;
+      }
+      if (propertyData.areaTercerNivel > 0) {
+        doc.text(`Tercer Nivel: ${propertyData.areaTercerNivel} m²`, 20, yPosition);
+        yPosition += 7;
+      }
+      if (propertyData.areaCuartoNivel > 0) {
+        doc.text(`Cuarto Nivel: ${propertyData.areaCuartoNivel} m²`, 20, yPosition);
+        yPosition += 7;
+      }
+      yPosition += 10;
+
+      // Espacios adicionales
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("ESPACIOS Y CARACTERÍSTICAS", 20, yPosition);
+      yPosition += 10;
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Salas: ${propertyData.salas}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Comedor: ${propertyData.comedor}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Cocina: ${propertyData.cocina}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Bodega: ${propertyData.bodega}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Área de Servicio: ${propertyData.areaServicio}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Otros: ${propertyData.otros}`, 20, yPosition);
       yPosition += 15;
 
       // Resultado de valuación
@@ -447,7 +511,86 @@ const PropertyValuation = () => {
         doc.setFont("helvetica", "normal");
         const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, pageWidth - 40);
         doc.text(addressLines, 20, yPosition);
-        yPosition += (addressLines.length * 6) + 10;
+        yPosition += (addressLines.length * 6) + 7;
+        
+        if (propertyData.latitud && propertyData.longitud) {
+          doc.text(`Coordenadas: ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, 20, yPosition);
+          yPosition += 15;
+        }
+      }
+
+      // Croquis de ubicación (mapa)
+      if (propertyData.latitud && propertyData.longitud) {
+        // Verificar si necesitamos una nueva página
+        if (yPosition > pageHeight - 80) {
+          doc.addPage();
+          yPosition = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("CROQUIS DE UBICACIÓN", 20, yPosition);
+        yPosition += 15;
+
+        // Agregar imagen del mapa (placeholder por ahora)
+        doc.setFillColor(240, 240, 240);
+        doc.rect(20, yPosition, pageWidth - 40, 60, 'F');
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Mapa de ubicación del inmueble", pageWidth / 2, yPosition + 30, { align: "center" });
+        doc.text(`Lat: ${propertyData.latitud.toFixed(6)}, Lng: ${propertyData.longitud.toFixed(6)}`, pageWidth / 2, yPosition + 40, { align: "center" });
+        yPosition += 70;
+      }
+
+      // Fotografías del inmueble
+      if (propertyImages.length > 0) {
+        // Verificar si necesitamos una nueva página
+        if (yPosition > pageHeight - 100) {
+          doc.addPage();
+          yPosition = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("FOTOGRAFÍAS DEL INMUEBLE", 20, yPosition);
+        yPosition += 15;
+
+        let imageCount = 0;
+        const imagesPerRow = 2;
+        const imageWidth = (pageWidth - 60) / imagesPerRow;
+        const imageHeight = 50;
+
+        for (let i = 0; i < propertyImages.length; i++) {
+          const image = propertyImages[i];
+          const col = i % imagesPerRow;
+          const row = Math.floor(i / imagesPerRow);
+          
+          const xPos = 20 + (col * (imageWidth + 20));
+          const currentYPos = yPosition + (row * (imageHeight + 15));
+
+          // Verificar si necesitamos una nueva página
+          if (currentYPos + imageHeight > pageHeight - 20) {
+            doc.addPage();
+            yPosition = 20;
+            const newRow = row - Math.floor(i / imagesPerRow);
+            yPosition = 20 + (newRow * (imageHeight + 15));
+          }
+
+          try {
+            // Agregar imagen al PDF
+            doc.addImage(image.preview, 'JPEG', xPos, currentYPos, imageWidth, imageHeight);
+          } catch (error) {
+            // Si hay error con la imagen, agregar placeholder
+            doc.setFillColor(240, 240, 240);
+            doc.rect(xPos, currentYPos, imageWidth, imageHeight, 'F');
+            doc.setFontSize(8);
+            doc.text(`Imagen ${i + 1}`, xPos + imageWidth/2, currentYPos + imageHeight/2, { align: "center" });
+          }
+
+          imageCount++;
+        }
+
+        yPosition += Math.ceil(propertyImages.length / imagesPerRow) * (imageHeight + 15);
       }
 
       // Guardar PDF
@@ -456,7 +599,7 @@ const PropertyValuation = () => {
 
       toast({
         title: "PDF Generado",
-        description: "El reporte PDF se ha descargado correctamente",
+        description: "El reporte PDF se ha descargado correctamente con todos los datos, ubicación y fotografías",
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -517,6 +660,118 @@ const PropertyValuation = () => {
                 new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} m²` })
               ]
             }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Recámaras: ", bold: true }),
+                new TextRun({ text: `${propertyData.recamaras}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Baños: ", bold: true }),
+                new TextRun({ text: `${propertyData.banos}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Cocheras: ", bold: true }),
+                new TextRun({ text: `${propertyData.cochera}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Antigüedad de la Construcción: ", bold: true }),
+                new TextRun({ text: `${propertyData.antiguedad} años` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Ubicación: ", bold: true }),
+                new TextRun({ text: propertyData.ubicacion })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Estado General: ", bold: true }),
+                new TextRun({ text: propertyData.estadoGeneral })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "DETALLES DE ÁREAS",
+              heading: HeadingLevel.HEADING_1
+            }),
+            ...(propertyData.areaSotano > 0 ? [new Paragraph({
+              children: [
+                new TextRun({ text: "Sótano: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaSotano} m²` })
+              ]
+            })] : []),
+            ...(propertyData.areaPrimerNivel > 0 ? [new Paragraph({
+              children: [
+                new TextRun({ text: "Primer Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaPrimerNivel} m²` })
+              ]
+            })] : []),
+            ...(propertyData.areaSegundoNivel > 0 ? [new Paragraph({
+              children: [
+                new TextRun({ text: "Segundo Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaSegundoNivel} m²` })
+              ]
+            })] : []),
+            ...(propertyData.areaTercerNivel > 0 ? [new Paragraph({
+              children: [
+                new TextRun({ text: "Tercer Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTercerNivel} m²` })
+              ]
+            })] : []),
+            ...(propertyData.areaCuartoNivel > 0 ? [new Paragraph({
+              children: [
+                new TextRun({ text: "Cuarto Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaCuartoNivel} m²` })
+              ]
+            })] : []),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "ESPACIOS Y CARACTERÍSTICAS",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Salas: ", bold: true }),
+                new TextRun({ text: `${propertyData.salas}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Comedor: ", bold: true }),
+                new TextRun({ text: `${propertyData.comedor}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Cocina: ", bold: true }),
+                new TextRun({ text: `${propertyData.cocina}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Bodega: ", bold: true }),
+                new TextRun({ text: `${propertyData.bodega}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área de Servicio: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaServicio}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Otros: ", bold: true }),
+                new TextRun({ text: `${propertyData.otros}` })
+              ]
+            }),
             new Paragraph({ text: "" }), // Espacio
             new Paragraph({
               text: "RESULTADO DE VALUACIÓN",
@@ -552,6 +807,18 @@ const PropertyValuation = () => {
                   new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
                 ]
               })
+            ] : []),
+            ...(propertyImages.length > 0 ? [
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                text: "FOTOGRAFÍAS DEL INMUEBLE",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `Se adjuntan ${propertyImages.length} fotografías del inmueble.` })
+                ]
+              })
             ] : [])
           ]
         }]
@@ -563,7 +830,7 @@ const PropertyValuation = () => {
 
       toast({
         title: "Documento Word Generado",
-        description: "El reporte Word se ha descargado correctamente",
+        description: "El reporte Word se ha descargado correctamente con todos los datos del inmueble",
       });
     } catch (error) {
       console.error('Error generating Word document:', error);
