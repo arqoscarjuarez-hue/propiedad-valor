@@ -353,6 +353,12 @@ const PropertyValuation = () => {
       return;
     }
 
+    try {
+      toast({
+        title: "Generando PDF...",
+        description: "Por favor espera mientras se genera el reporte",
+      });
+
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
@@ -763,6 +769,14 @@ const PropertyValuation = () => {
       title: "📄 PDF Generado Exitosamente",
       description: `El reporte de valuación se ha descargado como ${fileName}`,
     });
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      toast({
+        title: "Error al generar PDF",
+        description: "Hubo un problema al generar el reporte. Inténtalo nuevamente.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
