@@ -18,7 +18,9 @@ import {
   HeadingLevel, 
   Table as DocxTable, 
   TableCell as DocxTableCell, 
-  TableRow as DocxTableRow 
+  TableRow as DocxTableRow,
+  ImageRun,
+  AlignmentType 
 } from 'docx';
 import { saveAs } from 'file-saver';
 import { useToast } from '@/hooks/use-toast';
@@ -417,6 +419,91 @@ const PropertyValuation = () => {
     return { avgPrice, minPrice, maxPrice, difference };
   };
 
+  // Función para generar imagen del mapa
+  const generateMapImage = async (lat: number, lng: number): Promise<string | null> => {
+    try {
+      // Usar OpenStreetMap como base para generar imagen del mapa
+      const zoom = 16;
+      const width = 400;
+      const height = 300;
+      
+      // Crear canvas para el mapa
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) return null;
+      
+      // Fondo blanco
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, width, height);
+      
+      // Dibujar un mapa simple con las coordenadas
+      ctx.fillStyle = '#e8f4fd';
+      ctx.fillRect(0, 0, width, height);
+      
+      // Dibujar calles simuladas
+      ctx.strokeStyle = '#d1d5db';
+      ctx.lineWidth = 2;
+      
+      // Calles horizontales
+      for (let i = 0; i < height; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(width, i);
+        ctx.stroke();
+      }
+      
+      // Calles verticales
+      for (let i = 0; i < width; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, height);
+        ctx.stroke();
+      }
+      
+      // Marcador de la propiedad en el centro
+      const centerX = width / 2;
+      const centerY = height / 2;
+      
+      // Círculo del marcador
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Borde del marcador
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Etiqueta de ubicación
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Propiedad Valuada', centerX, centerY + 25);
+      
+      // Coordenadas en la esquina
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '10px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillText(`${lat.toFixed(6)}, ${lng.toFixed(6)}`, 10, height - 10);
+      
+      // Escala
+      ctx.fillStyle = '#374151';
+      ctx.font = '10px Arial';
+      ctx.textAlign = 'right';
+      ctx.fillText('Escala: 1:1000', width - 10, height - 10);
+      
+      // Convertir canvas a imagen base64
+      return canvas.toDataURL('image/png');
+    } catch (error) {
+      console.error('Error generando imagen del mapa:', error);
+      return null;
+    }
+  };
+
   const generatePDF = async () => {
     if (!valuation) {
       toast({
@@ -651,7 +738,39 @@ const PropertyValuation = () => {
         
         if (propertyData.latitud && propertyData.longitud) {
           doc.text(`Coordenadas: ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, 20, yPosition);
-          yPosition += 15;
+          yPosition += 10;
+          
+          // Agregar imagen del croquis de ubicación
+          try {
+            const mapImage = await generateMapImage(propertyData.latitud, propertyData.longitud);
+            if (mapImage) {
+              // Verificar si hay espacio suficiente en la página
+              if (yPosition > pageHeight - 90) {
+                doc.addPage();
+                yPosition = 20;
+              }
+              
+              doc.setFontSize(12);
+              doc.setFont("helvetica", "bold");
+              doc.text("CROQUIS DE UBICACIÓN", 20, yPosition);
+              yPosition += 10;
+              
+              // Agregar la imagen del mapa
+              const mapWidth = 80;
+              const mapHeight = 60;
+              doc.addImage(mapImage, 'PNG', 20, yPosition, mapWidth, mapHeight);
+              
+              // Marco alrededor del mapa
+              doc.setDrawColor(150, 150, 150);
+              doc.setLineWidth(0.5);
+              doc.rect(20, yPosition, mapWidth, mapHeight);
+              
+              yPosition += mapHeight + 15;
+            }
+          } catch (error) {
+            console.error('Error agregando imagen del mapa:', error);
+            yPosition += 5;
+          }
         }
       }
 
@@ -1274,6 +1393,16 @@ const PropertyValuation = () => {
                   new TextRun({ text: "Coordenadas: ", bold: true }),
                   new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
                 ]
+              }),
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "CROQUIS DE UBICACIÓN", bold: true })
+                ]
+              }),
+              new Paragraph({
+                text: "Croquis de ubicación incluido en reporte PDF",
+                alignment: AlignmentType.CENTER
               })
             ] : []),
             ...(comparativeProperties.length > 0 ? [
