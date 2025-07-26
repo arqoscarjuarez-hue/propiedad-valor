@@ -523,14 +523,58 @@ const PropertyValuation = () => {
       doc.text("Espacios Habitacionales:", 20, yPosition);
       yPosition += 7;
       doc.setFont("helvetica", "normal");
-      doc.text(`• Recámaras/Dormitorios: ${propertyData.recamaras}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Salas/Estancias: ${propertyData.salas}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Comedor: ${propertyData.comedor}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Baños Completos: ${propertyData.banos}`, 25, yPosition);
-      yPosition += 10;
+      
+      // Recámaras con nombres específicos
+      if (propertyData.recamaras > 0) {
+        doc.text(`• Recámaras/Dormitorios (${propertyData.recamaras} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.recamaras; i++) {
+          const nombreRecamara = i === 1 ? "Recámara Principal" : `Recámara ${i}`;
+          doc.text(`  - ${nombreRecamara}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      // Salas con nombres específicos
+      if (propertyData.salas > 0) {
+        doc.text(`• Salas/Estancias (${propertyData.salas} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.salas; i++) {
+          const nombreSala = i === 1 ? "Sala Principal" : 
+                           i === 2 ? "Sala de TV/Familiar" : `Sala ${i}`;
+          doc.text(`  - ${nombreSala}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      // Comedor con nombres específicos
+      if (propertyData.comedor > 0) {
+        doc.text(`• Comedor (${propertyData.comedor} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.comedor; i++) {
+          const nombreComedor = i === 1 ? "Comedor Principal" : `Comedor ${i}`;
+          doc.text(`  - ${nombreComedor}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      // Baños con nombres específicos
+      if (propertyData.banos > 0) {
+        doc.text(`• Baños Completos (${propertyData.banos} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.banos; i++) {
+          const nombreBano = i === 1 ? "Baño Principal" : 
+                           i === 2 ? "Baño de Visitas" : `Baño ${i}`;
+          doc.text(`  - ${nombreBano}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      yPosition += 5;
       
       // Espacios de servicio
       doc.setFont("helvetica", "bold");
@@ -1055,24 +1099,72 @@ const PropertyValuation = () => {
               text: "Espacios Habitacionales:",
               heading: HeadingLevel.HEADING_2
             }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "• Recámaras/Dormitorios: ", bold: true }),
-                new TextRun({ text: `${propertyData.recamaras}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "• Salas/Estancias: ", bold: true }),
-                new TextRun({ text: `${propertyData.salas}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "• Comedor: ", bold: true }),
-                new TextRun({ text: `${propertyData.comedor}` })
-              ]
-            }),
+            // Recámaras con nombres específicos
+            ...(propertyData.recamaras > 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• Recámaras/Dormitorios (${propertyData.recamaras} espacios):`, bold: true })
+                ]
+              }),
+              ...Array.from({ length: propertyData.recamaras }, (_, i) => {
+                const nombreRecamara = i === 0 ? "Recámara Principal" : `Recámara ${i + 1}`;
+                return new Paragraph({
+                  children: [
+                    new TextRun({ text: `  - ${nombreRecamara}` })
+                  ]
+                });
+              })
+            ] : []),
+            // Salas con nombres específicos
+            ...(propertyData.salas > 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• Salas/Estancias (${propertyData.salas} espacios):`, bold: true })
+                ]
+              }),
+              ...Array.from({ length: propertyData.salas }, (_, i) => {
+                const nombreSala = i === 0 ? "Sala Principal" : 
+                                 i === 1 ? "Sala de TV/Familiar" : `Sala ${i + 1}`;
+                return new Paragraph({
+                  children: [
+                    new TextRun({ text: `  - ${nombreSala}` })
+                  ]
+                });
+              })
+            ] : []),
+            // Comedor con nombres específicos
+            ...(propertyData.comedor > 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• Comedor (${propertyData.comedor} espacios):`, bold: true })
+                ]
+              }),
+              ...Array.from({ length: propertyData.comedor }, (_, i) => {
+                const nombreComedor = i === 0 ? "Comedor Principal" : `Comedor ${i + 1}`;
+                return new Paragraph({
+                  children: [
+                    new TextRun({ text: `  - ${nombreComedor}` })
+                  ]
+                });
+              })
+            ] : []),
+            // Baños con nombres específicos
+            ...(propertyData.banos > 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• Baños Completos (${propertyData.banos} espacios):`, bold: true })
+                ]
+              }),
+              ...Array.from({ length: propertyData.banos }, (_, i) => {
+                const nombreBano = i === 0 ? "Baño Principal" : 
+                                 i === 1 ? "Baño de Visitas" : `Baño ${i + 1}`;
+                return new Paragraph({
+                  children: [
+                    new TextRun({ text: `  - ${nombreBano}` })
+                  ]
+                });
+              })
+            ] : []),
             new Paragraph({
               children: [
                 new TextRun({ text: "• Baños Completos: ", bold: true }),
