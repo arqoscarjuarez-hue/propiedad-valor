@@ -532,13 +532,68 @@ const PropertyValuation = () => {
         doc.text("CROQUIS DE UBICACIÓN", 20, yPosition);
         yPosition += 15;
 
-        // Agregar imagen del mapa (placeholder por ahora)
-        doc.setFillColor(240, 240, 240);
-        doc.rect(20, yPosition, pageWidth - 40, 60, 'F');
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.text("Mapa de ubicación del inmueble", pageWidth / 2, yPosition + 30, { align: "center" });
-        doc.text(`Lat: ${propertyData.latitud.toFixed(6)}, Lng: ${propertyData.longitud.toFixed(6)}`, pageWidth / 2, yPosition + 40, { align: "center" });
+        // Generar URL del mapa estático de OpenStreetMap
+        const mapWidth = 400;
+        const mapHeight = 300;
+        const zoom = 15;
+        const bbox = [
+          propertyData.longitud - 0.005,
+          propertyData.latitud - 0.005,
+          propertyData.longitud + 0.005,
+          propertyData.latitud + 0.005
+        ].join(',');
+        
+        // URL para mapa estático de OpenStreetMap
+        const staticMapUrl = `https://render.openstreetmap.org/cgi-bin/export?bbox=${bbox}&scale=1000&format=png`;
+        
+        try {
+          // Crear un canvas para dibujar el mapa con marcador
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = pageWidth - 40;
+          canvas.height = 60;
+          
+          if (ctx) {
+            // Fondo del mapa
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar información del mapa
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Ubicación del Inmueble', canvas.width / 2, 20);
+            
+            // Marcador visual simple
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Coordenadas
+            ctx.fillStyle = '#333';
+            ctx.font = '10px Arial';
+            ctx.fillText(`Lat: ${propertyData.latitud.toFixed(6)}, Lng: ${propertyData.longitud.toFixed(6)}`, canvas.width / 2, canvas.height - 10);
+            
+            // Convertir canvas a imagen y agregar al PDF
+            const mapImageData = canvas.toDataURL('image/png');
+            doc.addImage(mapImageData, 'PNG', 20, yPosition, pageWidth - 40, 60);
+          }
+        } catch (error) {
+          console.log('Error generating map image, using placeholder');
+          // Fallback: usar placeholder
+          doc.setFillColor(240, 240, 240);
+          doc.rect(20, yPosition, pageWidth - 40, 60, 'F');
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text("Mapa de ubicación del inmueble", pageWidth / 2, yPosition + 25, { align: "center" });
+          doc.text(`Lat: ${propertyData.latitud.toFixed(6)}, Lng: ${propertyData.longitud.toFixed(6)}`, pageWidth / 2, yPosition + 35, { align: "center" });
+          
+          // Agregar marcador visual
+          doc.setFillColor(231, 76, 60);
+          doc.circle(pageWidth / 2, yPosition + 20, 3, 'F');
+        }
+        
         yPosition += 70;
       }
 
