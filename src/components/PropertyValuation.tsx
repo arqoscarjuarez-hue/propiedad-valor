@@ -765,7 +765,17 @@ const PropertyValuation = () => {
               doc.setLineWidth(0.5);
               doc.rect(20, yPosition, mapWidth, mapHeight);
               
-              yPosition += mapHeight + 15;
+              // Enlace a Google Maps
+              const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
+              doc.setFontSize(9);
+              doc.setFont("helvetica", "normal");
+              doc.setTextColor(0, 0, 255); // Color azul para el enlace
+              doc.textWithLink("Ver ubicación en Google Maps", 20, yPosition + mapHeight + 8, { url: googleMapsUrl });
+              
+              // Restaurar color de texto negro
+              doc.setTextColor(0, 0, 0);
+              
+              yPosition += mapHeight + 20;
             }
           } catch (error) {
             console.error('Error agregando imagen del mapa:', error);
@@ -1403,6 +1413,15 @@ const PropertyValuation = () => {
               new Paragraph({
                 text: "Croquis de ubicación incluido en reporte PDF",
                 alignment: AlignmentType.CENTER
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Ver ubicación en Google Maps: " }),
+                  new TextRun({ 
+                    text: `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`,
+                    color: "0000FF"
+                  })
+                ]
               })
             ] : []),
             ...(comparativeProperties.length > 0 ? [
