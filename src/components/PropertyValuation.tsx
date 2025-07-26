@@ -109,6 +109,8 @@ const PropertyValuation = () => {
   });
   
   const [valuation, setValuation] = useState<number | null>(null);
+  const [baseValuation, setBaseValuation] = useState<number | null>(null);
+  const [priceAdjustment, setPriceAdjustment] = useState<number>(0); // Porcentaje de ajuste (-30 a +30)
   const [multipleValuations, setMultipleValuations] = useState<Array<{
     id: number;
     valor: number;
@@ -351,7 +353,11 @@ const PropertyValuation = () => {
     // Convertir a la moneda seleccionada
     const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
     
-    setValuation(valorFinalEnMonedaSeleccionada);
+    setBaseValuation(valorFinalEnMonedaSeleccionada);
+    
+    // Aplicar ajuste de precio si existe
+    const valorAjustado = valorFinalEnMonedaSeleccionada * (1 + priceAdjustment / 100);
+    setValuation(valorAjustado);
     
     toast({
       title: "Calculando Valuación",
@@ -367,8 +373,23 @@ const PropertyValuation = () => {
     
     toast({
       title: "Valuación Completada",
-      description: `Valor estimado: ${formatCurrency(valorFinalEnMonedaSeleccionada, selectedCurrency)} (3 comparables)`,
+      description: `Valor estimado: ${formatCurrency(valorAjustado, selectedCurrency)} (3 comparables)`,
     });
+  };
+
+  // Función para manejar cambios en el ajuste de precio
+  const handlePriceAdjustment = (newAdjustment: number) => {
+    setPriceAdjustment(newAdjustment);
+    
+    if (baseValuation) {
+      const valorAjustado = baseValuation * (1 + newAdjustment / 100);
+      setValuation(valorAjustado);
+      
+      toast({
+        title: "Precio Ajustado",
+        description: `Ajuste: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - Nuevo valor: ${formatCurrency(valorAjustado, selectedCurrency)}`,
+      });
+    }
   };
 
   const regenerateComparatives = async () => {
@@ -516,6 +537,13 @@ const PropertyValuation = () => {
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
       doc.text(`Valor Estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition + 8);
+      
+      // Mostrar ajuste si existe
+      if (priceAdjustment !== 0) {
+        doc.setFontSize(10);
+        doc.text(`(Valor base: ${formatCurrency(baseValuation || 0, selectedCurrency)} | Ajuste: ${priceAdjustment > 0 ? '+' : ''}${priceAdjustment}%)`, 20, yPosition + 18);
+        yPosition += 6;
+      }
       
       doc.setFontSize(12);
       doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition + 18);
@@ -1042,6 +1070,20 @@ const PropertyValuation = () => {
                 new TextRun({ text: formatCurrency(valuation, selectedCurrency), size: 28, bold: true })
               ]
             }),
+            ...(priceAdjustment !== 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Valor Base Original: ", bold: true }),
+                  new TextRun({ text: formatCurrency(baseValuation || 0, selectedCurrency) })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Ajuste Aplicado: ", bold: true }),
+                  new TextRun({ text: `${priceAdjustment > 0 ? '+' : ''}${priceAdjustment}%` })
+                ]
+              })
+            ] : []),
             new Paragraph({
               children: [
                 new TextRun({ text: "Precio por m² construido: ", bold: true }),
@@ -1310,13 +1352,14 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-7">
                    <TabsTrigger value="areas">Áreas</TabsTrigger>
                    <TabsTrigger value="tipo">Tipo</TabsTrigger>
                    <TabsTrigger value="espacios">Espacios</TabsTrigger>
                    <TabsTrigger value="caracteristicas">Características</TabsTrigger>
                    <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
                    <TabsTrigger value="fotos">Fotos</TabsTrigger>
+                   <TabsTrigger value="ajustes">Ajustes</TabsTrigger>
                  </TabsList>
 
                  <TabsContent value="areas" className="space-y-4 mt-6">
@@ -1660,9 +1703,119 @@ const PropertyValuation = () => {
                        </div>
                      )}
                    </div>
-                 </TabsContent>
+                  </TabsContent>
 
-               </Tabs>
+                  <TabsContent value="ajustes" className="space-y-4 mt-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Ajuste de Precio
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Ajusta el valor del avalúo hasta en un ±30% según consideraciones especiales del mercado o características únicas de la propiedad.
+                    </p>
+                    
+                    <div className="space-y-6">
+                      {/* Mostrar valores solo si hay valuación */}
+                      {baseValuation && (
+                        <div className="bg-muted p-4 rounded-lg space-y-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <Label className="text-sm font-medium text-muted-foreground">Valor Base (Original)</Label>
+                              <p className="text-lg font-bold text-foreground">
+                                {formatCurrency(baseValuation, selectedCurrency)}
+                              </p>
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-muted-foreground">Valor Ajustado</Label>
+                              <p className="text-xl font-bold text-primary">
+                                {formatCurrency(valuation || 0, selectedCurrency)}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <Badge variant={priceAdjustment > 0 ? "default" : priceAdjustment < 0 ? "destructive" : "secondary"}>
+                              {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}% de ajuste
+                            </Badge>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Control de ajuste */}
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="price-adjustment" className="text-sm font-medium">
+                            Porcentaje de Ajuste: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
+                          </Label>
+                          <div className="mt-2">
+                            <input
+                              type="range"
+                              id="price-adjustment"
+                              min="-30"
+                              max="30"
+                              step="1"
+                              value={priceAdjustment}
+                              onChange={(e) => handlePriceAdjustment(Number(e.target.value))}
+                              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
+                            />
+                          </div>
+                          <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                            <span>-30%</span>
+                            <span>0%</span>
+                            <span>+30%</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePriceAdjustment(-10)}
+                            className="text-xs"
+                          >
+                            -10%
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePriceAdjustment(0)}
+                            className="text-xs"
+                          >
+                            Reset 0%
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePriceAdjustment(10)}
+                            className="text-xs"
+                          >
+                            +10%
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Información del ajuste */}
+                      <div className="text-xs text-muted-foreground space-y-2">
+                        <p><strong>Cuándo ajustar hacia arriba (+):</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>Características premium únicas</li>
+                          <li>Ubicación excepcional en la zona</li>
+                          <li>Acabados de lujo o renovaciones recientes</li>
+                          <li>Mercado inmobiliario en alza</li>
+                        </ul>
+                        
+                        <p><strong>Cuándo ajustar hacia abajo (-):</strong></p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          <li>Defectos estructurales o problemas ocultos</li>
+                          <li>Necesidad urgente de venta</li>
+                          <li>Mercado inmobiliario en baja</li>
+                          <li>Factores externos negativos (ruido, contaminación)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                </Tabs>
               
               <div className="mt-8 pt-4 border-t">
                 <Button 
@@ -1694,6 +1847,17 @@ const PropertyValuation = () => {
                     </p>
                     <Badge variant="secondary" className="mt-2">{selectedCurrency.code}</Badge>
                     <p className="text-xs text-muted-foreground mt-1">Basado en 3 comparables</p>
+                    
+                    {/* Mostrar información del ajuste si existe */}
+                    {priceAdjustment !== 0 && baseValuation && (
+                      <div className="mt-3 p-3 bg-muted rounded-lg">
+                        <p className="text-xs text-muted-foreground">Valor base original:</p>
+                        <p className="text-sm font-medium">{formatCurrency(baseValuation, selectedCurrency)}</p>
+                        <Badge variant={priceAdjustment > 0 ? "default" : "destructive"} className="mt-1">
+                          Ajuste: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="space-y-2 text-sm">
