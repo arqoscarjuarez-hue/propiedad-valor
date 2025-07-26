@@ -1455,90 +1455,180 @@ const PropertyValuation = () => {
                 </TabsContent>
 
                 <TabsContent value="espacios" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Distribución de Espacios</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {[
-                      { key: 'recamaras', label: 'Recámaras' },
-                      { key: 'salas', label: 'Salas' },
-                      { key: 'comedor', label: 'Comedor' },
-                      { key: 'cocina', label: 'Cocina' },
-                      { key: 'bodega', label: 'Bodega' },
-                      { key: 'areaServicio', label: 'Área de Servicio' },
-                      { key: 'cochera', label: 'Cochera' },
-                      { key: 'banos', label: 'Baños' },
-                      { key: 'otros', label: 'Otros' }
-                    ].map(({ key, label }) => (
-                      <div key={key}>
-                        <Label htmlFor={key}>{label}</Label>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Distribución de Espacios y Características</h3>
+                  
+                  {/* Espacios Habitacionales */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios Habitacionales</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[
+                        { key: 'recamaras', label: 'Recámaras/Dormitorios', description: 'Número de habitaciones' },
+                        { key: 'salas', label: 'Salas/Estancias', description: 'Salas de estar principales' },
+                        { key: 'comedor', label: 'Comedor', description: 'Espacios de comedor' },
+                        { key: 'banos', label: 'Baños Completos', description: 'Baños con regadera/tina' }
+                      ].map(({ key, label, description }) => (
+                        <div key={key} className="space-y-1">
+                          <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
+                          <Input
+                            id={key}
+                            type="number"
+                            value={propertyData[key as keyof PropertyData] || ''}
+                            onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                            placeholder="0"
+                            className="text-center"
+                          />
+                          <p className="text-xs text-muted-foreground">{description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Espacios de Servicio */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios de Servicio</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[
+                        { key: 'cocina', label: 'Cocina', description: 'Número de cocinas' },
+                        { key: 'areaServicio', label: 'Área de Servicio/Lavado', description: 'Cuarto de lavado/servicio' },
+                        { key: 'bodega', label: 'Bodegas/Trasteros', description: 'Espacios de almacenamiento' },
+                        { key: 'cochera', label: 'Cocheras/Garajes', description: 'Espacios para vehículos' }
+                      ].map(({ key, label, description }) => (
+                        <div key={key} className="space-y-1">
+                          <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
+                          <Input
+                            id={key}
+                            type="number"
+                            value={propertyData[key as keyof PropertyData] || ''}
+                            onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                            placeholder="0"
+                            className="text-center"
+                          />
+                          <p className="text-xs text-muted-foreground">{description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Espacios Adicionales */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios Adicionales</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="space-y-1">
+                        <Label htmlFor="otros" className="text-sm font-medium">Otros Espacios</Label>
                         <Input
-                          id={key}
+                          id="otros"
                           type="number"
-                          value={propertyData[key as keyof PropertyData] || ''}
-                          onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                          value={propertyData.otros || ''}
+                          onChange={(e) => handleInputChange('otros', Number(e.target.value))}
                           placeholder="0"
+                          className="text-center"
                         />
+                        <p className="text-xs text-muted-foreground">Estudios, oficinas, patios techados, etc.</p>
                       </div>
-                    ))}
+                    </div>
+                  </div>
+
+                  {/* Resumen de espacios */}
+                  <div className="bg-muted p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold mb-2">Resumen de Espacios:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>Total Recámaras: <span className="font-medium">{propertyData.recamaras}</span></div>
+                      <div>Total Baños: <span className="font-medium">{propertyData.banos}</span></div>
+                      <div>Total Salas: <span className="font-medium">{propertyData.salas}</span></div>
+                      <div>Cocheras: <span className="font-medium">{propertyData.cochera}</span></div>
+                      <div>Espacios Servicio: <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span></div>
+                      <div>Otros Espacios: <span className="font-medium">{propertyData.otros}</span></div>
+                    </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Características Generales</h3>
-                  <div className="space-y-4">
-                    <div>
-                       <Label htmlFor="antiguedad" className="flex items-center gap-2">
-                         <Calendar className="h-4 w-4" />
-                         Antigüedad de la Construcción (años)
-                       </Label>
-                      <Input
-                        id="antiguedad"
-                        type="number"
-                        value={propertyData.antiguedad || ''}
-                        onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                        placeholder="0"
-                      />
+                  <h3 className="text-lg font-semibold text-foreground mb-4">Características Generales y Específicas</h3>
+                  
+                  {/* Información Temporal */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Información Temporal</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="antiguedad" className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Antigüedad de la Construcción (años)
+                        </Label>
+                        <Input
+                          id="antiguedad"
+                          type="number"
+                          value={propertyData.antiguedad || ''}
+                          onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">Años desde la construcción original</p>
+                      </div>
                     </div>
-                    
-                    <div>
-                      <Label className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        Ubicación
-                      </Label>
-                      <Select value={propertyData.ubicacion} onValueChange={(value) => handleInputChange('ubicacion', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Califica la ubicación" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="excelente">Excelente</SelectItem>
-                          <SelectItem value="buena">Buena</SelectItem>
-                          <SelectItem value="regular">Regular</SelectItem>
-                          <SelectItem value="mala">Mala</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  </div>
+
+                  {/* Calidad y Estado */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Calidad y Estado de la Propiedad</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          Calidad de Ubicación
+                        </Label>
+                        <Select value={propertyData.ubicacion} onValueChange={(value) => handleInputChange('ubicacion', value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona la calidad de ubicación" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="excelente">Excelente - Zona exclusiva/premium</SelectItem>
+                            <SelectItem value="buena">Buena - Zona residencial consolidada</SelectItem>
+                            <SelectItem value="regular">Regular - Zona en desarrollo</SelectItem>
+                            <SelectItem value="mala">Mala - Zona con problemas urbanos</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">Evalúa servicios, seguridad, accesibilidad</p>
+                      </div>
+                      
+                      <div>
+                        <Label className="flex items-center gap-2">
+                          <Star className="h-4 w-4" />
+                          Estado General de Conservación
+                        </Label>
+                        <Select value={propertyData.estadoGeneral} onValueChange={(value) => handleInputChange('estadoGeneral', value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona el estado de conservación" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="nuevo">NUEVO - Sin uso, como recién construido</SelectItem>
+                            <SelectItem value="bueno">BUENO - Muy bien conservado, mínimo desgaste</SelectItem>
+                            <SelectItem value="medio">MEDIO - Conservación promedio, uso normal</SelectItem>
+                            <SelectItem value="regular">REGULAR - Desgaste visible, necesita mantenimiento</SelectItem>
+                            <SelectItem value="reparaciones-sencillas">REPARACIONES SENCILLAS - Pintura, detalles menores</SelectItem>
+                            <SelectItem value="reparaciones-medias">REPARACIONES MEDIAS - Cambio de pisos, plomería</SelectItem>
+                            <SelectItem value="reparaciones-importantes">REPARACIONES IMPORTANTES - Estructura, instalaciones</SelectItem>
+                            <SelectItem value="danos-graves">DAÑOS GRAVES - Problemas estructurales serios</SelectItem>
+                            <SelectItem value="en-desecho">EN DESECHO - Demolición parcial necesaria</SelectItem>
+                            <SelectItem value="inservibles">INSERVIBLES - Propiedad no habitable</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">Afecta directamente el valor de la propiedad</p>
+                      </div>
                     </div>
-                    
-                    <div>
-                      <Label className="flex items-center gap-2">
-                        <Star className="h-4 w-4" />
-                        Estado General
-                      </Label>
-                      <Select value={propertyData.estadoGeneral} onValueChange={(value) => handleInputChange('estadoGeneral', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Califica el estado de la propiedad" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="nuevo">NUEVO</SelectItem>
-                          <SelectItem value="bueno">BUENO</SelectItem>
-                          <SelectItem value="medio">MEDIO</SelectItem>
-                          <SelectItem value="regular">REGULAR</SelectItem>
-                          <SelectItem value="reparaciones-sencillas">REPARACIONES SENCILLAS</SelectItem>
-                          <SelectItem value="reparaciones-medias">REPARACIONES MEDIAS</SelectItem>
-                          <SelectItem value="reparaciones-importantes">REPARACIONES IMPORTANTES</SelectItem>
-                          <SelectItem value="danos-graves">DAÑOS GRAVES</SelectItem>
-                          <SelectItem value="en-desecho">EN DESECHO</SelectItem>
-                          <SelectItem value="inservibles">INSERVIBLES</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  </div>
+
+                  {/* Resumen de características */}
+                  <div className="bg-muted p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold mb-2">Resumen de Características:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="font-medium">Antigüedad:</span> {propertyData.antiguedad} años
+                      </div>
+                      <div>
+                        <span className="font-medium">Ubicación:</span> {propertyData.ubicacion || 'No especificada'}
+                      </div>
+                      <div className="md:col-span-2">
+                        <span className="font-medium">Estado:</span> {propertyData.estadoGeneral || 'No especificado'}
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
