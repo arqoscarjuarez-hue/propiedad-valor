@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Camera, Trash2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import { useToast } from '@/hooks/use-toast';
 import LocationMap from './LocationMap';
@@ -97,6 +97,7 @@ const PropertyValuation = () => {
     rate: 1
   });
   const [activeTab, setActiveTab] = useState('areas');
+  const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     setPropertyData(prev => ({
@@ -137,6 +138,27 @@ const PropertyValuation = () => {
       longitud: lng,
       direccionCompleta: address
     }));
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const preview = URL.createObjectURL(file);
+        setPropertyImages(prev => [...prev, { file, preview }]);
+      }
+    });
+  };
+
+  const removeImage = (index: number) => {
+    setPropertyImages(prev => {
+      const newImages = prev.filter((_, i) => i !== index);
+      // Liberar memoria del preview
+      URL.revokeObjectURL(prev[index].preview);
+      return newImages;
+    });
   };
 
   const generateComparativeProperties = async (baseValue: number): Promise<ComparativeProperty[]> => {
@@ -321,7 +343,7 @@ const PropertyValuation = () => {
     return { avgPrice, minPrice, maxPrice, difference };
   };
 
-  const generatePDF = () => {
+  const generatePDF = async () => {
     if (!valuation) {
       toast({
         title: "Error",
@@ -440,6 +462,76 @@ const PropertyValuation = () => {
       }
     }
 
+    // Sección: Fotos del Inmueble (si existen)
+    if (propertyImages.length > 0) {
+      if (yPosition > 200) {
+        doc.addPage();
+        yPosition = 20;
+      } else {
+        yPosition += 15;
+      }
+
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("FOTOS DEL INMUEBLE", 20, yPosition);
+      yPosition += 15;
+
+      // Procesar las imágenes de manera asíncrona
+      for (let i = 0; i < propertyImages.length; i++) {
+        const image = propertyImages[i];
+        
+        try {
+          // Convertir blob a base64
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+          
+          await new Promise((resolve, reject) => {
+            img.onload = () => {
+              // Calcular dimensiones para el PDF (máximo 120x80mm)
+              const maxWidth = 120;
+              const maxHeight = 80;
+              const aspectRatio = img.width / img.height;
+              
+              let width = maxWidth;
+              let height = maxWidth / aspectRatio;
+              
+              if (height > maxHeight) {
+                height = maxHeight;
+                width = maxHeight * aspectRatio;
+              }
+              
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx?.drawImage(img, 0, 0);
+              
+              const imgData = canvas.toDataURL('image/jpeg', 0.7);
+              
+              // Verificar si necesitamos nueva página
+              if (yPosition + height > 250) {
+                doc.addPage();
+                yPosition = 20;
+              }
+              
+              // Agregar imagen al PDF
+              doc.addImage(imgData, 'JPEG', 20, yPosition, width, height);
+              yPosition += height + 10;
+              
+              resolve(null);
+            };
+            img.onerror = reject;
+          });
+          
+          img.src = image.preview;
+        } catch (error) {
+          console.error('Error processing image:', error);
+          // Continuar con la siguiente imagen si hay error
+        }
+      }
+
+      yPosition += 10;
+    }
+
     // Agregar nueva página si es necesario
     if (yPosition > 250) {
       doc.addPage();
@@ -503,13 +595,14 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="areas">Áreas</TabsTrigger>
-                  <TabsTrigger value="tipo">Tipo</TabsTrigger>
-                  <TabsTrigger value="espacios">Espacios</TabsTrigger>
-                  <TabsTrigger value="caracteristicas">Características</TabsTrigger>
-                  <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
-                </TabsList>
+                <TabsList className="grid w-full grid-cols-6">
+                   <TabsTrigger value="areas">Áreas</TabsTrigger>
+                   <TabsTrigger value="tipo">Tipo</TabsTrigger>
+                   <TabsTrigger value="espacios">Espacios</TabsTrigger>
+                   <TabsTrigger value="caracteristicas">Características</TabsTrigger>
+                   <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
+                   <TabsTrigger value="fotos">Fotos</TabsTrigger>
+                 </TabsList>
 
                 <TabsContent value="areas" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">Áreas de Construcción (m²)</h3>
@@ -687,9 +780,64 @@ const PropertyValuation = () => {
                       </div>
                     </div>
                   )}
-                </TabsContent>
+                 </TabsContent>
 
-              </Tabs>
+                 <TabsContent value="fotos" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                     <Camera className="h-5 w-5" />
+                     Fotos del Inmueble (Opcional)
+                   </h3>
+                   <p className="text-sm text-muted-foreground mb-4">
+                     Agrega fotos del inmueble para incluirlas en el reporte de valuación. Formatos aceptados: JPG, PNG, WebP
+                   </p>
+                   
+                   <div className="space-y-4">
+                     <div>
+                       <Label htmlFor="property-images" className="cursor-pointer">
+                         <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
+                           <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                           <p className="text-sm text-muted-foreground">Haz clic para seleccionar fotos o arrastra aquí</p>
+                           <p className="text-xs text-muted-foreground mt-1">Máximo 10 fotos</p>
+                         </div>
+                       </Label>
+                       <Input
+                         id="property-images"
+                         type="file"
+                         multiple
+                         accept="image/*"
+                         onChange={handleImageUpload}
+                         className="hidden"
+                       />
+                     </div>
+
+                     {propertyImages.length > 0 && (
+                       <div className="space-y-3">
+                         <h4 className="text-sm font-medium">Fotos seleccionadas ({propertyImages.length})</h4>
+                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                           {propertyImages.map((image, index) => (
+                             <div key={index} className="relative group">
+                               <img
+                                 src={image.preview}
+                                 alt={`Foto ${index + 1}`}
+                                 className="w-full h-24 object-cover rounded-lg border"
+                               />
+                               <Button
+                                 variant="destructive"
+                                 size="sm"
+                                 className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                 onClick={() => removeImage(index)}
+                               >
+                                 <Trash2 className="h-3 w-3" />
+                               </Button>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+                   </div>
+                 </TabsContent>
+
+               </Tabs>
               
               <div className="mt-8 pt-4 border-t">
                 <Button 
