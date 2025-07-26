@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
 import { useToast } from '@/hooks/use-toast';
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
@@ -318,6 +319,156 @@ const PropertyValuation = () => {
     const difference = valuation ? ((valuation - avgPrice) / avgPrice) * 100 : 0;
     
     return { avgPrice, minPrice, maxPrice, difference };
+  };
+
+  const generatePDF = () => {
+    if (!valuation) {
+      toast({
+        title: "Error",
+        description: "Primero debes calcular la valuación para generar el PDF",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    let yPosition = 20;
+
+    // Título principal
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("REPORTE DE VALUACIÓN INMOBILIARIA", pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 15;
+
+    // Fecha
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 20;
+
+    // Sección: Datos de la Propiedad
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("DATOS DE LA PROPIEDAD", 20, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    
+    const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
+    
+    const propertyDetails = [
+      `Tipo de propiedad: ${propertyData.tipoPropiedad.toUpperCase()}`,
+      `Área construida total: ${areaTotal.toLocaleString()} m²`,
+      `  - Primer nivel: ${propertyData.areaPrimerNivel.toLocaleString()} m²`,
+      `  - Segundo nivel: ${propertyData.areaSegundoNivel.toLocaleString()} m²`,
+      `  - Tercer nivel: ${propertyData.areaTercerNivel.toLocaleString()} m²`,
+      `Área de terreno: ${propertyData.areaTerreno.toLocaleString()} m²`,
+      `Recámaras: ${propertyData.recamaras}`,
+      `Baños: ${propertyData.banos}`,
+      `Cocheras: ${propertyData.cochera}`,
+      `Antigüedad: ${propertyData.antiguedad} años`,
+      `Ubicación: ${propertyData.ubicacion.toUpperCase()}`,
+      `Estado general: ${propertyData.estadoGeneral.replace('-', ' ').toUpperCase()}`
+    ];
+
+    if (propertyData.direccionCompleta) {
+      propertyDetails.unshift(`Dirección: ${propertyData.direccionCompleta}`);
+    }
+
+    propertyDetails.forEach(detail => {
+      doc.text(detail, 20, yPosition);
+      yPosition += 6;
+    });
+
+    yPosition += 10;
+
+    // Sección: Resultado de Valuación
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("RESULTADO DE VALUACIÓN", 20, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Valor estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition);
+    yPosition += 8;
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Precio por m² construido: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition);
+    yPosition += 15;
+
+    // Sección: Propiedades Comparativas (si existen)
+    if (comparativeProperties.length > 0) {
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("PROPIEDADES COMPARATIVAS", 20, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text("Propiedades similares en un radio de 2 km:", 20, yPosition);
+      yPosition += 8;
+
+      comparativeProperties.forEach((prop, index) => {
+        const distance = prop.distancia ? 
+          (prop.distancia < 1000 ? `${prop.distancia}m` : `${(prop.distancia / 1000).toFixed(1)}km`) 
+          : 'N/A';
+        
+        doc.text(`${index + 1}. ${prop.address.substring(0, 60)}${prop.address.length > 60 ? '...' : ''}`, 25, yPosition);
+        yPosition += 5;
+        doc.text(`   Distancia: ${distance} | Área: ${prop.areaConstruida}m² | Precio: ${formatCurrency(prop.precio, selectedCurrency)}`, 25, yPosition);
+        yPosition += 8;
+      });
+
+      // Análisis de mercado
+      const analysis = getMarketAnalysis();
+      if (analysis) {
+        yPosition += 5;
+        doc.setFont("helvetica", "bold");
+        doc.text("ANÁLISIS DE MERCADO:", 20, yPosition);
+        yPosition += 7;
+        
+        doc.setFont("helvetica", "normal");
+        doc.text(`Precio promedio del mercado: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 25, yPosition);
+        yPosition += 5;
+        doc.text(`Rango de precios: ${formatCurrency(analysis.minPrice, selectedCurrency)} - ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 25, yPosition);
+        yPosition += 5;
+        doc.text(`Diferencia con promedio: ${analysis.difference > 0 ? '+' : ''}${analysis.difference.toFixed(1)}%`, 25, yPosition);
+      }
+    }
+
+    // Agregar nueva página si es necesario
+    if (yPosition > 250) {
+      doc.addPage();
+      yPosition = 20;
+    } else {
+      yPosition += 20;
+    }
+
+    // Disclaimer
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "italic");
+    const disclaimer = "IMPORTANTE: Esta valuación es un estimado basado en los datos proporcionados y factores de mercado generales. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales con fines legales, fiscales o comerciales.";
+    const disclaimerLines = doc.splitTextToSize(disclaimer, pageWidth - 40);
+    doc.text(disclaimerLines, 20, yPosition);
+
+    // Pie de página
+    yPosition = doc.internal.pageSize.height - 20;
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text("Generado por Sistema de Valuación Inmobiliaria", pageWidth / 2, yPosition, { align: "center" });
+
+    // Descargar el PDF
+    const fileName = `Valuacion_${propertyData.tipoPropiedad}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+
+    toast({
+      title: "PDF Generado",
+      description: `El reporte de valuación se ha descargado como ${fileName}`,
+    });
   };
 
   return (
@@ -721,7 +872,17 @@ const PropertyValuation = () => {
                     })()}
                   </div>
                   
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t space-y-3">
+                    <Button 
+                      onClick={generatePDF} 
+                      variant="outline" 
+                      className="w-full"
+                      size="sm"
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      Descargar Reporte PDF
+                    </Button>
+                    
                     <p className="text-xs text-muted-foreground text-center">
                       * Esta valuación es un estimado basado en los datos proporcionados. 
                       Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
