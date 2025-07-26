@@ -355,110 +355,253 @@ const PropertyValuation = () => {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
     let yPosition = 20;
 
-    // Título principal
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.text("REPORTE DE VALUACIÓN INMOBILIARIA", pageWidth / 2, yPosition, { align: "center" });
-    yPosition += 15;
+    // Función para agregar encabezado de sección
+    const addSectionHeader = (title: string, icon = '') => {
+      // Fondo del encabezado
+      doc.setFillColor(59, 130, 246); // Color azul
+      doc.rect(15, yPosition - 5, pageWidth - 30, 12, 'F');
+      
+      // Texto del encabezado
+      doc.setTextColor(255, 255, 255); // Texto blanco
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${icon} ${title}`, 20, yPosition + 3);
+      
+      // Resetear color de texto
+      doc.setTextColor(0, 0, 0);
+      yPosition += 20;
+    };
 
-    // Fecha
+    // Función para agregar línea divisoria
+    const addDivider = () => {
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.5);
+      doc.line(20, yPosition, pageWidth - 20, yPosition);
+      yPosition += 10;
+    };
+
+    // Header principal con diseño atractivo
+    doc.setFillColor(30, 41, 59); // Color azul oscuro
+    doc.rect(0, 0, pageWidth, 35, 'F');
+    
+    // Título principal
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("REPORTE DE VALUACIÓN INMOBILIARIA", pageWidth / 2, 20, { align: "center" });
+    
+    // Subtítulo
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPosition, { align: "center" });
+    doc.text("Análisis Profesional de Valor de Mercado", pageWidth / 2, 28, { align: "center" });
+    
+    // Resetear color de texto
+    doc.setTextColor(0, 0, 0);
+    yPosition = 50;
+
+    // Información de fecha con diseño
+    doc.setFillColor(248, 250, 252);
+    doc.rect(15, yPosition - 3, pageWidth - 30, 10, 'F');
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.text(`📅 Fecha de valuación: ${new Date().toLocaleDateString('es-ES', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })}`, 20, yPosition + 3);
     yPosition += 20;
 
     // Sección: Datos de la Propiedad
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("DATOS DE LA PROPIEDAD", 20, yPosition);
-    yPosition += 10;
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
+    addSectionHeader("INFORMACIÓN GENERAL DE LA PROPIEDAD", "🏠");
     
     const areaTotal = propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel;
     
-    const propertyDetails = [
-      `Tipo de propiedad: ${propertyData.tipoPropiedad.toUpperCase()}`,
-      `Área construida total: ${areaTotal.toLocaleString()} m²`,
-      `  - Primer nivel: ${propertyData.areaPrimerNivel.toLocaleString()} m²`,
-      `  - Segundo nivel: ${propertyData.areaSegundoNivel.toLocaleString()} m²`,
-      `  - Tercer nivel: ${propertyData.areaTercerNivel.toLocaleString()} m²`,
-      `Área de terreno: ${propertyData.areaTerreno.toLocaleString()} m²`,
-      `Recámaras: ${propertyData.recamaras}`,
-      `Baños: ${propertyData.banos}`,
-      `Cocheras: ${propertyData.cochera}`,
-      `Antigüedad: ${propertyData.antiguedad} años`,
-      `Ubicación: ${propertyData.ubicacion.toUpperCase()}`,
-      `Estado general: ${propertyData.estadoGeneral.replace('-', ' ').toUpperCase()}`
+    // Información principal destacada
+    doc.setFillColor(254, 249, 195); // Fondo amarillo claro
+    doc.rect(15, yPosition - 3, pageWidth - 30, 25, 'F');
+    
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, 20, yPosition + 5);
+    doc.text(`Área Total: ${areaTotal.toLocaleString()} m²`, 20, yPosition + 12);
+    doc.text(`Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, 20, yPosition + 19);
+    yPosition += 35;
+
+    // Detalles de construcción
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(60, 60, 60);
+    
+    const constructionDetails = [
+      `📐 Distribución de áreas:`,
+      `    • Primer nivel: ${propertyData.areaPrimerNivel.toLocaleString()} m²`,
+      `    • Segundo nivel: ${propertyData.areaSegundoNivel.toLocaleString()} m²`,
+      `    • Tercer nivel: ${propertyData.areaTercerNivel.toLocaleString()} m²`,
+      `🏠 Espacios:`,
+      `    • Recámaras: ${propertyData.recamaras} • Baños: ${propertyData.banos} • Cocheras: ${propertyData.cochera}`,
+      `📅 Antigüedad: ${propertyData.antiguedad} años`,
+      `📍 Zona: ${propertyData.ubicacion.toUpperCase()}`,
+      `🔧 Estado: ${propertyData.estadoGeneral.replace('-', ' ').toUpperCase()}`
     ];
 
-    if (propertyData.direccionCompleta) {
-      propertyDetails.unshift(`Dirección: ${propertyData.direccionCompleta}`);
-    }
-
-    propertyDetails.forEach(detail => {
+    constructionDetails.forEach(detail => {
       doc.text(detail, 20, yPosition);
       yPosition += 6;
     });
 
-    yPosition += 10;
+    if (propertyData.direccionCompleta) {
+      yPosition += 5;
+      doc.setFont("helvetica", "bold");
+      doc.text(`📍 Dirección:`, 20, yPosition);
+      yPosition += 6;
+      doc.setFont("helvetica", "normal");
+      const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, pageWidth - 50);
+      doc.text(addressLines, 25, yPosition);
+      yPosition += (addressLines.length * 6) + 5;
+    }
 
-    // Sección: Resultado de Valuación
-    doc.setFontSize(14);
+    addDivider();
+
+    // Sección: Resultado de Valuación (destacado)
+    addSectionHeader("RESULTADO DE VALUACIÓN", "💰");
+    
+    // Caja destacada para el valor
+    doc.setFillColor(220, 252, 231); // Verde claro
+    doc.setDrawColor(34, 197, 94); // Verde
+    doc.setLineWidth(1);
+    doc.rect(15, yPosition - 5, pageWidth - 30, 30, 'FD');
+    
+    doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
-    doc.text("RESULTADO DE VALUACIÓN", 20, yPosition);
-    yPosition += 10;
+    doc.setTextColor(22, 101, 52); // Verde oscuro
+    doc.text(`Valor Estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition + 8);
+    
+    doc.setFontSize(12);
+    doc.setTextColor(60, 60, 60);
+    doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition + 18);
+    
+    doc.setTextColor(0, 0, 0);
+    yPosition += 40;
 
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text(`Valor estimado: ${formatCurrency(valuation, selectedCurrency)}`, 20, yPosition);
-    yPosition += 8;
-
+    // Sección: Ubicación y Coordenadas
+    addSectionHeader("UBICACIÓN Y COORDENADAS", "📍");
+    
+    if (propertyData.direccionCompleta) {
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.text(`🏠 Dirección completa:`, 20, yPosition);
+      yPosition += 6;
+      const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, pageWidth - 50);
+      doc.text(addressLines, 25, yPosition);
+      yPosition += (addressLines.length * 6) + 8;
+    }
+    
+    // Coordenadas en caja destacada
+    doc.setFillColor(239, 246, 255); // Azul muy claro
+    doc.rect(15, yPosition - 3, pageWidth - 30, 20, 'F');
+    
     doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text(`🌐 Coordenadas geográficas:`, 20, yPosition + 5);
     doc.setFont("helvetica", "normal");
-    doc.text(`Precio por m² construido: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition);
-    yPosition += 15;
+    doc.text(`Latitud: ${propertyData.latitud?.toFixed(6)}° | Longitud: ${propertyData.longitud?.toFixed(6)}°`, 20, yPosition + 12);
+    yPosition += 30;
+
+    // Croquis de ubicación mejorado
+    try {
+      const mapWidth = 160;
+      const mapHeight = 90;
+      
+      // Marco para el mapa
+      doc.setFillColor(245, 245, 245);
+      doc.setDrawColor(180, 180, 180);
+      doc.setLineWidth(1);
+      doc.rect(20, yPosition, mapWidth, mapHeight, 'FD');
+      
+      // Contenido del mapa
+      doc.setFillColor(59, 130, 246);
+      doc.circle(20 + mapWidth/2, yPosition + mapHeight/2, 3, 'F');
+      
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(59, 130, 246);
+      doc.text("📍 UBICACIÓN", 20 + mapWidth/2, yPosition + mapHeight/2 - 15, { align: "center" });
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${propertyData.latitud?.toFixed(4)}°, ${propertyData.longitud?.toFixed(4)}°`, 20 + mapWidth/2, yPosition + mapHeight/2 + 15, { align: "center" });
+      
+      yPosition += mapHeight + 20;
+    } catch (error) {
+      console.warn('No se pudo agregar el mapa al PDF:', error);
+      yPosition += 10;
+    }
 
     // Sección: Propiedades Comparativas (si existen)
     if (comparativeProperties.length > 0) {
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("PROPIEDADES COMPARATIVAS", 20, yPosition);
-      yPosition += 10;
+      // Verificar si necesita nueva página
+      if (yPosition > 200) {
+        doc.addPage();
+        yPosition = 20;
+      }
 
+      addSectionHeader("ANÁLISIS COMPARATIVO DE MERCADO", "📊");
+      
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
+      doc.setTextColor(60, 60, 60);
       doc.text("Propiedades similares en un radio de 2 km:", 20, yPosition);
-      yPosition += 8;
+      yPosition += 12;
 
       comparativeProperties.forEach((prop, index) => {
         const distance = prop.distancia ? 
           (prop.distancia < 1000 ? `${prop.distancia}m` : `${(prop.distancia / 1000).toFixed(1)}km`) 
           : 'N/A';
         
-        doc.text(`${index + 1}. ${prop.address.substring(0, 60)}${prop.address.length > 60 ? '...' : ''}`, 25, yPosition);
-        yPosition += 5;
-        doc.text(`   Distancia: ${distance} | Área: ${prop.areaConstruida}m² | Precio: ${formatCurrency(prop.precio, selectedCurrency)}`, 25, yPosition);
-        yPosition += 8;
-      });
-
-      // Análisis de mercado
-      const analysis = getMarketAnalysis();
-      if (analysis) {
-        yPosition += 5;
+        // Fondo alternado para cada propiedad
+        if (index % 2 === 0) {
+          doc.setFillColor(250, 250, 250);
+          doc.rect(15, yPosition - 2, pageWidth - 30, 16, 'F');
+        }
+        
+        doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
-        doc.text("ANÁLISIS DE MERCADO:", 20, yPosition);
-        yPosition += 7;
+        doc.setTextColor(30, 30, 30);
+        doc.text(`${index + 1}. ${prop.address.substring(0, 80)}${prop.address.length > 80 ? '...' : ''}`, 20, yPosition + 3);
         
         doc.setFont("helvetica", "normal");
-        doc.text(`Precio promedio del mercado: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 25, yPosition);
-        yPosition += 5;
-        doc.text(`Rango de precios: ${formatCurrency(analysis.minPrice, selectedCurrency)} - ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 25, yPosition);
-        yPosition += 5;
-        doc.text(`Diferencia con promedio: ${analysis.difference > 0 ? '+' : ''}${analysis.difference.toFixed(1)}%`, 25, yPosition);
+        doc.setTextColor(80, 80, 80);
+        doc.text(`📏 ${prop.areaConstruida}m² | 📍 ${distance} | 💲 ${formatCurrency(prop.precio, selectedCurrency)}`, 25, yPosition + 9);
+        yPosition += 18;
+      });
+
+      // Análisis de mercado en caja destacada
+      const analysis = getMarketAnalysis();
+      if (analysis) {
+        yPosition += 10;
+        
+        doc.setFillColor(254, 243, 199); // Amarillo claro
+        doc.setDrawColor(245, 158, 11); // Amarillo
+        doc.setLineWidth(1);
+        doc.rect(15, yPosition - 5, pageWidth - 30, 35, 'FD');
+        
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(146, 64, 14); // Amarillo oscuro
+        doc.text("📈 RESUMEN DEL ANÁLISIS DE MERCADO", 20, yPosition + 5);
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(60, 60, 60);
+        doc.text(`• Precio promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 25, yPosition + 15);
+        doc.text(`• Rango: ${formatCurrency(analysis.minPrice, selectedCurrency)} - ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 25, yPosition + 22);
+        doc.text(`• Diferencia con promedio: ${analysis.difference > 0 ? '+' : ''}${analysis.difference.toFixed(1)}%`, 25, yPosition + 29);
+        
+        doc.setTextColor(0, 0, 0);
+        yPosition += 45;
       }
     }
 
@@ -595,18 +738,29 @@ const PropertyValuation = () => {
     const disclaimerLines = doc.splitTextToSize(disclaimer, pageWidth - 40);
     doc.text(disclaimerLines, 20, yPosition);
 
-    // Pie de página
-    yPosition = doc.internal.pageSize.height - 20;
+    // Pie de página profesional
+    const currentPage = doc.getCurrentPageInfo().pageNumber;
+    yPosition = pageHeight - 25;
+    
+    // Línea superior del pie
+    doc.setDrawColor(59, 130, 246);
+    doc.setLineWidth(1);
+    doc.line(20, yPosition, pageWidth - 20, yPosition);
+    
+    // Información del pie
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
-    doc.text("Generado por Sistema de Valuación Inmobiliaria", pageWidth / 2, yPosition, { align: "center" });
+    doc.setTextColor(100, 100, 100);
+    doc.text("Sistema de Valuación Inmobiliaria Profesional", 20, yPosition + 8);
+    doc.text(`Página ${currentPage}`, pageWidth - 20, yPosition + 8, { align: "right" });
+    doc.text(`Generado el ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPosition + 8, { align: "center" });
 
     // Descargar el PDF
     const fileName = `Valuacion_${propertyData.tipoPropiedad}_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(fileName);
 
     toast({
-      title: "PDF Generado",
+      title: "📄 PDF Generado Exitosamente",
       description: `El reporte de valuación se ha descargado como ${fileName}`,
     });
   };
