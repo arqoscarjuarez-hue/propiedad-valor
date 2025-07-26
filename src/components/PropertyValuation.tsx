@@ -303,8 +303,26 @@ const PropertyValuation = () => {
       'inservibles': 0.0000
     };
     
-    // Factor por antigüedad
-    const factorAntiguedad = Math.max(0.5, 1 - (propertyData.antiguedad * 0.015));
+    // Depreciación por antigüedad usando fórmula de Ross-Heindecke
+    // D = (V² / VU²) donde V = vida útil restante, VU = vida útil total
+    const getVidaUtilSegunTipo = (tipo: string): number => {
+      const vidasUtiles = {
+        'casa': 100,        // 100 años
+        'departamento': 80, // 80 años  
+        'terreno': 0,       // Sin depreciación
+        'comercial': 60,    // 60 años
+        'bodega': 50        // 50 años
+      };
+      return vidasUtiles[tipo as keyof typeof vidasUtiles] || 80;
+    };
+
+    const vidaUtilTotal = getVidaUtilSegunTipo(propertyData.tipoPropiedad);
+    const vidaUtilRestante = Math.max(0, vidaUtilTotal - propertyData.antiguedad);
+    
+    // Factor de Ross-Heindecke: (Vida útil restante)² / (Vida útil total)²
+    const factorAntiguedad = vidaUtilTotal > 0 
+      ? Math.pow(vidaUtilRestante, 2) / Math.pow(vidaUtilTotal, 2)
+      : 1; // Para terrenos sin depreciación
     
     // Bonificación por espacios (convertido a USD)
     const bonificacionEspacios = (propertyData.recamaras * 2800) +   // $2,800 per bedroom
