@@ -2711,39 +2711,44 @@ const PropertyValuation = () => {
         doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition + 6);
         yPosition += 20;
 
-        // Procesar fotografías en grupos de 2 por página
-        for (let i = 0; i < propertyImages.length; i += 2) {
+        // Procesar fotografías en grupos de 4 por página
+        for (let i = 0; i < propertyImages.length; i += 4) {
           if (i > 0) {
             doc.addPage();
             yPosition = marginTop;
           }
 
-          const currentGroup = propertyImages.slice(i, i + 2);
+          const currentGroup = propertyImages.slice(i, i + 4);
           const imageWidth = 80;
           const imageHeight = 60;
-          const spacing = 10;
+          const spacingX = 10;
+          const spacingY = 5;
 
           currentGroup.forEach((imageData, groupIndex) => {
             try {
-              const xPosition = marginLeft + (groupIndex * (imageWidth + spacing));
+              // Calcular posición en grid 2x2
+              const row = Math.floor(groupIndex / 2);
+              const col = groupIndex % 2;
+              const xPosition = marginLeft + (col * (imageWidth + spacingX));
+              const currentYPosition = yPosition + (row * (imageHeight + spacingY + 15));
               
-              doc.addImage(imageData.preview, 'JPEG', xPosition, yPosition, imageWidth, imageHeight);
+              doc.addImage(imageData.preview, 'JPEG', xPosition, currentYPosition, imageWidth, imageHeight);
               
               // Marco
               doc.setDrawColor(150, 150, 150);
               doc.setLineWidth(0.5);
-              doc.rect(xPosition, yPosition, imageWidth, imageHeight);
+              doc.rect(xPosition, currentYPosition, imageWidth, imageHeight);
               
               // Título
               doc.setFontSize(10);
               doc.setFont("helvetica", "bold");
-              doc.text(`Fotografía ${i + groupIndex + 1}`, xPosition, yPosition + imageHeight + 8);
+              doc.text(`Fotografía ${i + groupIndex + 1}`, xPosition, currentYPosition + imageHeight + 8);
             } catch (error) {
               console.error(`Error agregando imagen ${i + groupIndex + 1}:`, error);
             }
           });
 
-          yPosition += imageHeight + 2;
+          yPosition += (imageHeight + spacingY + 15) * 2;
         }
       }
 
