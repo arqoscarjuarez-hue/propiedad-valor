@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -141,6 +141,9 @@ const translations = {
     adjustmentDescription: 'Ajusta el precio final basado en factores adicionales',
     marketAnalysisTitle: 'Análisis de Mercado',
     comparativeProperties: 'Propiedades Comparativas',
+    selectComparatives: 'Seleccionar Comparables (3 de 10)',
+    allComparatives: 'Todas las Propiedades Comparables',
+    selectedForValuation: 'Seleccionadas para Avalúo',
     averagePrice: 'Precio Promedio',
     minPrice: 'Precio Mínimo',
     maxPrice: 'Precio Máximo',
@@ -306,6 +309,9 @@ const translations = {
     adjustmentDescription: 'Adjust final price based on additional factors',
     marketAnalysisTitle: 'Market Analysis',
     comparativeProperties: 'Comparative Properties',
+    selectComparatives: 'Select Comparables (3 of 10)',
+    allComparatives: 'All Comparative Properties',
+    selectedForValuation: 'Selected for Valuation',
     averagePrice: 'Average Price',
     minPrice: 'Minimum Price',
     maxPrice: 'Maximum Price',
@@ -471,6 +477,9 @@ const translations = {
     adjustmentDescription: 'Ajuster le prix final basé sur des facteurs supplémentaires',
     marketAnalysisTitle: 'Analyse du Marché',
     comparativeProperties: 'Propriétés Comparatives',
+    selectComparatives: 'Sélectionner Comparables (3 sur 10)',
+    allComparatives: 'Toutes les Propriétés Comparatives',
+    selectedForValuation: 'Sélectionnées pour Évaluation',
     averagePrice: 'Prix Moyen',
     minPrice: 'Prix Minimum',
     maxPrice: 'Prix Maximum',
@@ -636,6 +645,9 @@ const translations = {
     adjustmentDescription: 'Endpreis basierend auf zusätzlichen Faktoren anpassen',
     marketAnalysisTitle: 'Marktanalyse',
     comparativeProperties: 'Vergleichsimmobilien',
+    selectComparatives: 'Vergleichsimmobilien Auswählen (3 von 10)',
+    allComparatives: 'Alle Vergleichsimmobilien',
+    selectedForValuation: 'Für Bewertung Ausgewählt',
     averagePrice: 'Durchschnittspreis',
     minPrice: 'Mindestpreis',
     maxPrice: 'Höchstpreis',
@@ -801,6 +813,9 @@ const translations = {
     adjustmentDescription: 'Aggiusta il prezzo finale basato su fattori aggiuntivi',
     marketAnalysisTitle: 'Analisi di Mercato',
     comparativeProperties: 'Proprietà Comparative',
+    selectComparatives: 'Seleziona Comparabili (3 di 10)',
+    allComparatives: 'Tutte le Proprietà Comparative',
+    selectedForValuation: 'Selezionate per Valutazione',
     averagePrice: 'Prezzo Medio',
     minPrice: 'Prezzo Minimo',
     maxPrice: 'Prezzo Massimo',
@@ -966,6 +981,9 @@ const translations = {
     adjustmentDescription: 'Ajustar preço final baseado em fatores adicionais',
     marketAnalysisTitle: 'Análise de Mercado',
     comparativeProperties: 'Propriedades Comparativas',
+    selectComparatives: 'Selecionar Comparáveis (3 de 10)',
+    allComparatives: 'Todas as Propriedades Comparativas',
+    selectedForValuation: 'Selecionadas para Avaliação',
     averagePrice: 'Preço Médio',
     minPrice: 'Preço Mínimo',
     maxPrice: 'Preço Máximo',
@@ -1021,6 +1039,224 @@ const translations = {
     priceAdjusted: 'Preço Ajustado',
     adjustment: 'Ajuste',
     newValue: 'Novo valor'
+  },
+
+  zh: {
+    propertyValuator: '房产评估师',
+    professionalSystem: '专业评估系统',
+    languageSelector: '语言选择',
+    propertyData: '房产数据',
+    areas: '面积',
+    propertyType: '房产类型',
+    spaces: '空间',
+    characteristics: '特征',
+    location: '位置',
+    
+    // Tipo de propiedad
+    house: '房屋',
+    apartment: '公寓',
+    land: '土地',
+    commercial: '商业',
+    
+    // Areas
+    basementArea: '地下室面积 (m²)',
+    firstFloorArea: '一层面积 (m²)',
+    secondFloorArea: '二层面积 (m²)',
+    thirdFloorArea: '三层面积 (m²)',
+    fourthFloorArea: '四层面积 (m²)',
+    landArea: '土地面积 (m²)',
+    
+    // Espacios
+    bedrooms: '卧室',
+    livingRooms: '客厅',
+    diningRoom: '餐厅',
+    kitchen: '厨房',
+    storage: '储藏室',
+    serviceArea: '服务区',
+    garage: '车库',
+    bathrooms: '浴室',
+    others: '其他',
+    
+    // Características
+    age: '房龄 (年)',
+    generalCondition: '总体状况',
+    
+    // Opciones de ubicación
+    excellent: '优秀',
+    good: '良好',
+    regular: '一般',
+    
+    // Opciones de estado
+    new: '全新',
+    medium: '中等',
+    old: '陈旧',
+    
+    // Ubicación
+    address: '地址',
+    searchAddress: '搜索地址',
+    
+    // Botones
+    calculateValuation: '计算评估',
+    resetForm: '重置表单',
+    downloadPDF: '下载 PDF',
+    downloadWord: '下载 Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: '房产评估',
+    estimatedValue: '估计价值',
+    priceAdjustment: '价格调整',
+    adjustmentDescription: '根据附加因素调整最终价格',
+    marketAnalysisTitle: '市场分析',
+    comparativeProperties: '可比房产',
+    selectComparatives: '选择可比房产 (10选3)',
+    allComparatives: '所有可比房产',
+    selectedForValuation: '选中用于评估',
+    averagePrice: '平均价格',
+    minPrice: '最低价格',
+    maxPrice: '最高价格',
+    
+    // Tabla de comparativas
+    property: '房产',
+    builtArea: '建筑面积',
+    price: '价格',
+    priceM2: '单价/m²',
+    distance: '距离',
+    
+    currencyChanged: '货币已更改',
+    valuationNowIn: '评估现在以',
+    valuationCompleted: '评估完成',
+    valuationCompletedDesc: '房产评估已成功计算',
+    formReset: '表单重置',
+    formResetDesc: '所有数据已清除',
+    
+    // PDF Content
+    residentialValuation: '住宅评估',
+    apartmentValuation: '公寓评估',
+    landValuation: '土地评估',
+    commercialValuation: '商业评估',
+    residentialSubtitle: '住宅房产专业报告',
+    apartmentSubtitle: '公寓单位专业报告',
+    landSubtitle: '土地表面专业报告',
+    commercialSubtitle: '商业房产专业报告',
+    marketAnalysis: '市场价值专业分析',
+    propertyLocationPDF: '房产位置',
+    generalInfo: '一般信息',
+    type: '类型',
+    constructedArea: '建筑面积',
+    
+    // PDF Price adjustment
+    baseValue: '基础价值',
+    adjustment: '调整',
+    newValue: '新价值'
+  },
+
+  hi: {
+    propertyValuator: 'संपत्ति मूल्यांकनकर्ता',
+    professionalSystem: 'व्यावसायिक मूल्यांकन प्रणाली',
+    languageSelector: 'भाषा चयनकर्ता',
+    propertyData: 'संपत्ति डेटा',
+    areas: 'क्षेत्रफल',
+    propertyType: 'संपत्ति प्रकार',
+    spaces: 'स्थान',
+    characteristics: 'विशेषताएं',
+    location: 'स्थान',
+    
+    // Tipo de propiedad
+    house: 'मकान',
+    apartment: 'अपार्टमेंट',
+    land: 'भूमि',
+    commercial: 'व्यावसायिक',
+    
+    // Areas
+    basementArea: 'तहखाना क्षेत्र (m²)',
+    firstFloorArea: 'पहली मंजिल क्षेत्र (m²)',
+    secondFloorArea: 'दूसरी मंजिल क्षेत्र (m²)',
+    thirdFloorArea: 'तीसरी मंजिल क्षेत्र (m²)',
+    fourthFloorArea: 'चौथी मंजिल क्षेत्र (m²)',
+    landArea: 'भूमि क्षेत्र (m²)',
+    
+    // Espacios
+    bedrooms: 'शयनकक्ष',
+    livingRooms: 'बैठक कक्ष',
+    diningRoom: 'भोजन कक्ष',
+    kitchen: 'रसोई',
+    storage: 'भंडारण',
+    serviceArea: 'सेवा क्षेत्र',
+    garage: 'गैराज',
+    bathrooms: 'स्नानघर',
+    others: 'अन्य',
+    
+    // Características
+    age: 'आयु (वर्ष)',
+    generalCondition: 'सामान्य स्थिति',
+    
+    // Opciones de ubicación
+    excellent: 'उत्कृष्ट',
+    good: 'अच्छा',
+    regular: 'नियमित',
+    
+    // Opciones de estado
+    new: 'नया',
+    medium: 'मध्यम',
+    old: 'पुराना',
+    
+    // Ubicación
+    address: 'पता',
+    searchAddress: 'पता खोजें',
+    
+    // Botones
+    calculateValuation: 'मूल्यांकन की गणना करें',
+    resetForm: 'फॉर्म रीसेट करें',
+    downloadPDF: 'PDF डाउनलोड करें',
+    downloadWord: 'Word डाउनलोड करें',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'संपत्ति मूल्यांकन',
+    estimatedValue: 'अनुमानित मूल्य',
+    priceAdjustment: 'मूल्य समायोजन',
+    adjustmentDescription: 'अतिरिक्त कारकों के आधार पर अंतिम मूल्य समायोजित करें',
+    marketAnalysisTitle: 'बाजार विश्लेषण',
+    comparativeProperties: 'तुलनात्मक संपत्तियां',
+    selectComparatives: 'तुलनीय चुनें (10 में से 3)',
+    allComparatives: 'सभी तुलनात्मक संपत्तियां',
+    selectedForValuation: 'मूल्यांकन के लिए चयनित',
+    averagePrice: 'औसत मूल्य',
+    minPrice: 'न्यूनतम मूल्य',
+    maxPrice: 'अधिकतम मूल्य',
+    
+    // Tabla de comparativas
+    property: 'संपत्ति',
+    builtArea: 'निर्मित क्षेत्र',
+    price: 'मूल्य',
+    priceM2: 'मूल्य/m²',
+    distance: 'दूरी',
+    
+    currencyChanged: 'मुद्रा बदली गई',
+    valuationNowIn: 'मूल्यांकन अब इसमें है',
+    valuationCompleted: 'मूल्यांकन पूर्ण',
+    valuationCompletedDesc: 'संपत्ति मूल्यांकन सफलतापूर्वक गणना की गई',
+    formReset: 'फॉर्म रीसेट',
+    formResetDesc: 'सभी डेटा साफ कर दिया गया',
+    
+    // PDF Content
+    residentialValuation: 'आवासीय मूल्यांकन',
+    apartmentValuation: 'अपार्टमेंट मूल्यांकन',
+    landValuation: 'भूमि मूल्यांकन',
+    commercialValuation: 'व्यावसायिक मूल्यांकन',
+    residentialSubtitle: 'आवासीय संपत्ति पेशेवर रिपोर्ट',
+    apartmentSubtitle: 'अपार्टमेंट इकाई पेशेवर रिपोर्ट',
+    landSubtitle: 'भूमि सतह पेशेवर रिपोर्ट',
+    commercialSubtitle: 'व्यावसायिक संपत्ति पेशेवर रिपोर्ट',
+    marketAnalysis: 'बाजार मूल्य पेशेवर विश्लेषण',
+    propertyLocationPDF: 'संपत्ति स्थान',
+    generalInfo: 'सामान्य जानकारी',
+    type: 'प्रकार',
+    constructedArea: 'निर्मित क्षेत्र',
+    
+    // PDF Price adjustment
+    baseValue: 'आधार मूल्य',
+    adjustment: 'समायोजन',
+    newValue: 'नया मूल्य'
   }
 };
 
@@ -1225,6 +1461,11 @@ const PropertyValuation = () => {
       longitud: -99.1380
     }
   ]);
+  
+  // Estados para manejo de comparables
+  const [allComparativeProperties, setAllComparativeProperties] = useState<ComparativeProperty[]>([]);
+  const [selectedComparatives, setSelectedComparatives] = useState<number[]>([0, 1, 2]); // Por defecto los primeros 3
+  
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>({
     code: 'USD',
     name: 'Dólar Estadounidense',
@@ -1304,6 +1545,14 @@ const PropertyValuation = () => {
     });
   };
 
+  // Efecto para actualizar comparables seleccionados
+  useEffect(() => {
+    if (allComparativeProperties.length > 0) {
+      const selectedProps = selectedComparatives.map(index => allComparativeProperties[index]).filter(Boolean);
+      setComparativeProperties(selectedProps);
+    }
+  }, [selectedComparatives, allComparativeProperties]);
+
   const handleLocationChange = (lat: number, lng: number, address: string) => {
     setPropertyData(prev => ({
       ...prev,
@@ -1334,7 +1583,7 @@ const PropertyValuation = () => {
     });
   };
 
-  const generateComparativeProperties = async (baseValue: number, numComparables: number = 3): Promise<ComparativeProperty[]> => {
+  const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
     
     // Generar ubicaciones cercanas basadas en las coordenadas de la propiedad
@@ -1510,9 +1759,12 @@ const PropertyValuation = () => {
       description: translations[selectedLanguage].generatingReport,
     });
 
-    // Generar comparativas con solo 3 comparables
-    const comparatives = await generateComparativeProperties(valorFinal, 3);
-    setComparativeProperties(comparatives);
+    // Generar comparativas con 10 comparables
+    const allComparatives = await generateComparativeProperties(valorFinal, 10);
+    setAllComparativeProperties(allComparatives);
+    // Actualizar las propiedades seleccionadas (los primeros 3)
+    const selectedProps = selectedComparatives.map(index => allComparatives[index]).filter(Boolean);
+    setComparativeProperties(selectedProps);
     
     // Limpiar múltiples valuaciones ya que ahora solo hacemos una
     setMultipleValuations([]);
@@ -3305,6 +3557,65 @@ const PropertyValuation = () => {
                       ) : null;
                     })()}
                    </div>
+                   
+                   {/* Selector de Comparables */}
+                   {allComparativeProperties.length > 0 && (
+                     <div className="pt-4 border-t">
+                       <Label className="text-sm font-medium mb-3 block">
+                         Seleccionar Comparables (3 de 10)
+                       </Label>
+                       <div className="space-y-3 max-h-80 overflow-y-auto">
+                         {allComparativeProperties.map((comp, index) => (
+                           <div 
+                             key={index}
+                             className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                               selectedComparatives.includes(index) 
+                                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                                 : 'border-gray-200 hover:border-gray-300'
+                             }`}
+                             onClick={() => {
+                               if (selectedComparatives.includes(index)) {
+                                 if (selectedComparatives.length > 1) {
+                                   setSelectedComparatives(selectedComparatives.filter(i => i !== index));
+                                 }
+                               } else if (selectedComparatives.length < 3) {
+                                 setSelectedComparatives([...selectedComparatives, index]);
+                               } else {
+                                 // Reemplazar el último seleccionado
+                                 const newSelection = [...selectedComparatives.slice(0, 2), index];
+                                 setSelectedComparatives(newSelection);
+                               }
+                             }}
+                           >
+                             <div className="flex justify-between items-start">
+                               <div className="flex-1">
+                                 <p className="text-sm font-medium truncate">{comp.address}</p>
+                                 <div className="flex gap-4 mt-1 text-xs text-gray-600">
+                                   <span>{comp.areaConstruida}m²</span>
+                                   <span>{comp.recamaras} rec</span>
+                                   <span>{comp.banos} baños</span>
+                                   <span>{comp.distancia}m</span>
+                                 </div>
+                                 <p className="text-sm font-bold text-green-600 mt-1">
+                                   {formatCurrency(comp.precio, selectedCurrency)}
+                                 </p>
+                               </div>
+                               <div className="ml-2">
+                                 {selectedComparatives.includes(index) && (
+                                   <Badge variant="default" className="text-xs">
+                                     #{selectedComparatives.indexOf(index) + 1}
+                                   </Badge>
+                                 )}
+                               </div>
+                             </div>
+                           </div>
+                         ))}
+                       </div>
+                       <p className="text-xs text-gray-500 mt-2">
+                         Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
+                       </p>
+                     </div>
+                   )}
                    
                    {/* Selector de tipo de membrete */}
                    <div className="pt-4 border-t">
