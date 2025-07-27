@@ -585,6 +585,25 @@ const PropertyValuation = () => {
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
 
+      // Dirección del inmueble (nueva sección)
+      if (propertyData.direccionCompleta) {
+        doc.setFillColor(240, 240, 240);
+        doc.rect(marginLeft, yPosition, contentWidth, 12, 'F');
+        
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text('DIRECCIÓN DEL INMUEBLE:', marginLeft + 5, yPosition + 8);
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        // Dividir dirección larga en múltiples líneas si es necesario
+        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 10);
+        doc.text(addressLines, marginLeft + 5, yPosition + 16);
+        
+        yPosition += 20 + (addressLines.length > 1 ? (addressLines.length - 1) * 4 : 0);
+      }
+
       // Información general
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
