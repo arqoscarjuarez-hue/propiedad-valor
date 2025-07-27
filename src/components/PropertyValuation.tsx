@@ -2542,8 +2542,8 @@ const PropertyValuation = () => {
         { nombre: "Drenaje", disponible: propertyData.servicios.drenaje }
       ];
 
-      serviciosBasicos.forEach(({ nombre, disponible }) => {
-        doc.text(`${disponible ? '✓' : '✗'} ${nombre}`, marginLeft + 5, yPosition);
+      serviciosBasicos.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
+        doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
         yPosition += 5;
       });
 
@@ -2567,8 +2567,8 @@ const PropertyValuation = () => {
         { nombre: "Tinaco/Cisterna", disponible: propertyData.servicios.tinaco }
       ];
 
-      serviciosAdicionales.forEach(({ nombre, disponible }) => {
-        doc.text(`${disponible ? '✓' : '✗'} ${nombre}`, marginLeft + 5, yPosition);
+      serviciosAdicionales.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
+        doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
         yPosition += 5;
       });
 
@@ -3007,27 +3007,27 @@ const PropertyValuation = () => {
                 new TextRun({ text: "Servicios Básicos:", bold: true })
               ]
             }),
-            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: "✓ Agua Potable" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Agua Potable" })] })]),
-            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: "✓ Electricidad" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Electricidad" })] })]),
-            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: "✓ Gas Natural/LP" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Gas Natural/LP" })] })]),
-            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: "✓ Drenaje" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Drenaje" })] })]),
+            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: "✓ Agua Potable" })] })] : []),
+            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: "✓ Electricidad" })] })] : []),
+            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: "✓ Gas Natural/LP" })] })] : []),
+            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: "✓ Drenaje" })] })] : []),
             
             new Paragraph({
               children: [
                 new TextRun({ text: "Servicios Adicionales:", bold: true })
               ]
             }),
-            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: "✓ Internet" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Internet" })] })]),
-            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: "✓ TV por Cable" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ TV por Cable" })] })]),
-            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: "✓ Teléfono" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Teléfono" })] })]),
-            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: "✓ Seguridad Privada" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Seguridad Privada" })] })]),
-            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: "✓ Alberca" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Alberca" })] })]),
-            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: "✓ Jardín" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Jardín" })] })]),
-            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: "✓ Elevador" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Elevador" })] })]),
-            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: "✓ Aire Acondicionado" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Aire Acondicionado" })] })]),
-            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: "✓ Calefacción" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Calefacción" })] })]),
-            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: "✓ Paneles Solares" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Paneles Solares" })] })]),
-            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: "✓ Tinaco/Cisterna" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Tinaco/Cisterna" })] })]),
+            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: "✓ Internet" })] })] : []),
+            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: "✓ TV por Cable" })] })] : []),
+            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: "✓ Teléfono" })] })] : []),
+            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: "✓ Seguridad Privada" })] })] : []),
+            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: "✓ Alberca" })] })] : []),
+            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: "✓ Jardín" })] })] : []),
+            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: "✓ Elevador" })] })] : []),
+            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: "✓ Aire Acondicionado" })] })] : []),
+            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: "✓ Calefacción" })] })] : []),
+            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: "✓ Paneles Solares" })] })] : []),
+            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: "✓ Tinaco/Cisterna" })] })] : []),
 
             new Paragraph({ text: "" }), // Espacio
 
