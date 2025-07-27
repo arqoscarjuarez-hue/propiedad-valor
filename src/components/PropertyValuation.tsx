@@ -560,7 +560,7 @@ const PropertyValuation = () => {
       const marginLeft = 25; // 25mm margen izquierdo
       const marginRight = 25; // 25mm margen derecho  
       const marginTop = 20; // 20mm margen superior
-      const marginBottom = 20; // 20mm margen inferior
+      const marginBottom = 30; // 30mm margen inferior (3 centímetros)
       const contentWidth = pageWidth - marginLeft - marginRight; // Ancho del contenido
       
       let yPosition = marginTop;
@@ -792,10 +792,10 @@ const PropertyValuation = () => {
           try {
             const mapImage = await generateMapImage(propertyData.latitud, propertyData.longitud);
             if (mapImage) {
-              // Verificar si hay espacio suficiente en la página
-              if (yPosition > pageHeight - 90) {
+              // Verificar si hay espacio suficiente en la página (considerando margen inferior de 3cm)
+              if (yPosition > pageHeight - marginBottom - 90) {
                 doc.addPage();
-                yPosition = 20;
+                yPosition = marginTop;
               }
               
               doc.setFontSize(12);
@@ -835,10 +835,10 @@ const PropertyValuation = () => {
 
       // Tabla de comparables
       if (comparativeProperties.length > 0) {
-        // Verificar si necesitamos una nueva página
-        if (yPosition > pageHeight - 120) {
+        // Verificar si necesitamos una nueva página (considerando margen inferior de 3cm)
+        if (yPosition > pageHeight - marginBottom - 120) {
           doc.addPage();
-          yPosition = 20;
+          yPosition = marginTop;
         }
 
         doc.setFontSize(14);
@@ -875,10 +875,10 @@ const PropertyValuation = () => {
         for (let i = 0; i < Math.min(comparativeProperties.length, 8); i++) {
           const comp = comparativeProperties[i];
           
-          // Verificar si necesitamos nueva página
-          if (yPosition > pageHeight - 20) {
+          // Verificar si necesitamos nueva página (considerando margen inferior de 3cm)
+          if (yPosition > pageHeight - marginBottom - 20) {
             doc.addPage();
-            yPosition = 20;
+            yPosition = marginTop;
           }
           
           // Alternar color de fila
@@ -932,7 +932,7 @@ const PropertyValuation = () => {
       if (propertyImages.length > 0) {
         // Nueva página dedicada para fotografías
         doc.addPage();
-        yPosition = 20;
+        yPosition = marginTop;
 
         // Título principal centrado
         doc.setFillColor(30, 41, 59);
@@ -946,7 +946,7 @@ const PropertyValuation = () => {
         yPosition = 40;
 
         // Configuración de layout vertical: 3 fotografías por página
-        const maxImagesPerPage = 3; // 3 fotos por página en vertical
+        const maxImagesPerPage = 2; // 2 fotos por página en vertical
         const maxTotalImages = propertyImages.length;
         
         // Diseño vertical: 1 columna centrada con márgenes apropiados
@@ -1030,7 +1030,7 @@ const PropertyValuation = () => {
           // Si hay más imágenes, crear nueva página
           if (imageIndex < maxTotalImages) {
             doc.addPage();
-            yPosition = 20;
+            yPosition = marginTop;
             
             // Título de continuación
             doc.setFontSize(14);
@@ -1045,7 +1045,7 @@ const PropertyValuation = () => {
         // Información adicional al final de las fotos
         const lastPageY = yPosition + 30;
         
-        if (lastPageY < pageHeight - 40) {
+        if (lastPageY < pageHeight - marginBottom) {
           doc.setFontSize(9);
           doc.setFont("helvetica", "normal");
           doc.setTextColor(100, 100, 100);
