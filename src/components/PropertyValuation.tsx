@@ -552,10 +552,18 @@ const PropertyValuation = () => {
     }
 
     try {
-      const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.width;
-      const pageHeight = doc.internal.pageSize.height;
-      let yPosition = 20;
+      const doc = new jsPDF('portrait', 'mm', 'letter'); // Tamaño carta con orientación vertical
+      const pageWidth = doc.internal.pageSize.width; // ~216mm
+      const pageHeight = doc.internal.pageSize.height; // ~279mm
+      
+      // Márgenes apropiados para tamaño carta
+      const marginLeft = 25; // 25mm margen izquierdo
+      const marginRight = 25; // 25mm margen derecho  
+      const marginTop = 20; // 20mm margen superior
+      const marginBottom = 20; // 20mm margen inferior
+      const contentWidth = pageWidth - marginLeft - marginRight; // Ancho del contenido
+      
+      let yPosition = marginTop;
 
       // Obtener configuración del membrete seleccionado
       const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
@@ -580,36 +588,36 @@ const PropertyValuation = () => {
       // Información general
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("INFORMACIÓN GENERAL", 20, yPosition);
+      doc.text("INFORMACIÓN GENERAL", marginLeft, yPosition);
       yPosition += 10;
 
       const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, 20, yPosition);
+      doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Área Total Construida: ${areaTotal.toLocaleString()} m²`, 20, yPosition);
+      doc.text(`Área Total Construida: ${areaTotal.toLocaleString()} m²`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Área de Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, 20, yPosition);
+      doc.text(`Área de Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Recámaras: ${propertyData.recamaras}`, 20, yPosition);
+      doc.text(`Recámaras: ${propertyData.recamaras}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Baños: ${propertyData.banos}`, 20, yPosition);
+      doc.text(`Baños: ${propertyData.banos}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Cocheras: ${propertyData.cochera}`, 20, yPosition);
+      doc.text(`Cocheras: ${propertyData.cochera}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Antigüedad de la Construcción: ${propertyData.antiguedad} años`, 20, yPosition);
+      doc.text(`Antigüedad de la Construcción: ${propertyData.antiguedad} años`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Ubicación: ${propertyData.ubicacion}`, 20, yPosition);
+      doc.text(`Ubicación: ${propertyData.ubicacion}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Estado General: ${propertyData.estadoGeneral}`, 20, yPosition);
+      doc.text(`Estado General: ${propertyData.estadoGeneral}`, marginLeft, yPosition);
       yPosition += 15;
 
       // Detalles de áreas
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("DETALLES DE ÁREAS", 20, yPosition);
+      doc.text("DETALLES DE ÁREAS", marginLeft, yPosition);
       yPosition += 10;
       
       doc.setFontSize(12);
@@ -639,7 +647,7 @@ const PropertyValuation = () => {
       // Espacios habitacionales y de servicio
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("DISTRIBUCIÓN COMPLETA DE ESPACIOS", 20, yPosition);
+      doc.text("DISTRIBUCIÓN COMPLETA DE ESPACIOS", marginLeft, yPosition);
       yPosition += 10;
       
       doc.setFontSize(12);
@@ -647,7 +655,7 @@ const PropertyValuation = () => {
       
       // Espacios habitacionales
       doc.setFont("helvetica", "bold");
-      doc.text("Espacios Habitacionales:", 20, yPosition);
+      doc.text("Espacios Habitacionales:", marginLeft, yPosition);
       yPosition += 7;
       doc.setFont("helvetica", "normal");
       
@@ -705,7 +713,7 @@ const PropertyValuation = () => {
       
       // Espacios de servicio
       doc.setFont("helvetica", "bold");
-      doc.text("Espacios de Servicio:", 20, yPosition);
+      doc.text("Espacios de Servicio:", marginLeft, yPosition);
       yPosition += 7;
       doc.setFont("helvetica", "normal");
       doc.text(`• Cocina: ${propertyData.cocina}`, 25, yPosition);
@@ -741,7 +749,7 @@ const PropertyValuation = () => {
 
       // Resultado de valuación con color personalizado
       doc.setFillColor(config.secondaryColor[0], config.secondaryColor[1], config.secondaryColor[2]);
-      doc.rect(15, yPosition - 5, pageWidth - 30, 35, 'F');
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 35, 'F');
       
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -767,13 +775,13 @@ const PropertyValuation = () => {
       if (propertyData.direccionCompleta) {
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text("UBICACIÓN", 20, yPosition);
+        doc.text("UBICACIÓN", marginLeft, yPosition);
         yPosition += 10;
         
         doc.setFontSize(11);
         doc.setFont("helvetica", "normal");
-        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, pageWidth - 40);
-        doc.text(addressLines, 20, yPosition);
+        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth);
+        doc.text(addressLines, marginLeft, yPosition);
         yPosition += (addressLines.length * 6) + 7;
         
         if (propertyData.latitud && propertyData.longitud) {
@@ -835,19 +843,19 @@ const PropertyValuation = () => {
 
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text("PROPIEDADES COMPARABLES", 20, yPosition);
+        doc.text("PROPIEDADES COMPARABLES", marginLeft, yPosition);
         yPosition += 15;
 
         // Resumen de tabla comparativa
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text("PROPIEDADES COMPARABLES", 20, yPosition);
+        doc.text("PROPIEDADES COMPARABLES", marginLeft, yPosition);
         yPosition += 10;
         const colWidths = [40, 25, 25, 25, 30, 35];
-        const colPositions = [20, 60, 85, 110, 135, 165];
+        const colPositions = [marginLeft, marginLeft + 40, marginLeft + 65, marginLeft + 90, marginLeft + 115, marginLeft + 145];
         
         doc.setFillColor(240, 240, 240);
-        doc.rect(20, yPosition - 2, pageWidth - 40, 15, 'F');
+        doc.rect(marginLeft, yPosition - 2, contentWidth, 15, 'F');
         
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
@@ -876,7 +884,7 @@ const PropertyValuation = () => {
           // Alternar color de fila
           if (i % 2 === 0) {
             doc.setFillColor(250, 250, 250);
-            doc.rect(20, yPosition - 2, pageWidth - 40, 12, 'F');
+            doc.rect(marginLeft, yPosition - 2, contentWidth, 12, 'F');
           }
           
           // Truncar dirección si es muy larga
@@ -899,7 +907,7 @@ const PropertyValuation = () => {
         if (analysis) {
           doc.setFontSize(12);
           doc.setFont("helvetica", "bold");
-          doc.text("ANÁLISIS DE MERCADO", 20, yPosition);
+          doc.text("ANÁLISIS DE MERCADO", marginLeft, yPosition);
           yPosition += 10;
           
           doc.setFontSize(10);
@@ -941,8 +949,8 @@ const PropertyValuation = () => {
         const maxImagesPerPage = 3; // 3 fotos por página en vertical
         const maxTotalImages = propertyImages.length;
         
-        // Diseño vertical: 1 columna centrada
-        const maxImageWidth = Math.min(120, pageWidth - 80); // Ancho máximo de imagen
+        // Diseño vertical: 1 columna centrada con márgenes apropiados
+        const maxImageWidth = Math.min(120, contentWidth - 40); // Ancho máximo de imagen respetando márgenes
         const maxImageHeight = 70; // Altura máxima de imagen en formato vertical
         const spacingY = 20; // Espaciado vertical entre imágenes
 
