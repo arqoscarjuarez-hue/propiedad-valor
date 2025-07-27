@@ -127,6 +127,43 @@ const PropertyValuation = () => {
   });
   const [activeTab, setActiveTab] = useState('areas');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
+  const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
+
+  // Configuraciones de membrete por tipo de propiedad
+  const letterheadConfigs = {
+    casa: {
+      name: 'Casa Residencial',
+      primaryColor: [34, 139, 34], // Verde
+      secondaryColor: [144, 238, 144], // Verde claro
+      title: 'VALUACIÓN RESIDENCIAL',
+      subtitle: 'Avalúo Profesional de Casa Habitación',
+      icon: '🏠'
+    },
+    departamento: {
+      name: 'Departamento',
+      primaryColor: [70, 130, 180], // Azul acero
+      secondaryColor: [176, 196, 222], // Azul claro
+      title: 'VALUACIÓN DE DEPARTAMENTO',
+      subtitle: 'Avalúo Profesional de Unidad Habitacional',
+      icon: '🏢'
+    },
+    terreno: {
+      name: 'Terreno',
+      primaryColor: [139, 69, 19], // Marrón
+      secondaryColor: [222, 184, 135], // Marrón claro
+      title: 'VALUACIÓN DE TERRENO',
+      subtitle: 'Avalúo Profesional de Superficie',
+      icon: '🏞️'
+    },
+    comercial: {
+      name: 'Bien Raíz Comercial',
+      primaryColor: [128, 0, 128], // Púrpura
+      secondaryColor: [221, 160, 221], // Púrpura claro
+      title: 'VALUACIÓN COMERCIAL',
+      subtitle: 'Avalúo Profesional de Bien Comercial',
+      icon: '🏪'
+    }
+  };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     setPropertyData(prev => ({
@@ -520,19 +557,22 @@ const PropertyValuation = () => {
       const pageHeight = doc.internal.pageSize.height;
       let yPosition = 20;
 
-      // Header principal
-      doc.setFillColor(30, 41, 59);
+      // Obtener configuración del membrete seleccionado
+      const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
+
+      // Header principal con color personalizado
+      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.rect(0, 0, pageWidth, 35, 'F');
       
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
-      doc.text("REPORTE DE VALUACIÓN INMOBILIARIA", pageWidth / 2, 20, { align: "center" });
+      doc.text(config.title, pageWidth / 2, 16, { align: "center" });
       
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text("Análisis Profesional de Valor de Mercado", pageWidth / 2, 28, { align: "center" });
-      doc.text("Basado en 3 Comparables", pageWidth / 2, 32, { align: "center" });
+      doc.text(config.subtitle, pageWidth / 2, 25, { align: "center" });
+      doc.text(`${config.icon} Análisis Profesional de Valor de Mercado`, pageWidth / 2, 30, { align: "center" });
       
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
@@ -699,8 +739,8 @@ const PropertyValuation = () => {
       doc.text(`TOTAL DE ESPACIOS IDENTIFICADOS: ${totalEspacios}`, 25, yPosition + 10);
       yPosition += 20;
 
-      // Resultado de valuación
-      doc.setFillColor(220, 252, 231);
+      // Resultado de valuación con color personalizado
+      doc.setFillColor(config.secondaryColor[0], config.secondaryColor[1], config.secondaryColor[2]);
       doc.rect(15, yPosition - 5, pageWidth - 30, 35, 'F');
       
       doc.setFontSize(16);
@@ -1109,21 +1149,24 @@ const PropertyValuation = () => {
     try {
       const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
+      // Obtener configuración del membrete seleccionado
+      const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
+      
       const doc = new DocxDocument({
         sections: [{
           properties: {},
           children: [
             new Paragraph({
-              text: "REPORTE DE VALUACIÓN INMOBILIARIA",
+              text: config.title,
               heading: HeadingLevel.TITLE,
               alignment: "center"
             }),
             new Paragraph({
-              text: "Análisis Profesional de Valor de Mercado",
+              text: config.subtitle,
               alignment: "center"
             }),
             new Paragraph({
-              text: "Basado en 3 Comparables",
+              text: `${config.icon} Análisis Profesional de Valor de Mercado`,
               alignment: "center"
             }),
             new Paragraph({ text: "" }), // Espacio
@@ -2152,9 +2195,26 @@ const PropertyValuation = () => {
                         </div>
                       ) : null;
                     })()}
-                  </div>
+                   </div>
                    
-                   <div className="pt-4 border-t space-y-3">
+                   {/* Selector de tipo de membrete */}
+                   <div className="pt-4 border-t">
+                     <Label className="text-sm font-medium mb-2 block">Tipo de Membrete para Reportes</Label>
+                     <Select value={selectedLetterhead} onValueChange={setSelectedLetterhead}>
+                       <SelectTrigger className="w-full">
+                         <SelectValue placeholder="Seleccionar tipo de membrete" />
+                       </SelectTrigger>
+                       <SelectContent>
+                         {Object.entries(letterheadConfigs).map(([key, config]) => (
+                           <SelectItem key={key} value={key}>
+                             {config.icon} {config.name}
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
+                     </Select>
+                   </div>
+                    
+                    <div className="pt-4 border-t space-y-3">
                      <Button 
                        onClick={generatePDF} 
                        variant="outline" 
