@@ -2430,6 +2430,14 @@ const PropertyValuation = () => {
           doc.text("Coordenadas:", marginLeft, yPosition);
           doc.setFont("helvetica", "normal");
           doc.text(`${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft + 30, yPosition);
+          yPosition += 6;
+          
+          // Agregar enlace a Google Maps
+          const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(0, 0, 255); // Azul para el enlace
+          doc.textWithLink("Ver ubicación en Google Maps", marginLeft, yPosition, { url: googleMapsUrl });
+          doc.setTextColor(0, 0, 0); // Regresar a negro
           yPosition += 10;
         }
       }
