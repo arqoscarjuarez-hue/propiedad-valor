@@ -3135,12 +3135,6 @@ const PropertyValuation = () => {
 
       // SECCIÓN FINAL - CONCLUSIONES Y CERTIFICACIÓN
       yPosition += 30;
-      
-      // Nueva página para conclusiones si es necesario
-      if (yPosition > pageHeight - 100) {
-        doc.addPage();
-        yPosition = 30;
-      }
 
       // Título de conclusiones
       doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
