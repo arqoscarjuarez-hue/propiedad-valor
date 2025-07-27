@@ -2862,105 +2862,171 @@ const PropertyValuation = () => {
         for (let i = 0; i < Math.min(comparativeProperties.length, 3); i++) {
           const comp = comparativeProperties[i];
           
-          // Título del comparable
-          doc.setFontSize(12);
+          // Título del comparable con número destacado
+          doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+          doc.rect(marginLeft, yPosition - 2, contentWidth, 18, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(14);
+          doc.setFont("helvetica", "bold");
+          doc.text(`PROPIEDAD COMPARABLE ${i + 1}`, marginLeft + 5, yPosition + 10);
+          doc.setTextColor(0, 0, 0);
+          yPosition += 25;
+          
+          // Marco principal para el comparable
+          doc.setFillColor(248, 250, 252);
+          doc.rect(marginLeft, yPosition - 5, contentWidth, 120, 'F');
+          doc.setDrawColor(180, 180, 180);
+          doc.setLineWidth(0.8);
+          doc.rect(marginLeft, yPosition - 5, contentWidth, 120);
+          
+          // Información básica del inmueble
+          doc.setFillColor(230, 235, 240);
+          doc.rect(marginLeft + 2, yPosition, contentWidth - 4, 15, 'F');
+          doc.setFontSize(11);
           doc.setFont("helvetica", "bold");
           doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-          doc.text(`COMPARABLE ${i + 1}`, marginLeft, yPosition);
+          doc.text("INFORMACIÓN DEL INMUEBLE", marginLeft + 5, yPosition + 10);
           doc.setTextColor(0, 0, 0);
-          yPosition += 10;
+          yPosition += 20;
           
-          // Marco para el comparable
-          doc.setFillColor(250, 250, 250);
-          doc.rect(marginLeft, yPosition - 5, contentWidth, 80, 'F');
-          doc.setDrawColor(200, 200, 200);
-          doc.setLineWidth(0.5);
-          doc.rect(marginLeft, yPosition - 5, contentWidth, 80);
-          
-          // Información detallada
+          // Dirección completa
           doc.setFontSize(10);
           doc.setFont("helvetica", "bold");
-          doc.text("Dirección:", marginLeft + 5, yPosition + 5);
+          doc.text("Dirección completa:", marginLeft + 5, yPosition);
           doc.setFont("helvetica", "normal");
-          doc.text(comp.address, marginLeft + 25, yPosition + 5);
+          const addressLines = doc.splitTextToSize(comp.address, contentWidth - 50);
+          doc.text(addressLines, marginLeft + 40, yPosition);
+          yPosition += Math.max(addressLines.length * 5, 8);
+          
+          // Características físicas en dos columnas
+          doc.setFont("helvetica", "bold");
+          doc.text("CARACTERÍSTICAS FÍSICAS", marginLeft + 5, yPosition);
+          yPosition += 8;
+          
+          // Columna izquierda
+          doc.setFont("helvetica", "bold");
+          doc.text("• Área construida:", marginLeft + 8, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${comp.areaConstruida.toLocaleString()} m²`, marginLeft + 35, yPosition);
           
           doc.setFont("helvetica", "bold");
-          doc.text("Área construida:", marginLeft + 5, yPosition + 12);
+          doc.text("• Recámaras:", marginLeft + 8, yPosition + 7);
           doc.setFont("helvetica", "normal");
-          doc.text(`${comp.areaConstruida} m²`, marginLeft + 35, yPosition + 12);
+          doc.text(comp.recamaras.toString(), marginLeft + 25, yPosition + 7);
           
           doc.setFont("helvetica", "bold");
-          doc.text("Recámaras:", marginLeft + 5, yPosition + 19);
+          doc.text("• Baños completos:", marginLeft + 8, yPosition + 14);
           doc.setFont("helvetica", "normal");
-          doc.text(comp.recamaras.toString(), marginLeft + 25, yPosition + 19);
+          doc.text(comp.banos.toString(), marginLeft + 35, yPosition + 14);
+          
+          // Columna derecha
+          doc.setFont("helvetica", "bold");
+          doc.text("• Antigüedad:", marginLeft + 100, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${comp.antiguedad} años`, marginLeft + 125, yPosition);
           
           doc.setFont("helvetica", "bold");
-          doc.text("Baños:", marginLeft + 60, yPosition + 19);
+          doc.text("• Distancia:", marginLeft + 100, yPosition + 7);
           doc.setFont("helvetica", "normal");
-          doc.text(comp.banos.toString(), marginLeft + 75, yPosition + 19);
+          doc.text(`${comp.distancia} metros`, marginLeft + 120, yPosition + 7);
           
           doc.setFont("helvetica", "bold");
-          doc.text("Antigüedad:", marginLeft + 5, yPosition + 26);
+          doc.text("• Tipo:", marginLeft + 100, yPosition + 14);
           doc.setFont("helvetica", "normal");
-          doc.text(`${comp.antiguedad} años`, marginLeft + 30, yPosition + 26);
+          doc.text(comp.tipoPropiedad || propertyData.tipoPropiedad, marginLeft + 115, yPosition + 14);
+          
+          yPosition += 25;
+          
+          // Análisis de precios
+          doc.setFillColor(230, 235, 240);
+          doc.rect(marginLeft + 2, yPosition, contentWidth - 4, 15, 'F');
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+          doc.text("ANÁLISIS DE PRECIOS", marginLeft + 5, yPosition + 10);
+          doc.setTextColor(0, 0, 0);
+          yPosition += 20;
+          
+          // Información de precios
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.text("• Precio de venta:", marginLeft + 8, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(formatCurrency(comp.precio, selectedCurrency), marginLeft + 35, yPosition);
           
           doc.setFont("helvetica", "bold");
-          doc.text("Precio:", marginLeft + 5, yPosition + 33);
+          doc.text("• Precio por m²:", marginLeft + 8, yPosition + 7);
           doc.setFont("helvetica", "normal");
-          doc.text(formatCurrency(comp.precio, selectedCurrency), marginLeft + 20, yPosition + 33);
+          doc.text(formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency), marginLeft + 30, yPosition + 7);
           
+          // Cálculo de ajuste vs propiedad valuada
+          const adjustmentFactor = ((comp.precio / comp.areaConstruida) / (valuation / (propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel)) - 1) * 100;
           doc.setFont("helvetica", "bold");
-          doc.text("Precio/m²:", marginLeft + 5, yPosition + 40);
+          doc.text("• Variación vs valuado:", marginLeft + 8, yPosition + 14);
           doc.setFont("helvetica", "normal");
-          doc.text(formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency), marginLeft + 25, yPosition + 40);
+          doc.setTextColor(adjustmentFactor > 0 ? 0 : 255, adjustmentFactor > 0 ? 150 : 0, 0);
+          doc.text(`${adjustmentFactor > 0 ? '+' : ''}${adjustmentFactor.toFixed(1)}%`, marginLeft + 45, yPosition + 14);
+          doc.setTextColor(0, 0, 0);
           
-          doc.setFont("helvetica", "bold");
-          doc.text("Distancia:", marginLeft + 5, yPosition + 47);
-          doc.setFont("helvetica", "normal");
-          doc.text(`${comp.distancia} m`, marginLeft + 25, yPosition + 47);
-          
-          // Agregar imagen placeholder del comparable
+          // Agregar imagen placeholder del comparable con mejor diseño
           try {
-            // Crear imagen placeholder simple
             const canvas = document.createElement('canvas');
-            canvas.width = 120;
-            canvas.height = 80;
+            canvas.width = 150;
+            canvas.height = 100;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-              // Fondo
-              ctx.fillStyle = '#f0f9ff';
-              ctx.fillRect(0, 0, 120, 80);
+              // Fondo degradado
+              const gradient = ctx.createLinearGradient(0, 0, 0, 100);
+              gradient.addColorStop(0, '#f8fafc');
+              gradient.addColorStop(1, '#e2e8f0');
+              ctx.fillStyle = gradient;
+              ctx.fillRect(0, 0, 150, 100);
               
               // Bordes
-              ctx.strokeStyle = '#cbd5e1';
+              ctx.strokeStyle = '#94a3b8';
               ctx.lineWidth = 2;
-              ctx.strokeRect(2, 2, 116, 76);
+              ctx.strokeRect(2, 2, 146, 96);
               
-              // Texto
+              // Simulación de ventanas/estructura
+              ctx.fillStyle = '#cbd5e1';
+              ctx.fillRect(20, 20, 25, 20);
+              ctx.fillRect(50, 20, 25, 20);
+              ctx.fillRect(80, 20, 25, 20);
+              ctx.fillRect(20, 45, 85, 15);
+              
+              // Texto informativo
               ctx.fillStyle = '#475569';
-              ctx.font = '12px Arial';
+              ctx.font = 'bold 12px Arial';
               ctx.textAlign = 'center';
-              ctx.fillText('Propiedad', 60, 30);
-              ctx.fillText(`Comparable ${i + 1}`, 60, 45);
-              ctx.fillText('Fotografía', 60, 60);
-              
-              const imageData = canvas.toDataURL('image/png');
-              
-              // Posición de la imagen a la derecha
-              const imageX = marginLeft + contentWidth - 50;
-              const imageY = yPosition;
-              doc.addImage(imageData, 'PNG', imageX, imageY, 40, 30);
-              
-              // Marco alrededor de la imagen
-              doc.setDrawColor(150, 150, 150);
-              doc.setLineWidth(0.5);
-              doc.rect(imageX, imageY, 40, 30);
+              ctx.fillText(`Comparable ${i + 1}`, 75, 75);
+              ctx.font = '10px Arial';
+              ctx.fillText(`${comp.areaConstruida} m²`, 75, 88);
             }
+            
+            const imageData = canvas.toDataURL('image/png');
+            
+            // Posición de la imagen a la derecha
+            const imageX = marginLeft + contentWidth - 48;
+            const imageY = yPosition - 35;
+            doc.addImage(imageData, 'PNG', imageX, imageY, 40, 25);
+            
+            // Marco alrededor de la imagen
+            doc.setDrawColor(120, 120, 120);
+            doc.setLineWidth(0.5);
+            doc.rect(imageX, imageY, 40, 25);
+            
+            // Etiqueta de la imagen
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "italic");
+            doc.setTextColor(100, 100, 100);
+            doc.text("Vista representativa", imageX + 20, imageY + 30, { align: "center" });
+            doc.setTextColor(0, 0, 0);
+            
           } catch (error) {
             console.error('Error creando imagen del comparable:', error);
           }
           
-          yPosition += 90;
+          yPosition += 35;
         }
 
         // Análisis de mercado
