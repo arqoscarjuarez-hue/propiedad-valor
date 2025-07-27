@@ -2733,7 +2733,7 @@ const PropertyValuation = () => {
             }
           });
 
-          yPosition += imageHeight + 20;
+          yPosition += imageHeight + 10;
         }
       }
 
