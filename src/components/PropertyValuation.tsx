@@ -2769,7 +2769,11 @@ const PropertyValuation = () => {
         yPosition += 25;
 
         comparativeProperties.forEach((comp, index) => {
-          checkNewPage(120); // Espacio necesario para cada ficha detallada
+          // Agregar nueva página para cada comparable (excepto el primero)
+          if (index > 0) {
+            doc.addPage();
+            yPosition = marginTop + 10;
+          }
           
           // Marco para cada comparable
           doc.setDrawColor(200, 200, 200);
@@ -2884,7 +2888,6 @@ const PropertyValuation = () => {
           }
 
           doc.text(observacion, marginLeft + 10, yPosition);
-          yPosition += 15;
         });
       }
 
