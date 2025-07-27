@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -57,6 +58,27 @@ const translations = {
     thirdFloor: 'Tercer Nivel',
     fourthFloor: 'Cuarto Nivel',
     landArea: 'Área del Terreno',
+    
+    // Servicios disponibles
+    services: 'Servicios',
+    availableServices: 'Servicios Disponibles',
+    basicServices: 'Servicios Básicos',
+    additionalServices: 'Servicios Adicionales',
+    water: 'Agua Potable',
+    electricity: 'Electricidad',
+    gas: 'Gas Natural/LP',
+    drainage: 'Drenaje',
+    internet: 'Internet',
+    cable: 'TV por Cable',
+    phone: 'Teléfono',
+    security: 'Seguridad Privada',
+    swimmingPool: 'Alberca',
+    garden: 'Jardín',
+    elevator: 'Elevador',
+    airConditioning: 'Aire Acondicionado',
+    heating: 'Calefacción',
+    solarPanels: 'Paneles Solares',
+    waterTank: 'Tinaco/Cisterna',
     
     // Tipos de propiedad
     propertyTypeTitle: 'Tipo de Propiedad',
@@ -226,6 +248,27 @@ const translations = {
     fourthFloor: 'Fourth Floor',
     landArea: 'Land Area',
     
+    // Servicios disponibles
+    services: 'Services',
+    availableServices: 'Available Services',
+    basicServices: 'Basic Services',
+    additionalServices: 'Additional Services',
+    water: 'Potable Water',
+    electricity: 'Electricity',
+    gas: 'Natural Gas/LP',
+    drainage: 'Drainage',
+    internet: 'Internet',
+    cable: 'Cable TV',
+    phone: 'Phone',
+    security: 'Private Security',
+    swimmingPool: 'Swimming Pool',
+    garden: 'Garden',
+    elevator: 'Elevator',
+    airConditioning: 'Air Conditioning',
+    heating: 'Heating',
+    solarPanels: 'Solar Panels',
+    waterTank: 'Water Tank/Cistern',
+    
     // Tipos de propiedad
     propertyTypeTitle: 'Property Type',
     selectPropertyType: 'Select property type',
@@ -393,6 +436,27 @@ const translations = {
     thirdFloor: 'Deuxième Étage',
     fourthFloor: 'Troisième Étage',
     landArea: 'Surface du Terrain',
+    
+    // Servicios disponibles
+    services: 'Services',
+    availableServices: 'Services Disponibles',
+    basicServices: 'Services de Base',
+    additionalServices: 'Services Supplémentaires',
+    water: 'Eau Potable',
+    electricity: 'Électricité',
+    gas: 'Gaz Naturel/GPL',
+    drainage: 'Égouts',
+    internet: 'Internet',
+    cable: 'Télévision par Câble',
+    phone: 'Téléphone',
+    security: 'Sécurité Privée',
+    swimmingPool: 'Piscine',
+    garden: 'Jardin',
+    elevator: 'Ascenseur',
+    airConditioning: 'Climatisation',
+    heating: 'Chauffage',
+    solarPanels: 'Panneaux Solaires',
+    waterTank: 'Réservoir d\'Eau/Citerne',
     
     // Tipos de propiedad
     propertyTypeTitle: 'Type de Propriété',
@@ -562,6 +626,27 @@ const translations = {
     fourthFloor: 'Dritter Stock',
     landArea: 'Grundstücksfläche',
     
+    // Servicios disponibles
+    services: 'Dienstleistungen',
+    availableServices: 'Verfügbare Dienstleistungen',
+    basicServices: 'Grundlegende Dienstleistungen',
+    additionalServices: 'Zusätzliche Dienstleistungen',
+    water: 'Trinkwasser',
+    electricity: 'Elektrizität',
+    gas: 'Erdgas/Propangas',
+    drainage: 'Kanalisation',
+    internet: 'Internet',
+    cable: 'Kabelfernsehen',
+    phone: 'Telefon',
+    security: 'Private Sicherheit',
+    swimmingPool: 'Schwimmbad',
+    garden: 'Garten',
+    elevator: 'Aufzug',
+    airConditioning: 'Klimaanlage',
+    heating: 'Heizung',
+    solarPanels: 'Solarpaneele',
+    waterTank: 'Wassertank/Zisterne',
+    
     // Tipos de propiedad
     propertyTypeTitle: 'Immobilientyp',
     selectPropertyType: 'Immobilientyp auswählen',
@@ -729,6 +814,27 @@ const translations = {
     thirdFloor: 'Secondo Piano',
     fourthFloor: 'Terzo Piano',
     landArea: 'Area del Terreno',
+    
+    // Servicios disponibles
+    services: 'Servizi',
+    availableServices: 'Servizi Disponibili',
+    basicServices: 'Servizi di Base',
+    additionalServices: 'Servizi Aggiuntivi',
+    water: 'Acqua Potabile',
+    electricity: 'Elettricità',
+    gas: 'Gas Naturale/GPL',
+    drainage: 'Fognature',
+    internet: 'Internet',
+    cable: 'TV via Cavo',
+    phone: 'Telefono',
+    security: 'Sicurezza Privata',
+    swimmingPool: 'Piscina',
+    garden: 'Giardino',
+    elevator: 'Ascensore',
+    airConditioning: 'Aria Condizionata',
+    heating: 'Riscaldamento',
+    solarPanels: 'Pannelli Solari',
+    waterTank: 'Serbatoio Acqua/Cisterna',
     
     // Tipos de propiedad
     propertyTypeTitle: 'Tipo di Proprietà',
@@ -898,6 +1004,27 @@ const translations = {
     fourthFloor: 'Terceiro Andar',
     landArea: 'Área do Terreno',
     
+    // Servicios disponibles
+    services: 'Serviços',
+    availableServices: 'Serviços Disponíveis',
+    basicServices: 'Serviços Básicos',
+    additionalServices: 'Serviços Adicionais',
+    water: 'Água Potável',
+    electricity: 'Eletricidade',
+    gas: 'Gás Natural/GLP',
+    drainage: 'Esgoto',
+    internet: 'Internet',
+    cable: 'TV a Cabo',
+    phone: 'Telefone',
+    security: 'Segurança Privada',
+    swimmingPool: 'Piscina',
+    garden: 'Jardim',
+    elevator: 'Elevador',
+    airConditioning: 'Ar Condicionado',
+    heating: 'Aquecimento',
+    solarPanels: 'Painéis Solares',
+    waterTank: 'Tanque de Água/Cisterna',
+    
     // Tipos de propiedad
     propertyTypeTitle: 'Tipo de Propriedade',
     selectPropertyType: 'Selecione o tipo de propriedade',
@@ -1064,6 +1191,27 @@ const translations = {
     fourthFloor: '四层',
     landArea: '土地面积',
     
+    // Servicios disponibles
+    services: '服务',
+    availableServices: '可用服务',
+    basicServices: '基础服务',
+    additionalServices: '附加服务',
+    water: '自来水',
+    electricity: '电力',
+    gas: '天然气/液化气',
+    drainage: '排水',
+    internet: '互联网',
+    cable: '有线电视',
+    phone: '电话',
+    security: '私人保安',
+    swimmingPool: '游泳池',
+    garden: '花园',
+    elevator: '电梯',
+    airConditioning: '空调',
+    heating: '暖气',
+    solarPanels: '太阳能板',
+    waterTank: '水箱/水池',
+    
     // Tipo de propiedad
     propertyTypeTitle: '房产类型',
     selectPropertyType: '选择房产类型',
@@ -1228,6 +1376,27 @@ const translations = {
     thirdFloor: 'तीसरी मंजिल',
     fourthFloor: 'चौथी मंजिल',
     landArea: 'भूमि क्षेत्र',
+    
+    // Servicios disponibles
+    services: 'सेवाएं',
+    availableServices: 'उपलब्ध सेवाएं',
+    basicServices: 'मूलभूत सेवाएं',
+    additionalServices: 'अतिरिक्त सेवाएं',
+    water: 'पेयजल',
+    electricity: 'बिजली',
+    gas: 'प्राकृतिक गैस/एलपी',
+    drainage: 'जल निकासी',
+    internet: 'इंटरनेट',
+    cable: 'केबल टीवी',
+    phone: 'फोन',
+    security: 'निजी सुरक्षा',
+    swimmingPool: 'तरणताल',
+    garden: 'उद्यान',
+    elevator: 'लिफ्ट',
+    airConditioning: 'वातानुकूलन',
+    heating: 'हीटिंग',
+    solarPanels: 'सोलर पैनल',
+    waterTank: 'पानी टैंक/टंकी',
     
     // Tipo de propiedad
     propertyTypeTitle: 'संपत्ति प्रकार',
@@ -1407,6 +1576,25 @@ interface PropertyData {
   latitud?: number;
   longitud?: number;
   direccionCompleta?: string;
+  
+  // Servicios disponibles
+  servicios: {
+    agua: boolean;
+    electricidad: boolean;
+    gas: boolean;
+    drenaje: boolean;
+    internet: boolean;
+    cable: boolean;
+    telefono: boolean;
+    seguridad: boolean;
+    alberca: boolean;
+    jardin: boolean;
+    elevador: boolean;
+    aireAcondicionado: boolean;
+    calefaccion: boolean;
+    panelesSolares: boolean;
+    tinaco: boolean;
+  };
 }
 
 interface ComparativeProperty {
@@ -1452,7 +1640,24 @@ const PropertyValuation = () => {
     estadoGeneral: 'good',
     latitud: 19.4326,
     longitud: -99.1332,
-    direccionCompleta: 'Av. Insurgentes Sur 1234, Col. Del Valle, CDMX'
+    direccionCompleta: 'Av. Insurgentes Sur 1234, Col. Del Valle, CDMX',
+    servicios: {
+      agua: true,
+      electricidad: true,
+      gas: true,
+      drenaje: true,
+      internet: false,
+      cable: false,
+      telefono: false,
+      seguridad: false,
+      alberca: false,
+      jardin: false,
+      elevador: false,
+      aireAcondicionado: false,
+      calefaccion: false,
+      panelesSolares: false,
+      tinaco: true,
+    }
   });
   
   const [valuation, setValuation] = useState<number | null>(2850000);
@@ -1630,6 +1835,16 @@ const PropertyValuation = () => {
     setPropertyData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleServiceChange = (serviceName: keyof PropertyData['servicios'], checked: boolean) => {
+    setPropertyData(prev => ({
+      ...prev,
+      servicios: {
+        ...prev.servicios,
+        [serviceName]: checked
+      }
     }));
   };
 
@@ -3231,11 +3446,12 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-7">
+                <TabsList className="grid w-full grid-cols-8">
                    <TabsTrigger value="areas">{translations[selectedLanguage].areas}</TabsTrigger>
                    <TabsTrigger value="tipo">{translations[selectedLanguage].propertyType}</TabsTrigger>
                    <TabsTrigger value="espacios">{translations[selectedLanguage].spaces}</TabsTrigger>
                    <TabsTrigger value="caracteristicas">{translations[selectedLanguage].characteristics}</TabsTrigger>
+                   <TabsTrigger value="servicios">{translations[selectedLanguage].services}</TabsTrigger>
                    <TabsTrigger value="ubicacion">{translations[selectedLanguage].location}</TabsTrigger>
                    <TabsTrigger value="fotos">{translations[selectedLanguage].photos}</TabsTrigger>
                    <TabsTrigger value="ajustes">{translations[selectedLanguage].valuation}</TabsTrigger>
@@ -3335,20 +3551,20 @@ const PropertyValuation = () => {
                          { key: 'salas', label: translations[selectedLanguage].livingRooms, description: translations[selectedLanguage].livingRoomsDescription },
                          { key: 'comedor', label: translations[selectedLanguage].diningRoom, description: translations[selectedLanguage].diningRoomDescription },
                          { key: 'banos', label: translations[selectedLanguage].bathrooms, description: translations[selectedLanguage].bathroomsDescription }
-                       ].map(({ key, label, description }) => (
-                        <div key={key} className="space-y-1">
-                          <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
-                          <Input
-                            id={key}
-                            type="number"
-                            value={propertyData[key as keyof PropertyData] || ''}
-                            onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
-                            placeholder="0"
-                            className="text-center"
-                          />
-                          <p className="text-xs text-muted-foreground">{description}</p>
-                        </div>
-                      ))}
+                        ].map(({ key, label, description }) => (
+                         <div key={key} className="space-y-1">
+                           <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
+                           <Input
+                             id={key}
+                             type="number"
+                             value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
+                             onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                             placeholder="0"
+                             className="text-center"
+                           />
+                           <p className="text-xs text-muted-foreground">{description}</p>
+                         </div>
+                       ))}
                     </div>
                   </div>
 
@@ -3361,20 +3577,20 @@ const PropertyValuation = () => {
                         { key: 'areaServicio', label: 'Área de Servicio/Lavado', description: 'Cuarto de lavado/servicio' },
                         { key: 'bodega', label: 'Bodegas/Trasteros', description: 'Espacios de almacenamiento' },
                         { key: 'cochera', label: 'Cocheras/Garajes', description: 'Espacios para vehículos' }
-                      ].map(({ key, label, description }) => (
-                        <div key={key} className="space-y-1">
-                          <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
-                          <Input
-                            id={key}
-                            type="number"
-                            value={propertyData[key as keyof PropertyData] || ''}
-                            onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
-                            placeholder="0"
-                            className="text-center"
-                          />
-                          <p className="text-xs text-muted-foreground">{description}</p>
-                        </div>
-                      ))}
+                       ].map(({ key, label, description }) => (
+                         <div key={key} className="space-y-1">
+                           <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
+                           <Input
+                             id={key}
+                             type="number"
+                             value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
+                             onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                             placeholder="0"
+                             className="text-center"
+                           />
+                           <p className="text-xs text-muted-foreground">{description}</p>
+                         </div>
+                       ))}
                     </div>
                   </div>
 
@@ -3500,9 +3716,208 @@ const PropertyValuation = () => {
                       </div>
                     </div>
                   </div>
-                </TabsContent>
+                 </TabsContent>
 
-                <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                 <TabsContent value="servicios" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].availableServices}</h3>
+                   
+                   {/* Servicios Básicos */}
+                   <div className="mb-6">
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].basicServices}</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="agua"
+                           checked={propertyData.servicios.agua}
+                           onCheckedChange={(checked) => handleServiceChange('agua', checked as boolean)}
+                         />
+                         <label htmlFor="agua" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].water}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="electricidad"
+                           checked={propertyData.servicios.electricidad}
+                           onCheckedChange={(checked) => handleServiceChange('electricidad', checked as boolean)}
+                         />
+                         <label htmlFor="electricidad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].electricity}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="gas"
+                           checked={propertyData.servicios.gas}
+                           onCheckedChange={(checked) => handleServiceChange('gas', checked as boolean)}
+                         />
+                         <label htmlFor="gas" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].gas}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="drenaje"
+                           checked={propertyData.servicios.drenaje}
+                           onCheckedChange={(checked) => handleServiceChange('drenaje', checked as boolean)}
+                         />
+                         <label htmlFor="drenaje" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].drainage}
+                         </label>
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Servicios Adicionales */}
+                   <div className="mb-6">
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalServices}</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="internet"
+                           checked={propertyData.servicios.internet}
+                           onCheckedChange={(checked) => handleServiceChange('internet', checked as boolean)}
+                         />
+                         <label htmlFor="internet" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].internet}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="cable"
+                           checked={propertyData.servicios.cable}
+                           onCheckedChange={(checked) => handleServiceChange('cable', checked as boolean)}
+                         />
+                         <label htmlFor="cable" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].cable}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="telefono"
+                           checked={propertyData.servicios.telefono}
+                           onCheckedChange={(checked) => handleServiceChange('telefono', checked as boolean)}
+                         />
+                         <label htmlFor="telefono" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].phone}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="seguridad"
+                           checked={propertyData.servicios.seguridad}
+                           onCheckedChange={(checked) => handleServiceChange('seguridad', checked as boolean)}
+                         />
+                         <label htmlFor="seguridad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].security}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="alberca"
+                           checked={propertyData.servicios.alberca}
+                           onCheckedChange={(checked) => handleServiceChange('alberca', checked as boolean)}
+                         />
+                         <label htmlFor="alberca" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].swimmingPool}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="jardin"
+                           checked={propertyData.servicios.jardin}
+                           onCheckedChange={(checked) => handleServiceChange('jardin', checked as boolean)}
+                         />
+                         <label htmlFor="jardin" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].garden}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="elevador"
+                           checked={propertyData.servicios.elevador}
+                           onCheckedChange={(checked) => handleServiceChange('elevador', checked as boolean)}
+                         />
+                         <label htmlFor="elevador" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].elevator}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="aireAcondicionado"
+                           checked={propertyData.servicios.aireAcondicionado}
+                           onCheckedChange={(checked) => handleServiceChange('aireAcondicionado', checked as boolean)}
+                         />
+                         <label htmlFor="aireAcondicionado" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].airConditioning}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="calefaccion"
+                           checked={propertyData.servicios.calefaccion}
+                           onCheckedChange={(checked) => handleServiceChange('calefaccion', checked as boolean)}
+                         />
+                         <label htmlFor="calefaccion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].heating}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="panelesSolares"
+                           checked={propertyData.servicios.panelesSolares}
+                           onCheckedChange={(checked) => handleServiceChange('panelesSolares', checked as boolean)}
+                         />
+                         <label htmlFor="panelesSolares" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].solarPanels}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="tinaco"
+                           checked={propertyData.servicios.tinaco}
+                           onCheckedChange={(checked) => handleServiceChange('tinaco', checked as boolean)}
+                         />
+                         <label htmlFor="tinaco" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].waterTank}
+                         </label>
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Resumen de servicios */}
+                   <div className="bg-muted p-4 rounded-lg">
+                     <h4 className="text-sm font-semibold mb-2">Resumen de Servicios:</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                       <div className="flex justify-between">
+                         <span>Básicos:</span>
+                         <span className="font-medium">
+                           {[propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje].filter(Boolean).length}/4
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>Comunicación:</span>
+                         <span className="font-medium">
+                           {[propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono].filter(Boolean).length}/3
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>Comodidades:</span>
+                         <span className="font-medium">
+                           {[propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion].filter(Boolean).length}/5
+                         </span>
+                       </div>
+                       <div className="flex justify-between">
+                         <span>Especiales:</span>
+                         <span className="font-medium">
+                           {[propertyData.servicios.seguridad, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].filter(Boolean).length}/3
+                         </span>
+                       </div>
+                     </div>
+                   </div>
+                 </TabsContent>
+
+                 <TabsContent value="ubicacion" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
