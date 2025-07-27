@@ -361,6 +361,666 @@ const translations = {
     priceAdjusted: 'Price Adjusted',
     adjustment: 'Adjustment',
     newValue: 'New value'
+  },
+  fr: {
+    // UI Labels principales
+    propertyValuator: 'Évaluateur de Propriétés',
+    professionalSystem: 'Système professionnel d\'évaluation immobilière',
+    languageSelector: 'Langue / Language',
+    propertyData: 'Données de la Propriété',
+    
+    // Pestañas principales
+    areas: 'Superficies',
+    propertyType: 'Type',
+    spaces: 'Espaces',
+    characteristics: 'Caractéristiques',
+    location: 'Localisation',
+    photos: 'Photos',
+    valuation: 'Évaluation',
+    
+    // Sección de áreas
+    constructionAreas: 'Superficies de Construction (m²)',
+    basement: 'Sous-sol',
+    firstFloor: 'Rez-de-chaussée',
+    secondFloor: 'Premier Étage',
+    thirdFloor: 'Deuxième Étage',
+    fourthFloor: 'Troisième Étage',
+    landArea: 'Surface du Terrain',
+    
+    // Tipos de propiedad
+    propertyTypeTitle: 'Type de Propriété',
+    selectPropertyType: 'Sélectionnez le type de propriété',
+    house: 'Maison',
+    apartment: 'Appartement',
+    land: 'Terrain',
+    commercial: 'Commercial',
+    warehouse: 'Entrepôt',
+    
+    // Espacios y características
+    spacesDistribution: 'Distribution des Espaces et Caractéristiques',
+    livingSpaces: 'Espaces Habitables',
+    bedrooms: 'Chambres',
+    bedroomsDescription: 'Nombre de chambres',
+    livingRooms: 'Salons',
+    livingRoomsDescription: 'Espaces de vie principaux',
+    diningRoom: 'Salle à Manger',
+    diningRoomDescription: 'Espaces de repas',
+    bathrooms: 'Salles de Bain Complètes',
+    bathroomsDescription: 'Salles de bain avec douche/baignoire',
+    
+    serviceSpaces: 'Espaces de Service',
+    kitchen: 'Cuisine',
+    kitchenDescription: 'Nombre de cuisines',
+    storage: 'Stockage/Entrepôt',
+    storageDescription: 'Espaces de stockage',
+    serviceArea: 'Zone de Service',
+    serviceAreaDescription: 'Buanderie/local de service',
+    garage: 'Garage',
+    garageDescription: 'Places de parking',
+    others: 'Autres Espaces',
+    othersDescription: 'Bureaux, études, etc.',
+    
+    // Características
+    propertyCharacteristics: 'Caractéristiques de la Propriété',
+    age: 'Âge (années)',
+    ageDescription: 'Années depuis la construction',
+    locationQuality: 'Qualité de l\'Emplacement',
+    locationDescription: 'Évaluer la zone et les accès',
+    generalCondition: 'État Général',
+    conditionDescription: 'Condition physique de la propriété',
+    
+    // Condiciones
+    new: 'Nouveau',
+    good: 'Bon',
+    medium: 'Moyen',
+    regular: 'Régulier',
+    simpleRepairs: 'Réparations Simples',
+    mediumRepairs: 'Réparations Moyennes',
+    importantRepairs: 'Réparations Importantes',
+    seriousDamage: 'Dommages Graves',
+    waste: 'À Démolir',
+    useless: 'Inutilisable',
+    
+    // Ubicaciones
+    excellent: 'Excellent',
+    goodLocation: 'Bon',
+    regularLocation: 'Régulier',
+    badLocation: 'Mauvais',
+    
+    // Ubicación
+    propertyLocation: 'Localisation de la Propriété',
+    clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
+    currentAddress: 'Adresse actuelle',
+    
+    // Fotografías
+    propertyPhotos: 'Photos de la Propriété',
+    uploadPhotos: 'Télécharger des Photos',
+    photosDescription: 'Téléchargez des images intérieures et extérieures de la propriété',
+    removePhoto: 'Supprimer la photo',
+    
+    // Botones de acción
+    calculate: 'Calculer l\'Évaluation',
+    regenerate: 'Régénérer les Comparaisons',
+    downloadPDF: 'Télécharger PDF',
+    downloadWord: 'Télécharger Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Évaluation de la Propriété',
+    estimatedValue: 'Valeur Estimée',
+    priceAdjustment: 'Ajustement du Prix',
+    adjustmentDescription: 'Ajuster le prix final basé sur des facteurs supplémentaires',
+    marketAnalysisTitle: 'Analyse du Marché',
+    comparativeProperties: 'Propriétés Comparatives',
+    averagePrice: 'Prix Moyen',
+    minPrice: 'Prix Minimum',
+    maxPrice: 'Prix Maximum',
+    
+    // Tabla de comparativas
+    property: 'Propriété',
+    builtArea: 'Surface Const.',
+    price: 'Prix',
+    priceM2: 'Prix/m²',
+    distance: 'Distance',
+    
+    // PDF Content
+    residentialValuation: 'ÉVALUATION RÉSIDENTIELLE',
+    apartmentValuation: 'ÉVALUATION D\'APPARTEMENT',
+    landValuation: 'ÉVALUATION DE TERRAIN',
+    commercialValuation: 'ÉVALUATION COMMERCIALE',
+    residentialSubtitle: 'Expertise Professionnelle de Maison d\'Habitation',
+    apartmentSubtitle: 'Expertise Professionnelle d\'Unité d\'Habitation',
+    landSubtitle: 'Expertise Professionnelle de Surface',
+    commercialSubtitle: 'Expertise Professionnelle de Bien Commercial',
+    marketAnalysis: 'Analyse Professionnelle de la Valeur de Marché',
+    propertyLocationPDF: 'LOCALISATION DE LA PROPRIÉTÉ',
+    generalInfo: 'INFORMATIONS GÉNÉRALES',
+    type: 'Type',
+    totalBuiltArea: 'Surface Totale Construite',
+    propertyAreas: 'SURFACES DE LA PROPRIÉTÉ',
+    propertySpaces: 'ESPACES DE LA PROPRIÉTÉ',
+    estimatedValuePDF: 'VALEUR ESTIMÉE',
+    pricePerSqm: 'Prix par m²',
+    basedOnComparables: 'Basé sur 3 comparables',
+    mapLocation: 'LOCALISATION SUR CARTE',
+    address: 'Adresse',
+    viewInGoogleMaps: 'Voir l\'emplacement sur Google Maps',
+    photograph: 'Photographie',
+    totalPhotos: 'Total des photographies dans le dossier',
+    captureDate: 'Date de capture',
+    
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'années',
+    
+    // Messages
+    calculatingValuation: 'Calcul de l\'Évaluation',
+    generatingReport: 'Génération de l\'expertise avec 3 comparables...',
+    valuationCompleted: 'Évaluation Terminée',
+    estimatedValueTitle: 'Valeur estimée',
+    comparables: 'comparables',
+    comparativesUpdated: 'Comparaisons Mises à Jour',
+    newComparativesGenerated: 'De nouvelles propriétés proches ont été générées',
+    currencyChanged: 'Devise Changée',
+    valuationNowIn: 'Évaluation maintenant affichée en',
+    priceAdjusted: 'Prix Ajusté',
+    adjustment: 'Ajustement',
+    newValue: 'Nouvelle valeur'
+  },
+  de: {
+    // UI Labels principales
+    propertyValuator: 'Immobilienbewertung',
+    professionalSystem: 'Professionelles Immobilienbewertungssystem',
+    languageSelector: 'Sprache / Language',
+    propertyData: 'Immobiliendaten',
+    
+    // Pestañas principales
+    areas: 'Flächen',
+    propertyType: 'Typ',
+    spaces: 'Räume',
+    characteristics: 'Eigenschaften',
+    location: 'Lage',
+    photos: 'Fotos',
+    valuation: 'Bewertung',
+    
+    // Sección de áreas
+    constructionAreas: 'Bauflächen (m²)',
+    basement: 'Keller',
+    firstFloor: 'Erdgeschoss',
+    secondFloor: 'Erster Stock',
+    thirdFloor: 'Zweiter Stock',
+    fourthFloor: 'Dritter Stock',
+    landArea: 'Grundstücksfläche',
+    
+    // Tipos de propiedad
+    propertyTypeTitle: 'Immobilientyp',
+    selectPropertyType: 'Immobilientyp auswählen',
+    house: 'Haus',
+    apartment: 'Wohnung',
+    land: 'Grundstück',
+    commercial: 'Gewerblich',
+    warehouse: 'Lager',
+    
+    // Espacios y características
+    spacesDistribution: 'Raumaufteilung und Eigenschaften',
+    livingSpaces: 'Wohnräume',
+    bedrooms: 'Schlafzimmer',
+    bedroomsDescription: 'Anzahl der Schlafzimmer',
+    livingRooms: 'Wohnzimmer',
+    livingRoomsDescription: 'Hauptwohnbereiche',
+    diningRoom: 'Esszimmer',
+    diningRoomDescription: 'Essbereiche',
+    bathrooms: 'Vollbäder',
+    bathroomsDescription: 'Badezimmer mit Dusche/Badewanne',
+    
+    serviceSpaces: 'Wirtschaftsräume',
+    kitchen: 'Küche',
+    kitchenDescription: 'Anzahl der Küchen',
+    storage: 'Lager/Abstellraum',
+    storageDescription: 'Lagerräume',
+    serviceArea: 'Wirtschaftsbereich',
+    serviceAreaDescription: 'Waschküche/Wirtschaftsraum',
+    garage: 'Garage',
+    garageDescription: 'Parkplätze',
+    others: 'Andere Räume',
+    othersDescription: 'Büros, Arbeitszimmer, etc.',
+    
+    // Características
+    propertyCharacteristics: 'Immobilieneigenschaften',
+    age: 'Alter (Jahre)',
+    ageDescription: 'Jahre seit Bau',
+    locationQuality: 'Lagequalität',
+    locationDescription: 'Gebiet und Zugang bewerten',
+    generalCondition: 'Allgemeinzustand',
+    conditionDescription: 'Physischer Zustand der Immobilie',
+    
+    // Condiciones
+    new: 'Neu',
+    good: 'Gut',
+    medium: 'Mittel',
+    regular: 'Regulär',
+    simpleRepairs: 'Einfache Reparaturen',
+    mediumRepairs: 'Mittlere Reparaturen',
+    importantRepairs: 'Wichtige Reparaturen',
+    seriousDamage: 'Schwere Schäden',
+    waste: 'Abbruchreif',
+    useless: 'Unbrauchbar',
+    
+    // Ubicaciones
+    excellent: 'Ausgezeichnet',
+    goodLocation: 'Gut',
+    regularLocation: 'Regulär',
+    badLocation: 'Schlecht',
+    
+    // Ubicación
+    propertyLocation: 'Immobilienlage',
+    clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
+    currentAddress: 'Aktuelle Adresse',
+    
+    // Fotografías
+    propertyPhotos: 'Immobilienfotos',
+    uploadPhotos: 'Fotos Hochladen',
+    photosDescription: 'Innen- und Außenbilder der Immobilie hochladen',
+    removePhoto: 'Foto entfernen',
+    
+    // Botones de acción
+    calculate: 'Bewertung Berechnen',
+    regenerate: 'Vergleiche Regenerieren',
+    downloadPDF: 'PDF Herunterladen',
+    downloadWord: 'Word Herunterladen',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Immobilienbewertung',
+    estimatedValue: 'Geschätzter Wert',
+    priceAdjustment: 'Preisanpassung',
+    adjustmentDescription: 'Endpreis basierend auf zusätzlichen Faktoren anpassen',
+    marketAnalysisTitle: 'Marktanalyse',
+    comparativeProperties: 'Vergleichsimmobilien',
+    averagePrice: 'Durchschnittspreis',
+    minPrice: 'Mindestpreis',
+    maxPrice: 'Höchstpreis',
+    
+    // Tabla de comparativas
+    property: 'Immobilie',
+    builtArea: 'Wohnfläche',
+    price: 'Preis',
+    priceM2: 'Preis/m²',
+    distance: 'Entfernung',
+    
+    // PDF Content
+    residentialValuation: 'WOHNIMMOBILIENBEWERTUNG',
+    apartmentValuation: 'WOHNUNGSBEWERTUNG',
+    landValuation: 'GRUNDSTÜCKSBEWERTUNG',
+    commercialValuation: 'GEWERBEBEWERTUNG',
+    residentialSubtitle: 'Professionelle Wohnhausbewertung',
+    apartmentSubtitle: 'Professionelle Wohneinheitsbewertung',
+    landSubtitle: 'Professionelle Flächenbewertung',
+    commercialSubtitle: 'Professionelle Gewerbeimmobilienbewertung',
+    marketAnalysis: 'Professionelle Marktwertanalyse',
+    propertyLocationPDF: 'IMMOBILIENLAGE',
+    generalInfo: 'ALLGEMEINE INFORMATIONEN',
+    type: 'Typ',
+    totalBuiltArea: 'Gesamte Wohnfläche',
+    propertyAreas: 'IMMOBILIENFLÄCHEN',
+    propertySpaces: 'IMMOBILIENRÄUME',
+    estimatedValuePDF: 'GESCHÄTZTER WERT',
+    pricePerSqm: 'Preis pro m²',
+    basedOnComparables: 'Basierend auf 3 Vergleichsobjekten',
+    mapLocation: 'KARTENSTANDORT',
+    address: 'Adresse',
+    viewInGoogleMaps: 'Standort in Google Maps anzeigen',
+    photograph: 'Fotografie',
+    totalPhotos: 'Gesamtanzahl Fotos in der Akte',
+    captureDate: 'Aufnahmedatum',
+    
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'Jahre',
+    
+    // Messages
+    calculatingValuation: 'Bewertung Berechnen',
+    generatingReport: 'Gutachten mit 3 Vergleichsobjekten erstellen...',
+    valuationCompleted: 'Bewertung Abgeschlossen',
+    estimatedValueTitle: 'Geschätzter Wert',
+    comparables: 'Vergleichsobjekte',
+    comparativesUpdated: 'Vergleiche Aktualisiert',
+    newComparativesGenerated: 'Neue naheliegende Immobilien wurden generiert',
+    currencyChanged: 'Währung Geändert',
+    valuationNowIn: 'Bewertung wird jetzt angezeigt in',
+    priceAdjusted: 'Preis Angepasst',
+    adjustment: 'Anpassung',
+    newValue: 'Neuer Wert'
+  },
+  it: {
+    // UI Labels principales
+    propertyValuator: 'Valutatore di Proprietà',
+    professionalSystem: 'Sistema professionale di valutazione immobiliare',
+    languageSelector: 'Lingua / Language',
+    propertyData: 'Dati della Proprietà',
+    
+    // Pestañas principales
+    areas: 'Aree',
+    propertyType: 'Tipo',
+    spaces: 'Spazi',
+    characteristics: 'Caratteristiche',
+    location: 'Posizione',
+    photos: 'Foto',
+    valuation: 'Valutazione',
+    
+    // Sección de áreas
+    constructionAreas: 'Aree di Costruzione (m²)',
+    basement: 'Seminterrato',
+    firstFloor: 'Piano Terra',
+    secondFloor: 'Primo Piano',
+    thirdFloor: 'Secondo Piano',
+    fourthFloor: 'Terzo Piano',
+    landArea: 'Area del Terreno',
+    
+    // Tipos de propiedad
+    propertyTypeTitle: 'Tipo di Proprietà',
+    selectPropertyType: 'Seleziona il tipo di proprietà',
+    house: 'Casa',
+    apartment: 'Appartamento',
+    land: 'Terreno',
+    commercial: 'Commerciale',
+    warehouse: 'Magazzino',
+    
+    // Espacios y características
+    spacesDistribution: 'Distribuzione degli Spazi e Caratteristiche',
+    livingSpaces: 'Spazi Abitativi',
+    bedrooms: 'Camere da Letto',
+    bedroomsDescription: 'Numero di camere da letto',
+    livingRooms: 'Soggiorni',
+    livingRoomsDescription: 'Aree principali di soggiorno',
+    diningRoom: 'Sala da Pranzo',
+    diningRoomDescription: 'Spazi per mangiare',
+    bathrooms: 'Bagni Completi',
+    bathroomsDescription: 'Bagni con doccia/vasca',
+    
+    serviceSpaces: 'Spazi di Servizio',
+    kitchen: 'Cucina',
+    kitchenDescription: 'Numero di cucine',
+    storage: 'Ripostiglio/Magazzino',
+    storageDescription: 'Spazi di stoccaggio',
+    serviceArea: 'Area di Servizio',
+    serviceAreaDescription: 'Lavanderia/locale di servizio',
+    garage: 'Garage',
+    garageDescription: 'Posti auto',
+    others: 'Altri Spazi',
+    othersDescription: 'Studi, uffici, ecc.',
+    
+    // Características
+    propertyCharacteristics: 'Caratteristiche della Proprietà',
+    age: 'Età (anni)',
+    ageDescription: 'Anni dalla costruzione',
+    locationQuality: 'Qualità della Posizione',
+    locationDescription: 'Valuta zona e accessi',
+    generalCondition: 'Condizione Generale',
+    conditionDescription: 'Condizione fisica della proprietà',
+    
+    // Condiciones
+    new: 'Nuovo',
+    good: 'Buono',
+    medium: 'Medio',
+    regular: 'Regolare',
+    simpleRepairs: 'Riparazioni Semplici',
+    mediumRepairs: 'Riparazioni Medie',
+    importantRepairs: 'Riparazioni Importanti',
+    seriousDamage: 'Danni Gravi',
+    waste: 'Da Demolire',
+    useless: 'Inutilizzabile',
+    
+    // Ubicaciones
+    excellent: 'Eccellente',
+    goodLocation: 'Buona',
+    regularLocation: 'Regolare',
+    badLocation: 'Cattiva',
+    
+    // Ubicación
+    propertyLocation: 'Posizione della Proprietà',
+    clickOnMap: 'Clicca sulla mappa per selezionare la posizione esatta della proprietà',
+    currentAddress: 'Indirizzo attuale',
+    
+    // Fotografías
+    propertyPhotos: 'Foto della Proprietà',
+    uploadPhotos: 'Carica Foto',
+    photosDescription: 'Carica immagini interne ed esterne della proprietà',
+    removePhoto: 'Rimuovi foto',
+    
+    // Botones de acción
+    calculate: 'Calcola Valutazione',
+    regenerate: 'Rigenera Comparazioni',
+    downloadPDF: 'Scarica PDF',
+    downloadWord: 'Scarica Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Valutazione della Proprietà',
+    estimatedValue: 'Valore Stimato',
+    priceAdjustment: 'Aggiustamento del Prezzo',
+    adjustmentDescription: 'Aggiusta il prezzo finale basato su fattori aggiuntivi',
+    marketAnalysisTitle: 'Analisi di Mercato',
+    comparativeProperties: 'Proprietà Comparative',
+    averagePrice: 'Prezzo Medio',
+    minPrice: 'Prezzo Minimo',
+    maxPrice: 'Prezzo Massimo',
+    
+    // Tabla de comparativas
+    property: 'Proprietà',
+    builtArea: 'Area Costr.',
+    price: 'Prezzo',
+    priceM2: 'Prezzo/m²',
+    distance: 'Distanza',
+    
+    // PDF Content
+    residentialValuation: 'VALUTAZIONE RESIDENZIALE',
+    apartmentValuation: 'VALUTAZIONE DI APPARTAMENTO',
+    landValuation: 'VALUTAZIONE DI TERRENO',
+    commercialValuation: 'VALUTAZIONE COMMERCIALE',
+    residentialSubtitle: 'Perizia Professionale di Casa di Abitazione',
+    apartmentSubtitle: 'Perizia Professionale di Unità Abitativa',
+    landSubtitle: 'Perizia Professionale di Superficie',
+    commercialSubtitle: 'Perizia Professionale di Bene Commerciale',
+    marketAnalysis: 'Analisi Professionale del Valore di Mercato',
+    propertyLocationPDF: 'POSIZIONE DELLA PROPRIETÀ',
+    generalInfo: 'INFORMAZIONI GENERALI',
+    type: 'Tipo',
+    totalBuiltArea: 'Area Totale Costruita',
+    propertyAreas: 'AREE DELLA PROPRIETÀ',
+    propertySpaces: 'SPAZI DELLA PROPRIETÀ',
+    estimatedValuePDF: 'VALORE STIMATO',
+    pricePerSqm: 'Prezzo per m²',
+    basedOnComparables: 'Basato su 3 comparabili',
+    mapLocation: 'POSIZIONE SULLA MAPPA',
+    address: 'Indirizzo',
+    viewInGoogleMaps: 'Visualizza posizione su Google Maps',
+    photograph: 'Fotografia',
+    totalPhotos: 'Totale fotografie nel fascicolo',
+    captureDate: 'Data di acquisizione',
+    
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'anni',
+    
+    // Messages
+    calculatingValuation: 'Calcolo Valutazione',
+    generatingReport: 'Generazione perizia con 3 comparabili...',
+    valuationCompleted: 'Valutazione Completata',
+    estimatedValueTitle: 'Valore stimato',
+    comparables: 'comparabili',
+    comparativesUpdated: 'Comparazioni Aggiornate',
+    newComparativesGenerated: 'Sono state generate nuove proprietà vicine',
+    currencyChanged: 'Valuta Cambiata',
+    valuationNowIn: 'Valutazione ora mostrata in',
+    priceAdjusted: 'Prezzo Aggiustato',
+    adjustment: 'Aggiustamento',
+    newValue: 'Nuovo valore'
+  },
+  pt: {
+    // UI Labels principales
+    propertyValuator: 'Avaliador de Propriedades',
+    professionalSystem: 'Sistema profissional de avaliação imobiliária',
+    languageSelector: 'Idioma / Language',
+    propertyData: 'Dados da Propriedade',
+    
+    // Pestañas principales
+    areas: 'Áreas',
+    propertyType: 'Tipo',
+    spaces: 'Espaços',
+    characteristics: 'Características',
+    location: 'Localização',
+    photos: 'Fotos',
+    valuation: 'Avaliação',
+    
+    // Sección de áreas
+    constructionAreas: 'Áreas de Construção (m²)',
+    basement: 'Subsolo',
+    firstFloor: 'Térreo',
+    secondFloor: 'Primeiro Andar',
+    thirdFloor: 'Segundo Andar',
+    fourthFloor: 'Terceiro Andar',
+    landArea: 'Área do Terreno',
+    
+    // Tipos de propiedad
+    propertyTypeTitle: 'Tipo de Propriedade',
+    selectPropertyType: 'Selecione o tipo de propriedade',
+    house: 'Casa',
+    apartment: 'Apartamento',
+    land: 'Terreno',
+    commercial: 'Comercial',
+    warehouse: 'Armazém',
+    
+    // Espacios y características
+    spacesDistribution: 'Distribuição de Espaços e Características',
+    livingSpaces: 'Espaços Habitacionais',
+    bedrooms: 'Quartos',
+    bedroomsDescription: 'Número de quartos',
+    livingRooms: 'Salas de Estar',
+    livingRoomsDescription: 'Áreas principais de estar',
+    diningRoom: 'Sala de Jantar',
+    diningRoomDescription: 'Espaços de refeição',
+    bathrooms: 'Banheiros Completos',
+    bathroomsDescription: 'Banheiros com chuveiro/banheira',
+    
+    serviceSpaces: 'Espaços de Serviço',
+    kitchen: 'Cozinha',
+    kitchenDescription: 'Número de cozinhas',
+    storage: 'Depósito/Armazém',
+    storageDescription: 'Espaços de armazenamento',
+    serviceArea: 'Área de Serviço',
+    serviceAreaDescription: 'Lavanderia/área de serviço',
+    garage: 'Garagem',
+    garageDescription: 'Vagas de estacionamento',
+    others: 'Outros Espaços',
+    othersDescription: 'Escritórios, estudos, etc.',
+    
+    // Características
+    propertyCharacteristics: 'Características da Propriedade',
+    age: 'Idade (anos)',
+    ageDescription: 'Anos desde a construção',
+    locationQuality: 'Qualidade da Localização',
+    locationDescription: 'Avaliar área e acessos',
+    generalCondition: 'Estado Geral',
+    conditionDescription: 'Condição física da propriedade',
+    
+    // Condiciones
+    new: 'Novo',
+    good: 'Bom',
+    medium: 'Médio',
+    regular: 'Regular',
+    simpleRepairs: 'Reparos Simples',
+    mediumRepairs: 'Reparos Médios',
+    importantRepairs: 'Reparos Importantes',
+    seriousDamage: 'Danos Graves',
+    waste: 'Para Demolição',
+    useless: 'Inutilizável',
+    
+    // Ubicaciones
+    excellent: 'Excelente',
+    goodLocation: 'Boa',
+    regularLocation: 'Regular',
+    badLocation: 'Ruim',
+    
+    // Ubicación
+    propertyLocation: 'Localização da Propriedade',
+    clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
+    currentAddress: 'Endereço atual',
+    
+    // Fotografías
+    propertyPhotos: 'Fotos da Propriedade',
+    uploadPhotos: 'Enviar Fotos',
+    photosDescription: 'Envie imagens internas e externas da propriedade',
+    removePhoto: 'Remover foto',
+    
+    // Botones de acción
+    calculate: 'Calcular Avaliação',
+    regenerate: 'Regenerar Comparações',
+    downloadPDF: 'Baixar PDF',
+    downloadWord: 'Baixar Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Avaliação da Propriedade',
+    estimatedValue: 'Valor Estimado',
+    priceAdjustment: 'Ajuste de Preço',
+    adjustmentDescription: 'Ajustar preço final baseado em fatores adicionais',
+    marketAnalysisTitle: 'Análise de Mercado',
+    comparativeProperties: 'Propriedades Comparativas',
+    averagePrice: 'Preço Médio',
+    minPrice: 'Preço Mínimo',
+    maxPrice: 'Preço Máximo',
+    
+    // Tabla de comparativas
+    property: 'Propriedade',
+    builtArea: 'Área Const.',
+    price: 'Preço',
+    priceM2: 'Preço/m²',
+    distance: 'Distância',
+    
+    // PDF Content
+    residentialValuation: 'AVALIAÇÃO RESIDENCIAL',
+    apartmentValuation: 'AVALIAÇÃO DE APARTAMENTO',
+    landValuation: 'AVALIAÇÃO DE TERRENO',
+    commercialValuation: 'AVALIAÇÃO COMERCIAL',
+    residentialSubtitle: 'Laudo Profissional de Casa de Habitação',
+    apartmentSubtitle: 'Laudo Profissional de Unidade Habitacional',
+    landSubtitle: 'Laudo Profissional de Superfície',
+    commercialSubtitle: 'Laudo Profissional de Bem Comercial',
+    marketAnalysis: 'Análise Profissional de Valor de Mercado',
+    propertyLocationPDF: 'LOCALIZAÇÃO DA PROPRIEDADE',
+    generalInfo: 'INFORMAÇÕES GERAIS',
+    type: 'Tipo',
+    totalBuiltArea: 'Área Total Construída',
+    propertyAreas: 'ÁREAS DA PROPRIEDADE',
+    propertySpaces: 'ESPAÇOS DA PROPRIEDADE',
+    estimatedValuePDF: 'VALOR ESTIMADO',
+    pricePerSqm: 'Preço por m²',
+    basedOnComparables: 'Baseado em 3 comparáveis',
+    mapLocation: 'LOCALIZAÇÃO NO MAPA',
+    address: 'Endereço',
+    viewInGoogleMaps: 'Ver localização no Google Maps',
+    photograph: 'Fotografia',
+    totalPhotos: 'Total de fotografias no arquivo',
+    captureDate: 'Data de captura',
+    
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'anos',
+    
+    // Messages
+    calculatingValuation: 'Calculando Avaliação',
+    generatingReport: 'Gerando laudo com 3 comparáveis...',
+    valuationCompleted: 'Avaliação Concluída',
+    estimatedValueTitle: 'Valor estimado',
+    comparables: 'comparáveis',
+    comparativesUpdated: 'Comparações Atualizadas',
+    newComparativesGenerated: 'Novas propriedades próximas foram geradas',
+    currencyChanged: 'Moeda Alterada',
+    valuationNowIn: 'Avaliação agora mostrada em',
+    priceAdjusted: 'Preço Ajustado',
+    adjustment: 'Ajuste',
+    newValue: 'Novo valor'
   }
 };
 
