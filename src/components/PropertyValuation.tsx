@@ -585,23 +585,42 @@ const PropertyValuation = () => {
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
 
-      // Dirección del inmueble (nueva sección)
+      // Dirección del inmueble (sección profesional destacada)
       if (propertyData.direccionCompleta) {
-        doc.setFillColor(240, 240, 240);
-        doc.rect(marginLeft, yPosition, contentWidth, 12, 'F');
+        yPosition += 10; // Margen superior
         
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(11);
+        // Marco decorativo para la dirección
+        doc.setFillColor(248, 250, 252); // Gris muy claro
+        doc.rect(marginLeft - 5, yPosition, contentWidth + 10, 25, 'F');
+        
+        // Borde izquierdo de color
+        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.rect(marginLeft - 5, yPosition, 4, 25, 'F');
+        
+        // Borde exterior sutil
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.5);
+        doc.rect(marginLeft - 5, yPosition, contentWidth + 10, 25);
+        
+        // Título de la sección
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text('DIRECCIÓN DEL INMUEBLE:', marginLeft + 5, yPosition + 8);
+        doc.text('📍 UBICACIÓN DEL INMUEBLE', marginLeft + 5, yPosition + 8);
         
+        // Línea separadora sutil
+        doc.setDrawColor(220, 220, 220);
+        doc.setLineWidth(0.3);
+        doc.line(marginLeft + 5, yPosition + 10, marginLeft + contentWidth - 5, yPosition + 10);
+        
+        // Dirección con formato elegante
+        doc.setTextColor(60, 60, 60);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        // Dividir dirección larga en múltiples líneas si es necesario
-        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 10);
+        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 20);
         doc.text(addressLines, marginLeft + 5, yPosition + 16);
         
-        yPosition += 20 + (addressLines.length > 1 ? (addressLines.length - 1) * 4 : 0);
+        yPosition += 35 + (addressLines.length > 1 ? (addressLines.length - 1) * 4 : 0);
       }
 
       // Información general
