@@ -3055,84 +3055,6 @@ const PropertyValuation = () => {
         }
       }
 
-      // Agregar fotografías continuando en la misma página
-      if (propertyImages.length > 0) {
-        // Continuar en la misma página
-        yPosition += 15;
-
-        // Título de la sección de fotografías
-        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE", marginLeft, yPosition + 5);
-        doc.setTextColor(0, 0, 0);
-        yPosition += 25;
-
-        // Configuración para imágenes en página continua
-        const imageHeight = 55; // Altura de cada imagen
-        const imageWidth = 90; // Ancho de cada imagen
-        const spacingBetweenImages = 15;
-        
-        // Procesar todas las imágenes en página continua
-        for (let i = 0; i < propertyImages.length; i++) {
-          const imageData = propertyImages[i];
-          
-          try {
-            // Centrar imagen horizontalmente
-            const imageX = (pageWidth - imageWidth) / 2;
-            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
-            
-            // Añadir imagen
-            doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
-            
-            // Marco alrededor de la imagen
-            doc.setDrawColor(180, 180, 180);
-            doc.setLineWidth(0.5);
-            doc.rect(imageX, currentY, imageWidth, imageHeight);
-            
-            // Numeración y descripción de imagen
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(80, 80, 80);
-            doc.text(`Fotografía ${i + 1}`, imageX, currentY + imageHeight + 8);
-            
-            doc.setFontSize(8);
-            doc.setFont("helvetica", "normal");
-            doc.text(`Vista del inmueble - Archivo oficial`, imageX, currentY + imageHeight + 15);
-            
-            // Restaurar color de texto
-            doc.setTextColor(0, 0, 0);
-            
-          } catch (imgError) {
-            console.error('Error agregando imagen:', imgError);
-            
-            // En caso de error, mostrar un placeholder
-            doc.setFillColor(240, 240, 240);
-            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
-            const imageX = (pageWidth - imageWidth) / 2;
-            doc.rect(imageX, currentY, imageWidth, imageHeight, 'F');
-            doc.setTextColor(120, 120, 120);
-            doc.setFontSize(10);
-            doc.text(`Imagen ${i + 1} no disponible`, imageX + imageWidth/2, currentY + imageHeight/2, { align: "center" });
-            doc.setTextColor(0, 0, 0);
-          }
-        }
-
-        // Información adicional al final de las fotos
-        const finalY = yPosition + (propertyImages.length * (imageHeight + spacingBetweenImages)) + 20;
-        doc.setFillColor(248, 250, 252);
-        doc.rect(marginLeft, finalY - 5, contentWidth, 25, 'F');
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(100, 100, 100);
-        doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, finalY + 5, { align: "center" });
-        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, finalY + 12, { align: "center" });
-        doc.text("Fotografías tomadas para fines de valuación profesional", pageWidth / 2, finalY + 19, { align: "center" });
-        doc.setTextColor(0, 0, 0);
-      }
-
       // SECCIÓN FINAL - CONCLUSIONES Y CERTIFICACIÓN
       yPosition += 30;
 
@@ -3282,6 +3204,129 @@ const PropertyValuation = () => {
       doc.text(`Reporte generado el ${new Date().toLocaleDateString('es-ES')} - Página ${doc.getNumberOfPages()}`, pageWidth / 2, yPosition, { align: "center" });
       doc.text("Este avalúo es válido únicamente para la fecha de su elaboración", pageWidth / 2, yPosition + 8, { align: "center" });
       doc.setTextColor(0, 0, 0);
+
+      // ANEXO DE FOTOGRAFÍAS - Al final del documento
+      if (propertyImages.length > 0) {
+        yPosition += 40;
+
+        // Título de la sección de fotografías
+        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.rect(marginLeft, yPosition - 5, contentWidth, 20, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("ANEXO FOTOGRÁFICO", marginLeft, yPosition + 8);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 30;
+
+        // Subtítulo
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE", marginLeft, yPosition);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 15;
+
+        // Configuración para imágenes
+        const imageHeight = 65; // Altura de cada imagen
+        const imageWidth = 100; // Ancho de cada imagen
+        const spacingBetweenImages = 20;
+        
+        // Procesar todas las imágenes
+        for (let i = 0; i < propertyImages.length; i++) {
+          const imageData = propertyImages[i];
+          
+          try {
+            // Centrar imagen horizontalmente
+            const imageX = (pageWidth - imageWidth) / 2;
+            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
+            
+            // Marco decorativo alrededor de la imagen
+            doc.setFillColor(248, 250, 252);
+            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25, 'F');
+            doc.setDrawColor(180, 180, 180);
+            doc.setLineWidth(1);
+            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25);
+            
+            // Añadir imagen
+            doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
+            
+            // Marco alrededor de la imagen
+            doc.setDrawColor(120, 120, 120);
+            doc.setLineWidth(0.8);
+            doc.rect(imageX, currentY, imageWidth, imageHeight);
+            
+            // Numeración y descripción de imagen
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+            doc.text(`FOTOGRAFÍA ${i + 1}`, imageX + imageWidth/2, currentY + imageHeight + 12, { align: "center" });
+            
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(80, 80, 80);
+            doc.text(`Vista del inmueble - Archivo oficial del avalúo`, imageX + imageWidth/2, currentY + imageHeight + 18, { align: "center" });
+            
+            // Restaurar color de texto
+            doc.setTextColor(0, 0, 0);
+            
+          } catch (imgError) {
+            console.error('Error agregando imagen:', imgError);
+            
+            // En caso de error, mostrar un placeholder mejorado
+            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
+            const imageX = (pageWidth - imageWidth) / 2;
+            
+            // Marco decorativo
+            doc.setFillColor(248, 250, 252);
+            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25, 'F');
+            doc.setDrawColor(180, 180, 180);
+            doc.setLineWidth(1);
+            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25);
+            
+            // Placeholder
+            doc.setFillColor(240, 240, 240);
+            doc.rect(imageX, currentY, imageWidth, imageHeight, 'F');
+            doc.setDrawColor(200, 200, 200);
+            doc.rect(imageX, currentY, imageWidth, imageHeight);
+            
+            doc.setTextColor(120, 120, 120);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Imagen ${i + 1}`, imageX + imageWidth/2, currentY + imageHeight/2 - 5, { align: "center" });
+            doc.text("no disponible", imageX + imageWidth/2, currentY + imageHeight/2 + 5, { align: "center" });
+            doc.setTextColor(0, 0, 0);
+            
+            // Descripción
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+            doc.text(`FOTOGRAFÍA ${i + 1}`, imageX + imageWidth/2, currentY + imageHeight + 12, { align: "center" });
+            doc.setTextColor(0, 0, 0);
+          }
+        }
+
+        // Información final del anexo fotográfico
+        const finalPhotoY = yPosition + (propertyImages.length * (imageHeight + spacingBetweenImages)) + 15;
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft, finalPhotoY - 5, contentWidth, 35, 'F');
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.5);
+        doc.rect(marginLeft, finalPhotoY - 5, contentWidth, 35);
+        
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.text("RESUMEN DEL ANEXO FOTOGRÁFICO", pageWidth / 2, finalPhotoY + 5, { align: "center" });
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(80, 80, 80);
+        doc.text(`Total de fotografías incluidas: ${propertyImages.length}`, pageWidth / 2, finalPhotoY + 12, { align: "center" });
+        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, finalPhotoY + 18, { align: "center" });
+        doc.text("Fotografías tomadas específicamente para este avalúo inmobiliario", pageWidth / 2, finalPhotoY + 24, { align: "center" });
+        doc.setTextColor(0, 0, 0);
+      }
 
       // Guardar PDF
       const fileName = `reporte-valuacion-${Date.now()}.pdf`;
