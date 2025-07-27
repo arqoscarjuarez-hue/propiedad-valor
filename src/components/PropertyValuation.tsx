@@ -1083,38 +1083,148 @@ const PropertyValuation = () => {
   const { toast } = useToast();
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
-    areaPrimerNivel: 0,
-    areaSegundoNivel: 0,
+    areaPrimerNivel: 120,
+    areaSegundoNivel: 100,
     areaTercerNivel: 0,
     areaCuartoNivel: 0,
-    areaTerreno: 0,
-    tipoPropiedad: '',
-    recamaras: 0,
-    salas: 0,
-    comedor: 0,
-    cocina: 0,
-    bodega: 0,
-    areaServicio: 0,
-    cochera: 0,
-    banos: 0,
-    otros: 0,
-    antiguedad: 0,
-    ubicacion: '',
-    estadoGeneral: '',
+    areaTerreno: 200,
+    tipoPropiedad: 'casa',
+    recamaras: 3,
+    salas: 2,
+    comedor: 1,
+    cocina: 1,
+    bodega: 1,
+    areaServicio: 1,
+    cochera: 2,
+    banos: 2,
+    otros: 1,
+    antiguedad: 5,
+    ubicacion: 'good',
+    estadoGeneral: 'good',
     latitud: 19.4326,
     longitud: -99.1332,
-    direccionCompleta: ''
+    direccionCompleta: 'Av. Insurgentes Sur 1234, Col. Del Valle, CDMX'
   });
   
-  const [valuation, setValuation] = useState<number | null>(null);
-  const [baseValuation, setBaseValuation] = useState<number | null>(null);
-  const [priceAdjustment, setPriceAdjustment] = useState<number>(0); // Porcentaje de ajuste (-30 a +30)
+  const [valuation, setValuation] = useState<number | null>(2850000);
+  const [baseValuation, setBaseValuation] = useState<number | null>(2850000);
+  const [priceAdjustment, setPriceAdjustment] = useState<number>(0);
   const [multipleValuations, setMultipleValuations] = useState<Array<{
     id: number;
     valor: number;
     comparatives: ComparativeProperty[];
-  }>>([]);
-  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
+  }>>([
+    {
+      id: 1,
+      valor: 2850000,
+      comparatives: [
+        {
+          id: '1',
+          address: 'Av. Insurgentes Sur 1200, Del Valle',
+          areaConstruida: 180,
+          areaTerreno: 180,
+          tipoPropiedad: 'casa',
+          recamaras: 3,
+          banos: 2,
+          antiguedad: 4,
+          ubicacion: 'excellent',
+          estadoGeneral: 'good',
+          precio: 2950000,
+          distancia: 150,
+          descripcion: 'Casa moderna en excelente zona',
+          latitud: 19.4320,
+          longitud: -99.1330
+        },
+        {
+          id: '2',
+          address: 'Calle Medellin 123, Roma Norte',
+          areaConstruida: 200,
+          areaTerreno: 220,
+          tipoPropiedad: 'casa',
+          recamaras: 3,
+          banos: 2,
+          antiguedad: 6,
+          ubicacion: 'excellent',
+          estadoGeneral: 'good',
+          precio: 3200000,
+          distancia: 450,
+          descripcion: 'Casa estilo colonial renovada',
+          latitud: 19.4180,
+          longitud: -99.1320
+        },
+        {
+          id: '3',
+          address: 'Av. Patriotismo 890, San Pedro de los Pinos',
+          areaConstruida: 170,
+          areaTerreno: 190,
+          tipoPropiedad: 'casa',
+          recamaras: 2,
+          banos: 2,
+          antiguedad: 7,
+          ubicacion: 'good',
+          estadoGeneral: 'medium',
+          precio: 2400000,
+          distancia: 680,
+          descripcion: 'Casa tradicional con jardín',
+          latitud: 19.4280,
+          longitud: -99.1380
+        }
+      ]
+    }
+  ]);
+  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([
+    {
+      id: '1',
+      address: 'Av. Insurgentes Sur 1200, Del Valle',
+      areaConstruida: 180,
+      areaTerreno: 180,
+      tipoPropiedad: 'casa',
+      recamaras: 3,
+      banos: 2,
+      antiguedad: 4,
+      ubicacion: 'excellent',
+      estadoGeneral: 'good',
+      precio: 2950000,
+      distancia: 150,
+      descripcion: 'Casa moderna en excelente zona',
+      latitud: 19.4320,
+      longitud: -99.1330
+    },
+    {
+      id: '2',
+      address: 'Calle Medellin 123, Roma Norte',
+      areaConstruida: 200,
+      areaTerreno: 220,
+      tipoPropiedad: 'casa',
+      recamaras: 3,
+      banos: 2,
+      antiguedad: 6,
+      ubicacion: 'excellent',
+      estadoGeneral: 'good',
+      precio: 3200000,
+      distancia: 450,
+      descripcion: 'Casa estilo colonial renovada',
+      latitud: 19.4180,
+      longitud: -99.1320
+    },
+    {
+      id: '3',
+      address: 'Av. Patriotismo 890, San Pedro de los Pinos',
+      areaConstruida: 170,
+      areaTerreno: 190,
+      tipoPropiedad: 'casa',
+      recamaras: 2,
+      banos: 2,
+      antiguedad: 7,
+      ubicacion: 'good',
+      estadoGeneral: 'medium',
+      precio: 2400000,
+      distancia: 680,
+      descripcion: 'Casa tradicional con jardín',
+      latitud: 19.4280,
+      longitud: -99.1380
+    }
+  ]);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>({
     code: 'USD',
     name: 'Dólar Estadounidense',
