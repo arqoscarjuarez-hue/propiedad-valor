@@ -3909,7 +3909,6 @@ const PropertyValuation = () => {
                             <SelectItem value="reparaciones-importantes">REPARACIONES IMPORTANTES - Estructura, instalaciones</SelectItem>
                             <SelectItem value="danos-graves">DAÑOS GRAVES - Problemas estructurales serios</SelectItem>
                             <SelectItem value="en-desecho">EN DESECHO - Demolición parcial necesaria</SelectItem>
-                            <SelectItem value="inservibles">INSERVIBLES - Propiedad no habitable</SelectItem>
                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">Afecta directamente el valor de la propiedad</p>
