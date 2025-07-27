@@ -4066,7 +4066,7 @@ const PropertyValuation = () => {
       });
 
       // Por ahora, generar un documento simple como placeholder
-      const doc = new Document({
+      const doc = new DocxDocument({
         sections: [{
           properties: {},
           children: [
@@ -4075,30 +4075,30 @@ const PropertyValuation = () => {
               heading: HeadingLevel.TITLE,
               alignment: AlignmentType.CENTER
             }),
-            new Paragraph(""),
+            new Paragraph({ text: "" }),
             new Paragraph({
               text: "PROPIEDADES COMPARABLES",
               heading: HeadingLevel.HEADING_1
             }),
-            new Paragraph(`Se incluyen ${comparativeProperties.length} propiedades comparables.`),
-            new Paragraph(""),
+            new Paragraph({ text: `Se incluyen ${comparativeProperties.length} propiedades comparables.` }),
+            new Paragraph({ text: "" }),
             new Paragraph({
               text: "ANÁLISIS DE MERCADO",
               heading: HeadingLevel.HEADING_1
             }),
-            new Paragraph("Análisis basado en las propiedades comparables."),
-            new Paragraph(""),
+            new Paragraph({ text: "Análisis basado en las propiedades comparables." }),
+            new Paragraph({ text: "" }),
             new Paragraph({
               text: "ANÁLISIS DETALLADO DE COMPARABLES",
               heading: HeadingLevel.HEADING_1
             }),
-            new Paragraph("Detalles de cada propiedad comparable."),
-            new Paragraph(""),
+            new Paragraph({ text: "Detalles de cada propiedad comparable." }),
+            new Paragraph({ text: "" }),
             new Paragraph({
               text: "ANEXO FOTOGRÁFICO",
               heading: HeadingLevel.HEADING_1
             }),
-            new Paragraph(`Se incluyen ${propertyImages.length} fotografías del inmueble.`)
+            new Paragraph({ text: `Se incluyen ${propertyImages.length} fotografías del inmueble.` })
           ]
         }]
       });
@@ -4195,6 +4195,30 @@ const PropertyValuation = () => {
                 >
                   <Download className="mr-2 h-4 w-4" />
                   {translations[selectedLanguage].downloadWord}
+                </Button>
+                
+                {/* Separador visual */}
+                <div className="border-t border-green-200 dark:border-green-700 my-2"></div>
+                
+                {/* Botones de Anexos */}
+                <Button 
+                  onClick={generateAnnexPDF} 
+                  variant="outline" 
+                  className="w-full border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300"
+                  size="sm"
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  {translations[selectedLanguage].downloadAnnexPDF}
+                </Button>
+                
+                <Button 
+                  onClick={generateAnnexWord} 
+                  variant="outline" 
+                  className="w-full border-orange-300 dark:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300"
+                  size="sm"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  {translations[selectedLanguage].downloadAnnexWord}
                 </Button>
               </div>
             </Card>
