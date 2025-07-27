@@ -2294,22 +2294,38 @@ const PropertyValuation = () => {
     }
 
     try {
-      // Calcular altura total necesaria aproximada
-      const estimatedHeight = 600; // mm aproximados para todo el contenido
+      // Crear PDF en tamaño carta (8.5" x 11" = 216mm x 279mm) con páginas múltiples
+      const doc = new jsPDF('portrait', 'mm', 'letter'); // Tamaño carta estándar
+      const pageWidth = doc.internal.pageSize.width; // 216mm
+      const pageHeight = doc.internal.pageSize.height; // 279mm
       
-      // Crear PDF con altura personalizada para una sola página continua
-      const doc = new jsPDF('portrait', 'mm', [216, estimatedHeight]); // Ancho carta, altura extendida
-      const pageWidth = doc.internal.pageSize.width; // ~216mm
-      const pageHeight = doc.internal.pageSize.height; // altura extendida
-      
-      // Márgenes reducidos para aprovechar el espacio
-      const marginLeft = 20; // 20mm margen izquierdo
-      const marginRight = 20; // 20mm margen derecho  
-      const marginTop = 15; // 15mm margen superior
-      const marginBottom = 15; // 15mm margen inferior
-      const contentWidth = pageWidth - marginLeft - marginRight; // Ancho del contenido
+      // Márgenes profesionales estándar
+      const marginLeft = 25.4; // 1 pulgada = 25.4mm
+      const marginRight = 25.4; // 1 pulgada = 25.4mm  
+      const marginTop = 25.4; // 1 pulgada = 25.4mm
+      const marginBottom = 25.4; // 1 pulgada = 25.4mm
+      const contentWidth = pageWidth - marginLeft - marginRight; // Ancho útil del contenido
+      const contentHeight = pageHeight - marginTop - marginBottom; // Alto útil del contenido
       
       let yPosition = marginTop;
+      
+      // Función para verificar si necesitamos una nueva página
+      const checkPageBreak = (requiredSpace: number = 20) => {
+        if (yPosition + requiredSpace > pageHeight - marginBottom) {
+          doc.addPage();
+          yPosition = marginTop;
+          
+          // Agregar header reducido en páginas adicionales
+          doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+          doc.rect(0, 0, pageWidth, 20, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.text(`${config.title} - Continuación`, pageWidth / 2, 12, { align: "center" });
+          doc.setTextColor(0, 0, 0);
+          yPosition = marginTop + 25;
+        }
+      };
 
       // Obtener configuración del membrete seleccionado
       const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
@@ -2368,6 +2384,9 @@ const PropertyValuation = () => {
         
         yPosition += 35 + (addressLines.length > 1 ? (addressLines.length - 1) * 4 : 0);
       }
+
+      // Verificar página antes de información general
+      checkPageBreak(50);
 
       // Información general
       doc.setFontSize(14);
@@ -2665,6 +2684,9 @@ const PropertyValuation = () => {
       doc.text(`TOTAL GENERAL DE ESPACIOS: ${totalEspacios}`, 25, yPosition + 21);
       yPosition += 30;
 
+      // Verificar página antes de servicios disponibles
+      checkPageBreak(80);
+
       // Sección de Servicios Disponibles
       doc.setFillColor(245, 245, 245);
       doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
@@ -2796,7 +2818,9 @@ const PropertyValuation = () => {
 
       // Tabla de comparables
       if (comparativeProperties.length > 0) {
-        // Sin salto de página para contenido continuo
+        // Verificar página antes de comparables
+        checkPageBreak(100);
+        
         yPosition += 10;
 
         doc.setFontSize(14);
@@ -2883,11 +2907,11 @@ const PropertyValuation = () => {
       if (propertyImages.length > 0) {
         // Nueva página para fotografías
         doc.addPage();
-        yPosition = 40;
+        yPosition = marginTop + 25; // Usar margen estándar
 
         // Título de la sección de fotografías
         doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
+        doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
@@ -2906,11 +2930,11 @@ const PropertyValuation = () => {
           if (i > 0) {
             // Nueva página para cada grupo de 3 imágenes (excepto el primero)
             doc.addPage();
-            yPosition = 40;
+            yPosition = marginTop + 25; // Usar margen estándar
             
             // Título de continuación
             doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-            doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
+            doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
