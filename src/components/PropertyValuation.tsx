@@ -2722,38 +2722,38 @@ const PropertyValuation = () => {
 
       // Servicios básicos
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
+      doc.setFontSize(12);
       doc.text("Servicios Básicos:", marginLeft, yPosition);
       yPosition += 7;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
       
-      if (propertyData.servicios.agua) { doc.text("✓ Agua Potable", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.electricidad) { doc.text("✓ Electricidad", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.gas) { doc.text("✓ Gas Natural/LP", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.drenaje) { doc.text("✓ Drenaje", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.agua) { doc.text("• Agua Potable", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.electricidad) { doc.text("• Electricidad", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.gas) { doc.text("• Gas Natural/LP", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.drenaje) { doc.text("• Drenaje", 25, yPosition); yPosition += 6; }
       
       yPosition += 5;
       
       // Servicios adicionales
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
+      doc.setFontSize(12);
       doc.text("Servicios Adicionales:", marginLeft, yPosition);
       yPosition += 7;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
       
-      if (propertyData.servicios.internet) { doc.text("✓ Internet", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.cable) { doc.text("✓ TV por Cable", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.telefono) { doc.text("✓ Teléfono", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.seguridad) { doc.text("✓ Seguridad Privada", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.alberca) { doc.text("✓ Alberca", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.jardin) { doc.text("✓ Jardín", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.elevador) { doc.text("✓ Elevador", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.aireAcondicionado) { doc.text("✓ Aire Acondicionado", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.calefaccion) { doc.text("✓ Calefacción", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.panelesSolares) { doc.text("✓ Paneles Solares", 25, yPosition); yPosition += 5; }
-      if (propertyData.servicios.tinaco) { doc.text("✓ Tinaco/Cisterna", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.internet) { doc.text("• Internet", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.cable) { doc.text("• TV por Cable", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.telefono) { doc.text("• Teléfono", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.seguridad) { doc.text("• Seguridad Privada", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.alberca) { doc.text("• Alberca", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.jardin) { doc.text("• Jardín", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.elevador) { doc.text("• Elevador", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.aireAcondicionado) { doc.text("• Aire Acondicionado", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.calefaccion) { doc.text("• Calefacción", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.panelesSolares) { doc.text("• Paneles Solares", 25, yPosition); yPosition += 6; }
+      if (propertyData.servicios.tinaco) { doc.text("• Tinaco/Cisterna", 25, yPosition); yPosition += 6; }
       
       yPosition += 10;
 
