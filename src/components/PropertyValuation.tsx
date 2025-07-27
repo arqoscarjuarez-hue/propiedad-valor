@@ -3724,6 +3724,25 @@ const PropertyValuation = () => {
               </div>
             </Card>
           )}
+          
+          {/* Selector de tipo de membrete */}
+          {valuation && (
+            <Card className="p-4 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800">
+              <Label className="text-sm font-bold mb-3 block text-amber-900 dark:text-amber-100">Tipo de Membrete para Reportes</Label>
+              <Select value={selectedLetterhead} onValueChange={setSelectedLetterhead}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Seleccionar tipo de membrete" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(letterheadConfigs).map(([key, config]) => (
+                    <SelectItem key={key} value={key}>
+                      {config.icon} {config.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </Card>
+          )}
         </div>
 
         {/* Formulario Principal */}
@@ -4557,22 +4576,6 @@ const PropertyValuation = () => {
                       </div>
                     )}
                     
-                    {/* Selector de tipo de membrete */}
-                   <div className="pt-4 border-t">
-                     <Label className="text-sm font-medium mb-2 block">Tipo de Membrete para Reportes</Label>
-                     <Select value={selectedLetterhead} onValueChange={setSelectedLetterhead}>
-                       <SelectTrigger className="w-full">
-                         <SelectValue placeholder="Seleccionar tipo de membrete" />
-                       </SelectTrigger>
-                       <SelectContent>
-                         {Object.entries(letterheadConfigs).map(([key, config]) => (
-                           <SelectItem key={key} value={key}>
-                             {config.icon} {config.name}
-                           </SelectItem>
-                         ))}
-                       </SelectContent>
-                     </Select>
-                   </div>
                     
                      <div className="pt-4 border-t">
                       <p className="text-xs text-muted-foreground text-center">
