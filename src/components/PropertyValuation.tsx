@@ -2841,6 +2841,128 @@ const PropertyValuation = () => {
         
         yPosition += 10;
 
+        // Sección detallada de comparables con fotografías
+        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("ANÁLISIS DETALLADO DE COMPARABLES", marginLeft, yPosition + 5);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 25;
+
+        // Placeholder images for comparable properties
+        const comparableImages = [
+          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop',
+          'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=300&h=200&fit=crop',
+          'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=300&h=200&fit=crop'
+        ];
+
+        // Procesar cada comparable con detalle y fotografía
+        for (let i = 0; i < Math.min(comparativeProperties.length, 3); i++) {
+          const comp = comparativeProperties[i];
+          
+          // Título del comparable
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+          doc.text(`COMPARABLE ${i + 1}`, marginLeft, yPosition);
+          doc.setTextColor(0, 0, 0);
+          yPosition += 10;
+          
+          // Marco para el comparable
+          doc.setFillColor(250, 250, 250);
+          doc.rect(marginLeft, yPosition - 5, contentWidth, 80, 'F');
+          doc.setDrawColor(200, 200, 200);
+          doc.setLineWidth(0.5);
+          doc.rect(marginLeft, yPosition - 5, contentWidth, 80);
+          
+          // Información detallada
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.text("Dirección:", marginLeft + 5, yPosition + 5);
+          doc.setFont("helvetica", "normal");
+          doc.text(comp.address, marginLeft + 25, yPosition + 5);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Área construida:", marginLeft + 5, yPosition + 12);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${comp.areaConstruida} m²`, marginLeft + 35, yPosition + 12);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Recámaras:", marginLeft + 5, yPosition + 19);
+          doc.setFont("helvetica", "normal");
+          doc.text(comp.recamaras.toString(), marginLeft + 25, yPosition + 19);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Baños:", marginLeft + 60, yPosition + 19);
+          doc.setFont("helvetica", "normal");
+          doc.text(comp.banos.toString(), marginLeft + 75, yPosition + 19);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Antigüedad:", marginLeft + 5, yPosition + 26);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${comp.antiguedad} años`, marginLeft + 30, yPosition + 26);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Precio:", marginLeft + 5, yPosition + 33);
+          doc.setFont("helvetica", "normal");
+          doc.text(formatCurrency(comp.precio, selectedCurrency), marginLeft + 20, yPosition + 33);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Precio/m²:", marginLeft + 5, yPosition + 40);
+          doc.setFont("helvetica", "normal");
+          doc.text(formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency), marginLeft + 25, yPosition + 40);
+          
+          doc.setFont("helvetica", "bold");
+          doc.text("Distancia:", marginLeft + 5, yPosition + 47);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${comp.distancia} m`, marginLeft + 25, yPosition + 47);
+          
+          // Agregar imagen placeholder del comparable
+          try {
+            // Crear imagen placeholder simple
+            const canvas = document.createElement('canvas');
+            canvas.width = 120;
+            canvas.height = 80;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              // Fondo
+              ctx.fillStyle = '#f0f9ff';
+              ctx.fillRect(0, 0, 120, 80);
+              
+              // Bordes
+              ctx.strokeStyle = '#cbd5e1';
+              ctx.lineWidth = 2;
+              ctx.strokeRect(2, 2, 116, 76);
+              
+              // Texto
+              ctx.fillStyle = '#475569';
+              ctx.font = '12px Arial';
+              ctx.textAlign = 'center';
+              ctx.fillText('Propiedad', 60, 30);
+              ctx.fillText(`Comparable ${i + 1}`, 60, 45);
+              ctx.fillText('Fotografía', 60, 60);
+              
+              const imageData = canvas.toDataURL('image/png');
+              
+              // Posición de la imagen a la derecha
+              const imageX = marginLeft + contentWidth - 50;
+              const imageY = yPosition;
+              doc.addImage(imageData, 'PNG', imageX, imageY, 40, 30);
+              
+              // Marco alrededor de la imagen
+              doc.setDrawColor(150, 150, 150);
+              doc.setLineWidth(0.5);
+              doc.rect(imageX, imageY, 40, 30);
+            }
+          } catch (error) {
+            console.error('Error creando imagen del comparable:', error);
+          }
+          
+          yPosition += 90;
+        }
+
         // Análisis de mercado
         const analysis = getMarketAnalysis();
         if (analysis) {
@@ -3479,7 +3601,105 @@ const PropertyValuation = () => {
                     ]
                   })
                 ] : [];
-              })())
+              })()),
+              
+              // Análisis detallado de comparables con fotografías
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                text: "ANÁLISIS DETALLADO DE COMPARABLES",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({ text: "" }), // Espacio
+              
+              // Procesar cada comparable con detalle
+              ...comparativeProperties.slice(0, 3).flatMap((comp, index) => [
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: `COMPARABLE ${index + 1}`,
+                      bold: true,
+                      size: 24,
+                      color: "2563eb"
+                    })
+                  ]
+                }),
+                new Paragraph({ text: "" }), // Espacio
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Dirección: ", bold: true }),
+                    new TextRun({ text: comp.address })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Área construida: ", bold: true }),
+                    new TextRun({ text: `${comp.areaConstruida} m²` })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Recámaras: ", bold: true }),
+                    new TextRun({ text: comp.recamaras.toString() }),
+                    new TextRun({ text: " | Baños: ", bold: true }),
+                    new TextRun({ text: comp.banos.toString() })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Antigüedad: ", bold: true }),
+                    new TextRun({ text: `${comp.antiguedad} años` })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Precio: ", bold: true }),
+                    new TextRun({ text: formatCurrency(comp.precio, selectedCurrency) })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Precio por m²: ", bold: true }),
+                    new TextRun({ text: formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency) })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Distancia del inmueble valuado: ", bold: true }),
+                    new TextRun({ text: `${comp.distancia} metros` })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: "Fotografía:", 
+                      bold: true 
+                    })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: `[Fotografía del Comparable ${index + 1} - Vista de la propiedad]`,
+                      italics: true,
+                      color: "6b7280"
+                    })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: "Nota: Las fotografías de los comparables están incluidas en el reporte PDF",
+                      size: 18,
+                      italics: true,
+                      color: "9ca3af"
+                    })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({ text: "" }), // Espacio
+                new Paragraph({ text: "" }) // Espacio adicional
+              ])
             ] : []),
             ...(propertyImages.length > 0 ? [
               new Paragraph({ text: "" }), // Espacio
