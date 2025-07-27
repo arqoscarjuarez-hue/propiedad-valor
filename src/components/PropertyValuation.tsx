@@ -2541,11 +2541,7 @@ const PropertyValuation = () => {
         doc.text("PROPIEDADES COMPARABLES", marginLeft, yPosition);
         yPosition += 15;
 
-        // Resumen de tabla comparativa
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text("PROPIEDADES COMPARABLES", marginLeft, yPosition);
-        yPosition += 10;
+        // Tabla de 3 comparables seleccionados
         const colWidths = [40, 25, 25, 25, 30, 35];
         const colPositions = [marginLeft, marginLeft + 40, marginLeft + 65, marginLeft + 90, marginLeft + 115, marginLeft + 145];
         
@@ -2567,7 +2563,7 @@ const PropertyValuation = () => {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(9);
         
-        for (let i = 0; i < Math.min(comparativeProperties.length, 8); i++) {
+        for (let i = 0; i < Math.min(comparativeProperties.length, 3); i++) {
           const comp = comparativeProperties[i];
           
           // Sin verificación de salto de página para contenido continuo
