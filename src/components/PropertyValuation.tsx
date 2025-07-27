@@ -3207,7 +3207,7 @@ const PropertyValuation = () => {
       doc.text("FECHA DE AVALÚO:", marginLeft + 5, yPosition);
       doc.setFont("helvetica", "normal");
       doc.text(new Date().toLocaleDateString('es-ES'), marginLeft + 80, yPosition);
-      yPosition += 20;
+      yPosition += 25;
 
       // Metodología aplicada
       doc.setFontSize(12);
