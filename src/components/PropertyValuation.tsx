@@ -3581,18 +3581,18 @@ const PropertyValuation = () => {
               {translations[selectedLanguage].languageSelector}
             </Label>
             <Select value={selectedLanguage} onValueChange={(value: Language) => setSelectedLanguage(value)}>
-              <SelectTrigger className="bg-white dark:bg-slate-900 border-blue-300 dark:border-blue-700 focus:ring-blue-500">
+              <SelectTrigger className="bg-background border-input hover:bg-accent hover:text-accent-foreground focus:ring-ring">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-slate-900 border-blue-200 dark:border-blue-800 z-50">
-                <SelectItem value="es" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇪🇸 Español</SelectItem>
-                <SelectItem value="en" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇺🇸 English</SelectItem>
-                <SelectItem value="fr" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇫🇷 Français</SelectItem>
-                <SelectItem value="de" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇩🇪 Deutsch</SelectItem>
-                <SelectItem value="it" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇮🇹 Italiano</SelectItem>
-                <SelectItem value="pt" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇵🇹 Português</SelectItem>
-                <SelectItem value="zh" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇨🇳 中文</SelectItem>
-                <SelectItem value="hi" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇮🇳 हिन्दी</SelectItem>
+              <SelectContent className="bg-popover text-popover-foreground border-border shadow-md z-[1000] min-w-[200px]">
+                <SelectItem value="es" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇪🇸 Español</SelectItem>
+                <SelectItem value="en" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇺🇸 English</SelectItem>
+                <SelectItem value="fr" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇫🇷 Français</SelectItem>
+                <SelectItem value="de" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇩🇪 Deutsch</SelectItem>
+                <SelectItem value="it" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇮🇹 Italiano</SelectItem>
+                <SelectItem value="pt" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇵🇹 Português</SelectItem>
+                <SelectItem value="zh" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇨🇳 中文</SelectItem>
+                <SelectItem value="hi" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇮🇳 हिन्दी</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
