@@ -2383,6 +2383,51 @@ const PropertyValuation = () => {
         doc.text(addressLines, marginLeft + 5, yPosition + 16);
         
         yPosition += 35 + (addressLines.length > 1 ? (addressLines.length - 1) * 4 : 0);
+        
+        // Agregar coordenadas y croquis de ubicación inmediatamente después de la dirección
+        if (propertyData.latitud && propertyData.longitud) {
+          doc.setTextColor(0, 0, 0);
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.text(`Coordenadas: ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft, yPosition);
+          yPosition += 10;
+          
+          // Agregar imagen del croquis de ubicación
+          try {
+            const mapImage = await generateMapImage(propertyData.latitud, propertyData.longitud);
+            if (mapImage) {
+              doc.setFontSize(12);
+              doc.setFont("helvetica", "bold");
+              doc.text("CROQUIS DE UBICACIÓN", marginLeft, yPosition);
+              yPosition += 10;
+              
+              // Agregar la imagen del mapa
+              const mapWidth = 80;
+              const mapHeight = 60;
+              doc.addImage(mapImage, 'PNG', marginLeft, yPosition, mapWidth, mapHeight);
+              
+              // Marco alrededor del mapa
+              doc.setDrawColor(150, 150, 150);
+              doc.setLineWidth(0.5);
+              doc.rect(marginLeft, yPosition, mapWidth, mapHeight);
+              
+              // Enlace a Google Maps
+              const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
+              doc.setFontSize(10);
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(0, 0, 255); // Color azul para el enlace
+              doc.textWithLink("Ver ubicación en Google Maps", marginLeft, yPosition + mapHeight + 8, { url: googleMapsUrl });
+              
+              // Restaurar color de texto negro
+              doc.setTextColor(0, 0, 0);
+              
+              yPosition += mapHeight + 20;
+            }
+          } catch (error) {
+            console.error('Error agregando imagen del mapa:', error);
+            yPosition += 10;
+          }
+        }
       }
 
       // Verificar página antes de información general
@@ -2758,62 +2803,6 @@ const PropertyValuation = () => {
       
       yPosition += 35;
 
-      // Ubicación
-      if (propertyData.direccionCompleta) {
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text("UBICACIÓN", marginLeft, yPosition);
-        yPosition += 10;
-        
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth);
-        doc.text(addressLines, marginLeft, yPosition);
-        yPosition += (addressLines.length * 6) + 7;
-        
-        if (propertyData.latitud && propertyData.longitud) {
-          doc.text(`Coordenadas: ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, 20, yPosition);
-          yPosition += 10;
-          
-          // Agregar imagen del croquis de ubicación
-          try {
-            const mapImage = await generateMapImage(propertyData.latitud, propertyData.longitud);
-            if (mapImage) {
-              // Sin verificación de página para mantener contenido continuo
-              
-              doc.setFontSize(12);
-              doc.setFont("helvetica", "bold");
-              doc.text("CROQUIS DE UBICACIÓN", 20, yPosition);
-              yPosition += 10;
-              
-              // Agregar la imagen del mapa
-              const mapWidth = 80;
-              const mapHeight = 60;
-              doc.addImage(mapImage, 'PNG', 20, yPosition, mapWidth, mapHeight);
-              
-              // Marco alrededor del mapa
-              doc.setDrawColor(150, 150, 150);
-              doc.setLineWidth(0.5);
-              doc.rect(20, yPosition, mapWidth, mapHeight);
-              
-              // Enlace a Google Maps
-              const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
-              doc.setFontSize(10);
-              doc.setFont("helvetica", "bold");
-              doc.setTextColor(0, 0, 255); // Color azul para el enlace
-              doc.textWithLink("Ver ubicación en Google Maps", 20, yPosition + mapHeight + 8, { url: googleMapsUrl });
-              
-              // Restaurar color de texto negro
-              doc.setTextColor(0, 0, 0);
-              
-              yPosition += mapHeight + 20;
-            }
-          } catch (error) {
-            console.error('Error agregando imagen del mapa:', error);
-            yPosition += 5;
-          }
-        }
-      }
 
 
       // Tabla de comparables
@@ -3055,6 +3044,47 @@ const PropertyValuation = () => {
               alignment: "center"
             }),
             new Paragraph({ text: "" }), // Espacio
+            
+            // UBICACIÓN - Mover al principio del documento
+            ...(propertyData.direccionCompleta ? [
+              new Paragraph({
+                text: "UBICACIÓN DEL INMUEBLE",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Dirección: ", bold: true }),
+                  new TextRun({ text: propertyData.direccionCompleta })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Coordenadas: ", bold: true }),
+                  new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
+                ]
+              }),
+              new Paragraph({ text: "" }), // Espacio
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "CROQUIS DE UBICACIÓN", bold: true })
+                ]
+              }),
+              new Paragraph({
+                text: "Croquis de ubicación incluido en reporte PDF",
+                alignment: AlignmentType.CENTER
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Ver ubicación en Google Maps: " }),
+                  new TextRun({ 
+                    text: `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`,
+                    color: "0000FF"
+                  })
+                ]
+              }),
+              new Paragraph({ text: "" }) // Espacio
+            ] : []),
+            
             new Paragraph({
               text: "INFORMACIÓN GENERAL",
               heading: HeadingLevel.HEADING_1
@@ -3390,44 +3420,6 @@ const PropertyValuation = () => {
                 new TextRun({ text: formatCurrency(valuation / areaTotal, selectedCurrency) })
               ]
             }),
-            ...(propertyData.direccionCompleta ? [
-              new Paragraph({ text: "" }), // Espacio
-              new Paragraph({
-                text: "UBICACIÓN",
-                heading: HeadingLevel.HEADING_1
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Dirección: ", bold: true }),
-                  new TextRun({ text: propertyData.direccionCompleta })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Coordenadas: ", bold: true }),
-                  new TextRun({ text: `${propertyData.latitud?.toFixed(6)}, ${propertyData.longitud?.toFixed(6)}` })
-                ]
-              }),
-              new Paragraph({ text: "" }), // Espacio
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "CROQUIS DE UBICACIÓN", bold: true })
-                ]
-              }),
-              new Paragraph({
-                text: "Croquis de ubicación incluido en reporte PDF",
-                alignment: AlignmentType.CENTER
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Ver ubicación en Google Maps: " }),
-                  new TextRun({ 
-                    text: `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`,
-                    color: "0000FF"
-                  })
-                ]
-              })
-            ] : []),
             ...(comparativeProperties.length > 0 ? [
               new Paragraph({ text: "" }), // Espacio
               new Paragraph({
