@@ -33,45 +33,73 @@ import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 // Traducciones / Translations
 const translations = {
   es: {
-    // UI Labels
-    propertyType: 'Tipo de Propiedad',
+    // UI Labels principales
+    propertyValuator: 'Valuador de Propiedades',
+    professionalSystem: 'Sistema profesional de valuación inmobiliaria',
+    languageSelector: 'Idioma / Language',
+    propertyData: 'Datos de la Propiedad',
+    
+    // Pestañas principales
     areas: 'Áreas',
+    propertyType: 'Tipo',
     spaces: 'Espacios',
     characteristics: 'Características',
     location: 'Ubicación',
-    valuation: 'Valuación',
     photos: 'Fotografías',
+    valuation: 'Valuación',
+    
+    // Sección de áreas
+    constructionAreas: 'Áreas de Construcción (m²)',
     basement: 'Sótano',
     firstFloor: 'Primer Nivel',
     secondFloor: 'Segundo Nivel',
     thirdFloor: 'Tercer Nivel',
     fourthFloor: 'Cuarto Nivel',
     landArea: 'Área del Terreno',
-    bedrooms: 'Recámaras',
-    livingRooms: 'Salas',
-    diningRoom: 'Comedor',
-    kitchen: 'Cocina',
-    storage: 'Bodega',
-    serviceArea: 'Área de Servicio',
-    garage: 'Cochera',
-    bathrooms: 'Baños',
-    others: 'Otros',
-    age: 'Antigüedad (años)',
-    generalCondition: 'Estado General',
-    calculate: 'Calcular Valuación',
-    regenerate: 'Regenerar Comparativas',
-    downloadPDF: 'Descargar PDF',
-    downloadWord: 'Descargar Word',
-    uploadPhotos: 'Subir Fotografías',
     
-    // Property Types
+    // Tipos de propiedad
+    propertyTypeTitle: 'Tipo de Propiedad',
+    selectPropertyType: 'Selecciona el tipo de propiedad',
     house: 'Casa',
     apartment: 'Departamento',
     land: 'Terreno',
     commercial: 'Comercial',
     warehouse: 'Bodega',
     
-    // Conditions
+    // Espacios y características
+    spacesDistribution: 'Distribución de Espacios y Características',
+    livingSpaces: 'Espacios Habitacionales',
+    bedrooms: 'Recámaras/Dormitorios',
+    bedroomsDescription: 'Número de habitaciones',
+    livingRooms: 'Salas/Estancias',
+    livingRoomsDescription: 'Salas de estar principales',
+    diningRoom: 'Comedor',
+    diningRoomDescription: 'Espacios de comedor',
+    bathrooms: 'Baños Completos',
+    bathroomsDescription: 'Baños con regadera/tina',
+    
+    serviceSpaces: 'Espacios de Servicio',
+    kitchen: 'Cocina',
+    kitchenDescription: 'Número de cocinas',
+    storage: 'Bodega/Almacén',
+    storageDescription: 'Espacios de almacenamiento',
+    serviceArea: 'Área de Servicio',
+    serviceAreaDescription: 'Cuarto de lavado/servicio',
+    garage: 'Cochera/Garaje',
+    garageDescription: 'Espacios de estacionamiento',
+    others: 'Otros Espacios',
+    othersDescription: 'Estudios, oficinas, etc.',
+    
+    // Características
+    propertyCharacteristics: 'Características de la Propiedad',
+    age: 'Antigüedad (años)',
+    ageDescription: 'Años desde construcción',
+    locationQuality: 'Calidad de Ubicación',
+    locationDescription: 'Evalúa la zona y accesos',
+    generalCondition: 'Estado General',
+    conditionDescription: 'Condición física del inmueble',
+    
+    // Condiciones
     new: 'Nuevo',
     good: 'Bueno',
     medium: 'Medio',
@@ -83,11 +111,46 @@ const translations = {
     waste: 'En Desecho',
     useless: 'Inservibles',
     
-    // Locations
+    // Ubicaciones
     excellent: 'Excelente',
     goodLocation: 'Buena',
     regularLocation: 'Regular',
     badLocation: 'Mala',
+    
+    // Ubicación
+    propertyLocation: 'Ubicación de la Propiedad',
+    clickOnMap: 'Haz clic en el mapa para seleccionar la ubicación exacta del inmueble',
+    currentAddress: 'Dirección actual',
+    
+    // Fotografías
+    propertyPhotos: 'Fotografías del Inmueble',
+    uploadPhotos: 'Subir Fotografías',
+    photosDescription: 'Sube imágenes del interior y exterior del inmueble',
+    removePhoto: 'Eliminar foto',
+    
+    // Botones de acción
+    calculate: 'Calcular Valuación',
+    regenerate: 'Regenerar Comparativas',
+    downloadPDF: 'Descargar PDF',
+    downloadWord: 'Descargar Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Valuación de la Propiedad',
+    estimatedValue: 'Valor Estimado',
+    priceAdjustment: 'Ajuste de Precio',
+    adjustmentDescription: 'Ajusta el precio final basado en factores adicionales',
+    marketAnalysisTitle: 'Análisis de Mercado',
+    comparativeProperties: 'Propiedades Comparativas',
+    averagePrice: 'Precio Promedio',
+    minPrice: 'Precio Mínimo',
+    maxPrice: 'Precio Máximo',
+    
+    // Tabla de comparativas
+    property: 'Propiedad',
+    builtArea: 'Área Const.',
+    price: 'Precio',
+    priceM2: 'Precio/m²',
+    distance: 'Distancia',
     
     // PDF Content
     residentialValuation: 'VALUACIÓN RESIDENCIAL',
@@ -99,55 +162,26 @@ const translations = {
     landSubtitle: 'Avalúo Profesional de Superficie',
     commercialSubtitle: 'Avalúo Profesional de Bien Comercial',
     marketAnalysis: 'Análisis Profesional de Valor de Mercado',
-    propertyLocation: 'UBICACIÓN DEL INMUEBLE',
+    propertyLocationPDF: 'UBICACIÓN DEL INMUEBLE',
     generalInfo: 'INFORMACIÓN GENERAL',
     type: 'Tipo',
     totalBuiltArea: 'Área Total Construida',
     propertyAreas: 'ÁREAS DE LA PROPIEDAD',
     propertySpaces: 'ESPACIOS DE LA PROPIEDAD',
-    livingSpaces: 'Espacios Habitacionales',
-    serviceSpaces: 'Espacios de Servicio',
-    additionalSpaces: 'Espacios Adicionales',
-    estimatedValue: 'VALOR ESTIMADO',
+    estimatedValuePDF: 'VALOR ESTIMADO',
     pricePerSqm: 'Precio por m²',
     basedOnComparables: 'Basado en 3 comparables',
     mapLocation: 'UBICACIÓN EN MAPA',
     address: 'Dirección',
     viewInGoogleMaps: 'Ver ubicación en Google Maps',
-    comparativeProperties: 'PROPIEDADES COMPARATIVAS',
-    marketAnalysisTitle: 'ANÁLISIS DE MERCADO',
-    averagePrice: 'Precio Promedio',
-    minPrice: 'Precio Mínimo',
-    maxPrice: 'Precio Máximo',
-    propertyPhotos: 'FOTOGRAFÍAS DEL INMUEBLE',
     photograph: 'Fotografía',
     totalPhotos: 'Total de fotografías en el expediente',
     captureDate: 'Fecha de captura',
-    
-    // Table Headers
-    property: 'Propiedad',
-    builtArea: 'Área Const.',
-    price: 'Precio',
-    priceM2: 'Precio/m²',
-    distance: 'Distancia',
     
     // Units
     sqm: 'm²',
     meters: 'm',
     years: 'años',
-    
-    // Room Names
-    masterBedroom: 'Recámara Principal',
-    secondaryBedroom: 'Recámara Secundaria',
-    guestBedroom: 'Recámara de Huéspedes',
-    livingRoom: 'Sala',
-    familyRoom: 'Sala Familiar',
-    diningRoomSpace: 'Comedor',
-    kitchenSpace: 'Cocina',
-    serviceAreaSpace: 'Área de Servicio/Lavado',
-    storageSpace: 'Bodega',
-    garageSpace: 'Cochera',
-    otherSpaces: 'Otros Espacios (estudios, oficinas, patios techados)',
     
     // Messages
     calculatingValuation: 'Calculando Valuación',
@@ -164,45 +198,73 @@ const translations = {
     newValue: 'Nuevo valor'
   },
   en: {
-    // UI Labels
-    propertyType: 'Property Type',
+    // UI Labels principales
+    propertyValuator: 'Property Valuator',
+    professionalSystem: 'Professional real estate valuation system',
+    languageSelector: 'Language / Idioma',
+    propertyData: 'Property Data',
+    
+    // Pestañas principales
     areas: 'Areas',
+    propertyType: 'Type',
     spaces: 'Spaces',
-    characteristics: 'Characteristics',
+    characteristics: 'Features',
     location: 'Location',
-    valuation: 'Valuation',
     photos: 'Photos',
+    valuation: 'Valuation',
+    
+    // Sección de áreas
+    constructionAreas: 'Construction Areas (sqm)',
     basement: 'Basement',
     firstFloor: 'First Floor',
     secondFloor: 'Second Floor',
     thirdFloor: 'Third Floor',
     fourthFloor: 'Fourth Floor',
     landArea: 'Land Area',
-    bedrooms: 'Bedrooms',
-    livingRooms: 'Living Rooms',
-    diningRoom: 'Dining Room',
-    kitchen: 'Kitchen',
-    storage: 'Storage',
-    serviceArea: 'Service Area',
-    garage: 'Garage',
-    bathrooms: 'Bathrooms',
-    others: 'Others',
-    age: 'Age (years)',
-    generalCondition: 'General Condition',
-    calculate: 'Calculate Valuation',
-    regenerate: 'Regenerate Comparatives',
-    downloadPDF: 'Download PDF',
-    downloadWord: 'Download Word',
-    uploadPhotos: 'Upload Photos',
     
-    // Property Types
+    // Tipos de propiedad
+    propertyTypeTitle: 'Property Type',
+    selectPropertyType: 'Select property type',
     house: 'House',
     apartment: 'Apartment',
     land: 'Land',
     commercial: 'Commercial',
     warehouse: 'Warehouse',
     
-    // Conditions
+    // Espacios y características
+    spacesDistribution: 'Spaces Distribution and Features',
+    livingSpaces: 'Living Spaces',
+    bedrooms: 'Bedrooms',
+    bedroomsDescription: 'Number of bedrooms',
+    livingRooms: 'Living Rooms',
+    livingRoomsDescription: 'Main living areas',
+    diningRoom: 'Dining Room',
+    diningRoomDescription: 'Dining spaces',
+    bathrooms: 'Full Bathrooms',
+    bathroomsDescription: 'Bathrooms with shower/tub',
+    
+    serviceSpaces: 'Service Spaces',
+    kitchen: 'Kitchen',
+    kitchenDescription: 'Number of kitchens',
+    storage: 'Storage/Warehouse',
+    storageDescription: 'Storage spaces',
+    serviceArea: 'Service Area',
+    serviceAreaDescription: 'Laundry/service room',
+    garage: 'Garage',
+    garageDescription: 'Parking spaces',
+    others: 'Other Spaces',
+    othersDescription: 'Studies, offices, etc.',
+    
+    // Características
+    propertyCharacteristics: 'Property Features',
+    age: 'Age (years)',
+    ageDescription: 'Years since construction',
+    locationQuality: 'Location Quality',
+    locationDescription: 'Evaluate area and access',
+    generalCondition: 'General Condition',
+    conditionDescription: 'Physical condition of property',
+    
+    // Condiciones
     new: 'New',
     good: 'Good',
     medium: 'Medium',
@@ -214,11 +276,46 @@ const translations = {
     waste: 'Waste',
     useless: 'Useless',
     
-    // Locations
+    // Ubicaciones
     excellent: 'Excellent',
     goodLocation: 'Good',
     regularLocation: 'Regular',
     badLocation: 'Bad',
+    
+    // Ubicación
+    propertyLocation: 'Property Location',
+    clickOnMap: 'Click on the map to select the exact location of the property',
+    currentAddress: 'Current address',
+    
+    // Fotografías
+    propertyPhotos: 'Property Photos',
+    uploadPhotos: 'Upload Photos',
+    photosDescription: 'Upload interior and exterior images of the property',
+    removePhoto: 'Remove photo',
+    
+    // Botones de acción
+    calculate: 'Calculate Valuation',
+    regenerate: 'Regenerate Comparatives',
+    downloadPDF: 'Download PDF',
+    downloadWord: 'Download Word',
+    
+    // Resultado de valuación
+    propertyValuationTitle: 'Property Valuation',
+    estimatedValue: 'Estimated Value',
+    priceAdjustment: 'Price Adjustment',
+    adjustmentDescription: 'Adjust final price based on additional factors',
+    marketAnalysisTitle: 'Market Analysis',
+    comparativeProperties: 'Comparative Properties',
+    averagePrice: 'Average Price',
+    minPrice: 'Minimum Price',
+    maxPrice: 'Maximum Price',
+    
+    // Tabla de comparativas
+    property: 'Property',
+    builtArea: 'Built Area',
+    price: 'Price',
+    priceM2: 'Price/sqm',
+    distance: 'Distance',
     
     // PDF Content
     residentialValuation: 'RESIDENTIAL VALUATION',
@@ -230,55 +327,26 @@ const translations = {
     landSubtitle: 'Professional Land Surface Appraisal',
     commercialSubtitle: 'Professional Commercial Property Appraisal',
     marketAnalysis: 'Professional Market Value Analysis',
-    propertyLocation: 'PROPERTY LOCATION',
+    propertyLocationPDF: 'PROPERTY LOCATION',
     generalInfo: 'GENERAL INFORMATION',
     type: 'Type',
     totalBuiltArea: 'Total Built Area',
     propertyAreas: 'PROPERTY AREAS',
     propertySpaces: 'PROPERTY SPACES',
-    livingSpaces: 'Living Spaces',
-    serviceSpaces: 'Service Spaces',
-    additionalSpaces: 'Additional Spaces',
-    estimatedValue: 'ESTIMATED VALUE',
+    estimatedValuePDF: 'ESTIMATED VALUE',
     pricePerSqm: 'Price per sqm',
     basedOnComparables: 'Based on 3 comparables',
     mapLocation: 'MAP LOCATION',
     address: 'Address',
     viewInGoogleMaps: 'View location on Google Maps',
-    comparativeProperties: 'COMPARATIVE PROPERTIES',
-    marketAnalysisTitle: 'MARKET ANALYSIS',
-    averagePrice: 'Average Price',
-    minPrice: 'Minimum Price',
-    maxPrice: 'Maximum Price',
-    propertyPhotos: 'PROPERTY PHOTOGRAPHS',
     photograph: 'Photograph',
     totalPhotos: 'Total photographs in file',
     captureDate: 'Capture date',
-    
-    // Table Headers
-    property: 'Property',
-    builtArea: 'Built Area',
-    price: 'Price',
-    priceM2: 'Price/sqm',
-    distance: 'Distance',
     
     // Units
     sqm: 'sqm',
     meters: 'm',
     years: 'years',
-    
-    // Room Names
-    masterBedroom: 'Master Bedroom',
-    secondaryBedroom: 'Secondary Bedroom',
-    guestBedroom: 'Guest Bedroom',
-    livingRoom: 'Living Room',
-    familyRoom: 'Family Room',
-    diningRoomSpace: 'Dining Room',
-    kitchenSpace: 'Kitchen',
-    serviceAreaSpace: 'Service/Laundry Area',
-    storageSpace: 'Storage',
-    garageSpace: 'Garage',
-    otherSpaces: 'Other Spaces (studies, offices, covered patios)',
     
     // Messages
     calculatingValuation: 'Calculating Valuation',
@@ -1861,10 +1929,10 @@ const PropertyValuation = () => {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
           <Calculator className="h-10 w-10 text-primary" />
-          {selectedLanguage === 'es' ? 'Valuador de Propiedades' : 'Property Valuator'}
+          {translations[selectedLanguage].propertyValuator}
         </h1>
         <p className="text-lg text-muted-foreground">
-          {selectedLanguage === 'es' ? 'Sistema profesional de valuación inmobiliaria' : 'Professional real estate valuation system'}
+          {translations[selectedLanguage].professionalSystem}
         </p>
       </div>
 
@@ -1879,7 +1947,7 @@ const PropertyValuation = () => {
           {/* Selector de Idioma */}
           <Card className="p-4">
             <Label className="text-sm font-medium mb-2 block">
-              {selectedLanguage === 'es' ? 'Idioma / Language' : 'Language / Idioma'}
+              {translations[selectedLanguage].languageSelector}
             </Label>
             <Select value={selectedLanguage} onValueChange={(value: Language) => setSelectedLanguage(value)}>
               <SelectTrigger>
@@ -1899,7 +1967,7 @@ const PropertyValuation = () => {
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
               <CardTitle className="flex items-center gap-2">
                 <Home className="h-5 w-5" />
-                {translations[selectedLanguage].propertyType}
+                {translations[selectedLanguage].propertyData}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -1915,10 +1983,10 @@ const PropertyValuation = () => {
                  </TabsList>
 
                  <TabsContent value="areas" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4">Áreas de Construcción (m²)</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].constructionAreas}</h3>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div>
-                       <Label htmlFor="areaSotano">Sótano</Label>
+                       <Label htmlFor="areaSotano">{translations[selectedLanguage].basement}</Label>
                        <Input
                          id="areaSotano"
                          type="number"
@@ -1928,47 +1996,47 @@ const PropertyValuation = () => {
                        />
                      </div>
                      <div>
-                       <Label htmlFor="areaPrimerNivel">Primer Nivel</Label>
-                       <Input
-                         id="areaPrimerNivel"
-                         type="number"
-                         value={propertyData.areaPrimerNivel || ''}
-                         onChange={(e) => handleInputChange('areaPrimerNivel', Number(e.target.value))}
-                         placeholder="0"
-                       />
-                     </div>
-                     <div>
-                       <Label htmlFor="areaSegundoNivel">Segundo Nivel</Label>
-                       <Input
-                         id="areaSegundoNivel"
-                         type="number"
-                         value={propertyData.areaSegundoNivel || ''}
-                         onChange={(e) => handleInputChange('areaSegundoNivel', Number(e.target.value))}
-                         placeholder="0"
-                       />
-                     </div>
-                     <div>
-                       <Label htmlFor="areaTercerNivel">Tercer Nivel</Label>
-                       <Input
-                         id="areaTercerNivel"
-                         type="number"
-                         value={propertyData.areaTercerNivel || ''}
-                         onChange={(e) => handleInputChange('areaTercerNivel', Number(e.target.value))}
-                         placeholder="0"
-                       />
-                     </div>
-                     <div>
-                       <Label htmlFor="areaCuartoNivel">Cuarto Nivel</Label>
-                       <Input
-                         id="areaCuartoNivel"
-                         type="number"
-                         value={propertyData.areaCuartoNivel || ''}
-                         onChange={(e) => handleInputChange('areaCuartoNivel', Number(e.target.value))}
-                         placeholder="0"
-                       />
-                     </div>
-                     <div>
-                       <Label htmlFor="areaTerreno">Área del Terreno</Label>
+                        <Label htmlFor="areaPrimerNivel">{translations[selectedLanguage].firstFloor}</Label>
+                        <Input
+                          id="areaPrimerNivel"
+                          type="number"
+                          value={propertyData.areaPrimerNivel || ''}
+                          onChange={(e) => handleInputChange('areaPrimerNivel', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="areaSegundoNivel">{translations[selectedLanguage].secondFloor}</Label>
+                        <Input
+                          id="areaSegundoNivel"
+                          type="number"
+                          value={propertyData.areaSegundoNivel || ''}
+                          onChange={(e) => handleInputChange('areaSegundoNivel', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="areaTercerNivel">{translations[selectedLanguage].thirdFloor}</Label>
+                        <Input
+                          id="areaTercerNivel"
+                          type="number"
+                          value={propertyData.areaTercerNivel || ''}
+                          onChange={(e) => handleInputChange('areaTercerNivel', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="areaCuartoNivel">{translations[selectedLanguage].fourthFloor}</Label>
+                        <Input
+                          id="areaCuartoNivel"
+                          type="number"
+                          value={propertyData.areaCuartoNivel || ''}
+                          onChange={(e) => handleInputChange('areaCuartoNivel', Number(e.target.value))}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="areaTerreno">{translations[selectedLanguage].landArea}</Label>
                        <Input
                          id="areaTerreno"
                          type="number"
@@ -1980,35 +2048,35 @@ const PropertyValuation = () => {
                    </div>
                  </TabsContent>
 
-                <TabsContent value="tipo" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Tipo de Propiedad</h3>
-                  <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona el tipo de propiedad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="casa">Casa</SelectItem>
-                      <SelectItem value="departamento">Departamento</SelectItem>
-                      <SelectItem value="terreno">Terreno</SelectItem>
-                      <SelectItem value="comercial">Comercial</SelectItem>
-                      <SelectItem value="bodega">Bodega</SelectItem>
+                 <TabsContent value="tipo" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyTypeTitle}</h3>
+                   <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
+                     <SelectTrigger>
+                       <SelectValue placeholder={translations[selectedLanguage].selectPropertyType} />
+                     </SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="casa">{translations[selectedLanguage].house}</SelectItem>
+                       <SelectItem value="departamento">{translations[selectedLanguage].apartment}</SelectItem>
+                       <SelectItem value="terreno">{translations[selectedLanguage].land}</SelectItem>
+                       <SelectItem value="comercial">{translations[selectedLanguage].commercial}</SelectItem>
+                       <SelectItem value="bodega">{translations[selectedLanguage].warehouse}</SelectItem>
                     </SelectContent>
                   </Select>
                 </TabsContent>
 
                 <TabsContent value="espacios" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Distribución de Espacios y Características</h3>
-                  
-                  {/* Espacios Habitacionales */}
-                  <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios Habitacionales</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {[
-                        { key: 'recamaras', label: 'Recámaras/Dormitorios', description: 'Número de habitaciones' },
-                        { key: 'salas', label: 'Salas/Estancias', description: 'Salas de estar principales' },
-                        { key: 'comedor', label: 'Comedor', description: 'Espacios de comedor' },
-                        { key: 'banos', label: 'Baños Completos', description: 'Baños con regadera/tina' }
-                      ].map(({ key, label, description }) => (
+                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].spacesDistribution}</h3>
+                   
+                   {/* Espacios Habitacionales */}
+                   <div className="mb-6">
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].livingSpaces}</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                       {[
+                         { key: 'recamaras', label: translations[selectedLanguage].bedrooms, description: translations[selectedLanguage].bedroomsDescription },
+                         { key: 'salas', label: translations[selectedLanguage].livingRooms, description: translations[selectedLanguage].livingRoomsDescription },
+                         { key: 'comedor', label: translations[selectedLanguage].diningRoom, description: translations[selectedLanguage].diningRoomDescription },
+                         { key: 'banos', label: translations[selectedLanguage].bathrooms, description: translations[selectedLanguage].bathroomsDescription }
+                       ].map(({ key, label, description }) => (
                         <div key={key} className="space-y-1">
                           <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
                           <Input
@@ -2376,7 +2444,7 @@ const PropertyValuation = () => {
                   size="lg"
                 >
                   <Calculator className="mr-2 h-5 w-5" />
-                  Calcular Valuación
+                  {translations[selectedLanguage].calculate}
                 </Button>
               </div>
             </CardContent>
@@ -2481,7 +2549,7 @@ const PropertyValuation = () => {
                        size="sm"
                      >
                        <FileText className="mr-2 h-4 w-4" />
-                       Descargar Reporte PDF
+                       {translations[selectedLanguage].downloadPDF}
                      </Button>
                      
                      <Button 
@@ -2504,7 +2572,10 @@ const PropertyValuation = () => {
                 <div className="text-center py-8">
                   <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground">
-                    Completa los datos de la propiedad y presiona "Calcular Valuación" para ver el resultado.
+                    {selectedLanguage === 'es' ? 
+                      'Completa los datos de la propiedad y presiona "Calcular Valuación" para ver el resultado.' :
+                      'Complete the property data and press "Calculate Valuation" to see the result.'
+                    }
                   </p>
                 </div>
               )}
