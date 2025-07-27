@@ -3446,15 +3446,15 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-8">
-                   <TabsTrigger value="areas">{translations[selectedLanguage].areas}</TabsTrigger>
-                   <TabsTrigger value="tipo">{translations[selectedLanguage].propertyType}</TabsTrigger>
-                   <TabsTrigger value="espacios">{translations[selectedLanguage].spaces}</TabsTrigger>
-                   <TabsTrigger value="caracteristicas">{translations[selectedLanguage].characteristics}</TabsTrigger>
-                   <TabsTrigger value="servicios">{translations[selectedLanguage].services}</TabsTrigger>
-                   <TabsTrigger value="ubicacion">{translations[selectedLanguage].location}</TabsTrigger>
-                   <TabsTrigger value="fotos">{translations[selectedLanguage].photos}</TabsTrigger>
-                   <TabsTrigger value="ajustes">{translations[selectedLanguage].valuation}</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-4 grid-rows-2 h-auto gap-1">
+                   <TabsTrigger value="areas" className="h-10">{translations[selectedLanguage].areas}</TabsTrigger>
+                   <TabsTrigger value="tipo" className="h-10">{translations[selectedLanguage].propertyType}</TabsTrigger>
+                   <TabsTrigger value="espacios" className="h-10">{translations[selectedLanguage].spaces}</TabsTrigger>
+                   <TabsTrigger value="caracteristicas" className="h-10">{translations[selectedLanguage].characteristics}</TabsTrigger>
+                   <TabsTrigger value="servicios" className="h-10">{translations[selectedLanguage].services}</TabsTrigger>
+                   <TabsTrigger value="ubicacion" className="h-10">{translations[selectedLanguage].location}</TabsTrigger>
+                   <TabsTrigger value="fotos" className="h-10">{translations[selectedLanguage].photos}</TabsTrigger>
+                   <TabsTrigger value="ajustes" className="h-10">{translations[selectedLanguage].valuation}</TabsTrigger>
                  </TabsList>
 
                  <TabsContent value="areas" className="space-y-4 mt-6">
