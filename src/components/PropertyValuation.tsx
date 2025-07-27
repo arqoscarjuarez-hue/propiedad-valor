@@ -2841,6 +2841,31 @@ const PropertyValuation = () => {
         
         yPosition += 10;
 
+        // Análisis de mercado
+        const analysis = getMarketAnalysis();
+        if (analysis) {
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.text("ANÁLISIS DE MERCADO", marginLeft, yPosition);
+          yPosition += 10;
+          
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
+          doc.setFont("helvetica", "bold");
+          yPosition += 7;
+          doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
+          yPosition += 7;
+          doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 20, yPosition);
+          yPosition += 7;
+          
+          const variationText = analysis.difference > 0 ? 
+            `+${analysis.difference.toFixed(1)}% sobre el promedio` : 
+            `${analysis.difference.toFixed(1)}% bajo el promedio`;
+          doc.text(`Variación vs. Mercado: ${variationText}`, 20, yPosition);
+          yPosition += 15;
+        }
+
         // Sección detallada de comparables con fotografías
         doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
@@ -3029,30 +3054,6 @@ const PropertyValuation = () => {
           yPosition += 35;
         }
 
-        // Análisis de mercado
-        const analysis = getMarketAnalysis();
-        if (analysis) {
-          doc.setFontSize(12);
-          doc.setFont("helvetica", "bold");
-          doc.text("ANÁLISIS DE MERCADO", marginLeft, yPosition);
-          yPosition += 10;
-          
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "bold");
-          doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
-          doc.setFont("helvetica", "bold");
-          yPosition += 7;
-          doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
-          yPosition += 7;
-          doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 20, yPosition);
-          yPosition += 7;
-          
-          const variationText = analysis.difference > 0 ? 
-            `+${analysis.difference.toFixed(1)}% sobre el promedio` : 
-            `${analysis.difference.toFixed(1)}% bajo el promedio`;
-          doc.text(`Variación vs. Mercado: ${variationText}`, 20, yPosition);
-          yPosition += 15;
-        }
       }
 
       // SECCIÓN FINAL - CONCLUSIONES Y CERTIFICACIÓN
