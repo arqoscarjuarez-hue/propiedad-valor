@@ -30,6 +30,274 @@ import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
+// Traducciones / Translations
+const translations = {
+  es: {
+    // UI Labels
+    propertyType: 'Tipo de Propiedad',
+    areas: 'Áreas',
+    spaces: 'Espacios',
+    characteristics: 'Características',
+    location: 'Ubicación',
+    valuation: 'Valuación',
+    photos: 'Fotografías',
+    basement: 'Sótano',
+    firstFloor: 'Primer Nivel',
+    secondFloor: 'Segundo Nivel',
+    thirdFloor: 'Tercer Nivel',
+    fourthFloor: 'Cuarto Nivel',
+    landArea: 'Área del Terreno',
+    bedrooms: 'Recámaras',
+    livingRooms: 'Salas',
+    diningRoom: 'Comedor',
+    kitchen: 'Cocina',
+    storage: 'Bodega',
+    serviceArea: 'Área de Servicio',
+    garage: 'Cochera',
+    bathrooms: 'Baños',
+    others: 'Otros',
+    age: 'Antigüedad (años)',
+    generalCondition: 'Estado General',
+    calculate: 'Calcular Valuación',
+    regenerate: 'Regenerar Comparativas',
+    downloadPDF: 'Descargar PDF',
+    downloadWord: 'Descargar Word',
+    uploadPhotos: 'Subir Fotografías',
+    
+    // Property Types
+    house: 'Casa',
+    apartment: 'Departamento',
+    land: 'Terreno',
+    commercial: 'Comercial',
+    warehouse: 'Bodega',
+    
+    // Conditions
+    new: 'Nuevo',
+    good: 'Bueno',
+    medium: 'Medio',
+    regular: 'Regular',
+    simpleRepairs: 'Reparaciones Sencillas',
+    mediumRepairs: 'Reparaciones Medias',
+    importantRepairs: 'Reparaciones Importantes',
+    seriousDamage: 'Daños Graves',
+    waste: 'En Desecho',
+    useless: 'Inservibles',
+    
+    // Locations
+    excellent: 'Excelente',
+    goodLocation: 'Buena',
+    regularLocation: 'Regular',
+    badLocation: 'Mala',
+    
+    // PDF Content
+    residentialValuation: 'VALUACIÓN RESIDENCIAL',
+    apartmentValuation: 'VALUACIÓN DE DEPARTAMENTO',
+    landValuation: 'VALUACIÓN DE TERRENO',
+    commercialValuation: 'VALUACIÓN COMERCIAL',
+    residentialSubtitle: 'Avalúo Profesional de Casa Habitación',
+    apartmentSubtitle: 'Avalúo Profesional de Unidad Habitacional',
+    landSubtitle: 'Avalúo Profesional de Superficie',
+    commercialSubtitle: 'Avalúo Profesional de Bien Comercial',
+    marketAnalysis: 'Análisis Profesional de Valor de Mercado',
+    propertyLocation: 'UBICACIÓN DEL INMUEBLE',
+    generalInfo: 'INFORMACIÓN GENERAL',
+    type: 'Tipo',
+    totalBuiltArea: 'Área Total Construida',
+    propertyAreas: 'ÁREAS DE LA PROPIEDAD',
+    propertySpaces: 'ESPACIOS DE LA PROPIEDAD',
+    livingSpaces: 'Espacios Habitacionales',
+    serviceSpaces: 'Espacios de Servicio',
+    additionalSpaces: 'Espacios Adicionales',
+    estimatedValue: 'VALOR ESTIMADO',
+    pricePerSqm: 'Precio por m²',
+    basedOnComparables: 'Basado en 3 comparables',
+    mapLocation: 'UBICACIÓN EN MAPA',
+    address: 'Dirección',
+    viewInGoogleMaps: 'Ver ubicación en Google Maps',
+    comparativeProperties: 'PROPIEDADES COMPARATIVAS',
+    marketAnalysisTitle: 'ANÁLISIS DE MERCADO',
+    averagePrice: 'Precio Promedio',
+    minPrice: 'Precio Mínimo',
+    maxPrice: 'Precio Máximo',
+    propertyPhotos: 'FOTOGRAFÍAS DEL INMUEBLE',
+    photograph: 'Fotografía',
+    totalPhotos: 'Total de fotografías en el expediente',
+    captureDate: 'Fecha de captura',
+    
+    // Table Headers
+    property: 'Propiedad',
+    builtArea: 'Área Const.',
+    price: 'Precio',
+    priceM2: 'Precio/m²',
+    distance: 'Distancia',
+    
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'años',
+    
+    // Room Names
+    masterBedroom: 'Recámara Principal',
+    secondaryBedroom: 'Recámara Secundaria',
+    guestBedroom: 'Recámara de Huéspedes',
+    livingRoom: 'Sala',
+    familyRoom: 'Sala Familiar',
+    diningRoomSpace: 'Comedor',
+    kitchenSpace: 'Cocina',
+    serviceAreaSpace: 'Área de Servicio/Lavado',
+    storageSpace: 'Bodega',
+    garageSpace: 'Cochera',
+    otherSpaces: 'Otros Espacios (estudios, oficinas, patios techados)',
+    
+    // Messages
+    calculatingValuation: 'Calculando Valuación',
+    generatingReport: 'Generando avalúo con 3 comparables...',
+    valuationCompleted: 'Valuación Completada',
+    estimatedValueTitle: 'Valor estimado',
+    comparables: 'comparables',
+    comparativesUpdated: 'Comparativas Actualizadas',
+    newComparativesGenerated: 'Se han generado nuevas propiedades cercanas',
+    currencyChanged: 'Moneda Cambiada',
+    valuationNowIn: 'Valuación ahora se muestra en',
+    priceAdjusted: 'Precio Ajustado',
+    adjustment: 'Ajuste',
+    newValue: 'Nuevo valor'
+  },
+  en: {
+    // UI Labels
+    propertyType: 'Property Type',
+    areas: 'Areas',
+    spaces: 'Spaces',
+    characteristics: 'Characteristics',
+    location: 'Location',
+    valuation: 'Valuation',
+    photos: 'Photos',
+    basement: 'Basement',
+    firstFloor: 'First Floor',
+    secondFloor: 'Second Floor',
+    thirdFloor: 'Third Floor',
+    fourthFloor: 'Fourth Floor',
+    landArea: 'Land Area',
+    bedrooms: 'Bedrooms',
+    livingRooms: 'Living Rooms',
+    diningRoom: 'Dining Room',
+    kitchen: 'Kitchen',
+    storage: 'Storage',
+    serviceArea: 'Service Area',
+    garage: 'Garage',
+    bathrooms: 'Bathrooms',
+    others: 'Others',
+    age: 'Age (years)',
+    generalCondition: 'General Condition',
+    calculate: 'Calculate Valuation',
+    regenerate: 'Regenerate Comparatives',
+    downloadPDF: 'Download PDF',
+    downloadWord: 'Download Word',
+    uploadPhotos: 'Upload Photos',
+    
+    // Property Types
+    house: 'House',
+    apartment: 'Apartment',
+    land: 'Land',
+    commercial: 'Commercial',
+    warehouse: 'Warehouse',
+    
+    // Conditions
+    new: 'New',
+    good: 'Good',
+    medium: 'Medium',
+    regular: 'Regular',
+    simpleRepairs: 'Simple Repairs',
+    mediumRepairs: 'Medium Repairs',
+    importantRepairs: 'Important Repairs',
+    seriousDamage: 'Serious Damage',
+    waste: 'Waste',
+    useless: 'Useless',
+    
+    // Locations
+    excellent: 'Excellent',
+    goodLocation: 'Good',
+    regularLocation: 'Regular',
+    badLocation: 'Bad',
+    
+    // PDF Content
+    residentialValuation: 'RESIDENTIAL VALUATION',
+    apartmentValuation: 'APARTMENT VALUATION',
+    landValuation: 'LAND VALUATION',
+    commercialValuation: 'COMMERCIAL VALUATION',
+    residentialSubtitle: 'Professional Residential Property Appraisal',
+    apartmentSubtitle: 'Professional Housing Unit Appraisal',
+    landSubtitle: 'Professional Land Surface Appraisal',
+    commercialSubtitle: 'Professional Commercial Property Appraisal',
+    marketAnalysis: 'Professional Market Value Analysis',
+    propertyLocation: 'PROPERTY LOCATION',
+    generalInfo: 'GENERAL INFORMATION',
+    type: 'Type',
+    totalBuiltArea: 'Total Built Area',
+    propertyAreas: 'PROPERTY AREAS',
+    propertySpaces: 'PROPERTY SPACES',
+    livingSpaces: 'Living Spaces',
+    serviceSpaces: 'Service Spaces',
+    additionalSpaces: 'Additional Spaces',
+    estimatedValue: 'ESTIMATED VALUE',
+    pricePerSqm: 'Price per sqm',
+    basedOnComparables: 'Based on 3 comparables',
+    mapLocation: 'MAP LOCATION',
+    address: 'Address',
+    viewInGoogleMaps: 'View location on Google Maps',
+    comparativeProperties: 'COMPARATIVE PROPERTIES',
+    marketAnalysisTitle: 'MARKET ANALYSIS',
+    averagePrice: 'Average Price',
+    minPrice: 'Minimum Price',
+    maxPrice: 'Maximum Price',
+    propertyPhotos: 'PROPERTY PHOTOGRAPHS',
+    photograph: 'Photograph',
+    totalPhotos: 'Total photographs in file',
+    captureDate: 'Capture date',
+    
+    // Table Headers
+    property: 'Property',
+    builtArea: 'Built Area',
+    price: 'Price',
+    priceM2: 'Price/sqm',
+    distance: 'Distance',
+    
+    // Units
+    sqm: 'sqm',
+    meters: 'm',
+    years: 'years',
+    
+    // Room Names
+    masterBedroom: 'Master Bedroom',
+    secondaryBedroom: 'Secondary Bedroom',
+    guestBedroom: 'Guest Bedroom',
+    livingRoom: 'Living Room',
+    familyRoom: 'Family Room',
+    diningRoomSpace: 'Dining Room',
+    kitchenSpace: 'Kitchen',
+    serviceAreaSpace: 'Service/Laundry Area',
+    storageSpace: 'Storage',
+    garageSpace: 'Garage',
+    otherSpaces: 'Other Spaces (studies, offices, covered patios)',
+    
+    // Messages
+    calculatingValuation: 'Calculating Valuation',
+    generatingReport: 'Generating appraisal with 3 comparables...',
+    valuationCompleted: 'Valuation Completed',
+    estimatedValueTitle: 'Estimated value',
+    comparables: 'comparables',
+    comparativesUpdated: 'Comparatives Updated',
+    newComparativesGenerated: 'New nearby properties have been generated',
+    currencyChanged: 'Currency Changed',
+    valuationNowIn: 'Valuation now shown in',
+    priceAdjusted: 'Price Adjusted',
+    adjustment: 'Adjustment',
+    newValue: 'New value'
+  }
+};
+
+type Language = keyof typeof translations;
+
 interface PropertyData {
   // Áreas
   areaSotano: number;
@@ -125,6 +393,7 @@ const PropertyValuation = () => {
     symbol: '$',
     rate: 1
   });
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('es');
   const [activeTab, setActiveTab] = useState('areas');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
@@ -132,35 +401,35 @@ const PropertyValuation = () => {
   // Configuraciones de membrete por tipo de propiedad
   const letterheadConfigs = {
     casa: {
-      name: 'Casa Residencial',
+      name: translations[selectedLanguage].house,
       primaryColor: [34, 139, 34], // Verde
       secondaryColor: [144, 238, 144], // Verde claro
-      title: 'VALUACIÓN RESIDENCIAL',
-      subtitle: 'Avalúo Profesional de Casa Habitación',
+      title: translations[selectedLanguage].residentialValuation,
+      subtitle: translations[selectedLanguage].residentialSubtitle,
       icon: '🏠'
     },
     departamento: {
-      name: 'Departamento',
+      name: translations[selectedLanguage].apartment,
       primaryColor: [70, 130, 180], // Azul acero
       secondaryColor: [176, 196, 222], // Azul claro
-      title: 'VALUACIÓN DE DEPARTAMENTO',
-      subtitle: 'Avalúo Profesional de Unidad Habitacional',
+      title: translations[selectedLanguage].apartmentValuation,
+      subtitle: translations[selectedLanguage].apartmentSubtitle,
       icon: '🏢'
     },
     terreno: {
-      name: 'Terreno',
+      name: translations[selectedLanguage].land,
       primaryColor: [139, 69, 19], // Marrón
       secondaryColor: [222, 184, 135], // Marrón claro
-      title: 'VALUACIÓN DE TERRENO',
-      subtitle: 'Avalúo Profesional de Superficie',
+      title: translations[selectedLanguage].landValuation,
+      subtitle: translations[selectedLanguage].landSubtitle,
       icon: '🏞️'
     },
     comercial: {
-      name: 'Bien Raíz Comercial',
+      name: translations[selectedLanguage].commercial,
       primaryColor: [128, 0, 128], // Púrpura
       secondaryColor: [221, 160, 221], // Púrpura claro
-      title: 'VALUACIÓN COMERCIAL',
-      subtitle: 'Avalúo Profesional de Bien Comercial',
+      title: translations[selectedLanguage].commercialValuation,
+      subtitle: translations[selectedLanguage].commercialSubtitle,
       icon: '🏪'
     }
   };
@@ -192,8 +461,8 @@ const PropertyValuation = () => {
     }
     
     toast({
-      title: "Moneda Cambiada",
-      description: `Valuación ahora se muestra en ${currency.name} (${currency.code})`,
+      title: translations[selectedLanguage].currencyChanged,
+      description: `${translations[selectedLanguage].valuationNowIn} ${currency.name} (${currency.code})`,
     });
   };
 
@@ -399,8 +668,8 @@ const PropertyValuation = () => {
     setValuation(valorAjustado);
     
     toast({
-      title: "Calculando Valuación",
-      description: "Generando avalúo con 3 comparables...",
+      title: translations[selectedLanguage].calculatingValuation,
+      description: translations[selectedLanguage].generatingReport,
     });
 
     // Generar comparativas con solo 3 comparables
@@ -411,8 +680,8 @@ const PropertyValuation = () => {
     setMultipleValuations([]);
     
     toast({
-      title: "Valuación Completada",
-      description: `Valor estimado: ${formatCurrency(valorAjustado, selectedCurrency)} (3 comparables)`,
+      title: translations[selectedLanguage].valuationCompleted,
+      description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorAjustado, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
     });
   };
 
@@ -425,8 +694,8 @@ const PropertyValuation = () => {
       setValuation(valorAjustado);
       
       toast({
-        title: "Precio Ajustado",
-        description: `Ajuste: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - Nuevo valor: ${formatCurrency(valorAjustado, selectedCurrency)}`,
+        title: translations[selectedLanguage].priceAdjusted,
+        description: `${translations[selectedLanguage].adjustment}: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(valorAjustado, selectedCurrency)}`,
       });
     }
   };
@@ -438,8 +707,8 @@ const PropertyValuation = () => {
       const newComparatives = await generateComparativeProperties(valuationInUSD);
       setComparativeProperties(newComparatives);
       toast({
-        title: "Comparativas Actualizadas",
-        description: "Se han generado nuevas propiedades cercanas",
+        title: translations[selectedLanguage].comparativesUpdated,
+        description: translations[selectedLanguage].newComparativesGenerated,
       });
     }
   };
@@ -1592,20 +1861,36 @@ const PropertyValuation = () => {
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
           <Calculator className="h-10 w-10 text-primary" />
-          Valuador de Propiedades
+          {selectedLanguage === 'es' ? 'Valuador de Propiedades' : 'Property Valuator'}
         </h1>
         <p className="text-lg text-muted-foreground">
-          Sistema profesional de valuación inmobiliaria
+          {selectedLanguage === 'es' ? 'Sistema profesional de valuación inmobiliaria' : 'Professional real estate valuation system'}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Selector de Moneda */}
-        <div className="lg:col-span-1">
+        {/* Selectores de Moneda e Idioma */}
+        <div className="lg:col-span-1 space-y-4">
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
           />
+          
+          {/* Selector de Idioma */}
+          <Card className="p-4">
+            <Label className="text-sm font-medium mb-2 block">
+              {selectedLanguage === 'es' ? 'Idioma / Language' : 'Language / Idioma'}
+            </Label>
+            <Select value={selectedLanguage} onValueChange={(value: Language) => setSelectedLanguage(value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="es">🇪🇸 Español</SelectItem>
+                <SelectItem value="en">🇺🇸 English</SelectItem>
+              </SelectContent>
+            </Select>
+          </Card>
         </div>
 
         {/* Formulario Principal */}
@@ -1614,19 +1899,19 @@ const PropertyValuation = () => {
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
               <CardTitle className="flex items-center gap-2">
                 <Home className="h-5 w-5" />
-                Datos de la Propiedad
+                {translations[selectedLanguage].propertyType}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-7">
-                   <TabsTrigger value="areas">Áreas</TabsTrigger>
-                   <TabsTrigger value="tipo">Tipo</TabsTrigger>
-                   <TabsTrigger value="espacios">Espacios</TabsTrigger>
-                   <TabsTrigger value="caracteristicas">Características</TabsTrigger>
-                   <TabsTrigger value="ubicacion">Ubicación</TabsTrigger>
-                   <TabsTrigger value="fotos">Fotos</TabsTrigger>
-                   <TabsTrigger value="ajustes">Ajustes</TabsTrigger>
+                   <TabsTrigger value="areas">{translations[selectedLanguage].areas}</TabsTrigger>
+                   <TabsTrigger value="tipo">{translations[selectedLanguage].propertyType}</TabsTrigger>
+                   <TabsTrigger value="espacios">{translations[selectedLanguage].spaces}</TabsTrigger>
+                   <TabsTrigger value="caracteristicas">{translations[selectedLanguage].characteristics}</TabsTrigger>
+                   <TabsTrigger value="ubicacion">{translations[selectedLanguage].location}</TabsTrigger>
+                   <TabsTrigger value="fotos">{translations[selectedLanguage].photos}</TabsTrigger>
+                   <TabsTrigger value="ajustes">{translations[selectedLanguage].valuation}</TabsTrigger>
                  </TabsList>
 
                  <TabsContent value="areas" className="space-y-4 mt-6">
