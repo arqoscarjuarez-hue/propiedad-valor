@@ -1714,14 +1714,22 @@ const PropertyValuation = () => {
     }
     
     return Promise.all(nearbyAddresses.map(async (addressInfo, index) => {
-      const variation = (Math.random() - 0.5) * 0.2; // ±10% variation
-      const areaVariation = 1 + (Math.random() - 0.5) * 0.3; // ±15% area variation
+      const variation = (Math.random() - 0.5) * 0.2; // ±10% price variation
+      
+      // Variación del área de construcción: ±40% como máximo (estándar de valuación)
+      const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
+      const areaComparable = Math.round(areaTotal * areaVariationFactor);
+      
+      // Asegurar que esté dentro del rango ±40%
+      const areaMinima = areaTotal * 0.6; // -40%
+      const areaMaxima = areaTotal * 1.4; // +40%
+      const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
       
       return {
         id: `comp-${index + 1}`,
         address: addressInfo.address,
-        areaConstruida: Math.round(areaTotal * areaVariation),
-        areaTerreno: Math.round(propertyData.areaTerreno * areaVariation),
+        areaConstruida: areaFinal,
+        areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
         tipoPropiedad: propertyData.tipoPropiedad,
         recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
         banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
@@ -1730,7 +1738,7 @@ const PropertyValuation = () => {
         estadoGeneral: propertyData.estadoGeneral,
         precio: convertCurrency(baseValue * (1 + variation), selectedCurrency),
         distancia: addressInfo.distance,
-        descripcion: `${propertyData.tipoPropiedad} de ${Math.round(areaTotal * areaVariation)}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+        descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
         url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
         latitud: addressInfo.lat,
         longitud: addressInfo.lng
