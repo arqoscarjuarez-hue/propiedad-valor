@@ -2378,9 +2378,9 @@ const PropertyValuation = () => {
       yPosition += 6;
 
       // Ubicación y estado
-      const ubicacionTexto = propertyData.ubicacion === 'excellent' ? 'Excelente' :
-                             propertyData.ubicacion === 'good' ? 'Buena' :
-                             propertyData.ubicacion === 'medium' ? 'Regular' : 'Deficiente';
+      const ubicacionTexto = propertyData.ubicacion === 'excelente' ? 'Excelente' :
+                             propertyData.ubicacion === 'buena' ? 'Buena' :
+                             propertyData.ubicacion === 'regular' ? 'Regular' : 'Deficiente';
       
       const estadoTexto = propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
                          propertyData.estadoGeneral === 'good' ? 'Bueno' :
@@ -2826,9 +2826,9 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ text: "Calidad de Ubicación: ", bold: true }),
                 new TextRun({ 
-                  text: propertyData.ubicacion === 'excellent' ? 'Excelente' :
-                        propertyData.ubicacion === 'good' ? 'Buena' :
-                        propertyData.ubicacion === 'medium' ? 'Regular' : 'Deficiente'
+                  text: propertyData.ubicacion === 'excelente' ? 'Excelente' :
+                        propertyData.ubicacion === 'buena' ? 'Buena' :
+                        propertyData.ubicacion === 'regular' ? 'Regular' : 'Deficiente'
                 })
               ]
             }),
