@@ -573,14 +573,14 @@ const PropertyValuation = () => {
       doc.rect(0, 0, pageWidth, 35, 'F');
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(22);
+      doc.setFontSize(24);
       doc.setFont("helvetica", "bold");
       doc.text(config.title, pageWidth / 2, 16, { align: "center" });
       
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
       doc.text(config.subtitle, pageWidth / 2, 25, { align: "center" });
-      doc.text(`${config.icon} Análisis Profesional de Valor de Mercado`, pageWidth / 2, 30, { align: "center" });
+      doc.text("Análisis Profesional de Valor de Mercado", pageWidth / 2, 30, { align: "center" });
       
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
@@ -604,9 +604,9 @@ const PropertyValuation = () => {
         
         // Título de la sección
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.setFontSize(12);
+        doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text('📍 UBICACIÓN DEL INMUEBLE', marginLeft + 5, yPosition + 8);
+        doc.text('UBICACIÓN DEL INMUEBLE', marginLeft + 5, yPosition + 8);
         
         // Línea separadora sutil
         doc.setDrawColor(220, 220, 220);
@@ -615,8 +615,8 @@ const PropertyValuation = () => {
         
         // Dirección con formato elegante
         doc.setTextColor(60, 60, 60);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
         const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 20);
         doc.text(addressLines, marginLeft + 5, yPosition + 16);
         
@@ -631,8 +631,8 @@ const PropertyValuation = () => {
 
       const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
       doc.text(`Tipo: ${propertyData.tipoPropiedad.toUpperCase()}`, marginLeft, yPosition);
       yPosition += 7;
       doc.text(`Área Total Construida: ${areaTotal.toLocaleString()} m²`, marginLeft, yPosition);
@@ -658,8 +658,8 @@ const PropertyValuation = () => {
       doc.text("DETALLES DE ÁREAS", marginLeft, yPosition);
       yPosition += 10;
       
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
       if (propertyData.areaSotano > 0) {
         doc.text(`Sótano: ${propertyData.areaSotano} m²`, 20, yPosition);
         yPosition += 7;
@@ -695,7 +695,7 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "bold");
       doc.text("Espacios Habitacionales:", marginLeft, yPosition);
       yPosition += 7;
-      doc.setFont("helvetica", "normal");
+      doc.setFont("helvetica", "bold");
       
       // Recámaras con nombres específicos
       if (propertyData.recamaras > 0) {
@@ -753,7 +753,7 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "bold");
       doc.text("Espacios de Servicio:", marginLeft, yPosition);
       yPosition += 7;
-      doc.setFont("helvetica", "normal");
+      doc.setFont("helvetica", "bold");
       doc.text(`• Cocina: ${propertyData.cocina}`, 25, yPosition);
       yPosition += 6;
       doc.text(`• Área de Servicio/Lavado: ${propertyData.areaServicio}`, 25, yPosition);
@@ -768,7 +768,7 @@ const PropertyValuation = () => {
         doc.setFont("helvetica", "bold");
         doc.text("Espacios Adicionales:", 20, yPosition);
         yPosition += 7;
-        doc.setFont("helvetica", "normal");
+        doc.setFont("helvetica", "bold");
         doc.text(`• Otros Espacios (estudios, oficinas, patios techados): ${propertyData.otros}`, 25, yPosition);
         yPosition += 10;
       }
@@ -803,8 +803,8 @@ const PropertyValuation = () => {
       doc.setFontSize(12);
       doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, 20, yPosition + 18);
       
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
       doc.text("Basado en 3 comparables", 20, yPosition + 28);
       
       yPosition += 35;
@@ -816,8 +816,8 @@ const PropertyValuation = () => {
         doc.text("UBICACIÓN", marginLeft, yPosition);
         yPosition += 10;
         
-        doc.setFontSize(11);
-        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
         const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth);
         doc.text(addressLines, marginLeft, yPosition);
         yPosition += (addressLines.length * 6) + 7;
@@ -853,8 +853,8 @@ const PropertyValuation = () => {
               
               // Enlace a Google Maps
               const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
-              doc.setFontSize(9);
-              doc.setFont("helvetica", "normal");
+              doc.setFontSize(10);
+              doc.setFont("helvetica", "bold");
               doc.setTextColor(0, 0, 255); // Color azul para el enlace
               doc.textWithLink("Ver ubicación en Google Maps", 20, yPosition + mapHeight + 8, { url: googleMapsUrl });
               
@@ -907,8 +907,8 @@ const PropertyValuation = () => {
         yPosition += 15;
 
         // Datos de los comparables
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
         
         for (let i = 0; i < Math.min(comparativeProperties.length, 8); i++) {
           const comp = comparativeProperties[i];
@@ -951,7 +951,7 @@ const PropertyValuation = () => {
           doc.setFontSize(10);
           doc.setFont("helvetica", "bold");
           doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
-          doc.setFont("helvetica", "normal");
+          doc.setFont("helvetica", "bold");
           yPosition += 7;
           doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
           yPosition += 7;
@@ -1047,8 +1047,8 @@ const PropertyValuation = () => {
               doc.addImage(image.preview, 'JPEG', centeredX, centeredY, imageWidth, imageHeight);
               
               // Caption numerado centrado
-              doc.setFontSize(10);
-              doc.setFont("helvetica", "normal");
+              doc.setFontSize(11);
+              doc.setFont("helvetica", "bold");
               doc.text(`Fotografía ${imageIndex + i + 1}`, pageWidth / 2, currentYPos + maxImageHeight + 12, { align: "center" });
               
             } catch (error) {
@@ -1084,8 +1084,8 @@ const PropertyValuation = () => {
         const lastPageY = yPosition + 30;
         
         if (lastPageY < pageHeight - marginBottom) {
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
           doc.setTextColor(100, 100, 100);
           doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, lastPageY, { align: "center" });
           doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, lastPageY + 10, { align: "center" });
