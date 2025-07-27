@@ -2294,13 +2294,10 @@ const PropertyValuation = () => {
     }
 
     try {
-      // Calcular altura total necesaria para página continua
-      const estimatedHeight = 800; // mm aproximados para todo el contenido en una página continua
-      
-      // Crear PDF con página continua (ancho carta, altura extendida)
-      const doc = new jsPDF('portrait', 'mm', [216, estimatedHeight]); 
-      const pageWidth = doc.internal.pageSize.width; // 216mm (ancho carta)
-      const pageHeight = doc.internal.pageSize.height; // altura extendida
+      // Crear PDF con páginas tamaño carta (8.5" x 11" = 215.9mm x 279.4mm)
+      const doc = new jsPDF('portrait', 'mm', 'letter'); 
+      const pageWidth = doc.internal.pageSize.width; // 215.9mm (ancho carta)
+      const pageHeight = doc.internal.pageSize.height; // 279.4mm (alto carta)
       
       // Márgenes reducidos para página continua
       const marginLeft = 20; // 20mm margen izquierdo
