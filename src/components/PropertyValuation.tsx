@@ -2165,53 +2165,139 @@ const PropertyValuation = () => {
       yPosition += 7;
       doc.text(`Área de Terreno: ${propertyData.areaTerreno.toLocaleString()} m²`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Recámaras: ${propertyData.recamaras}`, marginLeft, yPosition);
-      yPosition += 7;
-      doc.text(`Baños: ${propertyData.banos}`, marginLeft, yPosition);
-      yPosition += 7;
-      doc.text(`Cocheras: ${propertyData.cochera}`, marginLeft, yPosition);
-      yPosition += 7;
       doc.text(`Antigüedad de la Construcción: ${propertyData.antiguedad} años`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Ubicación: ${propertyData.ubicacion}`, marginLeft, yPosition);
+      
+      // Traducir ubicación
+      const ubicacionTexto = propertyData.ubicacion === 'excellent' ? 'Excelente' :
+                            propertyData.ubicacion === 'good' ? 'Buena' :
+                            propertyData.ubicacion === 'medium' ? 'Regular' :
+                            propertyData.ubicacion === 'poor' ? 'Deficiente' : propertyData.ubicacion;
+      doc.text(`Calidad de Ubicación: ${ubicacionTexto}`, marginLeft, yPosition);
       yPosition += 7;
-      doc.text(`Estado General: ${propertyData.estadoGeneral}`, marginLeft, yPosition);
+      
+      // Traducir estado general
+      const estadoTexto = propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
+                         propertyData.estadoGeneral === 'good' ? 'Bueno' :
+                         propertyData.estadoGeneral === 'medium' ? 'Regular' :
+                         propertyData.estadoGeneral === 'poor' ? 'Deficiente' : propertyData.estadoGeneral;
+      doc.text(`Estado General: ${estadoTexto}`, marginLeft, yPosition);
       yPosition += 15;
 
-      // Detalles de áreas
+      // Detalles completos de áreas por nivel
+      doc.setFillColor(250, 250, 250);
+      doc.rect(marginLeft - 5, yPosition - 5, contentWidth + 10, 8, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("DETALLES DE ÁREAS", marginLeft, yPosition);
-      yPosition += 10;
+      doc.text("DISTRIBUCIÓN DETALLADA DE ÁREAS CONSTRUIDAS", marginLeft, yPosition);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 15;
       
-      doc.setFontSize(13);
+      doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      if (propertyData.areaSotano > 0) {
-        doc.text(`Sótano: ${propertyData.areaSotano} m²`, 20, yPosition);
-        yPosition += 7;
-      }
-      if (propertyData.areaPrimerNivel > 0) {
-        doc.text(`Primer Nivel: ${propertyData.areaPrimerNivel} m²`, 20, yPosition);
-        yPosition += 7;
-      }
-      if (propertyData.areaSegundoNivel > 0) {
-        doc.text(`Segundo Nivel: ${propertyData.areaSegundoNivel} m²`, 20, yPosition);
-        yPosition += 7;
-      }
-      if (propertyData.areaTercerNivel > 0) {
-        doc.text(`Tercer Nivel: ${propertyData.areaTercerNivel} m²`, 20, yPosition);
-        yPosition += 7;
-      }
-      if (propertyData.areaCuartoNivel > 0) {
-        doc.text(`Cuarto Nivel: ${propertyData.areaCuartoNivel} m²`, 20, yPosition);
-        yPosition += 7;
-      }
+      
+      // Mostrar todas las áreas, incluso si son 0
+      doc.text(`• Sótano: ${propertyData.areaSotano} m²`, 25, yPosition);
+      yPosition += 7;
+      doc.text(`• Primer Nivel: ${propertyData.areaPrimerNivel} m²`, 25, yPosition);
+      yPosition += 7;
+      doc.text(`• Segundo Nivel: ${propertyData.areaSegundoNivel} m²`, 25, yPosition);
+      yPosition += 7;
+      doc.text(`• Tercer Nivel: ${propertyData.areaTercerNivel} m²`, 25, yPosition);
+      yPosition += 7;
+      doc.text(`• Cuarto Nivel: ${propertyData.areaCuartoNivel} m²`, 25, yPosition);
+      yPosition += 7;
+      
+      // Resumen de área construida
+      doc.setFillColor(240, 248, 255);
+      doc.rect(20, yPosition, contentWidth - 10, 12, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`TOTAL ÁREA CONSTRUIDA: ${areaTotal} m²`, 25, yPosition + 8);
+      yPosition += 20;
+      
+      // Área de terreno detallada
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(`• Área Total del Terreno: ${propertyData.areaTerreno} m²`, 25, yPosition);
+      yPosition += 7;
+      
+      // Cálculo de área libre (terreno - construcción)
+      const areaLibre = propertyData.areaTerreno - areaTotal;
+      doc.text(`• Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} m²`, 25, yPosition);
+      yPosition += 7;
+      
+      // Coeficiente de ocupación del suelo
+      const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
+      doc.text(`• Coeficiente de Ocupación del Suelo: ${coeficienteOcupacion}%`, 25, yPosition);
+      yPosition += 15;
+
+      // Características completas de la propiedad
+      doc.setFillColor(250, 250, 250);
+      doc.rect(marginLeft - 5, yPosition - 5, contentWidth + 10, 8, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("CARACTERÍSTICAS COMPLETAS DE LA PROPIEDAD", marginLeft, yPosition);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 15;
+      
+      // Características físicas
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("CARACTERÍSTICAS FÍSICAS:", 20, yPosition);
+      yPosition += 8;
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`• Tipo de Propiedad: ${propertyData.tipoPropiedad.charAt(0).toUpperCase() + propertyData.tipoPropiedad.slice(1)}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Antigüedad: ${propertyData.antiguedad} años`, 25, yPosition);
+      yPosition += 6;
+      
+      // Traducir ubicación
+      const ubicacionTextoDetalle = propertyData.ubicacion === 'excellent' ? 'Excelente' :
+                            propertyData.ubicacion === 'good' ? 'Buena' :
+                            propertyData.ubicacion === 'medium' ? 'Regular' :
+                            propertyData.ubicacion === 'poor' ? 'Deficiente' : propertyData.ubicacion;
+      doc.text(`• Calidad de Ubicación: ${ubicacionTextoDetalle}`, 25, yPosition);
+      yPosition += 6;
+      
+      // Traducir estado general
+      const estadoTextoDetalle = propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
+                         propertyData.estadoGeneral === 'good' ? 'Bueno' :
+                         propertyData.estadoGeneral === 'medium' ? 'Regular' :
+                         propertyData.estadoGeneral === 'poor' ? 'Deficiente' : propertyData.estadoGeneral;
+      doc.text(`• Estado General de Conservación: ${estadoTextoDetalle}`, 25, yPosition);
       yPosition += 10;
 
-      // Espacios habitacionales y de servicio
-      doc.setFontSize(14);
+      // Resumen cuantitativo
+      doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      doc.text("DISTRIBUCIÓN COMPLETA DE ESPACIOS", marginLeft, yPosition);
+      doc.text("RESUMEN CUANTITATIVO:", 20, yPosition);
+      yPosition += 8;
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text(`• Total de Recámaras: ${propertyData.recamaras}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Total de Salas: ${propertyData.salas}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Total de Comedores: ${propertyData.comedor}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Total de Cocinas: ${propertyData.cocina}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Total de Baños: ${propertyData.banos}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Total de Cocheras: ${propertyData.cochera}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Áreas de Servicio: ${propertyData.areaServicio}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Bodegas/Trasteros: ${propertyData.bodega}`, 25, yPosition);
+      yPosition += 6;
+      doc.text(`• Otros Espacios: ${propertyData.otros}`, 25, yPosition);
+      yPosition += 15;
       yPosition += 10;
       
       doc.setFontSize(12);
