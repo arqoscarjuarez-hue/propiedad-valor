@@ -2294,39 +2294,23 @@ const PropertyValuation = () => {
     }
 
     try {
-      // Crear PDF en tamaño carta (8.5" x 11" = 216mm x 279mm) con páginas múltiples
-      const doc = new jsPDF('portrait', 'mm', 'letter'); // Tamaño carta estándar
-      const pageWidth = doc.internal.pageSize.width; // 216mm
-      const pageHeight = doc.internal.pageSize.height; // 279mm
+      // Calcular altura total necesaria para página continua
+      const estimatedHeight = 800; // mm aproximados para todo el contenido en una página continua
       
-      // Márgenes profesionales estándar
-      const marginLeft = 25.4; // 1 pulgada = 25.4mm
-      const marginRight = 25.4; // 1 pulgada = 25.4mm  
-      const marginTop = 25.4; // 1 pulgada = 25.4mm
-      const marginBottom = 25.4; // 1 pulgada = 25.4mm
+      // Crear PDF con página continua (ancho carta, altura extendida)
+      const doc = new jsPDF('portrait', 'mm', [216, estimatedHeight]); 
+      const pageWidth = doc.internal.pageSize.width; // 216mm (ancho carta)
+      const pageHeight = doc.internal.pageSize.height; // altura extendida
+      
+      // Márgenes reducidos para página continua
+      const marginLeft = 20; // 20mm margen izquierdo
+      const marginRight = 20; // 20mm margen derecho  
+      const marginTop = 15; // 15mm margen superior
+      const marginBottom = 15; // 15mm margen inferior
       const contentWidth = pageWidth - marginLeft - marginRight; // Ancho útil del contenido
-      const contentHeight = pageHeight - marginTop - marginBottom; // Alto útil del contenido
       
       let yPosition = marginTop;
       
-      // Función para verificar si necesitamos una nueva página
-      const checkPageBreak = (requiredSpace: number = 20) => {
-        if (yPosition + requiredSpace > pageHeight - marginBottom) {
-          doc.addPage();
-          yPosition = marginTop;
-          
-          // Agregar header reducido en páginas adicionales
-          doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-          doc.rect(0, 0, pageWidth, 20, 'F');
-          doc.setTextColor(255, 255, 255);
-          doc.setFontSize(12);
-          doc.setFont("helvetica", "bold");
-          doc.text(`${config.title} - Continuación`, pageWidth / 2, 12, { align: "center" });
-          doc.setTextColor(0, 0, 0);
-          yPosition = marginTop + 25;
-        }
-      };
-
       // Obtener configuración del membrete seleccionado
       const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
 
@@ -2429,9 +2413,6 @@ const PropertyValuation = () => {
           }
         }
       }
-
-      // Verificar página antes de información general
-      checkPageBreak(50);
 
       // Información general
       doc.setFontSize(14);
@@ -2729,9 +2710,6 @@ const PropertyValuation = () => {
       doc.text(`TOTAL GENERAL DE ESPACIOS: ${totalEspacios}`, 25, yPosition + 21);
       yPosition += 30;
 
-      // Verificar página antes de servicios disponibles
-      checkPageBreak(80);
-
       // Sección de Servicios Disponibles
       doc.setFillColor(245, 245, 245);
       doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
@@ -2807,9 +2785,6 @@ const PropertyValuation = () => {
 
       // Tabla de comparables
       if (comparativeProperties.length > 0) {
-        // Verificar página antes de comparables
-        checkPageBreak(100);
-        
         yPosition += 10;
 
         doc.setFontSize(14);
@@ -2892,11 +2867,10 @@ const PropertyValuation = () => {
         }
       }
 
-      // Agregar fotografías al final del documento con 3 por hoja
+      // Agregar fotografías continuando en la misma página
       if (propertyImages.length > 0) {
-        // Nueva página para fotografías
-        doc.addPage();
-        yPosition = marginTop + 25; // Usar margen estándar
+        // Continuar en la misma página
+        yPosition += 15;
 
         // Título de la sección de fotografías
         doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
@@ -2908,87 +2882,66 @@ const PropertyValuation = () => {
         doc.setTextColor(0, 0, 0);
         yPosition += 25;
 
-        // Configuración para 3 imágenes por hoja
-        const imagesPerPage = 3;
-        const availableHeight = 220; // Altura disponible para imágenes
+        // Configuración para imágenes en página continua
         const imageHeight = 55; // Altura de cada imagen
         const imageWidth = 90; // Ancho de cada imagen
         const spacingBetweenImages = 15;
         
-        for (let i = 0; i < propertyImages.length; i += imagesPerPage) {
-          if (i > 0) {
-            // Nueva página para cada grupo de 3 imágenes (excepto el primero)
-            doc.addPage();
-            yPosition = marginTop + 25; // Usar margen estándar
-            
-            // Título de continuación
-            doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-            doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE (Continuación)", marginLeft, yPosition + 5);
-            doc.setTextColor(0, 0, 0);
-            yPosition += 25;
-          }
+        // Procesar todas las imágenes en página continua
+        for (let i = 0; i < propertyImages.length; i++) {
+          const imageData = propertyImages[i];
           
-          // Procesar hasta 3 imágenes en esta página
-          for (let j = 0; j < imagesPerPage && (i + j) < propertyImages.length; j++) {
-            const imageIndex = i + j;
-            const imageData = propertyImages[imageIndex];
+          try {
+            // Centrar imagen horizontalmente
+            const imageX = (pageWidth - imageWidth) / 2;
+            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
             
-            try {
-              // Centrar imagen horizontalmente
-              const imageX = (pageWidth - imageWidth) / 2;
-              const currentY = yPosition + (j * (imageHeight + spacingBetweenImages));
-              
-              // Añadir imagen
-              doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
-              
-              // Marco alrededor de la imagen
-              doc.setDrawColor(180, 180, 180);
-              doc.setLineWidth(0.5);
-              doc.rect(imageX, currentY, imageWidth, imageHeight);
-              
-              // Numeración y descripción de imagen
-              doc.setFontSize(10);
-              doc.setFont("helvetica", "bold");
-              doc.setTextColor(80, 80, 80);
-              doc.text(`Fotografía ${imageIndex + 1}`, imageX, currentY + imageHeight + 8);
-              
-              doc.setFontSize(8);
-              doc.setFont("helvetica", "normal");
-              doc.text(`Vista del inmueble - Archivo oficial`, imageX, currentY + imageHeight + 15);
-              
-              // Restaurar color de texto
-              doc.setTextColor(0, 0, 0);
-              
-            } catch (imgError) {
-              console.error('Error agregando imagen:', imgError);
-              
-              // En caso de error, mostrar un placeholder
-              doc.setFillColor(240, 240, 240);
-              const currentY = yPosition + (j * (imageHeight + spacingBetweenImages));
-              const imageX = (pageWidth - imageWidth) / 2;
-              doc.rect(imageX, currentY, imageWidth, imageHeight, 'F');
-              doc.setTextColor(120, 120, 120);
-              doc.setFontSize(10);
-              doc.text(`Imagen ${imageIndex + 1} no disponible`, imageX + imageWidth/2, currentY + imageHeight/2, { align: "center" });
-              doc.setTextColor(0, 0, 0);
-            }
+            // Añadir imagen
+            doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
+            
+            // Marco alrededor de la imagen
+            doc.setDrawColor(180, 180, 180);
+            doc.setLineWidth(0.5);
+            doc.rect(imageX, currentY, imageWidth, imageHeight);
+            
+            // Numeración y descripción de imagen
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(80, 80, 80);
+            doc.text(`Fotografía ${i + 1}`, imageX, currentY + imageHeight + 8);
+            
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Vista del inmueble - Archivo oficial`, imageX, currentY + imageHeight + 15);
+            
+            // Restaurar color de texto
+            doc.setTextColor(0, 0, 0);
+            
+          } catch (imgError) {
+            console.error('Error agregando imagen:', imgError);
+            
+            // En caso de error, mostrar un placeholder
+            doc.setFillColor(240, 240, 240);
+            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
+            const imageX = (pageWidth - imageWidth) / 2;
+            doc.rect(imageX, currentY, imageWidth, imageHeight, 'F');
+            doc.setTextColor(120, 120, 120);
+            doc.setFontSize(10);
+            doc.text(`Imagen ${i + 1} no disponible`, imageX + imageWidth/2, currentY + imageHeight/2, { align: "center" });
+            doc.setTextColor(0, 0, 0);
           }
         }
 
-        // Información adicional al final de las fotos (en la última página de fotos)
-        const lastPageY = yPosition + (Math.min(imagesPerPage, propertyImages.length % imagesPerPage || imagesPerPage) * (imageHeight + spacingBetweenImages)) + 20;
+        // Información adicional al final de las fotos
+        const finalY = yPosition + (propertyImages.length * (imageHeight + spacingBetweenImages)) + 20;
         doc.setFillColor(248, 250, 252);
-        doc.rect(20, lastPageY - 5, pageWidth - 40, 25, 'F');
+        doc.rect(marginLeft, finalY - 5, contentWidth, 25, 'F');
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(100, 100, 100);
-        doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, lastPageY + 5, { align: "center" });
-        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, lastPageY + 12, { align: "center" });
-        doc.text("Fotografías tomadas para fines de valuación profesional", pageWidth / 2, lastPageY + 19, { align: "center" });
+        doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, finalY + 5, { align: "center" });
+        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, finalY + 12, { align: "center" });
+        doc.text("Fotografías tomadas para fines de valuación profesional", pageWidth / 2, finalY + 19, { align: "center" });
         doc.setTextColor(0, 0, 0);
       }
 
