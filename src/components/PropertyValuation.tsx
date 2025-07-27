@@ -1051,53 +1051,91 @@ const translations = {
     spaces: '空间',
     characteristics: '特征',
     location: '位置',
+    photos: '照片',
+    valuation: '评估',
+    
+    // Areas
+    constructionAreas: '建筑面积',
+    basement: '地下室',
+    firstFloor: '一层',
+    secondFloor: '二层',
+    thirdFloor: '三层',
+    fourthFloor: '四层',
+    landArea: '土地面积',
     
     // Tipo de propiedad
+    propertyTypeTitle: '房产类型',
+    selectPropertyType: '选择房产类型',
     house: '房屋',
     apartment: '公寓',
     land: '土地',
     commercial: '商业',
-    
-    // Areas
-    basementArea: '地下室面积 (m²)',
-    firstFloorArea: '一层面积 (m²)',
-    secondFloorArea: '二层面积 (m²)',
-    thirdFloorArea: '三层面积 (m²)',
-    fourthFloorArea: '四层面积 (m²)',
-    landArea: '土地面积 (m²)',
+    warehouse: '仓库',
     
     // Espacios
+    spacesDistribution: '空间分布和特征',
+    livingSpaces: '居住空间',
     bedrooms: '卧室',
+    bedroomsDescription: '卧室数量',
     livingRooms: '客厅',
+    livingRoomsDescription: '主要居住区域',
     diningRoom: '餐厅',
-    kitchen: '厨房',
-    storage: '储藏室',
-    serviceArea: '服务区',
-    garage: '车库',
+    diningRoomDescription: '用餐空间',
     bathrooms: '浴室',
-    others: '其他',
+    bathroomsDescription: '带淋浴/浴缸的浴室',
+    serviceSpaces: '服务空间',
+    kitchen: '厨房',
+    kitchenDescription: '厨房数量',
+    storage: '储藏室',
+    storageDescription: '储存空间',
+    serviceArea: '服务区',
+    serviceAreaDescription: '洗衣/服务间',
+    garage: '车库',
+    garageDescription: '停车位',
+    others: '其他空间',
+    othersDescription: '书房、办公室等',
     
     // Características
+    propertyCharacteristics: '房产特征',
     age: '房龄 (年)',
+    ageDescription: '建成年数',
+    locationQuality: '位置质量',
+    locationDescription: '评估区域和交通',
     generalCondition: '总体状况',
+    conditionDescription: '房产物理状况',
     
-    // Opciones de ubicación
-    excellent: '优秀',
-    good: '良好',
-    regular: '一般',
-    
-    // Opciones de estado
+    // Condiciones
     new: '全新',
+    good: '良好',
     medium: '中等',
-    old: '陈旧',
+    regular: '一般',
+    simpleRepairs: '简单维修',
+    mediumRepairs: '中等维修',
+    importantRepairs: '重要维修',
+    seriousDamage: '严重损坏',
+    waste: '待拆除',
+    useless: '无法使用',
+    
+    // Ubicaciones
+    excellent: '优秀',
+    goodLocation: '良好',
+    regularLocation: '一般',
+    badLocation: '较差',
     
     // Ubicación
-    address: '地址',
-    searchAddress: '搜索地址',
+    propertyLocation: '房产位置',
+    clickOnMap: '在地图上点击选择房产确切位置',
+    currentAddress: '当前地址',
     
-    // Botones
-    calculateValuation: '计算评估',
-    resetForm: '重置表单',
+    // Fotografías
+    propertyPhotos: '房产照片',
+    uploadPhotos: '上传照片',
+    photosDescription: '上传房产内外部图片',
+    removePhoto: '删除照片',
+    
+    // Botones de acción
+    calculate: '计算评估',
+    regenerate: '重新生成对比',
     downloadPDF: '下载 PDF',
     downloadWord: '下载 Word',
     
@@ -1122,13 +1160,6 @@ const translations = {
     priceM2: '单价/m²',
     distance: '距离',
     
-    currencyChanged: '货币已更改',
-    valuationNowIn: '评估现在以',
-    valuationCompleted: '评估完成',
-    valuationCompletedDesc: '房产评估已成功计算',
-    formReset: '表单重置',
-    formResetDesc: '所有数据已清除',
-    
     // PDF Content
     residentialValuation: '住宅评估',
     apartmentValuation: '公寓评估',
@@ -1142,10 +1173,35 @@ const translations = {
     propertyLocationPDF: '房产位置',
     generalInfo: '一般信息',
     type: '类型',
-    constructedArea: '建筑面积',
+    totalBuiltArea: '总建筑面积',
+    propertyAreas: '房产面积',
+    propertySpaces: '房产空间',
+    estimatedValuePDF: '估计价值',
+    pricePerSqm: '每平方米价格',
+    basedOnComparables: '基于3个可比房产',
+    mapLocation: '地图位置',
+    address: '地址',
+    viewInGoogleMaps: '在Google地图中查看位置',
+    photograph: '照片',
+    totalPhotos: '档案中的照片总数',
+    captureDate: '拍摄日期',
     
-    // PDF Price adjustment
-    baseValue: '基础价值',
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: '年',
+    
+    // Messages
+    calculatingValuation: '正在计算评估',
+    generatingReport: '正在生成3个可比的评估...',
+    valuationCompleted: '评估完成',
+    estimatedValueTitle: '估计价值',
+    comparables: '可比房产',
+    comparativesUpdated: '可比房产已更新',
+    newComparativesGenerated: '已生成新的附近房产',
+    currencyChanged: '货币已更改',
+    valuationNowIn: '评估现在显示为',
+    priceAdjusted: '价格已调整',
     adjustment: '调整',
     newValue: '新价值'
   },
@@ -1160,53 +1216,91 @@ const translations = {
     spaces: 'स्थान',
     characteristics: 'विशेषताएं',
     location: 'स्थान',
+    photos: 'तस्वीरें',
+    valuation: 'मूल्यांकन',
+    
+    // Areas
+    constructionAreas: 'निर्माण क्षेत्र',
+    basement: 'तहखाना',
+    firstFloor: 'पहली मंजिल',
+    secondFloor: 'दूसरी मंजिल',
+    thirdFloor: 'तीसरी मंजिल',
+    fourthFloor: 'चौथी मंजिल',
+    landArea: 'भूमि क्षेत्र',
     
     // Tipo de propiedad
+    propertyTypeTitle: 'संपत्ति प्रकार',
+    selectPropertyType: 'संपत्ति प्रकार चुनें',
     house: 'मकान',
     apartment: 'अपार्टमेंट',
     land: 'भूमि',
     commercial: 'व्यावसायिक',
-    
-    // Areas
-    basementArea: 'तहखाना क्षेत्र (m²)',
-    firstFloorArea: 'पहली मंजिल क्षेत्र (m²)',
-    secondFloorArea: 'दूसरी मंजिल क्षेत्र (m²)',
-    thirdFloorArea: 'तीसरी मंजिल क्षेत्र (m²)',
-    fourthFloorArea: 'चौथी मंजिल क्षेत्र (m²)',
-    landArea: 'भूमि क्षेत्र (m²)',
+    warehouse: 'गोदाम',
     
     // Espacios
+    spacesDistribution: 'स्थान वितरण और विशेषताएं',
+    livingSpaces: 'रहने की जगह',
     bedrooms: 'शयनकक्ष',
+    bedroomsDescription: 'शयनकक्षों की संख्या',
     livingRooms: 'बैठक कक्ष',
+    livingRoomsDescription: 'मुख्य रहने के क्षेत्र',
     diningRoom: 'भोजन कक्ष',
+    diningRoomDescription: 'भोजन स्थान',
+    bathrooms: 'पूर्ण स्नानघर',
+    bathroomsDescription: 'शावर/टब के साथ स्नानघर',
+    serviceSpaces: 'सेवा स्थान',
     kitchen: 'रसोई',
-    storage: 'भंडारण',
+    kitchenDescription: 'रसोई की संख्या',
+    storage: 'भंडारण/गोदाम',
+    storageDescription: 'भंडारण स्थान',
     serviceArea: 'सेवा क्षेत्र',
-    garage: 'गैराज',
-    bathrooms: 'स्नानघर',
-    others: 'अन्य',
+    serviceAreaDescription: 'धुलाई/सेवा कक्ष',
+    garage: 'गैराज/कार पार्किंग',
+    garageDescription: 'पार्किंग स्थान',
+    others: 'अन्य स्थान',
+    othersDescription: 'अध्ययन, कार्यालय, आदि',
     
     // Características
+    propertyCharacteristics: 'संपत्ति विशेषताएं',
     age: 'आयु (वर्ष)',
+    ageDescription: 'निर्माण के बाद से वर्ष',
+    locationQuality: 'स्थान गुणवत्ता',
+    locationDescription: 'क्षेत्र और पहुंच का मूल्यांकन',
     generalCondition: 'सामान्य स्थिति',
+    conditionDescription: 'संपत्ति की भौतिक स्थिति',
     
-    // Opciones de ubicación
-    excellent: 'उत्कृष्ट',
-    good: 'अच्छा',
-    regular: 'नियमित',
-    
-    // Opciones de estado
+    // Condiciones
     new: 'नया',
+    good: 'अच्छा',
     medium: 'मध्यम',
-    old: 'पुराना',
+    regular: 'नियमित',
+    simpleRepairs: 'सरल मरम्मत',
+    mediumRepairs: 'मध्यम मरम्मत',
+    importantRepairs: 'महत्वपूर्ण मरम्मत',
+    seriousDamage: 'गंभीर क्षति',
+    waste: 'कचरे में',
+    useless: 'बेकार',
+    
+    // Ubicaciones
+    excellent: 'उत्कृष्ट',
+    goodLocation: 'अच्छा',
+    regularLocation: 'नियमित',
+    badLocation: 'खराब',
     
     // Ubicación
-    address: 'पता',
-    searchAddress: 'पता खोजें',
+    propertyLocation: 'संपत्ति स्थान',
+    clickOnMap: 'संपत्ति का सटीक स्थान चुनने के लिए मानचित्र पर क्लिक करें',
+    currentAddress: 'वर्तमान पता',
     
-    // Botones
-    calculateValuation: 'मूल्यांकन की गणना करें',
-    resetForm: 'फॉर्म रीसेट करें',
+    // Fotografías
+    propertyPhotos: 'संपत्ति तस्वीरें',
+    uploadPhotos: 'तस्वीरें अपलोड करें',
+    photosDescription: 'संपत्ति के अंदर और बाहर की छवियां अपलोड करें',
+    removePhoto: 'तस्वीर हटाएं',
+    
+    // Botones de acción
+    calculate: 'मूल्यांकन की गणना करें',
+    regenerate: 'तुलनात्मक पुनर्जनन',
     downloadPDF: 'PDF डाउनलोड करें',
     downloadWord: 'Word डाउनलोड करें',
     
@@ -1231,13 +1325,6 @@ const translations = {
     priceM2: 'मूल्य/m²',
     distance: 'दूरी',
     
-    currencyChanged: 'मुद्रा बदली गई',
-    valuationNowIn: 'मूल्यांकन अब इसमें है',
-    valuationCompleted: 'मूल्यांकन पूर्ण',
-    valuationCompletedDesc: 'संपत्ति मूल्यांकन सफलतापूर्वक गणना की गई',
-    formReset: 'फॉर्म रीसेट',
-    formResetDesc: 'सभी डेटा साफ कर दिया गया',
-    
     // PDF Content
     residentialValuation: 'आवासीय मूल्यांकन',
     apartmentValuation: 'अपार्टमेंट मूल्यांकन',
@@ -1251,10 +1338,35 @@ const translations = {
     propertyLocationPDF: 'संपत्ति स्थान',
     generalInfo: 'सामान्य जानकारी',
     type: 'प्रकार',
-    constructedArea: 'निर्मित क्षेत्र',
+    totalBuiltArea: 'कुल निर्मित क्षेत्र',
+    propertyAreas: 'संपत्ति क्षेत्र',
+    propertySpaces: 'संपत्ति स्थान',
+    estimatedValuePDF: 'अनुमानित मूल्य',
+    pricePerSqm: 'प्रति वर्ग मीटर मूल्य',
+    basedOnComparables: '3 तुलनीय पर आधारित',
+    mapLocation: 'मानचित्र स्थान',
+    address: 'पता',
+    viewInGoogleMaps: 'Google मानचित्र में स्थान देखें',
+    photograph: 'तस्वीर',
+    totalPhotos: 'फाइल में कुल तस्वीरें',
+    captureDate: 'कैप्चर तिथि',
     
-    // PDF Price adjustment
-    baseValue: 'आधार मूल्य',
+    // Units
+    sqm: 'm²',
+    meters: 'm',
+    years: 'वर्ष',
+    
+    // Messages
+    calculatingValuation: 'मूल्यांकन की गणना हो रही है',
+    generatingReport: '3 तुलनीय के साथ मूल्यांकन तैयार की जा रही है...',
+    valuationCompleted: 'मूल्यांकन पूर्ण',
+    estimatedValueTitle: 'अनुमानित मूल्य',
+    comparables: 'तुलनीय',
+    comparativesUpdated: 'तुलनात्मक अपडेट किए गए',
+    newComparativesGenerated: 'नई आस-पास की संपत्तियां तैयार की गईं',
+    currencyChanged: 'मुद्रा बदली गई',
+    valuationNowIn: 'मूल्यांकन अब इसमें दिखाया गया है',
+    priceAdjusted: 'मूल्य समायोजित',
     adjustment: 'समायोजन',
     newValue: 'नया मूल्य'
   }
