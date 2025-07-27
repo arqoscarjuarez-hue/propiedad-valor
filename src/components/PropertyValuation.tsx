@@ -3154,38 +3154,6 @@ const PropertyValuation = () => {
 
       yPosition += 15;
 
-      // Certificación profesional
-      doc.setFillColor(245, 245, 245);
-      doc.rect(marginLeft, yPosition - 5, contentWidth, 60, 'F');
-      doc.setDrawColor(150, 150, 150);
-      doc.setLineWidth(0.5);
-      doc.rect(marginLeft, yPosition - 5, contentWidth, 60);
-
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.text("CERTIFICACIÓN PROFESIONAL", marginLeft + 5, yPosition + 5);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 15;
-
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      const certificacionText = [
-        "El presente avalúo ha sido elaborado siguiendo estándares profesionales internacionales",
-        "y metodologías reconocidas para la valuación de bienes inmuebles. El valor determinado",
-        "representa el valor comercial más probable bajo condiciones normales de mercado.",
-        "",
-        "Este documento constituye la opinión profesional del valor de la propiedad con base en",
-        "la información disponible a la fecha de elaboración del presente avalúo."
-      ];
-
-      certificacionText.forEach(line => {
-        doc.text(line, marginLeft + 5, yPosition);
-        yPosition += 5;
-      });
-
-      yPosition += 10;
-
       // Línea para firma
       doc.setDrawColor(0, 0, 0);
       doc.setLineWidth(0.5);
