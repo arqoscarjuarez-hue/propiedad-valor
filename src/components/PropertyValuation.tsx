@@ -194,6 +194,7 @@ const translations = {
     totalBuiltArea: 'Área Total Construida',
     propertyAreas: 'ÁREAS DE LA PROPIEDAD',
     propertySpaces: 'ESPACIOS DE LA PROPIEDAD',
+    availableServicesPDF: 'SERVICIOS DISPONIBLES',
     estimatedValuePDF: 'VALOR ESTIMADO',
     pricePerSqm: 'Precio por m²',
     basedOnComparables: 'Basado en 3 comparables',
@@ -2664,6 +2665,53 @@ const PropertyValuation = () => {
       doc.text(`TOTAL GENERAL DE ESPACIOS: ${totalEspacios}`, 25, yPosition + 21);
       yPosition += 30;
 
+      // Sección de Servicios Disponibles
+      doc.setFillColor(245, 245, 245);
+      doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("SERVICIOS DISPONIBLES", marginLeft, yPosition + 5);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 20;
+
+      // Servicios básicos
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("Servicios Básicos:", marginLeft, yPosition);
+      yPosition += 7;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      
+      if (propertyData.servicios.agua) { doc.text("✓ Agua Potable", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.electricidad) { doc.text("✓ Electricidad", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.gas) { doc.text("✓ Gas Natural/LP", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.drenaje) { doc.text("✓ Drenaje", 25, yPosition); yPosition += 5; }
+      
+      yPosition += 5;
+      
+      // Servicios adicionales
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.text("Servicios Adicionales:", marginLeft, yPosition);
+      yPosition += 7;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      
+      if (propertyData.servicios.internet) { doc.text("✓ Internet", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.cable) { doc.text("✓ TV por Cable", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.telefono) { doc.text("✓ Teléfono", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.seguridad) { doc.text("✓ Seguridad Privada", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.alberca) { doc.text("✓ Alberca", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.jardin) { doc.text("✓ Jardín", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.elevador) { doc.text("✓ Elevador", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.aireAcondicionado) { doc.text("✓ Aire Acondicionado", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.calefaccion) { doc.text("✓ Calefacción", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.panelesSolares) { doc.text("✓ Paneles Solares", 25, yPosition); yPosition += 5; }
+      if (propertyData.servicios.tinaco) { doc.text("✓ Tinaco/Cisterna", 25, yPosition); yPosition += 5; }
+      
+      yPosition += 10;
+
       // Resultado de valuación con color personalizado
       doc.setFillColor(config.secondaryColor[0], config.secondaryColor[1], config.secondaryColor[2]);
       doc.rect(marginLeft, yPosition - 5, contentWidth, 35, 'F');
@@ -3175,6 +3223,40 @@ const PropertyValuation = () => {
                 })
               ]
             }),
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              text: "SERVICIOS DISPONIBLES",
+              heading: HeadingLevel.HEADING_1
+            }),
+            // Servicios básicos
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Servicios Básicos:", bold: true })
+              ]
+            }),
+            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: "✓ Agua Potable" })] })] : []),
+            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: "✓ Electricidad" })] })] : []),
+            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: "✓ Gas Natural/LP" })] })] : []),
+            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: "✓ Drenaje" })] })] : []),
+            
+            // Servicios adicionales
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Servicios Adicionales:", bold: true })
+              ]
+            }),
+            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: "✓ Internet" })] })] : []),
+            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: "✓ TV por Cable" })] })] : []),
+            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: "✓ Teléfono" })] })] : []),
+            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: "✓ Seguridad Privada" })] })] : []),
+            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: "✓ Alberca" })] })] : []),
+            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: "✓ Jardín" })] })] : []),
+            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: "✓ Elevador" })] })] : []),
+            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: "✓ Aire Acondicionado" })] })] : []),
+            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: "✓ Calefacción" })] })] : []),
+            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: "✓ Paneles Solares" })] })] : []),
+            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: "✓ Tinaco/Cisterna" })] })] : []),
+
             new Paragraph({ text: "" }), // Espacio
             new Paragraph({
               text: "RESULTADO DE VALUACIÓN",
