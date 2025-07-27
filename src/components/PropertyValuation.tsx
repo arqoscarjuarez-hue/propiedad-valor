@@ -2260,6 +2260,18 @@ const PropertyValuation = () => {
         yPosition += 3;
       }
       
+      // Cocina como espacio habitacional
+      if (propertyData.cocina > 0) {
+        doc.text(`• Cocina (${propertyData.cocina} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.cocina; i++) {
+          const nombreCocina = i === 1 ? "Cocina Principal" : `Cocina ${i}`;
+          doc.text(`  - ${nombreCocina}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
       // Baños con nombres específicos
       if (propertyData.banos > 0) {
         doc.text(`• Baños Completos (${propertyData.banos} espacios):`, 25, yPosition);
@@ -2273,43 +2285,79 @@ const PropertyValuation = () => {
         yPosition += 3;
       }
       
+      // Otros espacios habitacionales
+      if (propertyData.otros > 0) {
+        doc.text(`• Otros Espacios Habitacionales (${propertyData.otros} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.otros; i++) {
+          const nombreOtro = i === 1 ? "Estudio/Oficina" : 
+                           i === 2 ? "Sala de Juegos" :
+                           i === 3 ? "Biblioteca/Den" : `Espacio Adicional ${i}`;
+          doc.text(`  - ${nombreOtro}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
       yPosition += 5;
       
-      // Espacios de servicio
+      // Espacios de servicio y apoyo
       doc.setFont("helvetica", "bold");
-      doc.text("Espacios de Servicio:", marginLeft, yPosition);
+      doc.text("Espacios de Servicio y Apoyo:", marginLeft, yPosition);
       yPosition += 7;
       doc.setFont("helvetica", "bold");
-      doc.text(`• Cocina: ${propertyData.cocina}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Área de Servicio/Lavado: ${propertyData.areaServicio}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Bodegas/Trasteros: ${propertyData.bodega}`, 25, yPosition);
-      yPosition += 6;
-      doc.text(`• Cocheras/Garajes: ${propertyData.cochera}`, 25, yPosition);
-      yPosition += 10;
       
-      // Espacios adicionales
-      if (propertyData.otros > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.text("Espacios Adicionales:", 20, yPosition);
-        yPosition += 7;
-        doc.setFont("helvetica", "bold");
-        doc.text(`• Otros Espacios (estudios, oficinas, patios techados): ${propertyData.otros}`, 25, yPosition);
-        yPosition += 10;
+      // Área de servicio con nombres específicos
+      if (propertyData.areaServicio > 0) {
+        doc.text(`• Área de Servicio/Lavado (${propertyData.areaServicio} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.areaServicio; i++) {
+          const nombreServicio = i === 1 ? "Cuarto de Lavado Principal" : `Área de Servicio ${i}`;
+          doc.text(`  - ${nombreServicio}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      // Bodegas con nombres específicos
+      if (propertyData.bodega > 0) {
+        doc.text(`• Bodegas/Trasteros (${propertyData.bodega} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.bodega; i++) {
+          const nombreBodega = i === 1 ? "Bodega Principal" : `Bodega ${i}`;
+          doc.text(`  - ${nombreBodega}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
+      }
+      
+      // Cocheras con nombres específicos
+      if (propertyData.cochera > 0) {
+        doc.text(`• Cocheras/Garajes (${propertyData.cochera} espacios):`, 25, yPosition);
+        yPosition += 5;
+        for (let i = 1; i <= propertyData.cochera; i++) {
+          const nombreCochera = i === 1 ? "Cochera Principal" : 
+                               i === 2 ? "Cochera Secundaria" : `Cochera ${i}`;
+          doc.text(`  - ${nombreCochera}`, 30, yPosition);
+          yPosition += 5;
+        }
+        yPosition += 3;
       }
       
       // Resumen total de espacios
-      const totalEspacios = propertyData.recamaras + propertyData.salas + propertyData.comedor + 
-                           propertyData.banos + propertyData.cocina + propertyData.areaServicio + 
-                           propertyData.bodega + propertyData.cochera + propertyData.otros;
+      const totalEspaciosHabitacionales = propertyData.recamaras + propertyData.salas + propertyData.comedor + 
+                                         propertyData.cocina + propertyData.banos + propertyData.otros;
+      const totalEspaciosServicio = propertyData.areaServicio + propertyData.bodega + propertyData.cochera;
+      const totalEspacios = totalEspaciosHabitacionales + totalEspaciosServicio;
       
       doc.setFillColor(245, 245, 245);
-      doc.rect(20, yPosition, pageWidth - 40, 15, 'F');
+      doc.rect(20, yPosition, pageWidth - 40, 25, 'F');
       doc.setFont("helvetica", "bold");
       doc.setFontSize(11);
-      doc.text(`TOTAL DE ESPACIOS IDENTIFICADOS: ${totalEspacios}`, 25, yPosition + 10);
-      yPosition += 20;
+      doc.text(`TOTAL DE ESPACIOS HABITACIONALES: ${totalEspaciosHabitacionales}`, 25, yPosition + 7);
+      doc.text(`TOTAL DE ESPACIOS DE SERVICIO: ${totalEspaciosServicio}`, 25, yPosition + 14);
+      doc.text(`TOTAL GENERAL DE ESPACIOS: ${totalEspacios}`, 25, yPosition + 21);
+      yPosition += 30;
 
       // Resultado de valuación con color personalizado
       doc.setFillColor(config.secondaryColor[0], config.secondaryColor[1], config.secondaryColor[2]);
