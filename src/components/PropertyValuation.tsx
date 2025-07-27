@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 import jsPDF from 'jspdf';
 import { 
@@ -1697,16 +1698,23 @@ const PropertyValuation = () => {
 
   const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+    const lat = propertyData.latitud || 19.4326;
+    const lng = propertyData.longitud || -99.1332;
     
-    // Generar ubicaciones cercanas basadas en las coordenadas de la propiedad
-    const nearbyAddresses = await generateNearbyAddresses(
-      propertyData.latitud || 19.4326, 
-      propertyData.longitud || -99.1332,
-      numComparables
-    );
+    console.log('Generando comparables con búsqueda real de Google Maps...');
+    
+    // Primero intentar buscar propiedades reales
+    let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables);
+    
+    // Si no hay suficientes propiedades reales, completar con simuladas
+    if (nearbyAddresses.length < numComparables) {
+      console.log(`Solo se encontraron ${nearbyAddresses.length} propiedades reales, completando con simuladas...`);
+      const simulatedAddresses = await generateNearbyAddresses(lat, lng, numComparables - nearbyAddresses.length);
+      nearbyAddresses = [...nearbyAddresses, ...simulatedAddresses];
+    }
     
     return Promise.all(nearbyAddresses.map(async (addressInfo, index) => {
-      const variation = (Math.random() - 0.5) * 0.2; // ±10% variation (más cercano al valor base)
+      const variation = (Math.random() - 0.5) * 0.2; // ±10% variation
       const areaVariation = 1 + (Math.random() - 0.5) * 0.3; // ±15% area variation
       
       return {
@@ -1722,15 +1730,78 @@ const PropertyValuation = () => {
         estadoGeneral: propertyData.estadoGeneral,
         precio: convertCurrency(baseValue * (1 + variation), selectedCurrency),
         distancia: addressInfo.distance,
-        descripcion: `${propertyData.tipoPropiedad} de ${Math.round(areaTotal * areaVariation)}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. Excelente ubicación en zona ${propertyData.ubicacion}.`,
-        url: `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
+        descripcion: `${propertyData.tipoPropiedad} de ${Math.round(areaTotal * areaVariation)}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+        url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
         latitud: addressInfo.lat,
         longitud: addressInfo.lng
       };
     }));
   };
 
-  // Función para generar direcciones cercanas usando geocodificación inversa
+  // Función para buscar propiedades cercanas usando Google Maps
+  const searchNearbyProperties = async (lat: number, lng: number, propertyType: string, numResults: number = 10) => {
+    try {
+      console.log('Buscando propiedades cercanas con Google Maps...');
+      
+      const propertyTypeQueries = {
+        'casa': 'casas en venta',
+        'departamento': 'departamentos en venta',
+        'terreno': 'terrenos en venta',
+        'comercial': 'locales comerciales en venta',
+        'bodega': 'bodegas en venta'
+      };
+      
+      const query = propertyTypeQueries[propertyType as keyof typeof propertyTypeQueries] || 'propiedades en venta';
+      
+      const response = await supabase.functions.invoke('google-maps', {
+        body: {
+          action: 'places-search',
+          data: {
+            query: query,
+            lat: lat,
+            lng: lng,
+            radius: 2000 // 2km radius
+          }
+        }
+      });
+
+      if (response.data?.results && response.data.results.length > 0) {
+        console.log(`Encontradas ${response.data.results.length} propiedades en Google Maps`);
+        return response.data.results.slice(0, numResults).map((place: any, index: number) => ({
+          id: `real-${index + 1}`,
+          address: place.name || place.vicinity || `Propiedad ${index + 1}`,
+          distance: place.geometry?.location ? 
+            calculateDistance(lat, lng, place.geometry.location.lat, place.geometry.location.lng) :
+            Math.round(Math.random() * 2000),
+          lat: place.geometry?.location?.lat || lat + (Math.random() - 0.5) * 0.01,
+          lng: place.geometry?.location?.lng || lng + (Math.random() - 0.5) * 0.01,
+          placeId: place.place_id,
+          rating: place.rating,
+          isReal: true
+        }));
+      } else {
+        console.log('No se encontraron propiedades reales, generando simuladas');
+        return [];
+      }
+    } catch (error) {
+      console.error('Error buscando propiedades con Google Maps:', error);
+      return [];
+    }
+  };
+
+  // Función para calcular distancia entre dos puntos
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371000; // Radio de la Tierra en metros
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return Math.round(R * c);
+  };
+
+  // Función para generar direcciones cercanas usando geocodificación inversa (fallback)
   const generateNearbyAddresses = async (lat: number, lng: number, numComparables: number = 3) => {
     const addresses = [];
     const radiusKm = 2; // Radio de 2 km para buscar comparativos
@@ -1748,42 +1819,13 @@ const PropertyValuation = () => {
       const newLat = lat + (deltaLat * Math.cos(randomBearing));
       const newLng = lng + (deltaLng * Math.sin(randomBearing));
       
-      try {
-        // Intentar obtener la dirección real usando geocodificación inversa
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${newLat}&lon=${newLng}&addressdetails=1`
-        );
-        const data = await response.json();
-        
-        if (data && data.display_name) {
-          addresses.push({
-            address: data.display_name,
-            distance: Math.round(randomDistance * 1000), // en metros
-            lat: newLat,
-            lng: newLng
-          });
-        } else {
-          // Fallback si no se encuentra dirección
-          addresses.push({
-            address: `Propiedad cercana ${i + 1} (${newLat.toFixed(4)}, ${newLng.toFixed(4)})`,
-            distance: Math.round(randomDistance * 1000),
-            lat: newLat,
-            lng: newLng
-          });
-        }
-      } catch (error) {
-        console.error('Error getting nearby address:', error);
-        // Fallback en caso de error
-        addresses.push({
-          address: `Propiedad cercana ${i + 1} (${randomDistance.toFixed(1)} km)`,
-          distance: Math.round(randomDistance * 1000),
-          lat: newLat,
-          lng: newLng
-        });
-      }
-      
-      // Delay para evitar rate limiting de Nominatim
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      addresses.push({
+        address: `Propiedad cercana ${i + 1} (${randomDistance.toFixed(1)} km)`,
+        distance: Math.round(randomDistance * 1000),
+        lat: newLat,
+        lng: newLng,
+        isReal: false
+      });
     }
     
     return addresses;
@@ -1904,6 +1946,11 @@ const PropertyValuation = () => {
 
   const regenerateComparatives = async () => {
     if (valuation) {
+      toast({
+        title: translations[selectedLanguage].calculatingValuation,
+        description: 'Buscando nuevas propiedades comparables cercanas...',
+      });
+
       // Convertir valuación actual de vuelta a USD base para generar comparativas
       const valuationInUSD = selectedCurrency.code === 'USD' ? valuation : valuation / (selectedCurrency.rate || 1);
       const newComparatives = await generateComparativeProperties(valuationInUSD);
@@ -3723,13 +3770,22 @@ const PropertyValuation = () => {
                            </div>
                          ))}
                        </div>
-                       <p className="text-xs text-gray-500 mt-2">
-                         Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
-                       </p>
-                     </div>
-                   )}
-                   
-                   {/* Selector de tipo de membrete */}
+                        <p className="text-xs text-gray-500 mt-2">
+                          Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
+                        </p>
+                        <Button 
+                          onClick={regenerateComparatives} 
+                          variant="outline" 
+                          className="w-full mt-3"
+                          size="sm"
+                        >
+                          <Shuffle className="mr-2 h-4 w-4" />
+                          Buscar Nuevos Comparables Cercanos
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {/* Selector de tipo de membrete */}
                    <div className="pt-4 border-t">
                      <Label className="text-sm font-medium mb-2 block">Tipo de Membrete para Reportes</Label>
                      <Select value={selectedLetterhead} onValueChange={setSelectedLetterhead}>
