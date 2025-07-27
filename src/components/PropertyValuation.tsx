@@ -2382,9 +2382,16 @@ const PropertyValuation = () => {
                              propertyData.ubicacion === 'buena' ? 'Buena' :
                              propertyData.ubicacion === 'regular' ? 'Regular' : 'Deficiente';
       
-      const estadoTexto = propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
-                         propertyData.estadoGeneral === 'good' ? 'Bueno' :
-                         propertyData.estadoGeneral === 'medium' ? 'Regular' : 'Deficiente';
+      const estadoTexto = propertyData.estadoGeneral === 'nuevo' ? 'Nuevo' :
+                         propertyData.estadoGeneral === 'bueno' ? 'Bueno' :
+                         propertyData.estadoGeneral === 'medio' ? 'Medio' :
+                         propertyData.estadoGeneral === 'regular' ? 'Regular' :
+                         propertyData.estadoGeneral === 'reparaciones-sencillas' ? 'Reparaciones Sencillas' :
+                         propertyData.estadoGeneral === 'reparaciones-medias' ? 'Reparaciones Medias' :
+                         propertyData.estadoGeneral === 'reparaciones-importantes' ? 'Reparaciones Importantes' :
+                         propertyData.estadoGeneral === 'danos-graves' ? 'Daños Graves' :
+                         propertyData.estadoGeneral === 'en-desecho' ? 'En Desecho' :
+                         propertyData.estadoGeneral === 'inservibles' ? 'Inservibles' : 'No Especificado';
 
       doc.setFont("helvetica", "bold");
       doc.text("Calidad de Ubicación:", marginLeft, yPosition);
@@ -2836,9 +2843,16 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ text: "Estado General: ", bold: true }),
                 new TextRun({ 
-                  text: propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
-                        propertyData.estadoGeneral === 'good' ? 'Bueno' :
-                        propertyData.estadoGeneral === 'medium' ? 'Regular' : 'Deficiente'
+                  text: propertyData.estadoGeneral === 'nuevo' ? 'Nuevo' :
+                        propertyData.estadoGeneral === 'bueno' ? 'Bueno' :
+                        propertyData.estadoGeneral === 'medio' ? 'Medio' :
+                        propertyData.estadoGeneral === 'regular' ? 'Regular' :
+                        propertyData.estadoGeneral === 'reparaciones-sencillas' ? 'Reparaciones Sencillas' :
+                        propertyData.estadoGeneral === 'reparaciones-medias' ? 'Reparaciones Medias' :
+                        propertyData.estadoGeneral === 'reparaciones-importantes' ? 'Reparaciones Importantes' :
+                        propertyData.estadoGeneral === 'danos-graves' ? 'Daños Graves' :
+                        propertyData.estadoGeneral === 'en-desecho' ? 'En Desecho' :
+                        propertyData.estadoGeneral === 'inservibles' ? 'Inservibles' : 'No Especificado'
                 })
               ]
             }),
