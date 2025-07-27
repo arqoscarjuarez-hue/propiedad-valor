@@ -155,7 +155,7 @@ const translations = {
     calculate: 'Calcular Valuación',
     regenerate: 'Regenerar Comparativas',
     downloadPDF: 'Descargar PDF',
-    downloadWord: 'Descargar Word',
+    downloadWord: 'Descargar PDF Ejecutivo',
     
     // Resultado de valuación
     propertyValuationTitle: 'Valuación de la Propiedad',
@@ -345,7 +345,7 @@ const translations = {
     calculate: 'Calculate Valuation',
     regenerate: 'Regenerate Comparatives',
     downloadPDF: 'Download PDF',
-    downloadWord: 'Download Word',
+    downloadWord: 'Download Executive PDF',
     
     // Resultado de valuación
     propertyValuationTitle: 'Property Valuation',
@@ -534,7 +534,7 @@ const translations = {
     calculate: 'Calculer l\'Évaluation',
     regenerate: 'Régénérer les Comparaisons',
     downloadPDF: 'Télécharger PDF',
-    downloadWord: 'Télécharger Word',
+    downloadWord: 'Télécharger PDF Exécutif',
     
     // Resultado de valuación
     propertyValuationTitle: 'Évaluation de la Propriété',
@@ -723,7 +723,7 @@ const translations = {
     calculate: 'Bewertung Berechnen',
     regenerate: 'Vergleiche Regenerieren',
     downloadPDF: 'PDF Herunterladen',
-    downloadWord: 'Word Herunterladen',
+    downloadWord: 'Executive PDF Herunterladen',
     
     // Resultado de valuación
     propertyValuationTitle: 'Immobilienbewertung',
@@ -912,7 +912,7 @@ const translations = {
     calculate: 'Calcola Valutazione',
     regenerate: 'Rigenera Comparazioni',
     downloadPDF: 'Scarica PDF',
-    downloadWord: 'Scarica Word',
+    downloadWord: 'Scarica PDF Esecutivo',
     
     // Resultado de valuación
     propertyValuationTitle: 'Valutazione della Proprietà',
@@ -1101,7 +1101,7 @@ const translations = {
     calculate: 'Calcular Avaliação',
     regenerate: 'Regenerar Comparações',
     downloadPDF: 'Baixar PDF',
-    downloadWord: 'Baixar Word',
+    downloadWord: 'Baixar PDF Executivo',
     
     // Resultado de valuación
     propertyValuationTitle: 'Avaliação da Propriedade',
@@ -1287,7 +1287,7 @@ const translations = {
     calculate: '计算评估',
     regenerate: '重新生成对比',
     downloadPDF: '下载 PDF',
-    downloadWord: '下载 Word',
+    downloadWord: '下载执行 PDF',
     
     // Resultado de valuación
     propertyValuationTitle: '房产评估',
@@ -1473,7 +1473,7 @@ const translations = {
     calculate: 'मूल्यांकन की गणना करें',
     regenerate: 'तुलनात्मक पुनर्जनन',
     downloadPDF: 'PDF डाउनलोड करें',
-    downloadWord: 'Word डाउनलोड करें',
+    downloadWord: 'कार्यकारी PDF डाउनलोड करें',
     
     // Resultado de valuación
     propertyValuationTitle: 'संपत्ति मूल्यांकन',
@@ -3155,7 +3155,7 @@ const PropertyValuation = () => {
     if (!valuation) {
       toast({
         title: "Error",
-        description: "Primero debes calcular la valuación para generar el documento Word",
+        description: "Primero debes calcular la valuación para generar el documento PDF ejecutivo",
         variant: "destructive"
       });
       return;
