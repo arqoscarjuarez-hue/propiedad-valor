@@ -156,8 +156,6 @@ const translations = {
     regenerate: 'Regenerar Comparativas',
     downloadPDF: 'Descargar PDF',
     downloadWord: 'Descargar Word',
-    downloadAnnexPDF: 'Anexos PDF',
-    downloadAnnexWord: 'Anexos Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Valuación de la Propiedad',
@@ -348,8 +346,6 @@ const translations = {
     regenerate: 'Regenerate Comparatives',
     downloadPDF: 'Download PDF',
     downloadWord: 'Download Word',
-    downloadAnnexPDF: 'Annexes PDF',
-    downloadAnnexWord: 'Annexes Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Property Valuation',
@@ -539,8 +535,6 @@ const translations = {
     regenerate: 'Régénérer les Comparaisons',
     downloadPDF: 'Télécharger PDF',
     downloadWord: 'Télécharger Word',
-    downloadAnnexPDF: 'Annexes PDF',
-    downloadAnnexWord: 'Annexes Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Évaluation de la Propriété',
@@ -730,8 +724,6 @@ const translations = {
     regenerate: 'Vergleiche Regenerieren',
     downloadPDF: 'PDF Herunterladen',
     downloadWord: 'Word Herunterladen',
-    downloadAnnexPDF: 'Anhänge PDF',
-    downloadAnnexWord: 'Anhänge Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Immobilienbewertung',
@@ -921,8 +913,6 @@ const translations = {
     regenerate: 'Rigenera Comparazioni',
     downloadPDF: 'Scarica PDF',
     downloadWord: 'Scarica Word',
-    downloadAnnexPDF: 'Allegati PDF',
-    downloadAnnexWord: 'Allegati Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Valutazione della Proprietà',
@@ -1112,8 +1102,6 @@ const translations = {
     regenerate: 'Regenerar Comparações',
     downloadPDF: 'Baixar PDF',
     downloadWord: 'Baixar Word',
-    downloadAnnexPDF: 'Anexos PDF',
-    downloadAnnexWord: 'Anexos Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'Avaliação da Propriedade',
@@ -1300,8 +1288,6 @@ const translations = {
     regenerate: '重新生成对比',
     downloadPDF: '下载 PDF',
     downloadWord: '下载 Word',
-    downloadAnnexPDF: '附件 PDF',
-    downloadAnnexWord: '附件 Word',
     
     // Resultado de valuación
     propertyValuationTitle: '房产评估',
@@ -1488,8 +1474,6 @@ const translations = {
     regenerate: 'तुलनात्मक पुनर्जनन',
     downloadPDF: 'PDF डाउनलोड करें',
     downloadWord: 'Word डाउनलोड करें',
-    downloadAnnexPDF: 'संलग्नक PDF',
-    downloadAnnexWord: 'संलग्नक Word',
     
     // Resultado de valuación
     propertyValuationTitle: 'संपत्ति मूल्यांकन',
@@ -3808,318 +3792,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para generar PDF de Anexos
-  const generateAnnexPDF = async () => {
-    if (!valuation || comparativeProperties.length === 0) {
-      toast({
-        title: "Error",
-        description: "Primero debes calcular la valuación para generar el documento de anexos",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      toast({
-        title: translations[selectedLanguage].calculatingValuation,
-        description: 'Generando documento de anexos en PDF...',
-      });
-
-      const config = letterheadConfigs[selectedLetterhead];
-      const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const marginLeft = 20;
-      const marginTop = 20;
-      const contentWidth = pageWidth - 2 * marginLeft;
-      let yPosition = marginTop;
-
-      // Membrete
-      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.rect(0, 0, pageWidth, 35, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.setFont("helvetica", "bold");
-      doc.text(config.title, marginLeft, 18);
-      doc.setFontSize(12);
-      doc.text(config.subtitle, marginLeft, 28);
-      doc.setTextColor(0, 0, 0);
-
-      yPosition = 50;
-
-      // Título del documento de anexos
-      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.rect(marginLeft, yPosition - 5, contentWidth, 20, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(18);
-      doc.setFont("helvetica", "bold");
-      doc.text("ANEXOS DEL AVALÚO INMOBILIARIO", marginLeft, yPosition + 8);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 30;
-
-      // PROPIEDADES COMPARABLES
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("PROPIEDADES COMPARABLES", marginLeft, yPosition);
-      yPosition += 15;
-
-      // Tabla de comparables
-      const colWidths = [40, 25, 25, 25, 30, 35];
-      const colPositions = [marginLeft, marginLeft + 40, marginLeft + 65, marginLeft + 90, marginLeft + 115, marginLeft + 145];
-      
-      doc.setFillColor(240, 240, 240);
-      doc.rect(marginLeft, yPosition - 2, contentWidth, 15, 'F');
-      
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "bold");
-      doc.text("Dirección", colPositions[0], yPosition + 8);
-      doc.text("Área (m²)", colPositions[1], yPosition + 8);
-      doc.text("Rec.", colPositions[2], yPosition + 8);
-      doc.text("Baños", colPositions[3], yPosition + 8);
-      doc.text("Antigüedad", colPositions[4], yPosition + 8);
-      doc.text("Precio", colPositions[5], yPosition + 8);
-      
-      yPosition += 15;
-
-      // Datos de los comparables
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      
-      for (let i = 0; i < Math.min(comparativeProperties.length, 3); i++) {
-        const comp = comparativeProperties[i];
-        
-        if (i % 2 === 0) {
-          doc.setFillColor(250, 250, 250);
-          doc.rect(marginLeft, yPosition - 2, contentWidth, 12, 'F');
-        }
-        
-        const shortAddress = comp.address.length > 25 ? comp.address.substring(0, 22) + "..." : comp.address;
-        
-        doc.text(shortAddress, colPositions[0], yPosition + 6);
-        doc.text(comp.areaConstruida.toString(), colPositions[1], yPosition + 6);
-        doc.text(comp.recamaras.toString(), colPositions[2], yPosition + 6);
-        doc.text(comp.banos.toString(), colPositions[3], yPosition + 6);
-        doc.text(comp.antiguedad.toString(), colPositions[4], yPosition + 6);
-        doc.text(formatCurrency(comp.precio, selectedCurrency), colPositions[5], yPosition + 6);
-        
-        yPosition += 12;
-      }
-      
-      yPosition += 20;
-
-      // ANÁLISIS DE MERCADO
-      const analysis = getMarketAnalysis();
-      if (analysis) {
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text("ANÁLISIS DE MERCADO", marginLeft, yPosition);
-        yPosition += 15;
-        
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, 20, yPosition);
-        yPosition += 7;
-        doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, 20, yPosition);
-        yPosition += 7;
-        doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, 20, yPosition);
-        yPosition += 7;
-        
-        const variationText = analysis.difference > 0 ? 
-          `+${analysis.difference.toFixed(1)}% sobre el promedio` : 
-          `${analysis.difference.toFixed(1)}% bajo el promedio`;
-        doc.text(`Variación vs. Mercado: ${variationText}`, 20, yPosition);
-        yPosition += 20;
-      }
-
-      // ANÁLISIS DETALLADO DE COMPARABLES
-      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.rect(marginLeft, yPosition - 5, contentWidth, 15, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(14);
-      doc.setFont("helvetica", "bold");
-      doc.text("ANÁLISIS DETALLADO DE COMPARABLES", marginLeft, yPosition + 5);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 25;
-
-      // Análisis detallado para cada comparable
-      for (let i = 0; i < Math.min(comparativeProperties.length, 3); i++) {
-        const comp = comparativeProperties[i];
-        
-        // Título del comparable
-        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.rect(marginLeft, yPosition - 2, contentWidth, 18, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text(`COMPARABLE ${i + 1}`, marginLeft, yPosition + 8);
-        doc.setTextColor(0, 0, 0);
-        yPosition += 25;
-
-        // Información detallada del comparable
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text(`Dirección: ${comp.address}`, marginLeft, yPosition);
-        yPosition += 6;
-        doc.text(`Área construida: ${comp.areaConstruida} m²`, marginLeft, yPosition);
-        yPosition += 6;
-        doc.text(`Recámaras: ${comp.recamaras} | Baños: ${comp.banos}`, marginLeft, yPosition);
-        yPosition += 6;
-        doc.text(`Antigüedad: ${comp.antiguedad} años`, marginLeft, yPosition);
-        yPosition += 6;
-        doc.text(`Precio total: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft, yPosition);
-        yPosition += 6;
-        doc.text(`Precio por m²: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft, yPosition);
-        yPosition += 15;
-      }
-
-      // ANEXO FOTOGRÁFICO
-      if (propertyImages.length > 0) {
-        yPosition += 20;
-
-        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.rect(marginLeft, yPosition - 5, contentWidth, 20, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(16);
-        doc.setFont("helvetica", "bold");
-        doc.text("ANEXO FOTOGRÁFICO", marginLeft, yPosition + 8);
-        doc.setTextColor(0, 0, 0);
-        yPosition += 30;
-
-        const imageHeight = 65;
-        const imageWidth = 100;
-        const spacingBetweenImages = 20;
-        
-        for (let i = 0; i < propertyImages.length; i++) {
-          const imageData = propertyImages[i];
-          
-          try {
-            const imageX = (pageWidth - imageWidth) / 2;
-            const currentY = yPosition + (i * (imageHeight + spacingBetweenImages));
-            
-            // Marco decorativo
-            doc.setFillColor(248, 250, 252);
-            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25, 'F');
-            doc.setDrawColor(180, 180, 180);
-            doc.setLineWidth(1);
-            doc.rect(imageX - 5, currentY - 5, imageWidth + 10, imageHeight + 25);
-            
-            // Imagen
-            doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
-            
-            // Marco de la imagen
-            doc.setDrawColor(120, 120, 120);
-            doc.setLineWidth(0.8);
-            doc.rect(imageX, currentY, imageWidth, imageHeight);
-            
-            // Descripción
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-            doc.text(`FOTOGRAFÍA ${i + 1}`, imageX + imageWidth/2, currentY + imageHeight + 12, { align: "center" });
-            
-            doc.setFontSize(9);
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(80, 80, 80);
-            doc.text(`Vista del inmueble - Archivo oficial del avalúo`, imageX + imageWidth/2, currentY + imageHeight + 18, { align: "center" });
-            doc.setTextColor(0, 0, 0);
-            
-          } catch (imgError) {
-            console.error('Error agregando imagen:', imgError);
-          }
-        }
-      }
-
-      // Guardar PDF
-      const fileName = `anexos-valuacion-${Date.now()}.pdf`;
-      doc.save(fileName);
-
-      toast({
-        title: "¡Éxito!",
-        description: "Documento de anexos PDF generado correctamente",
-      });
-
-    } catch (error) {
-      console.error('Error generating annex PDF:', error);
-      toast({
-        title: "Error",
-        description: "No se pudo generar el PDF de anexos",
-        variant: "destructive"
-      });
-    }
-  };
-
-  // Función para generar Word de Anexos (versión simplificada)
-  const generateAnnexWord = async () => {
-    if (!valuation || comparativeProperties.length === 0) {
-      toast({
-        title: "Error",
-        description: "Primero debes calcular la valuación para generar el documento de anexos",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      toast({
-        title: "Generando documento...",
-        description: 'Creando documento de anexos en Word...',
-      });
-
-      // Por ahora, generar un documento simple como placeholder
-      const doc = new DocxDocument({
-        sections: [{
-          properties: {},
-          children: [
-            new Paragraph({
-              text: "ANEXOS DEL AVALÚO INMOBILIARIO",
-              heading: HeadingLevel.TITLE,
-              alignment: AlignmentType.CENTER
-            }),
-            new Paragraph({ text: "" }),
-            new Paragraph({
-              text: "PROPIEDADES COMPARABLES",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({ text: `Se incluyen ${comparativeProperties.length} propiedades comparables.` }),
-            new Paragraph({ text: "" }),
-            new Paragraph({
-              text: "ANÁLISIS DE MERCADO",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({ text: "Análisis basado en las propiedades comparables." }),
-            new Paragraph({ text: "" }),
-            new Paragraph({
-              text: "ANÁLISIS DETALLADO DE COMPARABLES",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({ text: "Detalles de cada propiedad comparable." }),
-            new Paragraph({ text: "" }),
-            new Paragraph({
-              text: "ANEXO FOTOGRÁFICO",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({ text: `Se incluyen ${propertyImages.length} fotografías del inmueble.` })
-          ]
-        }]
-      });
-
-      const buffer = await Packer.toBlob(doc);
-      saveAs(buffer, `anexos-valuacion-${Date.now()}.docx`);
-
-      toast({
-        title: "¡Éxito!",
-        description: "Documento de anexos Word generado correctamente",
-      });
-
-    } catch (error) {
-      console.error('Error generating annex Word document:', error);
-      toast({
-        title: "Error",
-        description: "No se pudo generar el documento Word de anexos",
-        variant: "destructive"
-      });
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -4195,30 +3867,6 @@ const PropertyValuation = () => {
                 >
                   <Download className="mr-2 h-4 w-4" />
                   {translations[selectedLanguage].downloadWord}
-                </Button>
-                
-                {/* Separador visual */}
-                <div className="border-t border-green-200 dark:border-green-700 my-2"></div>
-                
-                {/* Botones de Anexos */}
-                <Button 
-                  onClick={generateAnnexPDF} 
-                  variant="outline" 
-                  className="w-full border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300"
-                  size="sm"
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  {translations[selectedLanguage].downloadAnnexPDF}
-                </Button>
-                
-                <Button 
-                  onClick={generateAnnexWord} 
-                  variant="outline" 
-                  className="w-full border-orange-300 dark:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300"
-                  size="sm"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  {translations[selectedLanguage].downloadAnnexWord}
                 </Button>
               </div>
             </Card>
