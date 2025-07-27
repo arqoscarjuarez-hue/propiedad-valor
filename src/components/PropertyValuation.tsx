@@ -2330,10 +2330,27 @@ const PropertyValuation = () => {
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
 
+      // Variable para contar páginas
+      let currentPageNumber = 1;
+
+      // Función para agregar número de página
+      const addPageNumber = (pageNum: number) => {
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Página ${pageNum}`, marginLeft, pageHeight - 10);
+        doc.setTextColor(0, 0, 0);
+      };
+
+      // Agregar número de página a la primera página
+      addPageNumber(currentPageNumber);
+
       // Función para verificar si necesitamos nueva página
       const checkNewPage = (requiredSpace: number) => {
         if (yPosition + requiredSpace > pageHeight - marginBottom) {
           doc.addPage();
+          currentPageNumber++;
+          addPageNumber(currentPageNumber);
           yPosition = marginTop;
           return true;
         }
@@ -2715,6 +2732,8 @@ const PropertyValuation = () => {
         for (let i = 0; i < propertyImages.length; i += 4) {
           if (i > 0) {
             doc.addPage();
+            currentPageNumber++;
+            addPageNumber(currentPageNumber);
             yPosition = marginTop;
           }
 
@@ -2756,6 +2775,8 @@ const PropertyValuation = () => {
       if (comparativeProperties.length > 0) {
         // Agregar nueva página para anexos
         doc.addPage();
+        currentPageNumber++;
+        addPageNumber(currentPageNumber);
         yPosition = marginTop + 10;
         
         // Título del anexo
@@ -2772,6 +2793,8 @@ const PropertyValuation = () => {
           // Agregar nueva página para cada comparable (excepto el primero)
           if (index > 0) {
             doc.addPage();
+            currentPageNumber++;
+            addPageNumber(currentPageNumber);
             yPosition = marginTop + 10;
           }
           
