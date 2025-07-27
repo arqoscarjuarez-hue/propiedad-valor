@@ -2296,14 +2296,454 @@ const PropertyValuation = () => {
     try {
       // Crear PDF con páginas tamaño carta (8.5" x 11" = 215.9mm x 279.4mm)
       const doc = new jsPDF('portrait', 'mm', 'letter'); 
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      
+      const marginLeft = 15;
+      const marginRight = 15;
+      const marginTop = 15;
+      const marginBottom = 15;
+      const contentWidth = pageWidth - marginLeft - marginRight;
+      
+      let yPosition = marginTop;
+      
+      // Obtener configuración del membrete seleccionado
+      const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
 
-      // Guardar PDF vacío
-      const fileName = `reporte-valuacion-${Date.now()}.pdf`;
+      // HEADER PRINCIPAL
+      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.rect(0, 0, pageWidth, 40, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.setFont("helvetica", "bold");
+      doc.text(config.title, pageWidth / 2, 18, { align: "center" });
+      
+      doc.setFontSize(12);
+      doc.text(config.subtitle, pageWidth / 2, 28, { align: "center" });
+      doc.text("AVALÚO INMOBILIARIO PROFESIONAL", pageWidth / 2, 35, { align: "center" });
+      
+      doc.setTextColor(0, 0, 0);
+      yPosition = 50;
+
+      // Función para verificar si necesitamos nueva página
+      const checkNewPage = (requiredSpace: number) => {
+        if (yPosition + requiredSpace > pageHeight - marginBottom) {
+          doc.addPage();
+          yPosition = marginTop;
+          return true;
+        }
+        return false;
+      };
+
+      // SECCIÓN 1: INFORMACIÓN GENERAL DEL INMUEBLE
+      checkNewPage(60);
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("1. INFORMACIÓN GENERAL DEL INMUEBLE", marginLeft, yPosition + 6);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 18;
+
+      // Información básica
+      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + 
+                       propertyData.areaSegundoNivel + propertyData.areaTercerNivel + 
+                       propertyData.areaCuartoNivel;
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("Tipo de Propiedad:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(propertyData.tipoPropiedad.toUpperCase(), marginLeft + 45, yPosition);
+      yPosition += 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Área Total Construida:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${areaTotal.toLocaleString()} m²`, marginLeft + 50, yPosition);
+      yPosition += 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Área del Terreno:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${propertyData.areaTerreno.toLocaleString()} m²`, marginLeft + 40, yPosition);
+      yPosition += 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Antigüedad:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${propertyData.antiguedad} años`, marginLeft + 30, yPosition);
+      yPosition += 6;
+
+      // Ubicación y estado
+      const ubicacionTexto = propertyData.ubicacion === 'excellent' ? 'Excelente' :
+                             propertyData.ubicacion === 'good' ? 'Buena' :
+                             propertyData.ubicacion === 'medium' ? 'Regular' : 'Deficiente';
+      
+      const estadoTexto = propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
+                         propertyData.estadoGeneral === 'good' ? 'Bueno' :
+                         propertyData.estadoGeneral === 'medium' ? 'Regular' : 'Deficiente';
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Calidad de Ubicación:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(ubicacionTexto, marginLeft + 50, yPosition);
+      yPosition += 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Estado General:", marginLeft, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(estadoTexto, marginLeft + 40, yPosition);
+      yPosition += 15;
+
+      // SECCIÓN 2: UBICACIÓN Y DIRECCIÓN
+      if (propertyData.direccionCompleta) {
+        checkNewPage(40);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("2. UBICACIÓN DEL INMUEBLE", marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("Dirección:", marginLeft, yPosition);
+        doc.setFont("helvetica", "normal");
+        const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 25);
+        doc.text(addressLines, marginLeft + 25, yPosition);
+        yPosition += (addressLines.length * 5) + 6;
+
+        if (propertyData.latitud && propertyData.longitud) {
+          doc.setFont("helvetica", "bold");
+          doc.text("Coordenadas:", marginLeft, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft + 30, yPosition);
+          yPosition += 10;
+        }
+      }
+
+      // SECCIÓN 3: DISTRIBUCIÓN DE ÁREAS
+      checkNewPage(80);
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS", marginLeft, yPosition + 6);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 18;
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      
+      // Áreas por nivel
+      const areas = [
+        { nivel: "Sótano", area: propertyData.areaSotano },
+        { nivel: "Primer Nivel", area: propertyData.areaPrimerNivel },
+        { nivel: "Segundo Nivel", area: propertyData.areaSegundoNivel },
+        { nivel: "Tercer Nivel", area: propertyData.areaTercerNivel },
+        { nivel: "Cuarto Nivel", area: propertyData.areaCuartoNivel }
+      ];
+
+      areas.forEach(({ nivel, area }) => {
+        doc.text(`${nivel}:`, marginLeft + 5, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${area} m²`, marginLeft + 50, yPosition);
+        doc.setFont("helvetica", "bold");
+        yPosition += 5;
+      });
+
+      yPosition += 5;
+      doc.setFillColor(240, 248, 255);
+      doc.rect(marginLeft, yPosition - 3, contentWidth, 8, 'F');
+      doc.setFontSize(12);
+      doc.text(`TOTAL ÁREA CONSTRUIDA: ${areaTotal} m²`, marginLeft + 5, yPosition + 3);
+      yPosition += 15;
+
+      // Área libre
+      const areaLibre = propertyData.areaTerreno - areaTotal;
+      doc.setFontSize(11);
+      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} m²`, marginLeft + 5, yPosition);
+      yPosition += 6;
+      
+      const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
+      doc.text(`Coeficiente de Ocupación: ${coeficienteOcupacion}%`, marginLeft + 5, yPosition);
+      yPosition += 15;
+
+      // SECCIÓN 4: ESPACIOS Y CARACTERÍSTICAS
+      checkNewPage(100);
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("4. ESPACIOS Y CARACTERÍSTICAS", marginLeft, yPosition + 6);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 18;
+
+      // Espacios habitacionales
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Espacios Habitacionales:", marginLeft, yPosition);
+      yPosition += 8;
+
+      const espacios = [
+        { nombre: "Recámaras", cantidad: propertyData.recamaras },
+        { nombre: "Salas", cantidad: propertyData.salas },
+        { nombre: "Comedores", cantidad: propertyData.comedor },
+        { nombre: "Cocinas", cantidad: propertyData.cocina },
+        { nombre: "Baños", cantidad: propertyData.banos },
+        { nombre: "Áreas de Servicio", cantidad: propertyData.areaServicio },
+        { nombre: "Bodegas", cantidad: propertyData.bodega },
+        { nombre: "Cocheras", cantidad: propertyData.cochera },
+        { nombre: "Otros Espacios", cantidad: propertyData.otros }
+      ];
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      espacios.forEach(({ nombre, cantidad }) => {
+        doc.text(`• ${nombre}:`, marginLeft + 5, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${cantidad}`, marginLeft + 70, yPosition);
+        doc.setFont("helvetica", "bold");
+        yPosition += 5;
+      });
+
+      yPosition += 10;
+
+      // SECCIÓN 5: SERVICIOS DISPONIBLES
+      checkNewPage(80);
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("5. SERVICIOS DISPONIBLES", marginLeft, yPosition + 6);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 18;
+
+      // Servicios básicos
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Servicios Básicos:", marginLeft, yPosition);
+      yPosition += 8;
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      const serviciosBasicos = [
+        { nombre: "Agua Potable", disponible: propertyData.servicios.agua },
+        { nombre: "Electricidad", disponible: propertyData.servicios.electricidad },
+        { nombre: "Gas Natural/LP", disponible: propertyData.servicios.gas },
+        { nombre: "Drenaje", disponible: propertyData.servicios.drenaje }
+      ];
+
+      serviciosBasicos.forEach(({ nombre, disponible }) => {
+        doc.text(`${disponible ? '✓' : '✗'} ${nombre}`, marginLeft + 5, yPosition);
+        yPosition += 5;
+      });
+
+      yPosition += 5;
+      doc.setFont("helvetica", "bold");
+      doc.text("Servicios Adicionales:", marginLeft, yPosition);
+      yPosition += 8;
+
+      doc.setFont("helvetica", "normal");
+      const serviciosAdicionales = [
+        { nombre: "Internet", disponible: propertyData.servicios.internet },
+        { nombre: "TV por Cable", disponible: propertyData.servicios.cable },
+        { nombre: "Teléfono", disponible: propertyData.servicios.telefono },
+        { nombre: "Seguridad Privada", disponible: propertyData.servicios.seguridad },
+        { nombre: "Alberca", disponible: propertyData.servicios.alberca },
+        { nombre: "Jardín", disponible: propertyData.servicios.jardin },
+        { nombre: "Elevador", disponible: propertyData.servicios.elevador },
+        { nombre: "Aire Acondicionado", disponible: propertyData.servicios.aireAcondicionado },
+        { nombre: "Calefacción", disponible: propertyData.servicios.calefaccion },
+        { nombre: "Paneles Solares", disponible: propertyData.servicios.panelesSolares },
+        { nombre: "Tinaco/Cisterna", disponible: propertyData.servicios.tinaco }
+      ];
+
+      serviciosAdicionales.forEach(({ nombre, disponible }) => {
+        doc.text(`${disponible ? '✓' : '✗'} ${nombre}`, marginLeft + 5, yPosition);
+        yPosition += 5;
+      });
+
+      yPosition += 15;
+
+      // SECCIÓN 6: ANÁLISIS DE MERCADO Y COMPARABLES
+      if (comparativeProperties.length > 0) {
+        checkNewPage(120);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("6. ANÁLISIS DE MERCADO Y COMPARABLES", marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
+
+        const analysis = getMarketAnalysis();
+        if (analysis) {
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.text("Resumen del Mercado:", marginLeft, yPosition);
+          yPosition += 10;
+
+          doc.setFontSize(11);
+          doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          yPosition += 6;
+          doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          yPosition += 6;
+          doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          yPosition += 6;
+          
+          const variacion = ((valuation - analysis.avgPrice) / analysis.avgPrice * 100).toFixed(1);
+          doc.text(`Variación vs. Mercado: ${variacion}%`, marginLeft + 5, yPosition);
+          yPosition += 15;
+        }
+
+        // Tabla de comparables
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("Propiedades Comparables Utilizadas:", marginLeft, yPosition);
+        yPosition += 10;
+
+        comparativeProperties.forEach((comp, index) => {
+          checkNewPage(35);
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.text(`Comparable ${index + 1}:`, marginLeft, yPosition);
+          yPosition += 6;
+
+          doc.setFont("helvetica", "normal");
+          doc.text(`• Dirección: ${comp.address}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          doc.text(`• Área Construida: ${comp.areaConstruida} m²`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          doc.text(`• Recámaras: ${comp.recamaras} | Baños: ${comp.banos}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          doc.text(`• Antigüedad: ${comp.antiguedad} años`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          doc.text(`• Precio: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          doc.text(`• Precio por m²: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+          if (comp.distancia) {
+            doc.text(`• Distancia: ${comp.distancia} metros`, marginLeft + 5, yPosition);
+            yPosition += 5;
+          }
+          yPosition += 8;
+        });
+      }
+
+      // SECCIÓN 7: RESULTADO DE VALUACIÓN
+      checkNewPage(80);
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("7. RESULTADO DE VALUACIÓN", marginLeft, yPosition + 6);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 18;
+
+      // Resultado principal
+      doc.setFillColor(248, 250, 252);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 25, 'F');
+      
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("VALOR ESTIMADO:", marginLeft + 5, yPosition + 8);
+      
+      doc.setFontSize(20);
+      doc.text(formatCurrency(valuation, selectedCurrency), marginLeft + 5, yPosition + 18);
+      yPosition += 35;
+
+      // Detalles del resultado
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(`Precio por m² construido: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, marginLeft, yPosition);
+      yPosition += 6;
+
+      if (priceAdjustment !== 0) {
+        doc.text(`Valor Base Original: ${formatCurrency(baseValuation || 0, selectedCurrency)}`, marginLeft, yPosition);
+        yPosition += 6;
+        doc.text(`Ajuste Aplicado: ${priceAdjustment > 0 ? '+' : ''}${priceAdjustment}%`, marginLeft, yPosition);
+        yPosition += 6;
+      }
+
+      doc.text(`Método: Comparación de mercado con ${comparativeProperties.length} comparables`, marginLeft, yPosition);
+      yPosition += 6;
+      doc.text(`Fecha de Valuación: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition);
+      yPosition += 15;
+
+      // FOTOGRAFÍAS
+      if (propertyImages.length > 0) {
+        checkNewPage(60);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("8. FOTOGRAFÍAS DEL INMUEBLE", marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Total de fotografías incluidas: ${propertyImages.length}`, marginLeft, yPosition);
+        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition + 6);
+        yPosition += 20;
+
+        // Procesar fotografías en grupos de 2 por página
+        for (let i = 0; i < propertyImages.length; i += 2) {
+          if (i > 0) {
+            doc.addPage();
+            yPosition = marginTop;
+          }
+
+          const currentGroup = propertyImages.slice(i, i + 2);
+          const imageWidth = 80;
+          const imageHeight = 60;
+          const spacing = 10;
+
+          currentGroup.forEach((imageData, groupIndex) => {
+            try {
+              const xPosition = marginLeft + (groupIndex * (imageWidth + spacing));
+              
+              doc.addImage(imageData.preview, 'JPEG', xPosition, yPosition, imageWidth, imageHeight);
+              
+              // Marco
+              doc.setDrawColor(150, 150, 150);
+              doc.setLineWidth(0.5);
+              doc.rect(xPosition, yPosition, imageWidth, imageHeight);
+              
+              // Título
+              doc.setFontSize(10);
+              doc.setFont("helvetica", "bold");
+              doc.text(`Fotografía ${i + groupIndex + 1}`, xPosition, yPosition + imageHeight + 8);
+            } catch (error) {
+              console.error(`Error agregando imagen ${i + groupIndex + 1}:`, error);
+            }
+          });
+
+          yPosition += imageHeight + 20;
+        }
+      }
+
+      // Guardar PDF
+      const fileName = `avaluo-inmobiliario-${Date.now()}.pdf`;
       doc.save(fileName);
 
       toast({
         title: "PDF Generado",
-        description: "El reporte PDF se ha descargado correctamente",
+        description: "El avalúo completo se ha descargado correctamente",
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -2326,24 +2766,421 @@ const PropertyValuation = () => {
     }
 
     try {
+      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + 
+                       propertyData.areaSegundoNivel + propertyData.areaTercerNivel + 
+                       propertyData.areaCuartoNivel;
+      
+      // Obtener configuración del membrete seleccionado
+      const config = letterheadConfigs[selectedLetterhead as keyof typeof letterheadConfigs];
+      
       const doc = new DocxDocument({
         sections: [{
           properties: {},
           children: [
+            // ENCABEZADO
             new Paragraph({
-              text: ""
-            })
+              text: config.title,
+              heading: HeadingLevel.TITLE,
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({
+              text: config.subtitle,
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({
+              text: "AVALÚO INMOBILIARIO PROFESIONAL",
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }), // Espacio
+
+            // 1. INFORMACIÓN GENERAL DEL INMUEBLE
+            new Paragraph({
+              text: "1. INFORMACIÓN GENERAL DEL INMUEBLE",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Tipo de Propiedad: ", bold: true }),
+                new TextRun({ text: propertyData.tipoPropiedad.toUpperCase() })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área Total Construida: ", bold: true }),
+                new TextRun({ text: `${areaTotal.toLocaleString()} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área del Terreno: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Antigüedad: ", bold: true }),
+                new TextRun({ text: `${propertyData.antiguedad} años` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Calidad de Ubicación: ", bold: true }),
+                new TextRun({ 
+                  text: propertyData.ubicacion === 'excellent' ? 'Excelente' :
+                        propertyData.ubicacion === 'good' ? 'Buena' :
+                        propertyData.ubicacion === 'medium' ? 'Regular' : 'Deficiente'
+                })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Estado General: ", bold: true }),
+                new TextRun({ 
+                  text: propertyData.estadoGeneral === 'excellent' ? 'Excelente' :
+                        propertyData.estadoGeneral === 'good' ? 'Bueno' :
+                        propertyData.estadoGeneral === 'medium' ? 'Regular' : 'Deficiente'
+                })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+
+            // 2. UBICACIÓN DEL INMUEBLE
+            ...(propertyData.direccionCompleta ? [
+              new Paragraph({
+                text: "2. UBICACIÓN DEL INMUEBLE",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Dirección: ", bold: true }),
+                  new TextRun({ text: propertyData.direccionCompleta })
+                ]
+              }),
+              ...(propertyData.latitud && propertyData.longitud ? [
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Coordenadas: ", bold: true }),
+                    new TextRun({ text: `${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}` })
+                  ]
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Google Maps: ", bold: true }),
+                    new TextRun({ 
+                      text: `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`,
+                      color: "0000FF"
+                    })
+                  ]
+                })
+              ] : []),
+              new Paragraph({ text: "" }) // Espacio
+            ] : []),
+
+            // 3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS
+            new Paragraph({
+              text: "3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Sótano: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaSotano} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Primer Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaPrimerNivel} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Segundo Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaSegundoNivel} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Tercer Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTercerNivel} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Cuarto Nivel: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaCuartoNivel} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "TOTAL ÁREA CONSTRUIDA: ", bold: true }),
+                new TextRun({ text: `${areaTotal} m²`, bold: true })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Área Libre (sin construir): ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTerreno - areaTotal > 0 ? propertyData.areaTerreno - areaTotal : 0} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Coeficiente de Ocupación: ", bold: true }),
+                new TextRun({ text: `${((areaTotal / propertyData.areaTerreno) * 100).toFixed(1)}%` })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+
+            // 4. ESPACIOS Y CARACTERÍSTICAS
+            new Paragraph({
+              text: "4. ESPACIOS Y CARACTERÍSTICAS",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Espacios Habitacionales:", bold: true })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Recámaras: ", bold: true }),
+                new TextRun({ text: `${propertyData.recamaras}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Salas: ", bold: true }),
+                new TextRun({ text: `${propertyData.salas}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Comedores: ", bold: true }),
+                new TextRun({ text: `${propertyData.comedor}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Cocinas: ", bold: true }),
+                new TextRun({ text: `${propertyData.cocina}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Baños: ", bold: true }),
+                new TextRun({ text: `${propertyData.banos}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Áreas de Servicio: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaServicio}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Bodegas: ", bold: true }),
+                new TextRun({ text: `${propertyData.bodega}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Cocheras: ", bold: true }),
+                new TextRun({ text: `${propertyData.cochera}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• Otros Espacios: ", bold: true }),
+                new TextRun({ text: `${propertyData.otros}` })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+
+            // 5. SERVICIOS DISPONIBLES
+            new Paragraph({
+              text: "5. SERVICIOS DISPONIBLES",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Servicios Básicos:", bold: true })
+              ]
+            }),
+            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: "✓ Agua Potable" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Agua Potable" })] })]),
+            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: "✓ Electricidad" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Electricidad" })] })]),
+            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: "✓ Gas Natural/LP" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Gas Natural/LP" })] })]),
+            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: "✓ Drenaje" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Drenaje" })] })]),
+            
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Servicios Adicionales:", bold: true })
+              ]
+            }),
+            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: "✓ Internet" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Internet" })] })]),
+            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: "✓ TV por Cable" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ TV por Cable" })] })]),
+            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: "✓ Teléfono" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Teléfono" })] })]),
+            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: "✓ Seguridad Privada" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Seguridad Privada" })] })]),
+            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: "✓ Alberca" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Alberca" })] })]),
+            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: "✓ Jardín" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Jardín" })] })]),
+            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: "✓ Elevador" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Elevador" })] })]),
+            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: "✓ Aire Acondicionado" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Aire Acondicionado" })] })]),
+            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: "✓ Calefacción" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Calefacción" })] })]),
+            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: "✓ Paneles Solares" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Paneles Solares" })] })]),
+            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: "✓ Tinaco/Cisterna" })] })] : [new Paragraph({ children: [new TextRun({ text: "✗ Tinaco/Cisterna" })] })]),
+
+            new Paragraph({ text: "" }), // Espacio
+
+            // 6. ANÁLISIS DE MERCADO (si hay comparables)
+            ...(comparativeProperties.length > 0 ? (() => {
+              const analysis = getMarketAnalysis();
+              return [
+                new Paragraph({
+                  text: "6. ANÁLISIS DE MERCADO Y COMPARABLES",
+                  heading: HeadingLevel.HEADING_1
+                }),
+                ...(analysis ? [
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Resumen del Mercado:", bold: true })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Promedio: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.avgPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Mínimo: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.minPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Precio Máximo: ", bold: true }),
+                      new TextRun({ text: formatCurrency(analysis.maxPrice, selectedCurrency) })
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [
+                      new TextRun({ text: "Variación vs. Mercado: ", bold: true }),
+                      new TextRun({ text: `${((valuation - analysis.avgPrice) / analysis.avgPrice * 100).toFixed(1)}%` })
+                    ]
+                  }),
+                  new Paragraph({ text: "" }) // Espacio
+                ] : []),
+                
+                // Tabla de comparables
+                new DocxTable({
+                  rows: [
+                    new DocxTableRow({
+                      children: [
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Propiedad", bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Área (m²)", bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Recámaras", bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Baños", bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Antigüedad", bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Precio", bold: true })] })] })
+                      ]
+                    }),
+                    ...comparativeProperties.map((comp: ComparativeProperty) => 
+                      new DocxTableRow({
+                        children: [
+                          new DocxTableCell({ children: [new Paragraph({ text: comp.address })] }),
+                          new DocxTableCell({ children: [new Paragraph({ text: comp.areaConstruida.toString() })] }),
+                          new DocxTableCell({ children: [new Paragraph({ text: comp.recamaras.toString() })] }),
+                          new DocxTableCell({ children: [new Paragraph({ text: comp.banos.toString() })] }),
+                          new DocxTableCell({ children: [new Paragraph({ text: comp.antiguedad.toString() })] }),
+                          new DocxTableCell({ children: [new Paragraph({ text: formatCurrency(comp.precio, selectedCurrency) })] })
+                        ]
+                      })
+                    )
+                  ]
+                }),
+                new Paragraph({ text: "" }) // Espacio
+              ];
+            })() : []),
+
+            // 7. RESULTADO DE VALUACIÓN
+            new Paragraph({
+              text: "7. RESULTADO DE VALUACIÓN",
+              heading: HeadingLevel.HEADING_1
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "VALOR ESTIMADO: ", bold: true, size: 32 }),
+                new TextRun({ text: formatCurrency(valuation, selectedCurrency), bold: true, size: 32 })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Precio por m² construido: ", bold: true }),
+                new TextRun({ text: formatCurrency(valuation / areaTotal, selectedCurrency) })
+              ]
+            }),
+            ...(priceAdjustment !== 0 ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Valor Base Original: ", bold: true }),
+                  new TextRun({ text: formatCurrency(baseValuation || 0, selectedCurrency) })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Ajuste Aplicado: ", bold: true }),
+                  new TextRun({ text: `${priceAdjustment > 0 ? '+' : ''}${priceAdjustment}%` })
+                ]
+              })
+            ] : []),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Método de Valuación: ", bold: true }),
+                new TextRun({ text: `Comparación de mercado con ${comparativeProperties.length} comparables` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Fecha de Valuación: ", bold: true }),
+                new TextRun({ text: new Date().toLocaleDateString('es-ES') })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+
+            // 8. FOTOGRAFÍAS (si existen)
+            ...(propertyImages.length > 0 ? [
+              new Paragraph({
+                text: "8. FOTOGRAFÍAS DEL INMUEBLE",
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `Total de fotografías incluidas: ${propertyImages.length}` }),
+                  new TextRun({ text: ` | Fecha de captura: ${new Date().toLocaleDateString('es-ES')}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: "Nota: Las fotografías están incluidas en el reporte PDF para una mejor visualización.",
+                    italics: true
+                  })
+                ]
+              }),
+              new Paragraph({ text: "" }) // Espacio
+            ] : [])
           ]
         }]
       });
 
       const buffer = await Packer.toBlob(doc);
-      const fileName = `reporte-valuacion-${Date.now()}.docx`;
+      const fileName = `avaluo-inmobiliario-${Date.now()}.docx`;
       saveAs(buffer, fileName);
 
       toast({
         title: "Documento Word Generado",
-        description: "El reporte Word se ha descargado correctamente",
+        description: "El avalúo completo se ha descargado correctamente",
       });
     } catch (error) {
       console.error('Error generating Word document:', error);
