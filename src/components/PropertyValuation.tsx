@@ -2078,15 +2078,19 @@ const PropertyValuation = () => {
     }
 
     try {
-      const doc = new jsPDF('portrait', 'mm', 'letter'); // Tamaño carta con orientación vertical
-      const pageWidth = doc.internal.pageSize.width; // ~216mm
-      const pageHeight = doc.internal.pageSize.height; // ~279mm
+      // Calcular altura total necesaria aproximada
+      const estimatedHeight = 600; // mm aproximados para todo el contenido
       
-      // Márgenes apropiados para tamaño carta
-      const marginLeft = 25; // 25mm margen izquierdo
-      const marginRight = 25; // 25mm margen derecho  
-      const marginTop = 20; // 20mm margen superior
-      const marginBottom = 30; // 30mm margen inferior (3 centímetros)
+      // Crear PDF con altura personalizada para una sola página continua
+      const doc = new jsPDF('portrait', 'mm', [216, estimatedHeight]); // Ancho carta, altura extendida
+      const pageWidth = doc.internal.pageSize.width; // ~216mm
+      const pageHeight = doc.internal.pageSize.height; // altura extendida
+      
+      // Márgenes reducidos para aprovechar el espacio
+      const marginLeft = 20; // 20mm margen izquierdo
+      const marginRight = 20; // 20mm margen derecho  
+      const marginTop = 15; // 15mm margen superior
+      const marginBottom = 15; // 15mm margen inferior
       const contentWidth = pageWidth - marginLeft - marginRight; // Ancho del contenido
       
       let yPosition = marginTop;
@@ -2490,11 +2494,7 @@ const PropertyValuation = () => {
           try {
             const mapImage = await generateMapImage(propertyData.latitud, propertyData.longitud);
             if (mapImage) {
-              // Verificar si hay espacio suficiente en la página (considerando margen inferior de 3cm)
-              if (yPosition > pageHeight - marginBottom - 90) {
-                doc.addPage();
-                yPosition = marginTop;
-              }
+              // Sin verificación de página para mantener contenido continuo
               
               doc.setFontSize(12);
               doc.setFont("helvetica", "bold");
@@ -2533,11 +2533,8 @@ const PropertyValuation = () => {
 
       // Tabla de comparables
       if (comparativeProperties.length > 0) {
-        // Verificar si necesitamos una nueva página (considerando margen inferior de 3cm)
-        if (yPosition > pageHeight - marginBottom - 120) {
-          doc.addPage();
-          yPosition = marginTop;
-        }
+        // Sin salto de página para contenido continuo
+        yPosition += 10;
 
         doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
@@ -2573,11 +2570,8 @@ const PropertyValuation = () => {
         for (let i = 0; i < Math.min(comparativeProperties.length, 8); i++) {
           const comp = comparativeProperties[i];
           
-          // Verificar si necesitamos nueva página (considerando margen inferior de 3cm)
-          if (yPosition > pageHeight - marginBottom - 20) {
-            doc.addPage();
-            yPosition = marginTop;
-          }
+          // Sin verificación de salto de página para contenido continuo
+          
           
           // Alternar color de fila
           if (i % 2 === 0) {
@@ -2626,11 +2620,9 @@ const PropertyValuation = () => {
         }
       }
 
-      // Fotografías del inmueble - Diseño profesional en máximo 2 hojas
+      // Fotografías del inmueble - En la misma página continua
       if (propertyImages.length > 0) {
-        // Nueva página dedicada para fotografías
-        doc.addPage();
-        yPosition = marginTop;
+        yPosition += 15;
 
         // Título principal centrado
         doc.setFillColor(30, 41, 59);
@@ -2725,19 +2717,8 @@ const PropertyValuation = () => {
           // Avanzar el índice de imágenes
           imageIndex += imagesInCurrentPage;
           
-          // Si hay más imágenes, crear nueva página
-          if (imageIndex < maxTotalImages) {
-            doc.addPage();
-            yPosition = marginTop;
-            
-            // Título de continuación
-            doc.setFontSize(14);
-            doc.setFont("helvetica", "bold");
-            doc.text(`FOTOGRAFÍAS DEL INMUEBLE (Página ${currentPage + 1})`, pageWidth / 2, yPosition, { align: "center" });
-            yPosition += 25;
-            
-            currentPage++;
-          }
+          // Sin salto de página - contenido continuo
+          yPosition += 20;
         }
 
         // Información adicional al final de las fotos
