@@ -3036,10 +3036,6 @@ const PropertyValuation = () => {
                 heading: HeadingLevel.HEADING_1
               }),
               new Paragraph({ text: "" }), // Espacio
-              new Paragraph({
-                text: "PROPIEDADES COMPARABLES",
-                heading: HeadingLevel.HEADING_1
-              }),
               new DocxTable({
                 rows: [
                   new DocxTableRow({
@@ -3076,7 +3072,7 @@ const PropertyValuation = () => {
                       })
                     ]
                   }),
-                  ...comparativeProperties.slice(0, 8).map(comp => 
+                  ...comparativeProperties.slice(0, 3).map(comp => 
                     new DocxTableRow({
                       children: [
                         new DocxTableCell({
