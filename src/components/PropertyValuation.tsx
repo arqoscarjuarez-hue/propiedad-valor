@@ -3019,8 +3019,44 @@ const PropertyValuation = () => {
             }),
             new Paragraph({
               children: [
+                new TextRun({ text: "Área de Terreno: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} m²` })
+              ]
+            }),
+            new Paragraph({
+              children: [
                 new TextRun({ text: "Recámaras: ", bold: true }),
                 new TextRun({ text: `${propertyData.recamaras}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Salas: ", bold: true }),
+                new TextRun({ text: `${propertyData.salas}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Comedores: ", bold: true }),
+                new TextRun({ text: `${propertyData.comedor}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Cocinas: ", bold: true }),
+                new TextRun({ text: `${propertyData.cocina}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Áreas de Servicio: ", bold: true }),
+                new TextRun({ text: `${propertyData.areaServicio}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Bodegas: ", bold: true }),
+                new TextRun({ text: `${propertyData.bodega}` })
               ]
             }),
             new Paragraph({
@@ -3033,6 +3069,12 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ text: "Cocheras: ", bold: true }),
                 new TextRun({ text: `${propertyData.cochera}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Otros Espacios: ", bold: true }),
+                new TextRun({ text: `${propertyData.otros}` })
               ]
             }),
             new Paragraph({
