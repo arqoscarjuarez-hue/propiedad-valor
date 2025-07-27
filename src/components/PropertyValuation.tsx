@@ -3557,6 +3557,37 @@ const PropertyValuation = () => {
               Toda la interfaz y reportes se traducen automáticamente
             </p>
           </Card>
+          
+          {/* Botones de Descarga de Documentos */}
+          {valuation && (
+            <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
+              <Label className="text-sm font-bold mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Descargar Documentos
+              </Label>
+              <div className="space-y-3">
+                <Button 
+                  onClick={generatePDF} 
+                  variant="outline" 
+                  className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50"
+                  size="sm"
+                >
+                  <FileText className="mr-2 h-4 w-4" />
+                  {translations[selectedLanguage].downloadPDF}
+                </Button>
+                
+                <Button 
+                  onClick={generateWord} 
+                  variant="secondary" 
+                  className="w-full bg-green-100 hover:bg-green-200 dark:bg-green-900/50 dark:hover:bg-green-800/50"
+                  size="sm"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  {translations[selectedLanguage].downloadWord}
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
 
         {/* Formulario Principal */}
@@ -4407,32 +4438,12 @@ const PropertyValuation = () => {
                      </Select>
                    </div>
                     
-                    <div className="pt-4 border-t space-y-3">
-                     <Button 
-                       onClick={generatePDF} 
-                       variant="outline" 
-                       className="w-full"
-                       size="sm"
-                     >
-                       <FileText className="mr-2 h-4 w-4" />
-                       {translations[selectedLanguage].downloadPDF}
-                     </Button>
-                     
-                     <Button 
-                       onClick={generateWord} 
-                       variant="secondary" 
-                       className="w-full"
-                       size="sm"
-                     >
-                       <Download className="mr-2 h-4 w-4" />
-                       Descargar Reporte Word
-                     </Button>
-                     
-                     <p className="text-xs text-muted-foreground text-center">
-                       * Esta valuación es un estimado basado en los datos proporcionados. 
-                       Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
-                     </p>
-                   </div>
+                     <div className="pt-4 border-t">
+                      <p className="text-xs text-muted-foreground text-center">
+                        * Esta valuación es un estimado basado en los datos proporcionados. 
+                        Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
+                      </p>
+                    </div>
                 </div>
               ) : (
                 <div className="text-center py-8">
