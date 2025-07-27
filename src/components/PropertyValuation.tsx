@@ -3714,8 +3714,8 @@ const PropertyValuation = () => {
                 
                 <Button 
                   onClick={generateWord} 
-                  variant="secondary" 
-                  className="w-full bg-green-100 hover:bg-green-200 dark:bg-green-900/50 dark:hover:bg-green-800/50"
+                  variant="outline" 
+                  className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300"
                   size="sm"
                 >
                   <Download className="mr-2 h-4 w-4" />
