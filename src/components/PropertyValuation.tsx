@@ -3133,6 +3133,162 @@ const PropertyValuation = () => {
         doc.setTextColor(0, 0, 0);
       }
 
+      // SECCIÓN FINAL - CONCLUSIONES Y CERTIFICACIÓN
+      yPosition += 30;
+      
+      // Nueva página para conclusiones si es necesario
+      if (yPosition > pageHeight - 100) {
+        doc.addPage();
+        yPosition = 30;
+      }
+
+      // Título de conclusiones
+      doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 20, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("CONCLUSIONES DEL AVALÚO INMOBILIARIO", marginLeft, yPosition + 8);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 30;
+
+      // Resumen ejecutivo del avalúo
+      doc.setFillColor(248, 250, 252);
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 80, 'F');
+      doc.setDrawColor(180, 180, 180);
+      doc.setLineWidth(0.8);
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 80);
+      
+      doc.setFontSize(13);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.text("RESUMEN EJECUTIVO", marginLeft + 5, yPosition + 5);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 15;
+
+      // Datos principales del avalúo
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("VALOR COMERCIAL DETERMINADO:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(14);
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.text(formatCurrency(valuation, selectedCurrency), marginLeft + 80, yPosition);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 10;
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("VALOR POR METRO CUADRADO:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      const valorM2 = valuation / areaTotal;
+      doc.text(formatCurrency(valorM2, selectedCurrency), marginLeft + 80, yPosition);
+      yPosition += 8;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("ÁREA TOTAL CONSTRUIDA:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${areaTotal.toLocaleString()} m²`, marginLeft + 80, yPosition);
+      yPosition += 8;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("MÉTODO DE AVALÚO:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text("Enfoque de Mercado - Análisis Comparativo", marginLeft + 80, yPosition);
+      yPosition += 8;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("COMPARABLES UTILIZADOS:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${Math.min(comparativeProperties.length, 3)} propiedades similares`, marginLeft + 80, yPosition);
+      yPosition += 8;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("FECHA DE AVALÚO:", marginLeft + 5, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(new Date().toLocaleDateString('es-ES'), marginLeft + 80, yPosition);
+      yPosition += 20;
+
+      // Metodología aplicada
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("METODOLOGÍA APLICADA", marginLeft, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      const metodologiaText = [
+        "1. Análisis de la propiedad sujeto: Se realizó inspección detallada de las características físicas,",
+        "   distribución de espacios, estado de conservación y servicios disponibles.",
+        "",
+        "2. Investigación de mercado: Se analizaron propiedades comparables en la zona con características",
+        "   similares en cuanto a tipo, ubicación, antigüedad y área construida.",
+        "",
+        "3. Análisis comparativo: Se aplicaron ajustes por diferencias en características específicas",
+        "   entre la propiedad sujeto y los comparables seleccionados.",
+        "",
+        "4. Valor final: Se determinó el valor comercial basado en el análisis estadístico de los",
+        "   comparables ajustados y las condiciones actuales del mercado inmobiliario."
+      ];
+
+      metodologiaText.forEach(line => {
+        doc.text(line, marginLeft, yPosition);
+        yPosition += 5;
+      });
+
+      yPosition += 15;
+
+      // Certificación profesional
+      doc.setFillColor(245, 245, 245);
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 60, 'F');
+      doc.setDrawColor(150, 150, 150);
+      doc.setLineWidth(0.5);
+      doc.rect(marginLeft, yPosition - 5, contentWidth, 60);
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.text("CERTIFICACIÓN PROFESIONAL", marginLeft + 5, yPosition + 5);
+      doc.setTextColor(0, 0, 0);
+      yPosition += 15;
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      const certificacionText = [
+        "El presente avalúo ha sido elaborado siguiendo estándares profesionales internacionales",
+        "y metodologías reconocidas para la valuación de bienes inmuebles. El valor determinado",
+        "representa el valor comercial más probable bajo condiciones normales de mercado.",
+        "",
+        "Este documento constituye la opinión profesional del valor de la propiedad con base en",
+        "la información disponible a la fecha de elaboración del presente avalúo."
+      ];
+
+      certificacionText.forEach(line => {
+        doc.text(line, marginLeft + 5, yPosition);
+        yPosition += 5;
+      });
+
+      yPosition += 10;
+
+      // Línea para firma
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(marginLeft + 120, yPosition + 15, marginLeft + contentWidth - 20, yPosition + 15);
+      
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text("Valuador Profesional", marginLeft + 140, yPosition + 22);
+      doc.text(`${config.title}`, marginLeft + 140, yPosition + 28);
+
+      // Pie de página final
+      yPosition = pageHeight - 30;
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Reporte generado el ${new Date().toLocaleDateString('es-ES')} - Página ${doc.getNumberOfPages()}`, pageWidth / 2, yPosition, { align: "center" });
+      doc.text("Este avalúo es válido únicamente para la fecha de su elaboración", pageWidth / 2, yPosition + 8, { align: "center" });
+      doc.setTextColor(0, 0, 0);
+
       // Guardar PDF
       const fileName = `reporte-valuacion-${Date.now()}.pdf`;
       doc.save(fileName);
