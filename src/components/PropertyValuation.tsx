@@ -2715,19 +2715,31 @@ const PropertyValuation = () => {
           />
           
           {/* Selector de Idioma */}
-          <Card className="p-4">
-            <Label className="text-sm font-medium mb-2 block">
+          <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
+            <Label className="text-sm font-bold mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              </svg>
               {translations[selectedLanguage].languageSelector}
             </Label>
             <Select value={selectedLanguage} onValueChange={(value: Language) => setSelectedLanguage(value)}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white dark:bg-slate-900 border-blue-300 dark:border-blue-700 focus:ring-blue-500">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="es">🇪🇸 Español</SelectItem>
-                <SelectItem value="en">🇺🇸 English</SelectItem>
+              <SelectContent className="bg-white dark:bg-slate-900 border-blue-200 dark:border-blue-800 z-50">
+                <SelectItem value="es" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇪🇸 Español</SelectItem>
+                <SelectItem value="en" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇺🇸 English</SelectItem>
+                <SelectItem value="fr" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇫🇷 Français</SelectItem>
+                <SelectItem value="de" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇩🇪 Deutsch</SelectItem>
+                <SelectItem value="it" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇮🇹 Italiano</SelectItem>
+                <SelectItem value="pt" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇵🇹 Português</SelectItem>
+                <SelectItem value="zh" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇨🇳 中文</SelectItem>
+                <SelectItem value="hi" className="hover:bg-blue-50 dark:hover:bg-blue-900/50">🇮🇳 हिन्दी</SelectItem>
               </SelectContent>
             </Select>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
+              Toda la interfaz y reportes se traducen automáticamente
+            </p>
           </Card>
         </div>
 

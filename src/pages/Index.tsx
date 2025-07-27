@@ -25,7 +25,7 @@ const Index = () => {
             </div>
             
             {/* Estadísticas en vivo */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-8">
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">12,450+</div>
                 <div className="text-xs text-slate-500">Propiedades Valuadas</div>
@@ -41,6 +41,18 @@ const Index = () => {
               <div className="flex items-center space-x-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-sm text-green-600 font-medium">En Línea</span>
+              </div>
+            </div>
+            
+            {/* Indicador móvil de estadísticas */}
+            <div className="flex lg:hidden items-center space-x-4">
+              <div className="text-center">
+                <div className="text-lg font-bold text-green-600">12K+</div>
+                <div className="text-xs text-slate-500">Valuadas</div>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm text-green-600 font-medium">Online</span>
               </div>
             </div>
           </div>
