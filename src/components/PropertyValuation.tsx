@@ -2879,67 +2879,103 @@ const PropertyValuation = () => {
         }
       }
 
-      // Las fotografías se ubicarán al final del documento (código movido abajo)
-
-      // Agregar fotografías al final del documento
+      // Agregar fotografías al final del documento con 3 por hoja
       if (propertyImages.length > 0) {
-        yPosition += 30;
+        // Nueva página para fotografías
+        doc.addPage();
+        yPosition = 40;
 
-        // Separador visual antes de las fotografías
-        doc.setFillColor(245, 245, 245);
-        doc.rect(marginLeft - 5, yPosition - 5, contentWidth + 10, 8, 'F');
-        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-        doc.setFontSize(16);
+        // Título de la sección de fotografías
+        doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE", marginLeft, yPosition);
+        doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE", marginLeft, yPosition + 5);
         doc.setTextColor(0, 0, 0);
-        yPosition += 20;
+        yPosition += 25;
 
-        // Configuración simplificada para fotografías
-        const maxImageWidth = Math.min(120, contentWidth - 40);
-        const maxImageHeight = 70;
-        const spacingY = 25;
-
-        // Procesar imágenes de forma simple
-        for (let i = 0; i < propertyImages.length; i++) {
-          const imageData = propertyImages[i];
-          
-          try {
-            // Centrar imagen horizontalmente
-            const imageX = (pageWidth - maxImageWidth) / 2;
+        // Configuración para 3 imágenes por hoja
+        const imagesPerPage = 3;
+        const availableHeight = 220; // Altura disponible para imágenes
+        const imageHeight = 55; // Altura de cada imagen
+        const imageWidth = 90; // Ancho de cada imagen
+        const spacingBetweenImages = 15;
+        
+        for (let i = 0; i < propertyImages.length; i += imagesPerPage) {
+          if (i > 0) {
+            // Nueva página para cada grupo de 3 imágenes (excepto el primero)
+            doc.addPage();
+            yPosition = 40;
             
-            // Añadir imagen usando el preview directamente
-            doc.addImage(imageData.preview, 'JPEG', imageX, yPosition, maxImageWidth, maxImageHeight);
-            
-            // Marco sutil alrededor de la imagen
-            doc.setDrawColor(200, 200, 200);
-            doc.setLineWidth(0.3);
-            doc.rect(imageX, yPosition, maxImageWidth, maxImageHeight);
-            
-            // Numeración de imagen
-            doc.setFontSize(9);
+            // Título de continuación
+            doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+            doc.rect(20, yPosition - 5, pageWidth - 40, 15, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
-            doc.setTextColor(120, 120, 120);
-            doc.text(`Fotografía ${i + 1} del Inmueble`, imageX, yPosition + maxImageHeight + 8);
-            
-            // Restaurar color de texto
+            doc.text("FOTOGRAFÍAS OFICIALES DEL INMUEBLE (Continuación)", marginLeft, yPosition + 5);
             doc.setTextColor(0, 0, 0);
+            yPosition += 25;
+          }
+          
+          // Procesar hasta 3 imágenes en esta página
+          for (let j = 0; j < imagesPerPage && (i + j) < propertyImages.length; j++) {
+            const imageIndex = i + j;
+            const imageData = propertyImages[imageIndex];
             
-            yPosition += maxImageHeight + spacingY;
-          } catch (imgError) {
-            console.error('Error agregando imagen:', imgError);
+            try {
+              // Centrar imagen horizontalmente
+              const imageX = (pageWidth - imageWidth) / 2;
+              const currentY = yPosition + (j * (imageHeight + spacingBetweenImages));
+              
+              // Añadir imagen
+              doc.addImage(imageData.preview, 'JPEG', imageX, currentY, imageWidth, imageHeight);
+              
+              // Marco alrededor de la imagen
+              doc.setDrawColor(180, 180, 180);
+              doc.setLineWidth(0.5);
+              doc.rect(imageX, currentY, imageWidth, imageHeight);
+              
+              // Numeración y descripción de imagen
+              doc.setFontSize(10);
+              doc.setFont("helvetica", "bold");
+              doc.setTextColor(80, 80, 80);
+              doc.text(`Fotografía ${imageIndex + 1}`, imageX, currentY + imageHeight + 8);
+              
+              doc.setFontSize(8);
+              doc.setFont("helvetica", "normal");
+              doc.text(`Vista del inmueble - Archivo oficial`, imageX, currentY + imageHeight + 15);
+              
+              // Restaurar color de texto
+              doc.setTextColor(0, 0, 0);
+              
+            } catch (imgError) {
+              console.error('Error agregando imagen:', imgError);
+              
+              // En caso de error, mostrar un placeholder
+              doc.setFillColor(240, 240, 240);
+              const currentY = yPosition + (j * (imageHeight + spacingBetweenImages));
+              const imageX = (pageWidth - imageWidth) / 2;
+              doc.rect(imageX, currentY, imageWidth, imageHeight, 'F');
+              doc.setTextColor(120, 120, 120);
+              doc.setFontSize(10);
+              doc.text(`Imagen ${imageIndex + 1} no disponible`, imageX + imageWidth/2, currentY + imageHeight/2, { align: "center" });
+              doc.setTextColor(0, 0, 0);
+            }
           }
         }
 
-        // Información adicional al final de las fotos
-        yPosition += 15;
+        // Información adicional al final de las fotos (en la última página de fotos)
+        const lastPageY = yPosition + (Math.min(imagesPerPage, propertyImages.length % imagesPerPage || imagesPerPage) * (imageHeight + spacingBetweenImages)) + 20;
         doc.setFillColor(248, 250, 252);
-        doc.rect(marginLeft - 5, yPosition - 5, contentWidth + 10, 20, 'F');
+        doc.rect(20, lastPageY - 5, pageWidth - 40, 25, 'F');
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(100, 100, 100);
-        doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, yPosition + 5, { align: "center" });
-        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, yPosition + 12, { align: "center" });
+        doc.text(`Total de fotografías en el expediente: ${propertyImages.length}`, pageWidth / 2, lastPageY + 5, { align: "center" });
+        doc.text(`Fecha de captura: ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, lastPageY + 12, { align: "center" });
+        doc.text("Fotografías tomadas para fines de valuación profesional", pageWidth / 2, lastPageY + 19, { align: "center" });
         doc.setTextColor(0, 0, 0);
       }
 
@@ -3484,9 +3520,109 @@ const PropertyValuation = () => {
               }),
               new Paragraph({
                 children: [
-                  new TextRun({ text: `Se adjuntan ${propertyImages.length} fotografías del inmueble.` })
+                  new TextRun({ text: `Total de fotografías: ${propertyImages.length}` }),
+                  new TextRun({ text: ` | Fecha: ${new Date().toLocaleDateString('es-ES')}` })
                 ]
-              })
+              }),
+              new Paragraph({ text: "" }), // Espacio
+              // Agregar fotografías agrupadas de 3 en 3
+              ...(() => {
+                const photoParagraphs: any[] = [];
+                const imagesPerGroup = 3;
+                
+                for (let i = 0; i < propertyImages.length; i += imagesPerGroup) {
+                  // Grupo de hasta 3 imágenes
+                  const currentGroup = propertyImages.slice(i, i + imagesPerGroup);
+                  
+                  // Título del grupo
+                  if (i > 0) {
+                    photoParagraphs.push(new Paragraph({ text: "" })); // Espacio
+                  }
+                  
+                  photoParagraphs.push(
+                    new Paragraph({
+                      children: [
+                        new TextRun({ 
+                          text: `Grupo ${Math.floor(i / imagesPerGroup) + 1} - Fotografías ${i + 1} a ${Math.min(i + imagesPerGroup, propertyImages.length)}`,
+                          bold: true 
+                        })
+                      ]
+                    })
+                  );
+                  
+                  // Procesar cada imagen del grupo
+                  currentGroup.forEach((imageData, groupIndex) => {
+                    const imageNumber = i + groupIndex + 1;
+                    
+                    try {
+                      // Convertir base64 a buffer para Word
+                      const base64Data = imageData.preview.split(',')[1];
+                      const imageBuffer = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+                      
+                      photoParagraphs.push(
+                        new Paragraph({
+                          children: [
+                            new ImageRun({
+                              data: imageBuffer,
+                              transformation: {
+                                width: 250,
+                                height: 180,
+                              },
+                              type: "jpg"
+                            })
+                          ],
+                          alignment: AlignmentType.CENTER
+                        }),
+                        new Paragraph({
+                          children: [
+                            new TextRun({ 
+                              text: `Fotografía ${imageNumber} - Vista del inmueble`,
+                              italics: true 
+                            })
+                          ],
+                          alignment: AlignmentType.CENTER
+                        }),
+                        new Paragraph({ text: "" }) // Espacio entre imágenes
+                      );
+                    } catch (error) {
+                      console.error(`Error procesando imagen ${imageNumber}:`, error);
+                      // En caso de error, agregar texto indicativo
+                      photoParagraphs.push(
+                        new Paragraph({
+                          children: [
+                            new TextRun({ 
+                              text: `[Fotografía ${imageNumber} - No disponible en formato Word]`,
+                              italics: true 
+                            })
+                          ],
+                          alignment: AlignmentType.CENTER
+                        }),
+                         new Paragraph({ text: "" })
+                       );
+                     }
+                   });
+                   
+                   // Separador entre grupos (excepto el último)
+                   if (i + imagesPerGroup < propertyImages.length) {
+                     photoParagraphs.push(
+                       new Paragraph({ text: "─".repeat(50), alignment: AlignmentType.CENTER }),
+                       new Paragraph({ text: "" })
+                     );
+                   }
+                 }
+                 
+                 return photoParagraphs;
+               })(),
+               new Paragraph({ text: "" }), // Espacio final
+               new Paragraph({
+                 children: [
+                   new TextRun({ 
+                     text: "Nota: Las fotografías han sido tomadas para fines de valuación profesional y forman parte integral del presente avalúo.",
+                     italics: true,
+                     size: 20
+                   })
+                 ]
+               })
             ] : [])
           ]
         }]
