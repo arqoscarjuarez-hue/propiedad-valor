@@ -166,11 +166,14 @@ All colors MUST be HSL.
       -moz-osx-font-smoothing: grayscale;
     }
     
-    /* Better dropdown visibility on mobile */
-    [data-radix-select-content] {
+    /* Better dropdown and tabs visibility on mobile */
+    [data-radix-select-content],
+    [data-radix-tabs-content] {
       max-height: 50vh;
       overflow-y: auto;
       z-index: 999;
+      background: hsl(var(--background));
+      border: 1px solid hsl(var(--border));
     }
     
     /* Improved touch targets */
@@ -185,13 +188,25 @@ All colors MUST be HSL.
       transition: transform 0.1s ease;
     }
     
-    /* Optimize animations for mobile */
+    /* Optimize animations for mobile and prevent blank screens */
     * {
       will-change: auto;
     }
     
     .animating {
       will-change: transform, opacity;
+    }
+    
+    /* Prevent tabs from causing blank screens */
+    [data-radix-tabs-trigger] {
+      background: hsl(var(--background)) !important;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    [data-radix-tabs-trigger][data-state="active"] {
+      background: hsl(var(--primary)) !important;
+      color: hsl(var(--primary-foreground)) !important;
     }
   }
 }
