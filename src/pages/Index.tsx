@@ -55,6 +55,21 @@ const Index = () => {
                 <span className="text-sm text-green-600 font-medium">Online</span>
               </div>
             </div>
+            
+            {/* Enlace para móvil */}
+            <div className="flex items-center">
+              <a 
+                href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com?forceHideBadge=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 bg-primary/10 hover:bg-primary/20 text-primary px-3 py-2 rounded-lg transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm font-medium">Ver en Celular</span>
+              </a>
+            </div>
           </div>
           
           {/* Banner de demostración */}
