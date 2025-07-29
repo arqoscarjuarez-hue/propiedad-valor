@@ -2060,101 +2060,141 @@ const PropertyValuation = () => {
   };
 
   const calculateValuation = async () => {
-    const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
-    
-    // Precio base por m² según tipo de propiedad (convertido a USD)
-    const precioBase = {
-      'casa': 800,      // ~$800 USD per m²
-      'departamento': 650,  // ~$650 USD per m²
-      'terreno': 400,   // ~$400 USD per m²
-      'comercial': 950,  // ~$950 USD per m²
-      'bodega': 550     // ~$550 USD per m²
-    };
-    
-    let valorBase = (areaTotal * (precioBase[propertyData.tipoPropiedad as keyof typeof precioBase] || 650)) +
-                    (propertyData.areaTerreno * 250); // $250 USD per m² for land
-    
-    // Factores de multiplicación por ubicación
-    const factorUbicacion = {
-      'excelente': 1.4,
-      'buena': 1.2,
-      'regular': 1.0,
-      'mala': 0.7
-    };
-    
-    // Factores por estado general (valores exactos proporcionados)
-    const factorEstado = {
-      'nuevo': 1.0000,
-      'bueno': 0.9968,
-      'medio': 0.9748,
-      'regular': 0.9191,
-      'reparaciones-sencillas': 0.8190,
-      'reparaciones-medias': 0.6680,
-      'reparaciones-importantes': 0.4740,
-      'danos-graves': 0.2480,
-      'en-desecho': 0.1350,
-      'inservibles': 0.0000
-    };
-    
-    // Depreciación por antigüedad usando método lineal
-    const getVidaUtilSegunTipo = (tipo: string): number => {
-      const vidasUtiles = {
-        'casa': 100,        // 100 años
-        'departamento': 80, // 80 años  
-        'terreno': 0,       // Sin depreciación
-        'comercial': 60,    // 60 años
-        'bodega': 50        // 50 años
+    try {
+      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+      
+      // Precio base por m² según tipo de propiedad (convertido a USD)
+      const precioBase = {
+        'casa': 800,      // ~$800 USD per m²
+        'departamento': 650,  // ~$650 USD per m²
+        'terreno': 400,   // ~$400 USD per m²
+        'comercial': 950,  // ~$950 USD per m²
+        'bodega': 550     // ~$550 USD per m²
       };
-      return vidasUtiles[tipo as keyof typeof vidasUtiles] || 80;
-    };
+      
+      let valorBase = (areaTotal * (precioBase[propertyData.tipoPropiedad as keyof typeof precioBase] || 650)) +
+                      (propertyData.areaTerreno * 250); // $250 USD per m² for land
+      
+      // Factores de multiplicación por ubicación
+      const factorUbicacion = {
+        'excelente': 1.4,
+        'buena': 1.2,
+        'regular': 1.0,
+        'mala': 0.7
+      };
+      
+      // Factores por estado general (valores exactos proporcionados)
+      const factorEstado = {
+        'nuevo': 1.0000,
+        'bueno': 0.9968,
+        'medio': 0.9748,
+        'regular': 0.9191,
+        'reparaciones-sencillas': 0.8190,
+        'reparaciones-medias': 0.6680,
+        'reparaciones-importantes': 0.4740,
+        'danos-graves': 0.2480,
+        'en-desecho': 0.1350,
+        'inservibles': 0.0000
+      };
+      
+      // Depreciación por antigüedad usando método lineal
+      const getVidaUtilSegunTipo = (tipo: string): number => {
+        const vidasUtiles = {
+          'casa': 100,        // 100 años
+          'departamento': 80, // 80 años  
+          'terreno': 0,       // Sin depreciación
+          'comercial': 60,    // 60 años
+          'bodega': 50        // 50 años
+        };
+        return vidasUtiles[tipo as keyof typeof vidasUtiles] || 80;
+      };
 
-    const vidaUtilTotal = getVidaUtilSegunTipo(propertyData.tipoPropiedad);
-    
-    // Factor de depreciación lineal: 1 - (antigüedad / vida útil total)
-    const factorAntiguedad = vidaUtilTotal > 0 
-      ? Math.max(0, 1 - (propertyData.antiguedad / vidaUtilTotal))
-      : 1; // Para terrenos sin depreciación
-    
-    // Bonificación por espacios (convertido a USD)
-    const bonificacionEspacios = (propertyData.recamaras * 2800) +   // $2,800 per bedroom
-                                (propertyData.banos * 1600) +        // $1,600 per bathroom
-                                (propertyData.cochera * 2200) +      // $2,200 per garage
-                                (propertyData.salas * 1300) +        // $1,300 per living room
-                                (propertyData.cocina * 1900);        // $1,900 per kitchen
-    
-    const valorFinal = (valorBase * 
-                       (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
-                       (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
-                       factorAntiguedad) + bonificacionEspacios;
-    
-    // Convertir a la moneda seleccionada
-    const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
-    
-    setBaseValuation(valorFinalEnMonedaSeleccionada);
-    
-    // Aplicar ajuste de precio si existe
-    const valorAjustado = valorFinalEnMonedaSeleccionada * (1 + priceAdjustment / 100);
-    setValuation(valorAjustado);
-    
-    toast({
-      title: translations[selectedLanguage].calculatingValuation,
-      description: translations[selectedLanguage].generatingReport,
-    });
+      const vidaUtilTotal = getVidaUtilSegunTipo(propertyData.tipoPropiedad);
+      
+      // Factor de depreciación lineal: 1 - (antigüedad / vida útil total)
+      const factorAntiguedad = vidaUtilTotal > 0 
+        ? Math.max(0, 1 - (propertyData.antiguedad / vidaUtilTotal))
+        : 1; // Para terrenos sin depreciación
+      
+      // Bonificación por espacios (convertido a USD)
+      const bonificacionEspacios = (propertyData.recamaras * 2800) +   // $2,800 per bedroom
+                                  (propertyData.banos * 1600) +        // $1,600 per bathroom
+                                  (propertyData.cochera * 2200) +      // $2,200 per garage
+                                  (propertyData.salas * 1300) +        // $1,300 per living room
+                                  (propertyData.cocina * 1900);        // $1,900 per kitchen
+      
+      const valorFinal = (valorBase * 
+                         (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
+                         (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
+                         factorAntiguedad) + bonificacionEspacios;
+      
+      // Convertir a la moneda seleccionada
+      const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
+      
+      setBaseValuation(valorFinalEnMonedaSeleccionada);
+      
+      // Aplicar ajuste de precio si existe
+      const valorAjustado = valorFinalEnMonedaSeleccionada * (1 + priceAdjustment / 100);
+      setValuation(valorAjustado);
+      
+      toast({
+        title: translations[selectedLanguage].calculatingValuation,
+        description: translations[selectedLanguage].generatingReport,
+      });
 
-    // Generar comparativas con 10 comparables
-    const allComparatives = await generateComparativeProperties(valorFinal, 10);
-    setAllComparativeProperties(allComparatives);
-    // Actualizar las propiedades seleccionadas (los primeros 3)
-    const selectedProps = selectedComparatives.map(index => allComparatives[index]).filter(Boolean);
-    setComparativeProperties(selectedProps);
-    
-    // Limpiar múltiples valuaciones ya que ahora solo hacemos una
-    setMultipleValuations([]);
-    
-    toast({
-      title: translations[selectedLanguage].valuationCompleted,
-      description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorAjustado, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
-    });
+      try {
+        // Generar comparativas con 10 comparables
+        const allComparatives = await generateComparativeProperties(valorFinal, 10);
+        setAllComparativeProperties(allComparatives);
+        // Actualizar las propiedades seleccionadas (los primeros 3)
+        const selectedProps = selectedComparatives.map(index => allComparatives[index]).filter(Boolean);
+        setComparativeProperties(selectedProps);
+      } catch (comparativesError) {
+        console.error('Error generating comparatives:', comparativesError);
+        // Generar comparativas básicas de respaldo
+        const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+        const fallbackComparatives = Array.from({ length: 3 }, (_, i) => {
+          const areaConstruida = Math.max(50, areaTotal + (Math.random() * 50 - 25));
+          const precio = valorFinal * (0.9 + Math.random() * 0.2);
+          return {
+            id: `fallback-${i + 1}`,
+            address: `Propiedad comparable ${i + 1}`,
+            areaConstruida: areaConstruida,
+            areaTerreno: Math.max(100, propertyData.areaTerreno + (Math.random() * 100 - 50)),
+            tipoPropiedad: propertyData.tipoPropiedad,
+            recamaras: Math.max(1, propertyData.recamaras + Math.floor(Math.random() * 3 - 1)),
+            banos: Math.max(1, propertyData.banos + Math.floor(Math.random() * 2)),
+            antiguedad: Math.max(0, propertyData.antiguedad + Math.floor(Math.random() * 10 - 5)),
+            ubicacion: propertyData.ubicacion,
+            estadoGeneral: propertyData.estadoGeneral,
+            precio: precio,
+            distancia: Math.floor(Math.random() * 2000 + 500), // distancia en metros
+            descripcion: `Propiedad comparable generada automáticamente`,
+            lat: (propertyData.latitud || 19.4326) + (Math.random() * 0.01 - 0.005),
+            lng: (propertyData.longitud || -99.1332) + (Math.random() * 0.01 - 0.005),
+            isReal: false
+          };
+        });
+        
+        setAllComparativeProperties(fallbackComparatives);
+        setComparativeProperties(fallbackComparatives);
+      }
+      
+      // Limpiar múltiples valuaciones ya que ahora solo hacemos una
+      setMultipleValuations([]);
+      
+      toast({
+        title: translations[selectedLanguage].valuationCompleted,
+        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorAjustado, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
+      });
+    } catch (error) {
+      console.error('Error in calculateValuation:', error);
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al calcular la valuación. Por favor intenta nuevamente.",
+        variant: "destructive"
+      });
+    }
   };
 
   // Función para manejar cambios en el ajuste de precio
