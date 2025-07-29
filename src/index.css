@@ -202,11 +202,81 @@ All colors MUST be HSL.
       background: hsl(var(--background)) !important;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
+      z-index: 1;
     }
     
     [data-radix-tabs-trigger][data-state="active"] {
       background: hsl(var(--primary)) !important;
       color: hsl(var(--primary-foreground)) !important;
+      z-index: 2;
+    }
+    
+    /* Ensure tabs content is always visible */
+    [data-radix-tabs-content] {
+      background: hsl(var(--background));
+      min-height: 200px;
+      position: relative;
+      z-index: 0;
+    }
+    
+    /* Prevent layout shift on tab change */
+    [data-radix-tabs-root] {
+      contain: layout;
+    }
+    
+    /* Smooth loading animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Loading shimmer effect */
+    .shimmer {
+      background: linear-gradient(90deg, 
+        hsl(var(--muted)) 25%, 
+        hsl(var(--accent)) 50%, 
+        hsl(var(--muted)) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  }
+  
+  /* Global performance optimizations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Print styles */
+  @media print {
+    * {
+      background: transparent !important;
+      color: black !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    
+    @page {
+      margin: 0.5in;
+    }
+    
+    h1, h2, h3 {
+      page-break-after: avoid;
+    }
+    
+    .no-print {
+      display: none !important;
     }
   }
 }

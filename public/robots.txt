@@ -1,7 +1,11 @@
+User-agent: *
+Allow: /
+
+# Specific search engines
 User-agent: Googlebot
 Allow: /
 
-User-agent: Bingbot
+User-agent: Bingbot  
 Allow: /
 
 User-agent: Twitterbot
@@ -10,5 +14,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemap location
+Sitemap: https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com/sitemap.xml
+
+# Crawl delay to prevent server overload
+Crawl-delay: 1
