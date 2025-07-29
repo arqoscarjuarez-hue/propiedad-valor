@@ -1839,9 +1839,19 @@ const PropertyValuation = () => {
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     try {
+      // Validar y limpiar el valor
+      let sanitizedValue = value;
+      
+      if (typeof value === 'string') {
+        const numValue = parseFloat(value);
+        sanitizedValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
+      } else if (typeof value === 'number') {
+        sanitizedValue = isNaN(value) ? 0 : Math.max(0, value);
+      }
+      
       setPropertyData(prev => ({
         ...prev,
-        [field]: value
+        [field]: sanitizedValue
       }));
     } catch (error) {
       console.error('Error updating property data:', error);
@@ -2103,9 +2113,24 @@ const PropertyValuation = () => {
   };
 
   const calculateValuation = async () => {
+    if (isCalculating) return; // Prevenir múltiples cálculos simultáneos
+    
     setIsCalculating(true);
     try {
-      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+      const areaTotal = (propertyData.areaSotano || 0) + 
+                       (propertyData.areaPrimerNivel || 0) + 
+                       (propertyData.areaSegundoNivel || 0) + 
+                       (propertyData.areaTercerNivel || 0) + 
+                       (propertyData.areaCuartoNivel || 0);
+      
+      if (areaTotal <= 0) {
+        toast({
+          title: "Error",
+          description: "Debe ingresar al menos un área de construcción mayor a 0",
+          variant: "destructive"
+        });
+        return;
+      }
       
       // Precio base por m² según tipo de propiedad (convertido a USD)
       const precioBase = {
@@ -3814,7 +3839,10 @@ const PropertyValuation = () => {
                          id="areaSotano"
                          type="number"
                          value={propertyData.areaSotano || ''}
-                         onChange={(e) => handleInputChange('areaSotano', Number(e.target.value))}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            handleInputChange('areaSotano', value === '' ? 0 : parseFloat(value) || 0);
+                          }}
                          placeholder="0"
                        />
                      </div>
@@ -3824,7 +3852,10 @@ const PropertyValuation = () => {
                           id="areaPrimerNivel"
                           type="number"
                           value={propertyData.areaPrimerNivel || ''}
-                          onChange={(e) => handleInputChange('areaPrimerNivel', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('areaPrimerNivel', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                         />
                       </div>
@@ -3834,7 +3865,10 @@ const PropertyValuation = () => {
                           id="areaSegundoNivel"
                           type="number"
                           value={propertyData.areaSegundoNivel || ''}
-                          onChange={(e) => handleInputChange('areaSegundoNivel', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('areaSegundoNivel', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                         />
                       </div>
@@ -3844,7 +3878,10 @@ const PropertyValuation = () => {
                           id="areaTercerNivel"
                           type="number"
                           value={propertyData.areaTercerNivel || ''}
-                          onChange={(e) => handleInputChange('areaTercerNivel', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('areaTercerNivel', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                         />
                       </div>
@@ -3854,7 +3891,10 @@ const PropertyValuation = () => {
                           id="areaCuartoNivel"
                           type="number"
                           value={propertyData.areaCuartoNivel || ''}
-                          onChange={(e) => handleInputChange('areaCuartoNivel', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('areaCuartoNivel', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                         />
                       </div>
@@ -3864,7 +3904,10 @@ const PropertyValuation = () => {
                          id="areaTerreno"
                          type="number"
                          value={propertyData.areaTerreno || ''}
-                         onChange={(e) => handleInputChange('areaTerreno', Number(e.target.value))}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                          }}
                          placeholder="0"
                        />
                      </div>
@@ -3906,7 +3949,10 @@ const PropertyValuation = () => {
                              id={key}
                              type="number"
                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                             onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
+                              }}
                              placeholder="0"
                              className="text-center"
                            />
@@ -3932,7 +3978,10 @@ const PropertyValuation = () => {
                              id={key}
                              type="number"
                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                             onChange={(e) => handleInputChange(key as keyof PropertyData, Number(e.target.value))}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
+                              }}
                              placeholder="0"
                              className="text-center"
                            />
@@ -3952,7 +4001,10 @@ const PropertyValuation = () => {
                           id="otros"
                           type="number"
                           value={propertyData.otros || ''}
-                          onChange={(e) => handleInputChange('otros', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('otros', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                           className="text-center"
                         />
@@ -3991,7 +4043,10 @@ const PropertyValuation = () => {
                           id="antiguedad"
                           type="number"
                           value={propertyData.antiguedad || ''}
-                          onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                           onChange={(e) => {
+                             const value = e.target.value;
+                             handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
+                           }}
                           placeholder="0"
                         />
                         <p className="text-xs text-muted-foreground mt-1">Años desde la construcción original</p>
@@ -4396,7 +4451,12 @@ const PropertyValuation = () => {
                               max="30"
                               step="1"
                               value={priceAdjustment}
-                              onChange={(e) => handlePriceAdjustment(Number(e.target.value))}
+                               onChange={(e) => {
+                                 const value = parseFloat(e.target.value);
+                                 if (!isNaN(value)) {
+                                   handlePriceAdjustment(Math.max(-30, Math.min(30, value)));
+                                 }
+                               }}
                               className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
                             />
                           </div>
@@ -4463,7 +4523,9 @@ const PropertyValuation = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    calculateValuation();
+                    if (!isCalculating) {
+                      calculateValuation();
+                    }
                   }} 
                   className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-12 sm:h-auto text-sm sm:text-base touch-manipulation"
                   size="lg"
