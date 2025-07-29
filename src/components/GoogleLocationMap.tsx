@@ -182,17 +182,32 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
       return;
     }
 
-    initializeGoogleMaps(googleMapsApiKey);
+    try {
+      initializeGoogleMaps(googleMapsApiKey);
+    } catch (error) {
+      console.error('Error initializing Google Maps:', error);
+      toast({
+        title: "Error de Inicialización",
+        description: "Error al inicializar Google Maps. Verifica tu conexión.",
+        variant: "destructive"
+      });
+    }
   };
 
   const searchAddress = async (address: string) => {
     if (!geocoder.current || !address.trim()) return;
 
     try {
-      const response = await geocoder.current.geocode({ address });
+      // Timeout para búsquedas lentas en móvil
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Búsqueda timeout')), 10000)
+      );
       
-      if (response.results[0]) {
-        const location = response.results[0].geometry.location;
+      const searchPromise = geocoder.current.geocode({ address });
+      const response = await Promise.race([searchPromise, timeoutPromise]);
+      
+      if ((response as any).results[0]) {
+        const location = (response as any).results[0].geometry.location;
         const lat = location.lat();
         const lng = location.lng();
         
@@ -212,7 +227,9 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
       console.error('Error searching address:', error);
       toast({
         title: "Error de búsqueda",
-        description: "Error al buscar la dirección",
+        description: error.message === 'Búsqueda timeout' 
+          ? "La búsqueda tomó demasiado tiempo. Intenta nuevamente." 
+          : "Error al buscar la dirección",
         variant: "destructive"
       });
     }

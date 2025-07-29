@@ -123,11 +123,34 @@ All colors MUST be HSL.
   button {
     min-height: 44px;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   
-  input, select {
+  input, select, textarea {
     min-height: 44px;
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent zoom on input focus */
+  input[type="text"], 
+  input[type="number"], 
+  input[type="email"], 
+  input[type="password"], 
+  input[type="search"], 
+  select, 
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Better touch targets */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
   
   /* Mobile scroll behavior */
@@ -135,6 +158,12 @@ All colors MUST be HSL.
     html {
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
+    }
+    
+    body {
+      overscroll-behavior-y: contain;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     /* Better dropdown visibility on mobile */
@@ -148,6 +177,21 @@ All colors MUST be HSL.
     .mobile-friendly {
       min-height: 48px;
       min-width: 48px;
+    }
+    
+    /* Better button responsiveness */
+    button:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+    
+    /* Optimize animations for mobile */
+    * {
+      will-change: auto;
+    }
+    
+    .animating {
+      will-change: transform, opacity;
     }
   }
 }

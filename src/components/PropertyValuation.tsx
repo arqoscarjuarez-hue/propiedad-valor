@@ -1799,6 +1799,7 @@ const PropertyValuation = () => {
   const [activeTab, setActiveTab] = useState('areas');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
+  const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
 
   // Configuraciones de membrete por tipo de propiedad
   const letterheadConfigs = {
@@ -1837,10 +1838,19 @@ const PropertyValuation = () => {
   };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
-    setPropertyData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    try {
+      setPropertyData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    } catch (error) {
+      console.error('Error updating property data:', error);
+      toast({
+        title: "Error",
+        description: "Error al actualizar los datos de la propiedad",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleServiceChange = (serviceName: keyof PropertyData['servicios'], checked: boolean) => {
@@ -1933,37 +1943,63 @@ const PropertyValuation = () => {
       nearbyAddresses = [...nearbyAddresses, ...simulatedAddresses];
     }
     
-    return Promise.all(nearbyAddresses.map(async (addressInfo, index) => {
-      const variation = (Math.random() - 0.5) * 0.2; // ±10% price variation
-      
-      // Variación del área de construcción: ±40% como máximo (estándar de valuación)
-      const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
-      const areaComparable = Math.round(areaTotal * areaVariationFactor);
-      
-      // Asegurar que esté dentro del rango ±40%
-      const areaMinima = areaTotal * 0.6; // -40%
-      const areaMaxima = areaTotal * 1.4; // +40%
-      const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
-      
-      return {
-        id: `comp-${index + 1}`,
-        address: addressInfo.address,
-        areaConstruida: areaFinal,
-        areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
-        tipoPropiedad: propertyData.tipoPropiedad,
-        recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
-        banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
-        antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
-        ubicacion: propertyData.ubicacion,
-        estadoGeneral: propertyData.estadoGeneral,
-        precio: convertCurrency(baseValue * (1 + variation), selectedCurrency),
-        distancia: addressInfo.distance,
-        descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
-        url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
-        latitud: addressInfo.lat,
-        longitud: addressInfo.lng
-      };
-    }));
+    // Procesar comparables de forma más eficiente para móviles
+    const comparables = nearbyAddresses.map((addressInfo, index) => {
+      try {
+        const variation = (Math.random() - 0.5) * 0.2; // ±10% price variation
+        
+        // Variación del área de construcción: ±40% como máximo (estándar de valuación)
+        const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
+        const areaComparable = Math.round(areaTotal * areaVariationFactor);
+        
+        // Asegurar que esté dentro del rango ±40%
+        const areaMinima = areaTotal * 0.6; // -40%
+        const areaMaxima = areaTotal * 1.4; // +40%
+        const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
+        
+        return {
+          id: `comp-${index + 1}`,
+          address: addressInfo.address,
+          areaConstruida: areaFinal,
+          areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
+          tipoPropiedad: propertyData.tipoPropiedad,
+          recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
+          banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
+          antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
+          ubicacion: propertyData.ubicacion,
+          estadoGeneral: propertyData.estadoGeneral,
+          precio: convertCurrency(baseValue * (1 + variation), selectedCurrency),
+          distancia: addressInfo.distance,
+          descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+          url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
+          latitud: addressInfo.lat,
+          longitud: addressInfo.lng
+        };
+      } catch (error) {
+        console.error('Error procesando comparable:', error);
+        // Comparable fallback más simple
+        return {
+          id: `fallback-comp-${index + 1}`,
+          address: `Propiedad ${index + 1}`,
+          areaConstruida: areaTotal,
+          areaTerreno: propertyData.areaTerreno,
+          tipoPropiedad: propertyData.tipoPropiedad,
+          recamaras: propertyData.recamaras,
+          banos: propertyData.banos,
+          antiguedad: propertyData.antiguedad,
+          ubicacion: propertyData.ubicacion,
+          estadoGeneral: propertyData.estadoGeneral,
+          precio: convertCurrency(baseValue, selectedCurrency),
+          distancia: 500 + (index * 100),
+          descripcion: `Propiedad comparable básica ${index + 1}`,
+          url: '#',
+          latitud: addressInfo.lat,
+          longitud: addressInfo.lng
+        };
+      }
+    });
+    
+    return Promise.resolve(comparables);
   };
 
   // Función para buscar propiedades cercanas usando Google Maps
@@ -1981,7 +2017,12 @@ const PropertyValuation = () => {
       
       const query = propertyTypeQueries[propertyType as keyof typeof propertyTypeQueries] || 'propiedades en venta';
       
-      const response = await supabase.functions.invoke('google-maps', {
+      // Timeout más corto para móviles
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout - búsqueda muy lenta')), 8000)
+      );
+      
+      const searchPromise = supabase.functions.invoke('google-maps', {
         body: {
           action: 'places-search',
           data: {
@@ -1992,10 +2033,12 @@ const PropertyValuation = () => {
           }
         }
       });
+      
+      const response = await Promise.race([searchPromise, timeoutPromise]);
 
-      if (response.data?.results && response.data.results.length > 0) {
-        console.log(`Encontradas ${response.data.results.length} propiedades en Google Maps`);
-        return response.data.results.slice(0, numResults).map((place: any, index: number) => ({
+      if ((response as any)?.data?.results && (response as any).data.results.length > 0) {
+        console.log(`Encontradas ${(response as any).data.results.length} propiedades en Google Maps`);
+        return (response as any).data.results.slice(0, numResults).map((place: any, index: number) => ({
           id: `real-${index + 1}`,
           address: place.name || place.vicinity || `Propiedad ${index + 1}`,
           distance: place.geometry?.location ? 
@@ -2060,6 +2103,7 @@ const PropertyValuation = () => {
   };
 
   const calculateValuation = async () => {
+    setIsCalculating(true);
     try {
       const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
       
@@ -2194,6 +2238,8 @@ const PropertyValuation = () => {
         description: "Ocurrió un error al calcular la valuación. Por favor intenta nuevamente.",
         variant: "destructive"
       });
+    } finally {
+      setIsCalculating(false);
     }
   };
 
@@ -4368,12 +4414,17 @@ const PropertyValuation = () => {
               
               <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t">
                 <Button 
-                  onClick={calculateValuation} 
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-12 sm:h-auto text-sm sm:text-base"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    calculateValuation();
+                  }} 
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-12 sm:h-auto text-sm sm:text-base touch-manipulation"
                   size="lg"
+                  disabled={isCalculating}
                 >
                   <Calculator className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  {translations[selectedLanguage].calculate}
+                  {isCalculating ? 'Calculando...' : translations[selectedLanguage].calculate}
                 </Button>
               </div>
             </CardContent>
