@@ -118,4 +118,36 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Touch-friendly mobile optimizations */
+  button {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  input, select {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Mobile scroll behavior */
+  @media (max-width: 768px) {
+    html {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Better dropdown visibility on mobile */
+    [data-radix-select-content] {
+      max-height: 50vh;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    
+    /* Improved touch targets */
+    .mobile-friendly {
+      min-height: 48px;
+      min-width: 48px;
+    }
+  }
 }

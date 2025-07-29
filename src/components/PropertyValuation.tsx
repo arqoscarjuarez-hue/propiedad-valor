@@ -3553,28 +3553,28 @@ const PropertyValuation = () => {
 
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-foreground mb-4 flex items-center justify-center gap-3">
-          <Calculator className="h-10 w-10 text-primary" />
+    <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
+      <div className="text-center mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3">
+          <Calculator className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-primary" />
           {translations[selectedLanguage].propertyValuator}
         </h1>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground px-4">
           {translations[selectedLanguage].professionalSystem}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Selectores de Moneda e Idioma */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-3 sm:space-y-4">
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
           />
           
-          {/* Selector de Idioma */}
-          <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
-            <Label className="text-sm font-bold mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
+           {/* Selector de Idioma */}
+           <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
+             <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
               </svg>
@@ -3600,23 +3600,23 @@ const PropertyValuation = () => {
             </p>
           </Card>
           
-          {/* Botones de Descarga de Documentos */}
-          {valuation && (
-            <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-              <Label className="text-sm font-bold mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                Descargar Documentos
-              </Label>
-              <div className="space-y-3">
-                <Button 
-                  onClick={generatePDF} 
-                  variant="outline" 
-                  className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50"
-                  size="sm"
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  {translations[selectedLanguage].downloadPDF}
-                </Button>
+           {/* Botones de Descarga de Documentos */}
+           {valuation && (
+             <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
+               <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
+                 <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                 Descargar Documentos
+               </Label>
+               <div className="space-y-2 sm:space-y-3">
+                 <Button 
+                   onClick={generatePDF} 
+                   variant="outline" 
+                   className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50 h-10 sm:h-auto text-xs sm:text-sm"
+                   size="sm"
+                 >
+                   <FileText className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                   {translations[selectedLanguage].downloadPDF}
+                 </Button>
                 
                 <Button 
                   onClick={generateWord} 
@@ -3654,28 +3654,28 @@ const PropertyValuation = () => {
         {/* Formulario Principal */}
         <div className="lg:col-span-2">
           <Card className="shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
-              <CardTitle className="flex items-center gap-2">
-                <Home className="h-5 w-5" />
+            <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 sm:p-6">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <Home className="h-4 w-4 sm:h-5 sm:w-5" />
                 {translations[selectedLanguage].propertyData}
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 grid-rows-2 h-auto gap-1">
-                   <TabsTrigger value="areas" className="h-10">{translations[selectedLanguage].areas}</TabsTrigger>
-                   <TabsTrigger value="tipo" className="h-10">{translations[selectedLanguage].propertyType}</TabsTrigger>
-                   <TabsTrigger value="espacios" className="h-10">{translations[selectedLanguage].spaces}</TabsTrigger>
-                   <TabsTrigger value="caracteristicas" className="h-10">{translations[selectedLanguage].characteristics}</TabsTrigger>
-                   <TabsTrigger value="servicios" className="h-10">{translations[selectedLanguage].services}</TabsTrigger>
-                   <TabsTrigger value="ubicacion" className="h-10">{translations[selectedLanguage].location}</TabsTrigger>
-                   <TabsTrigger value="fotos" className="h-10">{translations[selectedLanguage].photos}</TabsTrigger>
-                   <TabsTrigger value="ajustes" className="h-10">{translations[selectedLanguage].valuation}</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1">
+                   <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].areas}</TabsTrigger>
+                   <TabsTrigger value="tipo" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].propertyType}</TabsTrigger>
+                   <TabsTrigger value="espacios" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].spaces}</TabsTrigger>
+                   <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].characteristics}</TabsTrigger>
+                   <TabsTrigger value="servicios" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].services}</TabsTrigger>
+                   <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].location}</TabsTrigger>
+                   <TabsTrigger value="fotos" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].photos}</TabsTrigger>
+                   <TabsTrigger value="ajustes" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].valuation}</TabsTrigger>
                  </TabsList>
 
-                 <TabsContent value="areas" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].constructionAreas}</h3>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                    <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].constructionAreas}</h3>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                      <div>
                        <Label htmlFor="areaSotano">{translations[selectedLanguage].basement}</Label>
                        <Input
@@ -4187,10 +4187,10 @@ const PropertyValuation = () => {
                        />
                      </div>
 
-                     {propertyImages.length > 0 && (
-                       <div className="space-y-3">
-                         <h4 className="text-sm font-medium">Fotos seleccionadas ({propertyImages.length})</h4>
-                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                       {propertyImages.length > 0 && (
+                         <div className="space-y-2 sm:space-y-3">
+                           <h4 className="text-xs sm:text-sm font-medium">Fotos seleccionadas ({propertyImages.length})</h4>
+                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                            {propertyImages.map((image, index) => (
                              <div key={index} className="relative group">
                                <img
@@ -4214,10 +4214,10 @@ const PropertyValuation = () => {
                    </div>
                   </TabsContent>
 
-                  <TabsContent value="ajustes" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5" />
-                      Ajuste de Precio
+                   <TabsContent value="ajustes" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                     <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
+                       <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                       Ajuste de Precio
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
                       Ajusta el valor del avalúo hasta en un ±30% según consideraciones especiales del mercado o características únicas de la propiedad.
@@ -4275,12 +4275,12 @@ const PropertyValuation = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-1 sm:gap-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handlePriceAdjustment(-10)}
-                            className="text-xs"
+                            className="text-xs h-8 sm:h-auto"
                           >
                             -10%
                           </Button>
@@ -4288,7 +4288,7 @@ const PropertyValuation = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handlePriceAdjustment(0)}
-                            className="text-xs"
+                            className="text-xs h-8 sm:h-auto"
                           >
                             Reset 0%
                           </Button>
@@ -4296,7 +4296,7 @@ const PropertyValuation = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handlePriceAdjustment(10)}
-                            className="text-xs"
+                            className="text-xs h-8 sm:h-auto"
                           >
                             +10%
                           </Button>
@@ -4326,13 +4326,13 @@ const PropertyValuation = () => {
 
                 </Tabs>
               
-              <div className="mt-8 pt-4 border-t">
+              <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t">
                 <Button 
                   onClick={calculateValuation} 
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity"
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-12 sm:h-auto text-sm sm:text-base"
                   size="lg"
                 >
-                  <Calculator className="mr-2 h-5 w-5" />
+                  <Calculator className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   {translations[selectedLanguage].calculate}
                 </Button>
               </div>
@@ -4342,19 +4342,19 @@ const PropertyValuation = () => {
 
         {/* Panel de Resultados */}
         <div className="lg:col-span-1">
-          <Card className="shadow-lg sticky top-4">
-            <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground">
-              <CardTitle>Resultado de Valuación</CardTitle>
+          <Card className="shadow-lg lg:sticky lg:top-4">
+            <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl">Resultado de Valuación</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               {valuation ? (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="text-center">
-                    <h3 className="text-lg font-semibold text-muted-foreground">Valor Estimado</h3>
-                    <p className="text-3xl font-bold text-primary">
+                    <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">Valor Estimado</h3>
+                    <p className="text-2xl sm:text-3xl font-bold text-primary leading-tight">
                       {formatCurrency(valuation, selectedCurrency)}
                     </p>
-                    <Badge variant="secondary" className="mt-2">{selectedCurrency.code}</Badge>
+                    <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
                     <p className="text-xs text-muted-foreground mt-1">Basado en 3 comparables</p>
                     
                     {/* Mostrar información del ajuste si existe */}
