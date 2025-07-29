@@ -5,6 +5,21 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       {/* Header */}
       <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
+        {/* Enlace para móvil - Barra superior fija */}
+        <div className="bg-primary text-primary-foreground py-2 text-center">
+          <a 
+            href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com?forceHideBadge=true"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 hover:opacity-90 transition-opacity"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span className="text-sm font-medium">📱 Ver en Celular - Optimizado para Móviles</span>
+          </a>
+        </div>
+        
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -54,21 +69,6 @@ const Index = () => {
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-sm text-green-600 font-medium">Online</span>
               </div>
-            </div>
-            
-            {/* Enlace para móvil */}
-            <div className="flex items-center">
-              <a 
-                href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com?forceHideBadge=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-primary/10 hover:bg-primary/20 text-primary px-3 py-2 rounded-lg transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                <span className="text-sm font-medium">Ver en Celular</span>
-              </a>
             </div>
           </div>
           
