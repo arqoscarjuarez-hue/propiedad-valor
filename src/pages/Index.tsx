@@ -71,35 +71,6 @@ const Index = () => {
               </div>
             </div>
           </div>
-          
-          {/* Banner de demostración */}
-          <div className="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    Modo Demostración Activo
-                  </p>
-                  <p className="text-xs text-blue-700 dark:text-blue-300">
-                    Explorando una propiedad de muestra con datos reales del mercado inmobiliario
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
-                  Casa en Del Valle, CDMX
-                </span>
-                <span className="text-xs bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 px-2 py-1 rounded-full">
-                  $2,850,000 MXN
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </header>
 
