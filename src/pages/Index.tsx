@@ -1,4 +1,5 @@
 import PropertyValuation from "@/components/PropertyValuation";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const Index = () => {
   return (
@@ -101,6 +102,9 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 };

@@ -31,6 +31,10 @@ import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
+import AIValuationEngine from './AIValuationEngine';
+import MarketAnalytics from './MarketAnalytics';
+import VirtualTour from './VirtualTour';
+import PropertyComparison from './PropertyComparison';
 
 // Traducciones / Translations
 const translations = {
@@ -4711,8 +4715,36 @@ const PropertyValuation = () => {
               )}
             </CardContent>
           </Card>
+          
+          {/* Sección de Análisis IA - Solo si hay valuación */}
+          {valuation && (
+            <AIValuationEngine 
+              propertyData={propertyData} 
+              valuation={valuation} 
+            />
+          )}
         </div>
       </div>
+      
+      {/* Sección de Analytics de Mercado */}
+      {valuation && (
+        <div className="mt-8">
+          <MarketAnalytics 
+            propertyType={propertyData.tipoPropiedad || 'casa'}
+            location={propertyData.ubicacion || 'buena'}
+          />
+        </div>
+      )}
+      
+      {/* Sección de Tour Virtual */}
+      {valuation && (
+        <div className="mt-8">
+          <VirtualTour 
+            propertyType={propertyData.tipoPropiedad || 'casa'}
+            images={propertyImages}
+          />
+        </div>
+      )}
     </div>
   );
 };
