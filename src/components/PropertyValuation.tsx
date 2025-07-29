@@ -3747,17 +3747,63 @@ const PropertyValuation = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1">
-                   <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].areas}</TabsTrigger>
-                   <TabsTrigger value="tipo" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].propertyType}</TabsTrigger>
-                   <TabsTrigger value="espacios" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].spaces}</TabsTrigger>
-                   <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].characteristics}</TabsTrigger>
-                   <TabsTrigger value="servicios" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].services}</TabsTrigger>
-                   <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].location}</TabsTrigger>
-                   <TabsTrigger value="fotos" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].photos}</TabsTrigger>
-                   <TabsTrigger value="ajustes" className="h-8 sm:h-10 text-xs sm:text-sm">{translations[selectedLanguage].valuation}</TabsTrigger>
-                 </TabsList>
+              <Tabs value={activeTab} onValueChange={(newValue) => {
+                try {
+                  setActiveTab(newValue);
+                } catch (error) {
+                  console.error('Error changing tab:', error);
+                }
+              }} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
+                   <TabsTrigger 
+                     value="areas" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].areas}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="tipo" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].propertyType}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="espacios" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].spaces}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="caracteristicas" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].characteristics}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="servicios" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].services}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="ubicacion" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].location}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="fotos" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].photos}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="ajustes" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].valuation}
+                   </TabsTrigger>
+                  </TabsList>
 
                  <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                     <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].constructionAreas}</h3>
