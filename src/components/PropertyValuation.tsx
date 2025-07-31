@@ -4072,7 +4072,13 @@ const PropertyValuation = () => {
                           <MapPin className="h-4 w-4" />
                           Calidad de Ubicación
                         </Label>
-                        <Select value={propertyData.ubicacion} onValueChange={(value) => handleInputChange('ubicacion', value)}>
+                         <Select 
+                           value={propertyData.ubicacion} 
+                           onValueChange={(value) => {
+                             console.log('Ubicación seleccionada:', value);
+                             handleInputChange('ubicacion', value);
+                           }}
+                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Selecciona la calidad de ubicación" />
                           </SelectTrigger>
@@ -4091,7 +4097,13 @@ const PropertyValuation = () => {
                           <Star className="h-4 w-4" />
                           Estado General de Conservación
                         </Label>
-                        <Select value={propertyData.estadoGeneral} onValueChange={(value) => handleInputChange('estadoGeneral', value)}>
+                         <Select 
+                           value={propertyData.estadoGeneral} 
+                           onValueChange={(value) => {
+                             console.log('Estado general seleccionado:', value);
+                             handleInputChange('estadoGeneral', value);
+                           }}
+                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Selecciona el estado de conservación" />
                           </SelectTrigger>
