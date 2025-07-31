@@ -4,133 +4,133 @@
 
 @layer base {
   :root {
-    /* Beautiful Soft Color Scheme */
+    /* Beautiful Sky Blue Color Scheme */
     
-    /* Main Colors - Clean and Readable */
-    --background: 255 255 255;           /* Pure white background */
-    --foreground: 51 65 85;              /* Dark blue-gray text */
+    /* Main Colors - Clean Sky Theme */
+    --background: 240 249 255;           /* Very light sky blue background */
+    --foreground: 15 23 42;              /* Deep navy text for contrast */
     
-    /* Primary - Beautiful Blue */
-    --primary: 37 99 235;                /* Beautiful blue */
-    --primary-foreground: 255 255 255;   /* White text on blue */
-    --primary-glow: 59 130 246;          /* Bright blue glow */
+    /* Primary - Beautiful Sky Blue */
+    --primary: 14 165 233;               /* Beautiful sky blue */
+    --primary-foreground: 255 255 255;   /* White text on sky blue */
+    --primary-glow: 56 189 248;          /* Bright sky blue glow */
     
-    /* Secondary - Elegant Gray */
-    --secondary: 100 116 139;            /* Elegant gray */
-    --secondary-foreground: 255 255 255; /* White text on gray */
+    /* Secondary - Light Sky */
+    --secondary: 125 211 252;            /* Light sky blue */
+    --secondary-foreground: 15 23 42;    /* Dark text on light blue */
     
-    /* Accent - Soft Green */
-    --accent: 16 185 129;                /* Beautiful emerald */
-    --accent-foreground: 255 255 255;    /* White text on green */
+    /* Accent - Deep Sky */
+    --accent: 2 132 199;                 /* Deep sky blue */
+    --accent-foreground: 255 255 255;    /* White text on deep blue */
     
-    /* Muted - Very Light Gray */
-    --muted: 248 250 252;                /* Very light gray background */
-    --muted-foreground: 100 116 139;     /* Gray text */
+    /* Muted - Very Light Sky */
+    --muted: 224 242 254;                /* Very light sky background */
+    --muted-foreground: 71 85 105;       /* Gray text */
     
     /* Border & Input */
-    --border: 226 232 240;               /* Light gray border */
+    --border: 186 230 253;               /* Light sky border */
     --input: 255 255 255;                /* White input background */
-    --ring: 37 99 235;                   /* Blue focus ring */
+    --ring: 14 165 233;                  /* Sky blue focus ring */
     
     /* Card */
     --card: 255 255 255;                 /* White cards */
-    --card-foreground: 51 65 85;         /* Dark text on cards */
+    --card-foreground: 15 23 42;         /* Dark text on cards */
     
     /* Popover */
     --popover: 255 255 255;              /* White popover */
-    --popover-foreground: 51 65 85;      /* Dark text on popover */
+    --popover-foreground: 15 23 42;      /* Dark text on popover */
     
-    /* Destructive - Soft Red */
+    /* Destructive - Soft Coral */
     --destructive: 239 68 68;            /* Soft red */
     --destructive-foreground: 255 255 255; /* White text on red */
     
-    /* Real Estate Beautiful Colors */
-    --real-estate-primary: 37 99 235;    /* Beautiful blue */
-    --real-estate-secondary: 100 116 139; /* Elegant gray */
-    --real-estate-accent: 16 185 129;    /* Emerald accent */
-    --real-estate-neutral: 156 163 175;  /* Neutral gray */
+    /* Real Estate Sky Colors */
+    --real-estate-primary: 14 165 233;   /* Sky blue */
+    --real-estate-secondary: 125 211 252; /* Light sky */
+    --real-estate-accent: 2 132 199;     /* Deep sky */
+    --real-estate-neutral: 148 163 184;  /* Neutral gray */
     
-    /* Sidebar Beautiful Colors */
+    /* Sidebar Sky Colors */
     --sidebar-background: 255 255 255;
-    --sidebar-foreground: 51 65 85;
-    --sidebar-primary: 37 99 235;
+    --sidebar-foreground: 15 23 42;
+    --sidebar-primary: 14 165 233;
     --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 248 250 252;
-    --sidebar-accent-foreground: 51 65 85;
-    --sidebar-border: 226 232 240;
-    --sidebar-ring: 37 99 235;
+    --sidebar-accent: 240 249 255;
+    --sidebar-accent-foreground: 15 23 42;
+    --sidebar-border: 186 230 253;
+    --sidebar-ring: 14 165 233;
     
     /* Border Radius */
     --radius: 0.5rem;
     
-    /* Beautiful Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91 60) 0%, hsl(212 100 47) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(158 64 52) 0%, hsl(160 84 39) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0 100) 0%, hsl(210 40 98) 100%);
+    /* Sky Blue Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(199 89 48) 0%, hsl(200 98 39) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(198 93 60) 0%, hsl(199 89 48) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(204 100 97) 0%, hsl(199 100 96) 100%);
     
-    /* Soft Shadows */
-    --shadow-professional: 0 1px 3px 0 hsl(0 0 0 / 0.1), 0 1px 2px -1px hsl(0 0 0 / 0.1);
-    --shadow-elevated: 0 4px 6px -1px hsl(0 0 0 / 0.1), 0 2px 4px -2px hsl(0 0 0 / 0.1);
-    --shadow-glow: 0 0 0 1px hsl(217 91 60 / 0.05);
+    /* Sky Shadows */
+    --shadow-professional: 0 1px 3px 0 hsl(199 89 48 / 0.1), 0 1px 2px -1px hsl(199 89 48 / 0.1);
+    --shadow-elevated: 0 4px 6px -1px hsl(199 89 48 / 0.1), 0 2px 4px -2px hsl(199 89 48 / 0.1);
+    --shadow-glow: 0 0 0 1px hsl(199 89 48 / 0.05);
     
     /* Smooth Transitions */
     --transition-professional: all 0.2s ease-in-out;
   }
 
   .dark {
-    /* Dark Mode - Beautiful and Readable */
-    --background: 15 23 42;              /* Dark navy background */
-    --foreground: 248 250 252;           /* Light text */
+    /* Dark Mode - Sky Blue Theme */
+    --background: 8 47 73;               /* Dark blue-gray background */
+    --foreground: 224 242 254;           /* Light sky text */
     
-    /* Primary - Bright Blue */
-    --primary: 59 130 246;               /* Bright blue */
-    --primary-foreground: 15 23 42;      /* Dark text on blue */
-    --primary-glow: 99 102 241;          /* Purple glow */
+    /* Primary - Bright Sky */
+    --primary: 56 189 248;               /* Bright sky blue */
+    --primary-foreground: 8 47 73;       /* Dark text on sky */
+    --primary-glow: 125 211 252;         /* Light sky glow */
     
-    /* Secondary - Dark Gray */
-    --secondary: 71 85 105;              /* Dark gray */
-    --secondary-foreground: 248 250 252; /* Light text on gray */
+    /* Secondary - Medium Sky */
+    --secondary: 14 165 233;             /* Medium sky blue */
+    --secondary-foreground: 255 255 255; /* White text on medium sky */
     
-    /* Accent - Emerald */
-    --accent: 34 197 94;                 /* Bright emerald */
-    --accent-foreground: 15 23 42;       /* Dark text on emerald */
+    /* Accent - Deep Sky */
+    --accent: 2 132 199;                 /* Deep sky blue */
+    --accent-foreground: 255 255 255;    /* White text on deep sky */
     
-    /* Muted - Dark Grays */
-    --muted: 30 41 59;                   /* Dark background */
-    --muted-foreground: 148 163 184;     /* Light gray text */
+    /* Muted - Dark Sky */
+    --muted: 12 74 110;                  /* Dark sky background */
+    --muted-foreground: 186 230 253;     /* Light sky text */
     
     /* Border & Input */
-    --border: 51 65 85;                  /* Dark border */
-    --input: 30 41 59;                   /* Dark input */
-    --ring: 59 130 246;                  /* Blue ring */
+    --border: 30 64 175;                 /* Dark sky border */
+    --input: 12 74 110;                  /* Dark sky input */
+    --ring: 56 189 248;                  /* Bright sky ring */
     
     /* Card */
-    --card: 30 41 59;                    /* Dark card */
-    --card-foreground: 248 250 252;      /* Light text */
+    --card: 12 74 110;                   /* Dark sky card */
+    --card-foreground: 224 242 254;      /* Light text */
     
     /* Popover */
-    --popover: 30 41 59;                 /* Dark popover */
-    --popover-foreground: 248 250 252;   /* Light text */
+    --popover: 12 74 110;                /* Dark sky popover */
+    --popover-foreground: 224 242 254;   /* Light text */
     
     /* Destructive */
     --destructive: 248 113 113;          /* Light red */
-    --destructive-foreground: 15 23 42;  /* Dark text on red */
+    --destructive-foreground: 8 47 73;   /* Dark text on red */
     
-    /* Real Estate Dark Colors */
-    --real-estate-primary: 59 130 246;   /* Bright blue */
-    --real-estate-secondary: 100 116 139; /* Gray */
-    --real-estate-accent: 34 197 94;     /* Emerald */
-    --real-estate-neutral: 71 85 105;    /* Neutral */
+    /* Real Estate Dark Sky Colors */
+    --real-estate-primary: 56 189 248;   /* Bright sky */
+    --real-estate-secondary: 125 211 252; /* Light sky */
+    --real-estate-accent: 2 132 199;     /* Deep sky */
+    --real-estate-neutral: 100 116 139;  /* Neutral */
     
-    /* Sidebar Dark Colors */
-    --sidebar-background: 30 41 59;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 59 130 246;
-    --sidebar-primary-foreground: 15 23 42;
-    --sidebar-accent: 51 65 85;
-    --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 51 65 85;
-    --sidebar-ring: 59 130 246;
+    /* Sidebar Dark Sky Colors */
+    --sidebar-background: 12 74 110;
+    --sidebar-foreground: 224 242 254;
+    --sidebar-primary: 56 189 248;
+    --sidebar-primary-foreground: 8 47 73;
+    --sidebar-accent: 30 64 175;
+    --sidebar-accent-foreground: 224 242 254;
+    --sidebar-border: 30 64 175;
+    --sidebar-ring: 56 189 248;
   }
 }
 
