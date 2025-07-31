@@ -134,13 +134,21 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       
       // Detectar si es formato DMS (contiene ° o ')
       if (coordsInput.includes('°') || coordsInput.includes("'") || coordsInput.includes('"')) {
+        console.log('Detected DMS format:', coordsInput);
         // Formato DMS
         const parts = coordsInput.split(',');
+        console.log('DMS parts:', parts);
         if (parts.length === 2) {
-          lat = parseDMS(parts[0].trim());
-          lng = parseDMS(parts[1].trim());
+          try {
+            lat = parseDMS(parts[0].trim());
+            lng = parseDMS(parts[1].trim());
+            console.log('Parsed DMS coordinates:', lat, lng);
+          } catch (dmsError) {
+            console.error('DMS parsing error:', dmsError);
+            throw new Error('Error parseando coordenadas DMS: ' + (dmsError instanceof Error ? dmsError.message : 'formato inválido'));
+          }
         } else {
-          throw new Error('Formato DMS inválido. Use: lat°min\'sec"N, lng°min\'sec"W');
+          throw new Error('Formato DMS debe contener latitud y longitud separadas por coma');
         }
       }
       // Formato decimal: "lat, lng" o "lat,lng"
