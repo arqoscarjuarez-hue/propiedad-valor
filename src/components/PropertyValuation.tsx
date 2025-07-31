@@ -4773,7 +4773,7 @@ const PropertyValuation = () => {
 
         {/* Panel de Resultados */}
         <div className="lg:col-span-1">
-          <Card className="shadow-lg lg:sticky lg:top-4">
+          <Card className="shadow-lg lg:fixed lg:top-4 lg:right-4 lg:w-80 lg:z-50">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
               <CardTitle className="text-lg sm:text-xl">Resultado de Valuación</CardTitle>
             </CardHeader>
