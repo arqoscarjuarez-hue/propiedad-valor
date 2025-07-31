@@ -334,63 +334,69 @@ const DemoWalkthrough = ({ onClose }: DemoWalkthroughProps) => {
   }, [currentStep]);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
+    <div className="fixed inset-0 bg-background z-50 overflow-y-auto">
+      <Card className="w-full max-w-4xl mx-auto my-8 shadow-2xl border-2">
+        <div className="p-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary/10 p-2 rounded-lg">
+          <div className="flex items-center justify-between mb-8 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl">
+            <div className="flex items-center gap-4">
+              <div className="bg-primary/20 p-3 rounded-xl">
                 {currentStepData.icon}
               </div>
               <div>
-                <h2 className="text-xl font-bold">{currentStepData.title}</h2>
-                <p className="text-sm text-muted-foreground">{currentStepData.subtitle}</p>
+                <h2 className="text-2xl font-bold">{currentStepData.title}</h2>
+                <p className="text-muted-foreground">{currentStepData.subtitle}</p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
+            <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-destructive/10">
+              <X className="w-5 h-5" />
             </Button>
           </div>
 
           {/* Progress indicator */}
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-3 mb-8 p-4 bg-muted/30 rounded-lg">
+            <span className="text-sm font-medium text-muted-foreground">Progreso:</span>
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`h-2 flex-1 rounded-full transition-colors ${
-                  index <= currentStep ? 'bg-primary' : 'bg-muted'
+                className={`h-3 w-12 rounded-full transition-all duration-500 ${
+                  index <= currentStep ? 'bg-gradient-to-r from-primary to-secondary' : 'bg-muted'
                 }`}
               />
             ))}
+            <span className="text-sm font-medium text-primary ml-2">
+              {Math.round(((currentStep + 1) / steps.length) * 100)}%
+            </span>
           </div>
 
           {/* Content */}
-          <div className={`transition-opacity duration-300 ${isTyping ? 'opacity-50' : 'opacity-100'}`}>
-            {currentStepData.content}
+          <div className={`transition-all duration-500 min-h-[400px] ${isTyping ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
+            <div className="bg-card/50 border border-border/50 rounded-xl p-6">
+              {currentStepData.content}
+            </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 pt-4 border-t">
-            <div className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between mt-8 pt-6 border-t bg-muted/20 -mx-8 px-8 py-4 rounded-b-xl">
+            <div className="text-muted-foreground font-medium">
               Paso {currentStep + 1} de {steps.length}
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {currentStep > 0 && (
-                <Button variant="outline" onClick={handlePrevious}>
+                <Button variant="outline" onClick={handlePrevious} size="lg">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Anterior
                 </Button>
               )}
               
               {currentStep < steps.length - 1 ? (
-                <Button onClick={handleNext}>
+                <Button onClick={handleNext} size="lg">
                   Siguiente
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               ) : (
-                <Button onClick={onClose} className="bg-green-600 hover:bg-green-700">
+                <Button onClick={onClose} className="bg-green-600 hover:bg-green-700" size="lg">
                   <CheckCircle className="w-4 h-4 mr-2" />
                   ¡Entendido!
                 </Button>
