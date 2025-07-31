@@ -32,7 +32,7 @@ import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
-import MarketAnalytics from './MarketAnalytics';
+
 import PropertyComparison from './PropertyComparison';
 
 // Traducciones / Translations
@@ -4934,16 +4934,6 @@ const PropertyValuation = () => {
           </Card>
         </div>
       </div>
-      
-      {/* Sección de Analytics de Mercado */}
-      {valuation && (
-        <div className="mt-8">
-          <MarketAnalytics 
-            propertyType={propertyData.tipoPropiedad || 'casa'}
-            location={propertyData.ubicacion || 'buena'}
-          />
-        </div>
-      )}
     </div>
   );
 };

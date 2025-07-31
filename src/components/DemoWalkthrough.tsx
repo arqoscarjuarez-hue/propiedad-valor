@@ -441,8 +441,8 @@ const DemoWalkthrough = ({ onClose }: DemoWalkthroughProps) => {
           
           <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
             <div className="text-green-700 dark:text-green-300 text-sm">
-              <strong>Funciones adicionales:</strong> Comparación de propiedades, 
-              gráficos de mercado, y selector de monedas.
+              <strong>Funciones adicionales:</strong> Comparación de propiedades 
+              y selector de monedas.
             </div>
           </div>
         </div>
