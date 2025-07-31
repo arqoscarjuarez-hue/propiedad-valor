@@ -361,17 +361,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             <Navigation className="h-4 w-4 mr-2" />
             Mi Ubicación
           </Button>
-          <Button 
-            onClick={() => {
-              setPosition([19.4326, -99.1332]); // CDMX centro
-              reverseGeocode(19.4326, -99.1332);
-            }}
-            variant="outline"
-            size="sm"
-            className="flex-1"
-          >
-            Centro CDMX
-          </Button>
         </div>
 
         {currentAddress && (
