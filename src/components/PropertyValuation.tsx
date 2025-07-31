@@ -1945,13 +1945,22 @@ const PropertyValuation = () => {
     });
   };
 
-  // Efecto para actualizar comparables seleccionados
+  // Efecto para actualizar comparables seleccionados y recalcular valor
   useEffect(() => {
     if (allComparativeProperties.length > 0) {
       const selectedProps = selectedComparatives.map(index => allComparativeProperties[index]).filter(Boolean);
       setComparativeProperties(selectedProps);
+      
+      // Recalcular valor si tenemos valuación base y comparables seleccionados
+      if (baseValuation && selectedProps.length > 0) {
+        const valorFinalAjustado = calcularValorConComparables(baseValuation, selectedProps);
+        const valorAjustado = valorFinalAjustado * (1 + priceAdjustment / 100);
+        setValuation(valorAjustado);
+        
+        console.log('Valor recalculado por cambio en comparables:', valorAjustado);
+      }
     }
-  }, [selectedComparatives, allComparativeProperties]);
+  }, [selectedComparatives, allComparativeProperties, baseValuation, priceAdjustment]);
 
   const handleLocationChange = (lat: number, lng: number, address: string) => {
     setPropertyData(prev => ({
@@ -2159,6 +2168,24 @@ const PropertyValuation = () => {
     return addresses;
   };
 
+  // Función para calcular el valor ajustado basado en comparables
+  const calcularValorConComparables = (valorBase: number, comparables: ComparativeProperty[]): number => {
+    if (comparables.length === 0) return valorBase;
+    
+    // Calcular precio promedio de comparables
+    const precioPromedioComparables = comparables.reduce((sum, comp) => sum + comp.precio, 0) / comparables.length;
+    
+    // Calcular factor de ajuste basado en comparables (70% valor calculado + 30% promedio comparables)
+    const factorAjuste = 0.7;
+    const valorAjustadoPorComparables = (valorBase * factorAjuste) + (precioPromedioComparables * (1 - factorAjuste));
+    
+    console.log('Valor base calculado:', valorBase);
+    console.log('Precio promedio comparables:', precioPromedioComparables);
+    console.log('Valor final ajustado por comparables:', valorAjustadoPorComparables);
+    
+    return valorAjustadoPorComparables;
+  };
+
   const calculateValuation = async () => {
     if (isCalculating) return; // Prevenir múltiples cálculos simultáneos
     
@@ -2261,10 +2288,6 @@ const PropertyValuation = () => {
       
       setBaseValuation(valorFinalEnMonedaSeleccionada);
       
-      // Aplicar ajuste de precio si existe
-      const valorAjustado = valorFinalEnMonedaSeleccionada * (1 + priceAdjustment / 100);
-      setValuation(valorAjustado);
-      
       toast({
         title: translations[selectedLanguage].calculatingValuation,
         description: translations[selectedLanguage].generatingReport,
@@ -2277,6 +2300,11 @@ const PropertyValuation = () => {
         // Actualizar las propiedades seleccionadas (los primeros 3)
         const selectedProps = selectedComparatives.map(index => allComparatives[index]).filter(Boolean);
         setComparativeProperties(selectedProps);
+        
+        // Calcular valor final ajustado por comparables y aplicar ajuste de precio
+        const valorFinalAjustado = calcularValorConComparables(valorFinalEnMonedaSeleccionada, selectedProps);
+        const valorAjustado = valorFinalAjustado * (1 + priceAdjustment / 100);
+        setValuation(valorAjustado);
       } catch (comparativesError) {
         console.error('Error generating comparatives:', comparativesError);
         // Generar comparativas básicas de respaldo
@@ -2306,14 +2334,21 @@ const PropertyValuation = () => {
         
         setAllComparativeProperties(fallbackComparatives);
         setComparativeProperties(fallbackComparatives);
+        
+        // Calcular valor final ajustado con comparables de respaldo
+        const valorFinalAjustado = calcularValorConComparables(valorFinalEnMonedaSeleccionada, fallbackComparatives);
+        const valorAjustado = valorFinalAjustado * (1 + priceAdjustment / 100);
+        setValuation(valorAjustado);
       }
       
       // Limpiar múltiples valuaciones ya que ahora solo hacemos una
       setMultipleValuations([]);
       
+      // El valorAjustado ya se estableció en el try o catch
+      const valorFinalParaToast = valuation || valorFinalEnMonedaSeleccionada;
       toast({
         title: translations[selectedLanguage].valuationCompleted,
-        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorAjustado, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
+        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorFinalParaToast, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
       });
     } catch (error) {
       console.error('Error in calculateValuation:', error);
@@ -2331,7 +2366,18 @@ const PropertyValuation = () => {
   const handlePriceAdjustment = (newAdjustment: number) => {
     setPriceAdjustment(newAdjustment);
     
-    if (baseValuation) {
+    if (baseValuation && comparativeProperties.length > 0) {
+      // Calcular valor ajustado por comparables primero, luego aplicar ajuste de precio
+      const valorAjustadoPorComparables = calcularValorConComparables(baseValuation, comparativeProperties);
+      const valorFinal = valorAjustadoPorComparables * (1 + newAdjustment / 100);
+      setValuation(valorFinal);
+      
+      toast({
+        title: translations[selectedLanguage].priceAdjusted,
+        description: `${translations[selectedLanguage].adjustment}: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(valorFinal, selectedCurrency)}`,
+      });
+    } else if (baseValuation) {
+      // Fallback si no hay comparables
       const valorAjustado = baseValuation * (1 + newAdjustment / 100);
       setValuation(valorAjustado);
       
