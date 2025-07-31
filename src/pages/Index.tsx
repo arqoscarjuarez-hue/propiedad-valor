@@ -3,12 +3,14 @@ import PropertyValuation from "@/components/PropertyValuation";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import DemoWalkthrough from "@/components/DemoWalkthrough";
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 
 const Index = () => {
   const [showValuation, setShowValuation] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
 
   // Handle scroll to show/hide scroll to top button
   useEffect(() => {
@@ -31,6 +33,14 @@ const Index = () => {
         behavior: 'smooth' 
       });
     }, 100);
+  };
+
+  const handleShowDemo = () => {
+    setShowDemo(true);
+  };
+
+  const handleCloseDemo = () => {
+    setShowDemo(false);
   };
 
   return (
@@ -94,7 +104,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      {!showValuation && <HeroSection onStartValuation={handleStartValuation} />}
+      {!showValuation && <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />}
       
       {/* Features Section */}
       {!showValuation && <FeaturesSection />}
@@ -185,6 +195,9 @@ const Index = () => {
           <ArrowUp className="w-5 h-5" />
         </Button>
       )}
+      
+      {/* Demo Walkthrough */}
+      {showDemo && <DemoWalkthrough onClose={handleCloseDemo} />}
       
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />

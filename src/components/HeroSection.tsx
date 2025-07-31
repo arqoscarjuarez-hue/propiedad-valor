@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, TrendingUp, Shield, Zap, Star, MapPin } from 'lucide-react';
 
-const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => {
+const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () => void; onShowDemo: () => void }) => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 py-12 lg:py-20">
       {/* Background pattern */}
@@ -46,6 +46,7 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
                 variant="outline" 
                 size="lg"
                 className="text-lg px-8 py-6"
+                onClick={onShowDemo}
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Ver Demo
