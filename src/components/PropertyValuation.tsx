@@ -4920,15 +4920,8 @@ const PropertyValuation = () => {
                         </Button>
                       </div>
                     )}
-                    
-                    
-                     <div className="pt-4 border-t">
-                      <p className="text-xs text-muted-foreground text-center">
-                        * Esta valuación es un estimado basado en los datos proporcionados. 
-                        Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
-                      </p>
-                    </div>
-                </div>
+                     
+                 </div>
               ) : (
                 <div className="text-center py-8">
                   <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
