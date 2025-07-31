@@ -2201,10 +2201,16 @@ const PropertyValuation = () => {
                                   (propertyData.salas * 1300) +        // $1,300 per living room
                                   (propertyData.cocina * 1900);        // $1,900 per kitchen
       
+      // Calcular penalización por servicios básicos faltantes
+      const serviciosBasicos = ['agua', 'electricidad', 'gas', 'drenaje'] as const;
+      const serviciosFaltantes = serviciosBasicos.filter(servicio => !propertyData.servicios[servicio]).length;
+      const factorServiciosBasicos = 1 - (serviciosFaltantes * 0.0002); // -0.02% por cada servicio faltante
+      
       const valorFinal = (valorBase * 
                          (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
                          (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
-                         factorAntiguedad) + bonificacionEspacios;
+                         factorAntiguedad *
+                         factorServiciosBasicos) + bonificacionEspacios;
       
       // Convertir a la moneda seleccionada
       const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
