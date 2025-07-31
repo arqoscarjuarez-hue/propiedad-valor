@@ -2204,7 +2204,7 @@ const PropertyValuation = () => {
       // Calcular penalización por servicios básicos faltantes
       const serviciosBasicos = ['agua', 'electricidad', 'gas', 'drenaje'] as const;
       const serviciosFaltantes = serviciosBasicos.filter(servicio => !propertyData.servicios[servicio]).length;
-      const factorServiciosBasicos = 1 - (serviciosFaltantes * 0.0002); // -0.02% por cada servicio faltante
+      const factorServiciosBasicos = 1 - (serviciosFaltantes * 0.002); // -0.2% por cada servicio faltante
       
       // Calcular bonificación por servicios adicionales
       const serviciosAdicionales = ['internet', 'cable', 'telefono', 'seguridad', 'alberca', 'jardin', 'elevador', 'aireAcondicionado', 'calefaccion', 'panelesSolares', 'tinaco'] as const;
