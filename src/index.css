@@ -1,3 +1,176 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Professional Corporate Color Scheme */
+    
+    /* Main Colors - Navy Blue & Sophisticated Grays */
+    --background: 248 250 252;           /* Clean off-white */
+    --foreground: 15 23 42;              /* Deep navy text */
+    
+    /* Primary - Professional Navy Blue */
+    --primary: 15 23 42;                 /* Navy blue */
+    --primary-foreground: 248 250 252;   /* White on navy */
+    --primary-glow: 59 130 246;          /* Bright blue accent */
+    
+    /* Secondary - Warm Professional Gray */
+    --secondary: 71 85 105;              /* Professional gray */
+    --secondary-foreground: 248 250 252; /* White on gray */
+    
+    /* Accent - Sophisticated Blue */
+    --accent: 59 130 246;                /* Professional blue */
+    --accent-foreground: 248 250 252;    /* White on blue */
+    
+    /* Muted - Light Professional Grays */
+    --muted: 241 245 249;                /* Very light gray */
+    --muted-foreground: 100 116 139;     /* Medium gray text */
+    
+    /* Border & Input */
+    --border: 226 232 240;               /* Subtle border gray */
+    --input: 241 245 249;                /* Input background */
+    --ring: 59 130 246;                  /* Focus ring blue */
+    
+    /* Card */
+    --card: 255 255 255;                 /* Pure white cards */
+    --card-foreground: 15 23 42;         /* Navy text on cards */
+    
+    /* Popover */
+    --popover: 255 255 255;              /* White popover */
+    --popover-foreground: 15 23 42;      /* Navy text */
+    
+    /* Destructive - Professional Red */
+    --destructive: 220 38 38;            /* Professional red */
+    --destructive-foreground: 248 250 252; /* White on red */
+    
+    /* Real Estate Specific Colors */
+    --real-estate-primary: 15 23 42;     /* Navy blue */
+    --real-estate-secondary: 71 85 105;  /* Professional gray */
+    --real-estate-accent: 59 130 246;    /* Professional blue */
+    --real-estate-neutral: 148 163 184;  /* Neutral gray */
+    
+    /* Sidebar Colors */
+    --sidebar-background: 248 250 252;
+    --sidebar-foreground: 15 23 42;
+    --sidebar-primary: 15 23 42;
+    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-accent: 241 245 249;
+    --sidebar-accent-foreground: 15 23 42;
+    --sidebar-border: 226 232 240;
+    --sidebar-ring: 59 130 246;
+    
+    /* Border Radius */
+    --radius: 0.5rem;
+    
+    /* Professional Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(15 23 42) 0%, hsl(71 85 105) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(59 130 246) 0%, hsl(99 102 241) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(248 250 252) 0%, hsl(241 245 249) 100%);
+    
+    /* Professional Shadows */
+    --shadow-professional: 0 4px 12px -2px hsl(15 23 42 / 0.08);
+    --shadow-elevated: 0 8px 32px -4px hsl(15 23 42 / 0.12);
+    --shadow-glow: 0 0 24px hsl(59 130 246 / 0.15);
+    
+    /* Professional Transitions */
+    --transition-professional: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Dark Mode - Professional Dark Theme */
+    --background: 2 6 23;                /* Deep dark navy */
+    --foreground: 248 250 252;           /* Clean white text */
+    
+    /* Primary - Light Blue on Dark */
+    --primary: 59 130 246;               /* Professional blue */
+    --primary-foreground: 2 6 23;        /* Dark navy on blue */
+    --primary-glow: 99 102 241;          /* Purple glow */
+    
+    /* Secondary - Dark Gray */
+    --secondary: 30 41 59;               /* Dark professional gray */
+    --secondary-foreground: 248 250 252; /* White on dark gray */
+    
+    /* Accent - Bright Blue */
+    --accent: 99 102 241;                /* Bright professional blue */
+    --accent-foreground: 248 250 252;    /* White on blue */
+    
+    /* Muted - Dark Grays */
+    --muted: 15 23 42;                   /* Dark muted background */
+    --muted-foreground: 148 163 184;     /* Light gray text */
+    
+    /* Border & Input */
+    --border: 30 41 59;                  /* Dark border */
+    --input: 15 23 42;                   /* Dark input background */
+    --ring: 59 130 246;                  /* Blue focus ring */
+    
+    /* Card */
+    --card: 15 23 42;                    /* Dark card background */
+    --card-foreground: 248 250 252;      /* White text on cards */
+    
+    /* Popover */
+    --popover: 15 23 42;                 /* Dark popover */
+    --popover-foreground: 248 250 252;   /* White text */
+    
+    /* Destructive */
+    --destructive: 239 68 68;            /* Lighter red for dark mode */
+    --destructive-foreground: 248 250 252; /* White on red */
+    
+    /* Real Estate Dark Colors */
+    --real-estate-primary: 59 130 246;   /* Blue primary in dark */
+    --real-estate-secondary: 71 85 105;  /* Gray secondary */
+    --real-estate-accent: 99 102 241;    /* Purple accent */
+    --real-estate-neutral: 100 116 139;  /* Neutral gray */
+    
+    /* Sidebar Dark Colors */
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 248 250 252;
+    --sidebar-primary: 59 130 246;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 248 250 252;
+    --sidebar-border: 30 41 59;
+    --sidebar-ring: 59 130 246;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Professional Component Styles */
+  .btn-professional {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 
+           transition-all duration-200 shadow-professional
+           hover:shadow-elevated border-0 font-medium;
+  }
+  
+  .card-professional {
+    @apply bg-card border border-border shadow-professional
+           hover:shadow-elevated transition-all duration-200;
+  }
+  
+  .text-professional {
+    @apply text-foreground font-medium tracking-tight;
+  }
+  
+  .gradient-professional {
+    background: var(--gradient-primary);
+  }
+  
+  .shadow-professional {
+    box-shadow: var(--shadow-professional);
+  }
+  
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+}
