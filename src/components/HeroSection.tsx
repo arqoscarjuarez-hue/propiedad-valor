@@ -5,15 +5,15 @@ import { Calculator, TrendingUp, Shield, Zap, Star, MapPin } from 'lucide-react'
 
 const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-real-estate-accent/5 py-12 lg:py-20">
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 py-12 lg:py-20">
       {/* Background pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="absolute inset-0 opacity-5"></div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Hero content */}
-          <div className="text-center lg:text-left animate-fade-in">
-            <Badge variant="secondary" className="mb-4 hover-scale">
+          <div className="text-center lg:text-left">
+            <Badge variant="secondary" className="mb-4">
               <Star className="w-3 h-3 mr-1" />
               #1 Sistema de Valuación en América
             </Badge>
@@ -35,7 +35,7 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-6 hover-scale animate-pulse-glow"
+                className="text-lg px-8 py-6"
                 onClick={onStartValuation}
               >
                 <Calculator className="w-5 h-5 mr-2" />
@@ -45,7 +45,7 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
               <Button 
                 variant="outline" 
                 size="lg"
-                className="text-lg px-8 py-6 hover-scale"
+                className="text-lg px-8 py-6"
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Ver Demo
@@ -70,8 +70,8 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
           </div>
           
           {/* Feature showcase */}
-          <div className="relative animate-scale-in">
-            <div className="glass-card rounded-2xl p-8 backdrop-blur-sm border">
+          <div className="relative">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border">
               <div className="space-y-6">
                 <div className="text-center">
                   <div className="bg-primary/10 rounded-full p-4 w-16 h-16 mx-auto mb-4">
@@ -110,7 +110,7 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
             <div className="absolute -top-4 -right-4 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs font-medium animate-pulse">
               ¡Nuevo! AI Mejorado
             </div>
-            <div className="absolute -bottom-4 -left-4 bg-real-estate-accent text-white px-3 py-1 rounded-full text-xs font-medium">
+            <div className="absolute -bottom-4 -left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium">
               Gratis por tiempo limitado
             </div>
           </div>

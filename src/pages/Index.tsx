@@ -123,7 +123,7 @@ const Index = () => {
 
       {/* Valuation Section */}
       {showValuation && (
-        <main id="valuation-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in" role="main">
+        <main id="valuation-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
           <div className="mb-8 text-center">
             <h2 className="font-display text-3xl font-bold text-foreground mb-2">
               Realizar Valuación Profesional
@@ -149,7 +149,7 @@ const Index = () => {
             </p>
             <Button 
               size="lg" 
-              className="text-lg px-8 py-6 hover-scale animate-pulse-glow"
+              className="text-lg px-8 py-6"
               onClick={handleStartValuation}
             >
               Comenzar Valuación Ahora
@@ -201,7 +201,7 @@ const Index = () => {
       {showScrollTop && (
         <Button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 rounded-full p-3 shadow-elevated hover-scale z-40"
+          className="fixed bottom-6 right-6 rounded-full p-3 shadow-lg z-40"
           aria-label="Volver arriba"
         >
           <ArrowUp className="w-5 h-5" />

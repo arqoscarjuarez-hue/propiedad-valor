@@ -88,7 +88,7 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="group hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 border-0 bg-card/50 backdrop-blur-sm"
+              className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 bg-card/50 backdrop-blur-sm"
             >
               <CardContent className="p-6">
                 <div className={`bg-gradient-to-r ${feature.gradient} p-3 rounded-xl w-fit mb-4 group-hover:scale-110 transition-transform duration-300`}>
@@ -120,7 +120,7 @@ const FeaturesSection = () => {
             <div className="text-muted-foreground font-medium">Precisión Promedio</div>
           </div>
           <div className="group">
-            <div className="text-4xl font-bold text-real-estate-accent mb-2 group-hover:scale-110 transition-transform duration-300">
+            <div className="text-4xl font-bold text-yellow-500 mb-2 group-hover:scale-110 transition-transform duration-300">
               45
             </div>
             <div className="text-muted-foreground font-medium">Países Cubiertos</div>
