@@ -127,8 +127,24 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Detectar si es formato DMS (contiene ° o ')
       if (coordsInput.includes('°') || coordsInput.includes("'") || coordsInput.includes('"')) {
         console.log('Detected DMS format:', coordsInput);
-        // Formato DMS
-        const parts = coordsInput.split(',');
+        
+        // Formato DMS - puede venir con coma o sin coma
+        let parts: string[];
+        
+        if (coordsInput.includes(',')) {
+          // Con coma: "13°43'59.4"N, 89°11'48.9"W"
+          parts = coordsInput.split(',');
+        } else {
+          // Sin coma: "13°43'59.4"N 89°11'48.9"W" - separar por dirección doble
+          const pattern = /([0-9°'"NSEW\s.]+[NSEW])\s+([0-9°'"NSEW\s.]+[NSEW])/i;
+          const match = coordsInput.match(pattern);
+          if (match) {
+            parts = [match[1], match[2]];
+          } else {
+            throw new Error('Formato DMS debe contener latitud y longitud con direcciones N/S/E/W');
+          }
+        }
+        
         console.log('DMS parts:', parts);
         if (parts.length === 2) {
           try {
@@ -140,7 +156,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             throw new Error('Error parseando coordenadas DMS: ' + (dmsError instanceof Error ? dmsError.message : 'formato inválido'));
           }
         } else {
-          throw new Error('Formato DMS debe contener latitud y longitud separadas por coma');
+          throw new Error('No se pudieron separar latitud y longitud en formato DMS');
         }
       }
       // Formato decimal: "lat, lng" o "lat,lng"
