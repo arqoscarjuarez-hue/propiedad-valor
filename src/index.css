@@ -8,49 +8,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 210 25% 98%;
-    --foreground: 215 25% 15%;
+    --background: 210 15% 99%;
+    --foreground: 215 25% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 215 25% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 215 25% 12%;
 
-    --primary: 195 85% 35%;
+    --primary: 199 89% 48%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 195 85% 60%;
+    --primary-glow: 199 85% 65%;
 
-    --secondary: 140 55% 45%;
+    --secondary: 147 64% 47%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 25% 95%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 210 15% 96%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 195 85% 92%;
-    --accent-foreground: 195 85% 25%;
+    --accent: 199 89% 95%;
+    --accent-foreground: 199 89% 25%;
 
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 25% 88%;
-    --input: 210 25% 94%;
-    --ring: 195 85% 35%;
+    --border: 210 15% 90%;
+    --input: 210 15% 94%;
+    --ring: 199 89% 48%;
 
-    /* Real Estate specific colors */
-    --real-estate-primary: 195 85% 35%;
-    --real-estate-secondary: 140 55% 45%;
-    --real-estate-accent: 45 85% 60%;
+    /* Premium real estate colors */
+    --real-estate-primary: 199 89% 48%;
+    --real-estate-secondary: 147 64% 47%;
+    --real-estate-accent: 43 89% 58%;
     --real-estate-neutral: 215 15% 25%;
+    --real-estate-gold: 43 89% 58%;
+    --real-estate-dark: 215 25% 15%;
 
-    /* Gradients */
+    /* Professional gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--real-estate-primary)), hsl(var(--primary-glow)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--real-estate-secondary)), hsl(140 55% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--real-estate-primary)) 0%, hsl(var(--real-estate-secondary)) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--real-estate-secondary)), hsl(147 64% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--real-estate-primary)) 0%, hsl(var(--real-estate-secondary)) 50%, hsl(var(--real-estate-gold)) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(var(--real-estate-dark)) 0%, hsl(var(--real-estate-primary)) 100%);
 
-    /* Shadows */
-    --shadow-card: 0 4px 16px -4px hsl(var(--real-estate-primary) / 0.1);
-    --shadow-elevated: 0 8px 32px -8px hsl(var(--real-estate-primary) / 0.15);
+    /* Enhanced shadows */
+    --shadow-card: 0 4px 20px -4px hsl(var(--real-estate-primary) / 0.08);
+    --shadow-elevated: 0 8px 40px -8px hsl(var(--real-estate-primary) / 0.12);
+    --shadow-premium: 0 12px 60px -12px hsl(var(--real-estate-primary) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--real-estate-gold) / 0.3);
 
     --radius: 0.5rem;
 
@@ -278,5 +283,13 @@ All colors MUST be HSL.
     .no-print {
       display: none !important;
     }
+  }
+  
+  /* Background patterns */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(180deg, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
