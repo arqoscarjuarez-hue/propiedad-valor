@@ -1976,9 +1976,12 @@ const PropertyValuation = () => {
     if (!files) return;
 
     Array.from(files).forEach(file => {
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith('image/') && propertyImages.length < 12) {
         const preview = URL.createObjectURL(file);
-        setPropertyImages(prev => [...prev, { file, preview }]);
+        setPropertyImages(prev => {
+          if (prev.length >= 12) return prev;
+          return [...prev, { file, preview }];
+        });
       }
     });
   };
@@ -4580,7 +4583,7 @@ const PropertyValuation = () => {
                          <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
                            <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                            <p className="text-sm text-muted-foreground">Haz clic para seleccionar fotos o arrastra aquí</p>
-                           <p className="text-xs text-muted-foreground mt-1">Máximo 10 fotos</p>
+                           <p className="text-xs text-muted-foreground mt-1">Máximo 12 fotos</p>
                          </div>
                        </Label>
                        <Input
