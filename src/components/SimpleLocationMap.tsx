@@ -20,6 +20,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
 }) => {
   const [position, setPosition] = useState<[number, number]>([initialLat, initialLng]);
   const [searchAddress, setSearchAddress] = useState('');
+  const [searchCoordinates, setSearchCoordinates] = useState('');
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -64,6 +65,73 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       toast({
         title: "Error de búsqueda",
         description: "Error al buscar la ubicación",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Búsqueda por coordenadas directas
+  const searchByCoordinates = async (coordsInput: string) => {
+    if (!coordsInput.trim()) return;
+
+    setLoading(true);
+    try {
+      // Parsear diferentes formatos de coordenadas
+      let lat: number, lng: number;
+      
+      // Formato: "lat, lng" o "lat,lng"
+      if (coordsInput.includes(',')) {
+        const parts = coordsInput.split(',').map(part => part.trim());
+        if (parts.length === 2) {
+          lat = parseFloat(parts[0]);
+          lng = parseFloat(parts[1]);
+        } else {
+          throw new Error('Formato inválido');
+        }
+      }
+      // Formato: "lat lng" (separado por espacio)
+      else if (coordsInput.includes(' ')) {
+        const parts = coordsInput.split(' ').filter(part => part.trim() !== '');
+        if (parts.length === 2) {
+          lat = parseFloat(parts[0]);
+          lng = parseFloat(parts[1]);
+        } else {
+          throw new Error('Formato inválido');
+        }
+      } else {
+        throw new Error('Formato inválido');
+      }
+
+      // Validar que las coordenadas son números válidos
+      if (isNaN(lat) || isNaN(lng)) {
+        throw new Error('Las coordenadas deben ser números válidos');
+      }
+
+      // Validar rangos de coordenadas
+      if (lat < -90 || lat > 90) {
+        throw new Error('La latitud debe estar entre -90 y 90 grados');
+      }
+      if (lng < -180 || lng > 180) {
+        throw new Error('La longitud debe estar entre -180 y 180 grados');
+      }
+
+      setPosition([lat, lng]);
+      
+      // Obtener dirección para estas coordenadas
+      await reverseGeocode(lat, lng);
+
+      toast({
+        title: "Coordenadas Encontradas",
+        description: `Ubicación: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+      });
+
+    } catch (error) {
+      console.error('Error parsing coordinates:', error);
+      toast({
+        title: "Error en Coordenadas",
+        description: error instanceof Error ? error.message : "Formato inválido. Usa: latitud, longitud",
         variant: "destructive"
       });
     } finally {
@@ -199,6 +267,27 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           </Button>
         </div>
 
+        {/* Campo para búsqueda por coordenadas */}
+        <div className="flex gap-2">
+          <Input
+            placeholder="Buscar por coordenadas (ej: 19.432608, -99.133209)"
+            value={searchCoordinates}
+            onChange={(e) => setSearchCoordinates(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                searchByCoordinates(searchCoordinates);
+              }
+            }}
+          />
+          <Button 
+            onClick={() => searchByCoordinates(searchCoordinates)}
+            disabled={loading}
+            variant="outline"
+          >
+            <MapPin className="h-4 w-4" />
+          </Button>
+        </div>
+
         <div className="flex gap-2">
           <Button 
             onClick={getCurrentLocation}
@@ -293,10 +382,17 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       <div className="text-xs text-muted-foreground space-y-1">
         <p>💡 <strong>Cómo usar:</strong></p>
         <ul className="list-disc list-inside space-y-1 ml-4">
-          <li>Busca una dirección específica en el campo de búsqueda</li>
+          <li>Busca una dirección específica en el primer campo</li>
+          <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
           <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
+        </ul>
+        <p className="mt-2"><strong>Formatos de coordenadas válidos:</strong></p>
+        <ul className="list-disc list-inside space-y-1 ml-4">
+          <li>19.432608, -99.133209 (con coma)</li>
+          <li>19.432608 -99.133209 (con espacio)</li>
+          <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
         </ul>
       </div>
     </div>
