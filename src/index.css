@@ -45,34 +45,21 @@ All colors MUST be HSL.
     --real-estate-gold: 43 89% 58%;
     --real-estate-dark: 215 25% 15%;
 
-    /* Professional gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--real-estate-primary)), hsl(var(--primary-glow)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--real-estate-secondary)), hsl(147 64% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--real-estate-primary)) 0%, hsl(var(--real-estate-secondary)) 50%, hsl(var(--real-estate-gold)) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(var(--real-estate-dark)) 0%, hsl(var(--real-estate-primary)) 100%);
-
     /* Enhanced shadows */
-    --shadow-card: 0 4px 20px -4px hsl(var(--real-estate-primary) / 0.08);
-    --shadow-elevated: 0 8px 40px -8px hsl(var(--real-estate-primary) / 0.12);
-    --shadow-premium: 0 12px 60px -12px hsl(var(--real-estate-primary) / 0.15);
-    --shadow-glow: 0 0 40px hsl(var(--real-estate-gold) / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(199 89% 48% / 0.08);
+    --shadow-elevated: 0 8px 40px -8px hsl(199 89% 48% / 0.12);
+    --shadow-premium: 0 12px 60px -12px hsl(199 89% 48% / 0.15);
+    --shadow-glow: 0 0 40px hsl(43 89% 58% / 0.3);
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -123,168 +110,9 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
 
-  /* Touch-friendly mobile optimizations */
-  button {
-    min-height: 44px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  input, select, textarea {
-    min-height: 44px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Prevent zoom on input focus */
-  input[type="text"], 
-  input[type="number"], 
-  input[type="email"], 
-  input[type="password"], 
-  input[type="search"], 
-  select, 
-  textarea {
-    font-size: 16px !important;
-  }
-  
-  /* Better touch targets */
-  .touch-manipulation {
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Mobile scroll behavior */
-  @media (max-width: 768px) {
-    html {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    body {
-      overscroll-behavior-y: contain;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    /* Better dropdown and tabs visibility on mobile */
-    [data-radix-select-content],
-    [data-radix-tabs-content] {
-      max-height: 50vh;
-      overflow-y: auto;
-      z-index: 999;
-      background: hsl(var(--background));
-      border: 1px solid hsl(var(--border));
-    }
-    
-    /* Improved touch targets */
-    .mobile-friendly {
-      min-height: 48px;
-      min-width: 48px;
-    }
-    
-    /* Better button responsiveness */
-    button:active {
-      transform: scale(0.98);
-      transition: transform 0.1s ease;
-    }
-    
-    /* Optimize animations for mobile and prevent blank screens */
-    * {
-      will-change: auto;
-    }
-    
-    .animating {
-      will-change: transform, opacity;
-    }
-    
-    /* Prevent tabs from causing blank screens */
-    [data-radix-tabs-trigger] {
-      background: hsl(var(--background)) !important;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
-      z-index: 1;
-    }
-    
-    [data-radix-tabs-trigger][data-state="active"] {
-      background: hsl(var(--primary)) !important;
-      color: hsl(var(--primary-foreground)) !important;
-      z-index: 2;
-    }
-    
-    /* Ensure tabs content is always visible */
-    [data-radix-tabs-content] {
-      background: hsl(var(--background));
-      min-height: 200px;
-      position: relative;
-      z-index: 0;
-    }
-    
-    /* Prevent layout shift on tab change */
-    [data-radix-tabs-root] {
-      contain: layout;
-    }
-    
-    /* Smooth loading animations */
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Loading shimmer effect */
-    .shimmer {
-      background: linear-gradient(90deg, 
-        hsl(var(--muted)) 25%, 
-        hsl(var(--accent)) 50%, 
-        hsl(var(--muted)) 75%
-      );
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-  }
-  
-  /* Global performance optimizations */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    will-change: transform;
-  }
-  
-  /* Print styles */
-  @media print {
-    * {
-      background: transparent !important;
-      color: black !important;
-      box-shadow: none !important;
-      text-shadow: none !important;
-    }
-    
-    @page {
-      margin: 0.5in;
-    }
-    
-    h1, h2, h3 {
-      page-break-after: avoid;
-    }
-    
-    .no-print {
-      display: none !important;
-    }
-  }
-  
+@layer components {
   /* Background patterns */
   .bg-grid-pattern {
     background-image: 
