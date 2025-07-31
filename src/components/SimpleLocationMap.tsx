@@ -23,6 +23,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const [searchCoordinates, setSearchCoordinates] = useState('');
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
+  const [showCoordinatesInfo, setShowCoordinatesInfo] = useState(false);
   const { toast } = useToast();
 
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
@@ -455,18 +456,31 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
         </ul>
-        <div className="flex items-start gap-2 mt-2">
-          <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="font-semibold text-sm text-blue-800 dark:text-blue-200">Formatos de coordenadas válidos:</p>
-            <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300">
+        <div className="flex items-center gap-2 mt-2">
+          <Button
+            onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}
+            variant="ghost"
+            size="sm"
+            className="p-1 h-auto text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+          >
+            <Info className="h-4 w-4" />
+          </Button>
+          <span className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer" onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}>
+            Ver formatos de coordenadas válidos
+          </span>
+        </div>
+        
+        {showCoordinatesInfo && (
+          <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+            <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
+            <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
               <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
               <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
               <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
               <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
             </ul>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
