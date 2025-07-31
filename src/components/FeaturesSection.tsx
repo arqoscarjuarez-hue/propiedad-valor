@@ -8,7 +8,7 @@ import {
   Shield, 
   Globe,
   Clock,
-  Award,
+  Gift,
   TrendingUp
 } from 'lucide-react';
 
@@ -56,9 +56,9 @@ const features = [
     gradient: "from-teal-500 to-teal-600"
   },
   {
-    icon: Award,
-    title: "Certificación Profesional",
-    description: "Metodología avalada por colegios de valuadores y organismos reguladores",
+    icon: Gift,
+    title: "Totalmente Gratuito",
+    description: "Sin costos ocultos, sin suscripciones. Valuaciones profesionales completamente gratis",
     gradient: "from-yellow-500 to-yellow-600"
   },
   {
