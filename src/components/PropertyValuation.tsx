@@ -3867,6 +3867,16 @@ const PropertyValuation = () => {
               </Select>
             </Card>
           )}
+          
+          {/* Disclaimer de Valuación */}
+          {valuation && (
+            <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
+              <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                * Esta valuación es un estimado basado en los datos proporcionados. 
+                Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
+              </p>
+            </Card>
+          )}
         </div>
 
         {/* Formulario Principal */}
