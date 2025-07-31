@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Search, Navigation, Zap } from 'lucide-react';
+import { MapPin, Search, Navigation, Zap, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface SimpleLocationMapProps {
@@ -455,13 +455,18 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
         </ul>
-        <p className="mt-2"><strong>Formatos de coordenadas válidos:</strong></p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
-          <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
-          <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
-          <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
-          <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
-        </ul>
+        <div className="flex items-start gap-2 mt-2">
+          <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold text-sm text-blue-800 dark:text-blue-200">Formatos de coordenadas válidos:</p>
+            <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300">
+              <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
+              <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
+              <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
+              <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
