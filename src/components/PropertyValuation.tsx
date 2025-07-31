@@ -2025,7 +2025,7 @@ const PropertyValuation = () => {
           antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
           ubicacion: propertyData.ubicacion,
           estadoGeneral: propertyData.estadoGeneral,
-          precio: convertCurrency(baseValue * (1 + variation) * 0.9, selectedCurrency), // Aplicar descuento del 10%
+          precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
           distancia: addressInfo.distance,
           descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
           url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
@@ -2046,7 +2046,7 @@ const PropertyValuation = () => {
           antiguedad: propertyData.antiguedad,
           ubicacion: propertyData.ubicacion,
           estadoGeneral: propertyData.estadoGeneral,
-          precio: convertCurrency(baseValue * 0.9, selectedCurrency), // Aplicar descuento del 10%
+          precio: convertCurrency(baseValue * 0.85, selectedCurrency), // Aplicar descuento del 15%
           distancia: 500 + (index * 100),
           descripcion: `Propiedad comparable básica ${index + 1}`,
           url: '#',
@@ -2283,7 +2283,7 @@ const PropertyValuation = () => {
         const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
         const fallbackComparatives = Array.from({ length: 3 }, (_, i) => {
           const areaConstruida = Math.max(50, areaTotal + (Math.random() * 50 - 25));
-          const precio = valorFinal * (0.9 + Math.random() * 0.2) * 0.9; // Aplicar descuento del 10%
+          const precio = valorFinal * (0.9 + Math.random() * 0.2) * 0.85; // Aplicar descuento del 15%
           return {
             id: `fallback-${i + 1}`,
             address: `Propiedad comparable ${i + 1}`,
