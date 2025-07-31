@@ -72,6 +72,29 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     }
   };
 
+  // Función para convertir DMS a decimal
+  const parseDMS = (dmsString: string): number => {
+    // Remover espacios extra y normalizar
+    const normalized = dmsString.replace(/\s+/g, ' ').trim();
+    
+    // Buscar patrones DMS: 19°25'57.39"N o N19°25'57.39"
+    const dmsPattern = /([NSEW]?)(\d+)°?\s*(\d+)'?\s*(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i;
+    const match = normalized.match(dmsPattern);
+    
+    if (!match) {
+      throw new Error('Formato DMS inválido');
+    }
+    
+    const [, prefix, degrees, minutes, seconds, suffix] = match;
+    const direction = (prefix || suffix).toUpperCase();
+    
+    // Convertir a decimal
+    const decimal = parseInt(degrees) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600;
+    
+    // Aplicar signo según la dirección
+    return (direction === 'S' || direction === 'W') ? -decimal : decimal;
+  };
+
   // Búsqueda por coordenadas directas
   const searchByCoordinates = async (coordsInput: string) => {
     if (!coordsInput.trim()) return;
@@ -81,8 +104,19 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Parsear diferentes formatos de coordenadas
       let lat: number, lng: number;
       
-      // Formato: "lat, lng" o "lat,lng"
-      if (coordsInput.includes(',')) {
+      // Detectar si es formato DMS (contiene ° o ')
+      if (coordsInput.includes('°') || coordsInput.includes("'") || coordsInput.includes('"')) {
+        // Formato DMS
+        const parts = coordsInput.split(',');
+        if (parts.length === 2) {
+          lat = parseDMS(parts[0].trim());
+          lng = parseDMS(parts[1].trim());
+        } else {
+          throw new Error('Formato DMS inválido. Use: lat°min\'sec"N, lng°min\'sec"W');
+        }
+      }
+      // Formato decimal: "lat, lng" o "lat,lng"
+      else if (coordsInput.includes(',')) {
         const parts = coordsInput.split(',').map(part => part.trim());
         if (parts.length === 2) {
           lat = parseFloat(parts[0]);
@@ -91,7 +125,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           throw new Error('Formato inválido');
         }
       }
-      // Formato: "lat lng" (separado por espacio)
+      // Formato decimal: "lat lng" (separado por espacio)
       else if (coordsInput.includes(' ')) {
         const parts = coordsInput.split(' ').filter(part => part.trim() !== '');
         if (parts.length === 2) {
@@ -270,7 +304,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         {/* Campo para búsqueda por coordenadas */}
         <div className="flex gap-2">
           <Input
-            placeholder="Buscar por coordenadas (ej: 19.432608, -99.133209)"
+            placeholder="Coordenadas: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
             value={searchCoordinates}
             onChange={(e) => setSearchCoordinates(e.target.value)}
             onKeyPress={(e) => {
@@ -390,8 +424,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         </ul>
         <p className="mt-2"><strong>Formatos de coordenadas válidos:</strong></p>
         <ul className="list-disc list-inside space-y-1 ml-4">
-          <li>19.432608, -99.133209 (con coma)</li>
-          <li>19.432608 -99.133209 (con espacio)</li>
+          <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
+          <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
+          <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
           <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
         </ul>
       </div>
