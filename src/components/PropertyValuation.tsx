@@ -2206,11 +2206,17 @@ const PropertyValuation = () => {
       const serviciosFaltantes = serviciosBasicos.filter(servicio => !propertyData.servicios[servicio]).length;
       const factorServiciosBasicos = 1 - (serviciosFaltantes * 0.0002); // -0.02% por cada servicio faltante
       
+      // Calcular bonificación por servicios adicionales
+      const serviciosAdicionales = ['internet', 'cable', 'telefono', 'seguridad', 'alberca', 'jardin', 'elevador', 'aireAcondicionado', 'calefaccion', 'panelesSolares', 'tinaco'] as const;
+      const serviciosAdicionalesPresentes = serviciosAdicionales.filter(servicio => propertyData.servicios[servicio]).length;
+      const factorServiciosAdicionales = 1 + (serviciosAdicionalesPresentes * 0.0001); // +0.01% por cada servicio adicional
+      
       const valorFinal = (valorBase * 
                          (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
                          (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
                          factorAntiguedad *
-                         factorServiciosBasicos) + bonificacionEspacios;
+                         factorServiciosBasicos *
+                         factorServiciosAdicionales) + bonificacionEspacios;
       
       // Convertir a la moneda seleccionada
       const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
