@@ -37,28 +37,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Enhanced Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-sm">
-        {/* Mobile optimization banner */}
-        <div className="bg-gradient-to-r from-primary to-secondary text-primary-foreground py-2 text-center">
-          <a 
-            href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com?forceHideBadge=true"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-2 hover:opacity-90 transition-opacity"
-            aria-label="Ver aplicación optimizada para móviles"
-          >
-            <svg 
-              className="w-4 h-4" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-            <span className="text-sm font-medium">📱 Optimizado para Móviles - Abrir App</span>
-          </a>
-        </div>
-        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
