@@ -1627,7 +1627,24 @@ interface ComparativeProperty {
 
 const PropertyValuation = () => {
   const { toast } = useToast();
-  const [propertyData, setPropertyData] = useState<PropertyData>({
+  
+  // Cargar datos del último avalúo desde localStorage
+  const loadSavedData = () => {
+    try {
+      const savedData = localStorage.getItem('lastPropertyValuation');
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        return parsed.propertyData || null;
+      }
+    } catch (error) {
+      console.error('Error loading saved data:', error);
+    }
+    return null;
+  };
+
+  const savedPropertyData = loadSavedData();
+  
+  const [propertyData, setPropertyData] = useState<PropertyData>(savedPropertyData || {
     areaSotano: 0,
     areaPrimerNivel: 120,
     areaSegundoNivel: 100,
@@ -1804,6 +1821,27 @@ const PropertyValuation = () => {
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
+
+  // Guardar datos del último avalúo completado
+  useEffect(() => {
+    if (valuation && valuation > 0) {
+      const dataToSave = {
+        propertyData,
+        valuation,
+        baseValuation,
+        priceAdjustment,
+        comparativeProperties: comparativeProperties.slice(0, 3), // Solo las primeras 3 que se usan para el avalúo
+        selectedCurrency,
+        timestamp: new Date().toISOString()
+      };
+      
+      try {
+        localStorage.setItem('lastPropertyValuation', JSON.stringify(dataToSave));
+      } catch (error) {
+        console.error('Error saving valuation data:', error);
+      }
+    }
+  }, [valuation, propertyData, baseValuation, priceAdjustment, comparativeProperties, selectedCurrency]);
 
   // Configuraciones de membrete por tipo de propiedad
   const letterheadConfigs = {
