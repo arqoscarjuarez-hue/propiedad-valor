@@ -20,7 +20,7 @@ const HeroSection = ({ onStartValuation }: { onStartValuation: () => void }) => 
             
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
               Valuaciones
-              <span className="gradient-text block">Profesionales</span>
+              <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Profesionales</span>
               <span className="text-2xl sm:text-3xl lg:text-4xl font-normal text-muted-foreground">
                 en minutos
               </span>
