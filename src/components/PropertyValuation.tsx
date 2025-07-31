@@ -31,7 +31,7 @@ import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
-import AIValuationEngine from './AIValuationEngine';
+
 import MarketAnalytics from './MarketAnalytics';
 import PropertyComparison from './PropertyComparison';
 
@@ -4932,14 +4932,6 @@ const PropertyValuation = () => {
               )}
             </CardContent>
           </Card>
-          
-          {/* Sección de Análisis IA - Solo si hay valuación */}
-          {valuation && (
-            <AIValuationEngine 
-              propertyData={propertyData} 
-              valuation={valuation} 
-            />
-          )}
         </div>
       </div>
       
