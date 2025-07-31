@@ -77,9 +77,23 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     // Remover espacios extra y normalizar
     const normalized = dmsString.replace(/\s+/g, ' ').trim();
     
-    // Buscar patrones DMS: 19°25'57.39"N o N19°25'57.39"
-    const dmsPattern = /([NSEW]?)(\d+)°?\s*(\d+)'?\s*(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i;
-    const match = normalized.match(dmsPattern);
+    // Patrones para diferentes formatos DMS
+    const patterns = [
+      // 19°25'57.39"N o N19°25'57.39"
+      /([NSEW]?)(\d+)°\s*(\d+)'\s*(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i,
+      // 19° 25' 57.39" N
+      /([NSEW]?)(\d+)°\s+(\d+)'\s+(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i,
+      // 19 25 57.39 N (sin símbolos)
+      /([NSEW]?)(\d+)\s+(\d+)\s+(\d+(?:\.\d+)?)\s*([NSEW]?)/i,
+      // 19:25:57.39N (con dos puntos)
+      /([NSEW]?)(\d+):(\d+):(\d+(?:\.\d+)?)\s*([NSEW]?)/i
+    ];
+    
+    let match = null;
+    for (const pattern of patterns) {
+      match = normalized.match(pattern);
+      if (match) break;
+    }
     
     if (!match) {
       throw new Error('Formato DMS inválido');
@@ -88,8 +102,22 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     const [, prefix, degrees, minutes, seconds, suffix] = match;
     const direction = (prefix || suffix).toUpperCase();
     
+    // Validar que tenemos números válidos
+    const deg = parseInt(degrees);
+    const min = parseInt(minutes);
+    const sec = parseFloat(seconds);
+    
+    if (isNaN(deg) || isNaN(min) || isNaN(sec)) {
+      throw new Error('Coordenadas DMS inválidas');
+    }
+    
+    // Validar rangos
+    if (min >= 60 || sec >= 60) {
+      throw new Error('Minutos y segundos deben ser menores a 60');
+    }
+    
     // Convertir a decimal
-    const decimal = parseInt(degrees) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600;
+    const decimal = deg + min / 60 + sec / 3600;
     
     // Aplicar signo según la dirección
     return (direction === 'S' || direction === 'W') ? -decimal : decimal;
