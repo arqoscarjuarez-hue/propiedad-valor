@@ -33,7 +33,6 @@ import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import AIValuationEngine from './AIValuationEngine';
 import MarketAnalytics from './MarketAnalytics';
-import VirtualTour from './VirtualTour';
 import PropertyComparison from './PropertyComparison';
 
 // Traducciones / Translations
@@ -4950,16 +4949,6 @@ const PropertyValuation = () => {
           <MarketAnalytics 
             propertyType={propertyData.tipoPropiedad || 'casa'}
             location={propertyData.ubicacion || 'buena'}
-          />
-        </div>
-      )}
-      
-      {/* Sección de Tour Virtual */}
-      {valuation && (
-        <div className="mt-8">
-          <VirtualTour 
-            propertyType={propertyData.tipoPropiedad || 'casa'}
-            images={propertyImages}
           />
         </div>
       )}
