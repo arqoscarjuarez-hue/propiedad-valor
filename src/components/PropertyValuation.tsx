@@ -1843,14 +1843,19 @@ const PropertyValuation = () => {
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     try {
-      // Validar y limpiar el valor
+      // Campos que deben mantenerse como string
+      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion'];
+      
       let sanitizedValue = value;
       
-      if (typeof value === 'string') {
-        const numValue = parseFloat(value);
-        sanitizedValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
-      } else if (typeof value === 'number') {
-        sanitizedValue = isNaN(value) ? 0 : Math.max(0, value);
+      // Solo convertir a número si no es un campo de string
+      if (!stringFields.includes(field)) {
+        if (typeof value === 'string') {
+          const numValue = parseFloat(value);
+          sanitizedValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
+        } else if (typeof value === 'number') {
+          sanitizedValue = isNaN(value) ? 0 : Math.max(0, value);
+        }
       }
       
       setPropertyData(prev => ({
