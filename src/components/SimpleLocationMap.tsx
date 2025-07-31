@@ -327,7 +327,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       <div className="space-y-3">
         <div className="flex gap-2">
           <Input
-            placeholder="Buscar dirección (ej: Av. Reforma 123, CDMX)"
+            placeholder="Buscar dirección del inmueble valuado (ej: Av. Reforma 123, CDMX)"
             value={searchAddress}
             onChange={(e) => setSearchAddress(e.target.value)}
             onKeyPress={(e) => {
