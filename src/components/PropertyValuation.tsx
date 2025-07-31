@@ -2245,7 +2245,7 @@ const PropertyValuation = () => {
         const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
         const fallbackComparatives = Array.from({ length: 3 }, (_, i) => {
           const areaConstruida = Math.max(50, areaTotal + (Math.random() * 50 - 25));
-          const precio = valorFinal * (0.9 + Math.random() * 0.2);
+          const precio = valorFinal * (0.9 + Math.random() * 0.2) * 0.9; // Aplicar descuento del 10%
           return {
             id: `fallback-${i + 1}`,
             address: `Propiedad comparable ${i + 1}`,
