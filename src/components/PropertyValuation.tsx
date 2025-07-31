@@ -2175,8 +2175,8 @@ const PropertyValuation = () => {
     // Calcular precio promedio de comparables
     const precioPromedioComparables = comparables.reduce((sum, comp) => sum + comp.precio, 0) / comparables.length;
     
-    // Calcular factor de ajuste basado en comparables (95% valor calculado + 5% promedio comparables)
-    const factorAjuste = 0.95;
+    // Calcular factor de ajuste basado en comparables (60% valor calculado + 40% promedio comparables)
+    const factorAjuste = 0.6;
     const valorAjustadoPorComparables = (valorBase * factorAjuste) + (precioPromedioComparables * (1 - factorAjuste));
     
     console.log('Valor base calculado:', valorBase);
