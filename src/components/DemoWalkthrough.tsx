@@ -334,7 +334,7 @@ const DemoWalkthrough = ({ onClose }: DemoWalkthroughProps) => {
   }, [currentStep]);
 
   return (
-    <div className="fixed inset-0 bg-sky-50 dark:bg-sky-950 z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-rose-50 dark:bg-rose-950 z-50 overflow-y-auto">
       <Card className="w-full max-w-4xl mx-auto my-8 shadow-2xl border-2">
         <div className="p-8">
           {/* Header */}
