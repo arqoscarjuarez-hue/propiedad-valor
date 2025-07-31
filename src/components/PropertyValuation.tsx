@@ -4352,17 +4352,17 @@ const PropertyValuation = () => {
                    </div>
                  </TabsContent>
 
-                 <TabsContent value="ubicacion" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
-                  </p>
-                  <SimpleLocationMap
-                    onLocationChange={handleLocationChange}
-                    initialLat={propertyData.latitud}
-                    initialLng={propertyData.longitud}
-                    initialAddress={propertyData.direccionCompleta}
-                  />
+                  <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
+                   <p className="text-sm text-muted-foreground mb-4">
+                     Busca y marca la ubicación exacta de la propiedad en el mapa usando Google Maps. Puedes buscar por dirección o coordenadas para obtener la ubicación precisa.
+                   </p>
+                   <SupabaseGoogleLocationMap
+                     onLocationChange={handleLocationChange}
+                     initialLat={propertyData.latitud}
+                     initialLng={propertyData.longitud}
+                     initialAddress={propertyData.direccionCompleta}
+                   />
                   {propertyData.direccionCompleta && (
                     <div className="p-3 bg-muted rounded-lg">
                       <div className="flex items-start gap-2">
