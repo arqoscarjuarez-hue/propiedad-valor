@@ -223,9 +223,12 @@ const translations = {
     newComparativesGenerated: 'Se han generado nuevas propiedades cercanas',
     currencyChanged: 'Moneda Cambiada',
     valuationNowIn: 'Valuación ahora se muestra en',
-    priceAdjusted: 'Precio Ajustado',
-    adjustment: 'Ajuste',
-    newValue: 'Nuevo valor'
+     priceAdjusted: 'Precio Ajustado',
+     adjustment: 'Ajuste',
+     newValue: 'Nuevo valor',
+     
+     // Disclaimer
+     disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.'
   },
   en: {
     // UI Labels principales
@@ -412,9 +415,12 @@ const translations = {
     newComparativesGenerated: 'New nearby properties have been generated',
     currencyChanged: 'Currency Changed',
     valuationNowIn: 'Valuation now shown in',
-    priceAdjusted: 'Price Adjusted',
-    adjustment: 'Adjustment',
-    newValue: 'New value'
+     priceAdjusted: 'Price Adjusted',
+     adjustment: 'Adjustment',
+     newValue: 'New value',
+     
+     // Disclaimer
+     disclaimerText: 'This valuation is an estimate based on the provided data. It is recommended to consult with a certified appraiser for official valuations.'
   },
   fr: {
     // UI Labels principales
@@ -601,9 +607,12 @@ const translations = {
     newComparativesGenerated: 'De nouvelles propriétés proches ont été générées',
     currencyChanged: 'Devise Changée',
     valuationNowIn: 'Évaluation maintenant affichée en',
-    priceAdjusted: 'Prix Ajusté',
-    adjustment: 'Ajustement',
-    newValue: 'Nouvelle valeur'
+     priceAdjusted: 'Prix Ajusté',
+     adjustment: 'Ajustement',
+     newValue: 'Nouvelle valeur',
+     
+     // Disclaimer
+     disclaimerText: 'Cette évaluation est une estimation basée sur les données fournies. Il est recommandé de consulter un évaluateur certifié pour les évaluations officielles.'
   },
   de: {
     // UI Labels principales
@@ -790,9 +799,12 @@ const translations = {
     newComparativesGenerated: 'Neue naheliegende Immobilien wurden generiert',
     currencyChanged: 'Währung Geändert',
     valuationNowIn: 'Bewertung wird jetzt angezeigt in',
-    priceAdjusted: 'Preis Angepasst',
-    adjustment: 'Anpassung',
-    newValue: 'Neuer Wert'
+     priceAdjusted: 'Preis Angepasst',
+     adjustment: 'Anpassung',
+     newValue: 'Neuer Wert',
+     
+     // Disclaimer
+     disclaimerText: 'Diese Bewertung ist eine Schätzung basierend auf den bereitgestellten Daten. Es wird empfohlen, einen zertifizierten Gutachter für offizielle Bewertungen zu konsultieren.'
   },
   it: {
     // UI Labels principales
@@ -979,9 +991,12 @@ const translations = {
     newComparativesGenerated: 'Sono state generate nuove proprietà vicine',
     currencyChanged: 'Valuta Cambiata',
     valuationNowIn: 'Valutazione ora mostrata in',
-    priceAdjusted: 'Prezzo Aggiustato',
-    adjustment: 'Aggiustamento',
-    newValue: 'Nuovo valore'
+     priceAdjusted: 'Prezzo Aggiustato',
+     adjustment: 'Aggiustamento',
+     newValue: 'Nuovo valore',
+     
+     // Disclaimer
+     disclaimerText: 'Questa valutazione è una stima basata sui dati forniti. Si raccomanda di consultare un perito certificato per valutazioni ufficiali.'
   },
   pt: {
     // UI Labels principales
@@ -1168,9 +1183,12 @@ const translations = {
     newComparativesGenerated: 'Novas propriedades próximas foram geradas',
     currencyChanged: 'Moeda Alterada',
     valuationNowIn: 'Avaliação agora mostrada em',
-    priceAdjusted: 'Preço Ajustado',
-    adjustment: 'Ajuste',
-    newValue: 'Novo valor'
+     priceAdjusted: 'Preço Ajustado',
+     adjustment: 'Ajuste',
+     newValue: 'Novo valor',
+     
+     // Disclaimer
+     disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.'
   },
 
   zh: {
@@ -1354,9 +1372,12 @@ const translations = {
     newComparativesGenerated: '已生成新的附近房产',
     currencyChanged: '货币已更改',
     valuationNowIn: '评估现在显示为',
-    priceAdjusted: '价格已调整',
-    adjustment: '调整',
-    newValue: '新价值'
+     priceAdjusted: '价格已调整',
+     adjustment: '调整',
+     newValue: '新价值',
+     
+     // Disclaimer
+     disclaimerText: '此评估是基于提供数据的估算。建议咨询认证评估师进行官方评估。'
   },
 
   hi: {
@@ -1540,9 +1561,12 @@ const translations = {
     newComparativesGenerated: 'नई आस-पास की संपत्तियां तैयार की गईं',
     currencyChanged: 'मुद्रा बदली गई',
     valuationNowIn: 'मूल्यांकन अब इसमें दिखाया गया है',
-    priceAdjusted: 'मूल्य समायोजित',
-    adjustment: 'समायोजन',
-    newValue: 'नया मूल्य'
+     priceAdjusted: 'मूल्य समायोजित',
+     adjustment: 'समायोजन',
+     newValue: 'नया मूल्य',
+     
+     // Disclaimer
+     disclaimerText: 'यह मूल्यांकन प्रदान किए गए डेटा के आधार पर एक अनुमान है। आधिकारिक मूल्यांकन के लिए प्रमाणित मूल्यांकनकर्ता से सलाह लेने की सिफारिश की जाती है।'
   }
 };
 
@@ -3872,8 +3896,7 @@ const PropertyValuation = () => {
           {valuation && (
             <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
               <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                * Esta valuación es un estimado basado en los datos proporcionados. 
-                Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
+                * {translations[selectedLanguage].disclaimerText}
               </p>
             </Card>
           )}
