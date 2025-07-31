@@ -4390,31 +4390,124 @@ const PropertyValuation = () => {
                    </div>
                  </TabsContent>
 
-                  <TabsContent value="ubicacion" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
-                   <p className="text-sm text-muted-foreground mb-4">
-                     Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
-                   </p>
-                   <SimpleLocationMap
-                     onLocationChange={handleLocationChange}
-                     initialLat={propertyData.latitud}
-                     initialLng={propertyData.longitud}
-                     initialAddress={propertyData.direccionCompleta}
-                   />
-                  {propertyData.direccionCompleta && (
-                    <div className="p-3 bg-muted rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <MapPin className="h-4 w-4 text-primary mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium">Dirección Registrada:</p>
-                          <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
-                          </p>
+                   <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
+                    
+                    <Tabs defaultValue="mapa" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="mapa">Ver Mapa</TabsTrigger>
+                        <TabsTrigger value="editar">Editar Datos</TabsTrigger>
+                      </TabsList>
+                      
+                      <TabsContent value="mapa" className="space-y-4 mt-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
+                        </p>
+                        <SimpleLocationMap
+                          onLocationChange={handleLocationChange}
+                          initialLat={propertyData.latitud}
+                          initialLng={propertyData.longitud}
+                          initialAddress={propertyData.direccionCompleta}
+                        />
+                        {propertyData.direccionCompleta && (
+                          <div className="p-3 bg-muted rounded-lg">
+                            <div className="flex items-start gap-2">
+                              <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                              <div>
+                                <p className="text-sm font-medium">Dirección Registrada:</p>
+                                <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </TabsContent>
+                      
+                      <TabsContent value="editar" className="space-y-4 mt-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Edita manualmente los datos de ubicación de la propiedad.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="direccion-completa">Dirección Completa</Label>
+                            <Input
+                              id="direccion-completa"
+                              value={propertyData.direccionCompleta || ''}
+                              onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                              placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
+                              className="mt-1"
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="latitud">Latitud</Label>
+                              <Input
+                                id="latitud"
+                                type="number"
+                                step="any"
+                                value={propertyData.latitud || ''}
+                                onChange={(e) => handleInputChange('latitud', parseFloat(e.target.value) || 0)}
+                                placeholder="Ej: 19.4326"
+                                className="mt-1"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="longitud">Longitud</Label>
+                              <Input
+                                id="longitud"
+                                type="number"
+                                step="any"
+                                value={propertyData.longitud || ''}
+                                onChange={(e) => handleInputChange('longitud', parseFloat(e.target.value) || 0)}
+                                placeholder="Ej: -99.1332"
+                                className="mt-1"
+                              />
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor="ubicacion-calidad">Calidad de la Ubicación</Label>
+                            <Select
+                              value={propertyData.ubicacion}
+                              onValueChange={(value) => handleInputChange('ubicacion', value)}
+                            >
+                              <SelectTrigger className="mt-1">
+                                <SelectValue placeholder="Selecciona la calidad de la ubicación" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                                <SelectItem value="excelente">Excelente</SelectItem>
+                                <SelectItem value="buena">Buena</SelectItem>
+                                <SelectItem value="regular">Regular</SelectItem>
+                                <SelectItem value="mala">Mala</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          {propertyData.direccionCompleta && propertyData.latitud && propertyData.longitud && (
+                            <div className="p-3 bg-muted rounded-lg">
+                              <div className="flex items-start gap-2">
+                                <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                                <div>
+                                  <p className="text-sm font-medium">Datos Guardados:</p>
+                                  <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Ubicación: {propertyData.ubicacion}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </div>
-                  )}
+                      </TabsContent>
+                    </Tabs>
                  </TabsContent>
 
                  <TabsContent value="fotos" className="space-y-4 mt-6">
