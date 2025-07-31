@@ -4430,17 +4430,26 @@ const PropertyValuation = () => {
                           Edita manualmente los datos de ubicación de la propiedad.
                         </p>
                         
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="direccion-completa">Dirección Completa</Label>
-                            <Input
-                              id="direccion-completa"
-                              value={propertyData.direccionCompleta || ''}
-                              onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                              placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
-                              className="mt-1"
-                            />
-                          </div>
+                         <div className="space-y-4">
+                           <div>
+                             <Label htmlFor="direccion-completa">Dirección Completa</Label>
+                             <Input
+                               id="direccion-completa"
+                               value={propertyData.direccionCompleta || ''}
+                               onChange={(e) => {
+                                 // Solo actualizar la dirección, mantener las coordenadas del mapa
+                                 setPropertyData(prev => ({
+                                   ...prev,
+                                   direccionCompleta: e.target.value
+                                 }));
+                               }}
+                               placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
+                               className="mt-1"
+                             />
+                             <p className="text-xs text-muted-foreground mt-1">
+                               Las coordenadas del mapa se mantienen sin cambios
+                             </p>
+                           </div>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
