@@ -348,7 +348,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         {/* Campo para búsqueda por coordenadas */}
         <div className="flex gap-2">
           <Input
-            placeholder="Coordenadas: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
+            placeholder="Buscar coordenadas: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
             value={searchCoordinates}
             onChange={(e) => setSearchCoordinates(e.target.value)}
             onKeyPress={(e) => {
