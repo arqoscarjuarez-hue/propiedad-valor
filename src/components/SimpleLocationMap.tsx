@@ -72,48 +72,47 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     }
   };
 
-  // Función para convertir DMS a decimal
+  // Función simplificada para convertir DMS a decimal
   const parseDMS = (dmsString: string): number => {
-    // Remover espacios extra y normalizar
-    const normalized = dmsString.replace(/\s+/g, ' ').trim();
-    
-    // Extraer dirección (N, S, E, W)
-    const directionMatch = normalized.match(/([NSEW])/i);
-    const direction = directionMatch ? directionMatch[1].toUpperCase() : '';
-    
-    // Remover la dirección para extraer solo números
-    const numericString = normalized.replace(/[NSEW]/gi, '').trim();
-    
-    // Extraer grados, minutos y segundos usando regex más flexible
-    const dmsMatch = numericString.match(/(\d+(?:\.\d+)?)[°]?\s*(\d+(?:\.\d+)?)[']?\s*(\d+(?:\.\d+)?)["]?/);
-    
-    if (!dmsMatch) {
-      throw new Error(`No se pudieron extraer coordenadas DMS de: ${dmsString}`);
+    try {
+      // Remover espacios extra
+      let input = dmsString.trim();
+      console.log('Parsing DMS input:', input);
+      
+      // Detectar dirección
+      const isNegative = /[SW]/i.test(input);
+      
+      // Extraer todos los números (grados, minutos, segundos)
+      const numbers = input.match(/\d+(?:\.\d+)?/g);
+      console.log('Extracted numbers:', numbers);
+      
+      if (!numbers || numbers.length < 3) {
+        throw new Error('Se requieren al menos 3 números: grados, minutos, segundos');
+      }
+      
+      const degrees = parseFloat(numbers[0]);
+      const minutes = parseFloat(numbers[1]);
+      const seconds = parseFloat(numbers[2]);
+      
+      console.log('Parsed values:', { degrees, minutes, seconds, isNegative });
+      
+      // Validaciones básicas
+      if (minutes >= 60) throw new Error('Minutos deben ser < 60');
+      if (seconds >= 60) throw new Error('Segundos deben ser < 60');
+      
+      // Convertir a decimal
+      let decimal = degrees + minutes / 60 + seconds / 3600;
+      
+      // Aplicar signo
+      if (isNegative) decimal = -decimal;
+      
+      console.log('Final decimal result:', decimal);
+      return decimal;
+      
+    } catch (error) {
+      console.error('Error in parseDMS:', error);
+      throw new Error(`Error parseando DMS "${dmsString}": ${error instanceof Error ? error.message : 'formato inválido'}`);
     }
-    
-    const degrees = parseFloat(dmsMatch[1]);
-    const minutes = parseFloat(dmsMatch[2]);
-    const seconds = parseFloat(dmsMatch[3]);
-    
-    // Validar que tenemos números válidos
-    if (isNaN(degrees) || isNaN(minutes) || isNaN(seconds)) {
-      throw new Error('Coordenadas DMS contienen valores no numéricos');
-    }
-    
-    // Validar rangos
-    if (minutes >= 60 || seconds >= 60) {
-      throw new Error('Minutos y segundos deben ser menores a 60');
-    }
-    
-    if (degrees < 0 || degrees > 180) {
-      throw new Error('Grados fuera de rango válido');
-    }
-    
-    // Convertir a decimal
-    const decimal = degrees + minutes / 60 + seconds / 3600;
-    
-    // Aplicar signo según la dirección
-    return (direction === 'S' || direction === 'W') ? -decimal : decimal;
   };
 
   // Búsqueda por coordenadas directas
