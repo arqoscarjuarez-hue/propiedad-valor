@@ -347,24 +347,47 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         </div>
 
         {/* Campo para búsqueda por coordenadas */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="Buscar coordenadas del inmueble valuado: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
-            value={searchCoordinates}
-            onChange={(e) => setSearchCoordinates(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                searchByCoordinates(searchCoordinates);
-              }
-            }}
-          />
-          <Button 
-            onClick={() => searchByCoordinates(searchCoordinates)}
-            disabled={loading}
-            variant="outline"
-          >
-            <MapPin className="h-4 w-4" />
-          </Button>
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Input
+              placeholder="Buscar coordenadas del inmueble valuado: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
+              value={searchCoordinates}
+              onChange={(e) => setSearchCoordinates(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  searchByCoordinates(searchCoordinates);
+                }
+              }}
+            />
+            <Button 
+              onClick={() => searchByCoordinates(searchCoordinates)}
+              disabled={loading}
+              variant="outline"
+            >
+              <MapPin className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}
+              variant="outline"
+              size="sm"
+              className="px-2"
+              title="Ver formatos de coordenadas válidos"
+            >
+              <Info className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {showCoordinatesInfo && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
+              <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
+                <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
+                <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
+                <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
+                <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-2">
