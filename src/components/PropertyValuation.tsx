@@ -2209,7 +2209,7 @@ const PropertyValuation = () => {
       // Calcular bonificación por servicios adicionales
       const serviciosAdicionales = ['internet', 'cable', 'telefono', 'seguridad', 'alberca', 'jardin', 'elevador', 'aireAcondicionado', 'calefaccion', 'panelesSolares', 'tinaco'] as const;
       const serviciosAdicionalesPresentes = serviciosAdicionales.filter(servicio => propertyData.servicios[servicio]).length;
-      const factorServiciosAdicionales = 1 + (serviciosAdicionalesPresentes * 0.0001); // +0.01% por cada servicio adicional
+      const factorServiciosAdicionales = 1 + (serviciosAdicionalesPresentes * 0.001); // +0.1% por cada servicio adicional
       
       const valorFinal = (valorBase * 
                          (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
