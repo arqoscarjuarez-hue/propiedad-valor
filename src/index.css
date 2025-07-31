@@ -4,133 +4,133 @@
 
 @layer base {
   :root {
-    /* Professional Corporate Color Scheme */
+    /* Soft Professional Color Scheme */
     
-    /* Main Colors - Navy Blue & Sophisticated Grays */
-    --background: 248 250 252;           /* Clean off-white */
-    --foreground: 15 23 42;              /* Deep navy text */
+    /* Main Colors - Soft Warm Tones */
+    --background: 252 252 253;           /* Soft warm white */
+    --foreground: 71 85 105;             /* Soft dark gray */
     
-    /* Primary - Professional Navy Blue */
-    --primary: 15 23 42;                 /* Navy blue */
-    --primary-foreground: 248 250 252;   /* White on navy */
-    --primary-glow: 59 130 246;          /* Bright blue accent */
+    /* Primary - Soft Blue-Gray */
+    --primary: 100 116 139;              /* Soft blue-gray */
+    --primary-foreground: 248 250 252;   /* Clean white */
+    --primary-glow: 125 211 252;         /* Soft sky blue */
     
-    /* Secondary - Warm Professional Gray */
-    --secondary: 71 85 105;              /* Professional gray */
-    --secondary-foreground: 248 250 252; /* White on gray */
+    /* Secondary - Warm Soft Gray */
+    --secondary: 148 163 184;            /* Soft warm gray */
+    --secondary-foreground: 255 255 255; /* Pure white */
     
-    /* Accent - Sophisticated Blue */
-    --accent: 59 130 246;                /* Professional blue */
-    --accent-foreground: 248 250 252;    /* White on blue */
+    /* Accent - Soft Teal */
+    --accent: 14 165 233;                /* Soft sky blue */
+    --accent-foreground: 255 255 255;    /* White on blue */
     
-    /* Muted - Light Professional Grays */
-    --muted: 241 245 249;                /* Very light gray */
-    --muted-foreground: 100 116 139;     /* Medium gray text */
+    /* Muted - Very Soft Grays */
+    --muted: 248 250 252;                /* Very soft gray */
+    --muted-foreground: 120 113 108;     /* Warm muted text */
     
     /* Border & Input */
-    --border: 226 232 240;               /* Subtle border gray */
-    --input: 241 245 249;                /* Input background */
-    --ring: 59 130 246;                  /* Focus ring blue */
+    --border: 241 245 249;               /* Very soft border */
+    --input: 250 250 250;                /* Soft input background */
+    --ring: 125 211 252;                 /* Soft focus ring */
     
     /* Card */
     --card: 255 255 255;                 /* Pure white cards */
-    --card-foreground: 15 23 42;         /* Navy text on cards */
+    --card-foreground: 71 85 105;        /* Soft dark text */
     
     /* Popover */
     --popover: 255 255 255;              /* White popover */
-    --popover-foreground: 15 23 42;      /* Navy text */
+    --popover-foreground: 71 85 105;     /* Soft dark text */
     
-    /* Destructive - Professional Red */
-    --destructive: 220 38 38;            /* Professional red */
-    --destructive-foreground: 248 250 252; /* White on red */
+    /* Destructive - Soft Red */
+    --destructive: 239 68 68;            /* Soft red */
+    --destructive-foreground: 255 255 255; /* White on red */
     
-    /* Real Estate Specific Colors */
-    --real-estate-primary: 15 23 42;     /* Navy blue */
-    --real-estate-secondary: 71 85 105;  /* Professional gray */
-    --real-estate-accent: 59 130 246;    /* Professional blue */
-    --real-estate-neutral: 148 163 184;  /* Neutral gray */
+    /* Real Estate Specific Soft Colors */
+    --real-estate-primary: 100 116 139;  /* Soft blue-gray */
+    --real-estate-secondary: 148 163 184; /* Soft gray */
+    --real-estate-accent: 14 165 233;    /* Soft sky blue */
+    --real-estate-neutral: 203 213 225;  /* Very soft gray */
     
-    /* Sidebar Colors */
-    --sidebar-background: 248 250 252;
-    --sidebar-foreground: 15 23 42;
-    --sidebar-primary: 15 23 42;
-    --sidebar-primary-foreground: 248 250 252;
-    --sidebar-accent: 241 245 249;
-    --sidebar-accent-foreground: 15 23 42;
-    --sidebar-border: 226 232 240;
-    --sidebar-ring: 59 130 246;
+    /* Sidebar Soft Colors */
+    --sidebar-background: 250 250 250;
+    --sidebar-foreground: 71 85 105;
+    --sidebar-primary: 100 116 139;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 248 250 252;
+    --sidebar-accent-foreground: 71 85 105;
+    --sidebar-border: 241 245 249;
+    --sidebar-ring: 125 211 252;
     
     /* Border Radius */
-    --radius: 0.5rem;
+    --radius: 0.75rem;
     
-    /* Professional Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(15 23 42) 0%, hsl(71 85 105) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(59 130 246) 0%, hsl(99 102 241) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(248 250 252) 0%, hsl(241 245 249) 100%);
+    /* Soft Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(100 116 139) 0%, hsl(148 163 184) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(14 165 233) 0%, hsl(125 211 252) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(252 252 253) 0%, hsl(248 250 252) 100%);
     
-    /* Professional Shadows */
-    --shadow-professional: 0 4px 12px -2px hsl(15 23 42 / 0.08);
-    --shadow-elevated: 0 8px 32px -4px hsl(15 23 42 / 0.12);
-    --shadow-glow: 0 0 24px hsl(59 130 246 / 0.15);
+    /* Soft Shadows */
+    --shadow-professional: 0 2px 8px -1px hsl(100 116 139 / 0.06);
+    --shadow-elevated: 0 4px 16px -2px hsl(100 116 139 / 0.08);
+    --shadow-glow: 0 0 20px hsl(125 211 252 / 0.12);
     
-    /* Professional Transitions */
-    --transition-professional: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Soft Transitions */
+    --transition-professional: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    /* Dark Mode - Professional Dark Theme */
-    --background: 2 6 23;                /* Deep dark navy */
-    --foreground: 248 250 252;           /* Clean white text */
+    /* Dark Mode - Soft Dark Theme */
+    --background: 15 23 42;              /* Soft dark navy */
+    --foreground: 241 245 249;           /* Soft light text */
     
-    /* Primary - Light Blue on Dark */
-    --primary: 59 130 246;               /* Professional blue */
-    --primary-foreground: 2 6 23;        /* Dark navy on blue */
-    --primary-glow: 99 102 241;          /* Purple glow */
+    /* Primary - Soft Blue */
+    --primary: 125 211 252;              /* Soft sky blue */
+    --primary-foreground: 15 23 42;      /* Dark on blue */
+    --primary-glow: 14 165 233;          /* Soft blue glow */
     
-    /* Secondary - Dark Gray */
-    --secondary: 30 41 59;               /* Dark professional gray */
-    --secondary-foreground: 248 250 252; /* White on dark gray */
+    /* Secondary - Soft Dark Gray */
+    --secondary: 51 65 85;               /* Soft dark gray */
+    --secondary-foreground: 241 245 249; /* Light on dark */
     
-    /* Accent - Bright Blue */
-    --accent: 99 102 241;                /* Bright professional blue */
-    --accent-foreground: 248 250 252;    /* White on blue */
+    /* Accent - Soft Teal */
+    --accent: 56 189 248;                /* Soft bright blue */
+    --accent-foreground: 15 23 42;       /* Dark on blue */
     
-    /* Muted - Dark Grays */
-    --muted: 15 23 42;                   /* Dark muted background */
-    --muted-foreground: 148 163 184;     /* Light gray text */
+    /* Muted - Soft Dark Grays */
+    --muted: 30 41 59;                   /* Soft dark background */
+    --muted-foreground: 148 163 184;     /* Soft gray text */
     
     /* Border & Input */
-    --border: 30 41 59;                  /* Dark border */
-    --input: 15 23 42;                   /* Dark input background */
-    --ring: 59 130 246;                  /* Blue focus ring */
+    --border: 51 65 85;                  /* Soft dark border */
+    --input: 30 41 59;                   /* Soft dark input */
+    --ring: 125 211 252;                 /* Soft blue ring */
     
     /* Card */
-    --card: 15 23 42;                    /* Dark card background */
-    --card-foreground: 248 250 252;      /* White text on cards */
+    --card: 30 41 59;                    /* Soft dark card */
+    --card-foreground: 241 245 249;      /* Light text */
     
     /* Popover */
-    --popover: 15 23 42;                 /* Dark popover */
-    --popover-foreground: 248 250 252;   /* White text */
+    --popover: 30 41 59;                 /* Soft dark popover */
+    --popover-foreground: 241 245 249;   /* Light text */
     
     /* Destructive */
-    --destructive: 239 68 68;            /* Lighter red for dark mode */
-    --destructive-foreground: 248 250 252; /* White on red */
+    --destructive: 248 113 113;          /* Soft red */
+    --destructive-foreground: 255 255 255; /* White on red */
     
-    /* Real Estate Dark Colors */
-    --real-estate-primary: 59 130 246;   /* Blue primary in dark */
-    --real-estate-secondary: 71 85 105;  /* Gray secondary */
-    --real-estate-accent: 99 102 241;    /* Purple accent */
-    --real-estate-neutral: 100 116 139;  /* Neutral gray */
+    /* Real Estate Soft Dark Colors */
+    --real-estate-primary: 125 211 252;  /* Soft blue */
+    --real-estate-secondary: 100 116 139; /* Soft gray */
+    --real-estate-accent: 56 189 248;    /* Bright soft blue */
+    --real-estate-neutral: 71 85 105;    /* Soft neutral */
     
-    /* Sidebar Dark Colors */
-    --sidebar-background: 15 23 42;
-    --sidebar-foreground: 248 250 252;
-    --sidebar-primary: 59 130 246;
+    /* Sidebar Soft Dark Colors */
+    --sidebar-background: 30 41 59;
+    --sidebar-foreground: 241 245 249;
+    --sidebar-primary: 125 211 252;
     --sidebar-primary-foreground: 15 23 42;
-    --sidebar-accent: 30 41 59;
-    --sidebar-accent-foreground: 248 250 252;
-    --sidebar-border: 30 41 59;
-    --sidebar-ring: 59 130 246;
+    --sidebar-accent: 51 65 85;
+    --sidebar-accent-foreground: 241 245 249;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 125 211 252;
   }
 }
 
@@ -146,20 +146,20 @@
 }
 
 @layer components {
-  /* Professional Component Styles */
+  /* Soft Professional Component Styles */
   .btn-professional {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 
-           transition-all duration-200 shadow-professional
-           hover:shadow-elevated border-0 font-medium;
+    @apply bg-primary text-primary-foreground hover:bg-primary/80 
+           transition-all duration-300 shadow-professional
+           hover:shadow-elevated border-0 font-medium rounded-xl;
   }
   
   .card-professional {
     @apply bg-card border border-border shadow-professional
-           hover:shadow-elevated transition-all duration-200;
+           hover:shadow-elevated transition-all duration-300 rounded-xl;
   }
   
   .text-professional {
-    @apply text-foreground font-medium tracking-tight;
+    @apply text-foreground font-medium tracking-normal;
   }
   
   .gradient-professional {
