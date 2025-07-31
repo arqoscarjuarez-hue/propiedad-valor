@@ -77,47 +77,40 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     // Remover espacios extra y normalizar
     const normalized = dmsString.replace(/\s+/g, ' ').trim();
     
-    // Patrones para diferentes formatos DMS
-    const patterns = [
-      // 19°25'57.39"N o N19°25'57.39"
-      /([NSEW]?)(\d+)°\s*(\d+)'\s*(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i,
-      // 19° 25' 57.39" N
-      /([NSEW]?)(\d+)°\s+(\d+)'\s+(\d+(?:\.\d+)?)"?\s*([NSEW]?)/i,
-      // 19 25 57.39 N (sin símbolos)
-      /([NSEW]?)(\d+)\s+(\d+)\s+(\d+(?:\.\d+)?)\s*([NSEW]?)/i,
-      // 19:25:57.39N (con dos puntos)
-      /([NSEW]?)(\d+):(\d+):(\d+(?:\.\d+)?)\s*([NSEW]?)/i
-    ];
+    // Extraer dirección (N, S, E, W)
+    const directionMatch = normalized.match(/([NSEW])/i);
+    const direction = directionMatch ? directionMatch[1].toUpperCase() : '';
     
-    let match = null;
-    for (const pattern of patterns) {
-      match = normalized.match(pattern);
-      if (match) break;
+    // Remover la dirección para extraer solo números
+    const numericString = normalized.replace(/[NSEW]/gi, '').trim();
+    
+    // Extraer grados, minutos y segundos usando regex más flexible
+    const dmsMatch = numericString.match(/(\d+(?:\.\d+)?)[°]?\s*(\d+(?:\.\d+)?)[']?\s*(\d+(?:\.\d+)?)["]?/);
+    
+    if (!dmsMatch) {
+      throw new Error(`No se pudieron extraer coordenadas DMS de: ${dmsString}`);
     }
     
-    if (!match) {
-      throw new Error('Formato DMS inválido');
-    }
-    
-    const [, prefix, degrees, minutes, seconds, suffix] = match;
-    const direction = (prefix || suffix).toUpperCase();
+    const degrees = parseFloat(dmsMatch[1]);
+    const minutes = parseFloat(dmsMatch[2]);
+    const seconds = parseFloat(dmsMatch[3]);
     
     // Validar que tenemos números válidos
-    const deg = parseInt(degrees);
-    const min = parseInt(minutes);
-    const sec = parseFloat(seconds);
-    
-    if (isNaN(deg) || isNaN(min) || isNaN(sec)) {
-      throw new Error('Coordenadas DMS inválidas');
+    if (isNaN(degrees) || isNaN(minutes) || isNaN(seconds)) {
+      throw new Error('Coordenadas DMS contienen valores no numéricos');
     }
     
     // Validar rangos
-    if (min >= 60 || sec >= 60) {
+    if (minutes >= 60 || seconds >= 60) {
       throw new Error('Minutos y segundos deben ser menores a 60');
     }
     
+    if (degrees < 0 || degrees > 180) {
+      throw new Error('Grados fuera de rango válido');
+    }
+    
     // Convertir a decimal
-    const decimal = deg + min / 60 + sec / 3600;
+    const decimal = degrees + minutes / 60 + seconds / 3600;
     
     // Aplicar signo según la dirección
     return (direction === 'S' || direction === 'W') ? -decimal : decimal;
