@@ -3751,13 +3751,13 @@ const PropertyValuation = () => {
 
                   {/* Espacios de Servicio */}
                   <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios de Servicio</h4>
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].serviceSpaces}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {[
-                        { key: 'cocina', label: 'Cocina', description: 'Número de cocinas' },
-                        { key: 'areaServicio', label: 'Área de Servicio/Lavado', description: 'Cuarto de lavado/servicio' },
-                        { key: 'bodega', label: 'Bodegas/Trasteros', description: 'Espacios de almacenamiento' },
-                        { key: 'cochera', label: 'Cocheras/Garajes', description: 'Espacios para vehículos' }
+                       {[
+                         { key: 'cocina', label: translations[selectedLanguage].kitchen, description: translations[selectedLanguage].kitchenDescription },
+                         { key: 'areaServicio', label: translations[selectedLanguage].serviceArea, description: translations[selectedLanguage].serviceAreaDescription },
+                         { key: 'bodega', label: translations[selectedLanguage].storage, description: translations[selectedLanguage].storageDescription },
+                         { key: 'cochera', label: translations[selectedLanguage].garage, description: translations[selectedLanguage].garageDescription }
                        ].map(({ key, label, description }) => (
                          <div key={key} className="space-y-1">
                            <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
@@ -3795,21 +3795,21 @@ const PropertyValuation = () => {
                           placeholder="0"
                           className="text-center"
                         />
-                        <p className="text-xs text-muted-foreground">Estudios, oficinas, patios techados, etc.</p>
+                        <p className="text-xs text-muted-foreground">{translations[selectedLanguage].othersDescription}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Resumen de espacios */}
                   <div className="bg-muted p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold mb-2">Resumen de Espacios:</h4>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>Total Recámaras: <span className="font-medium">{propertyData.recamaras}</span></div>
-                      <div>Total Baños: <span className="font-medium">{propertyData.banos}</span></div>
-                      <div>Total Salas: <span className="font-medium">{propertyData.salas}</span></div>
-                      <div>Cocheras: <span className="font-medium">{propertyData.cochera}</span></div>
-                      <div>Espacios Servicio: <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span></div>
-                      <div>Otros Espacios: <span className="font-medium">{propertyData.otros}</span></div>
+                     <h4 className="text-sm font-semibold mb-2">Resumen de Espacios:</h4>
+                     <div className="grid grid-cols-2 gap-2 text-xs">
+                       <div>Total {translations[selectedLanguage].bedrooms}: <span className="font-medium">{propertyData.recamaras}</span></div>
+                       <div>Total {translations[selectedLanguage].bathrooms}: <span className="font-medium">{propertyData.banos}</span></div>
+                       <div>Total {translations[selectedLanguage].livingRooms}: <span className="font-medium">{propertyData.salas}</span></div>
+                       <div>{translations[selectedLanguage].garage}: <span className="font-medium">{propertyData.cochera}</span></div>
+                       <div>{translations[selectedLanguage].serviceSpaces}: <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span></div>
+                       <div>{translations[selectedLanguage].others}: <span className="font-medium">{propertyData.otros}</span></div>
                     </div>
                   </div>
                 </TabsContent>
