@@ -78,14 +78,14 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     try {
       // Remover espacios extra
       let input = dmsString.trim();
-      console.log('Parsing DMS input:', input);
+      
       
       // Detectar dirección
       const isNegative = /[SW]/i.test(input);
       
       // Extraer todos los números (grados, minutos, segundos)
       const numbers = input.match(/\d+(?:\.\d+)?/g);
-      console.log('Extracted numbers:', numbers);
+      
       
       if (!numbers || numbers.length < 3) {
         throw new Error('Se requieren al menos 3 números: grados, minutos, segundos');
@@ -95,7 +95,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       const minutes = parseFloat(numbers[1]);
       const seconds = parseFloat(numbers[2]);
       
-      console.log('Parsed values:', { degrees, minutes, seconds, isNegative });
+      
       
       // Validaciones básicas
       if (minutes >= 60) throw new Error('Minutos deben ser < 60');
@@ -107,7 +107,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Aplicar signo
       if (isNegative) decimal = -decimal;
       
-      console.log('Final decimal result:', decimal);
+      
       return decimal;
       
     } catch (error) {
@@ -127,7 +127,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       
       // Detectar si es formato DMS (contiene ° o ')
       if (coordsInput.includes('°') || coordsInput.includes("'") || coordsInput.includes('"')) {
-        console.log('Detected DMS format:', coordsInput);
+        
         
         // Formato DMS - puede venir con coma o sin coma
         let parts: string[];
@@ -146,12 +146,12 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           }
         }
         
-        console.log('DMS parts:', parts);
+        
         if (parts.length === 2) {
           try {
             lat = parseDMS(parts[0].trim());
             lng = parseDMS(parts[1].trim());
-            console.log('Parsed DMS coordinates:', lat, lng);
+            
           } catch (dmsError) {
             console.error('DMS parsing error:', dmsError);
             throw new Error('Error parseando coordenadas DMS: ' + (dmsError instanceof Error ? dmsError.message : 'formato inválido'));

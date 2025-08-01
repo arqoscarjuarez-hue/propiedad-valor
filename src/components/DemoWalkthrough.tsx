@@ -495,9 +495,9 @@ const DemoWalkthrough = ({ onClose }: DemoWalkthroughProps) => {
           {/* Progress indicator */}
           <div className="flex items-center gap-3 mb-8 p-4 bg-muted/30 rounded-lg">
             <span className="text-sm font-medium text-muted-foreground">Progreso:</span>
-            {steps.map((_, index) => (
+            {steps.map((step, index) => (
               <div
-                key={index}
+                key={`step-${index}`}
                 className={`h-3 w-12 rounded-full transition-all duration-500 ${
                   index <= currentStep ? 'bg-gradient-to-r from-primary to-secondary' : 'bg-muted'
                 }`}

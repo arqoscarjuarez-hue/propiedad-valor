@@ -1601,7 +1601,7 @@ const PropertyValuation = () => {
         const valorAjustado = valorFinalAjustado * (1 + priceAdjustment / 100);
         setValuation(valorAjustado);
         
-        console.log('Valor recalculado por cambio en comparables:', valorAjustado);
+        
       }
     }
   }, [selectedComparatives, allComparativeProperties, baseValuation, priceAdjustment]);
@@ -1644,14 +1644,14 @@ const PropertyValuation = () => {
     const lat = propertyData.latitud || 19.4326;
     const lng = propertyData.longitud || -99.1332;
     
-    console.log('Generando comparables con búsqueda real de Google Maps...');
+    
     
     // Primero intentar buscar propiedades reales
     let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables);
     
     // Si no hay suficientes propiedades reales, completar con simuladas
     if (nearbyAddresses.length < numComparables) {
-      console.log(`Solo se encontraron ${nearbyAddresses.length} propiedades reales, completando con simuladas...`);
+      
       const simulatedAddresses = await generateNearbyAddresses(lat, lng, numComparables - nearbyAddresses.length);
       nearbyAddresses = [...nearbyAddresses, ...simulatedAddresses];
     }
@@ -1718,7 +1718,7 @@ const PropertyValuation = () => {
   // Función para buscar propiedades cercanas usando Google Maps
   const searchNearbyProperties = async (lat: number, lng: number, propertyType: string, numResults: number = 10) => {
     try {
-      console.log('Buscando propiedades cercanas con Google Maps...');
+      
       
       const propertyTypeQueries = {
         'casa': 'casas en venta',
@@ -1750,7 +1750,7 @@ const PropertyValuation = () => {
       const response = await Promise.race([searchPromise, timeoutPromise]);
 
       if ((response as any)?.data?.results && (response as any).data.results.length > 0) {
-        console.log(`Encontradas ${(response as any).data.results.length} propiedades en Google Maps`);
+        
         return (response as any).data.results.slice(0, numResults).map((place: any, index: number) => ({
           id: `real-${index + 1}`,
           address: place.name || place.vicinity || `Propiedad ${index + 1}`,
@@ -1764,7 +1764,7 @@ const PropertyValuation = () => {
           isReal: true
         }));
       } else {
-        console.log('No se encontraron propiedades reales, generando simuladas');
+        
         return [];
       }
     } catch (error) {
@@ -1826,9 +1826,6 @@ const PropertyValuation = () => {
     const factorAjuste = 0.6;
     const valorAjustadoPorComparables = (valorBase * factorAjuste) + (precioPromedioComparables * (1 - factorAjuste));
     
-    console.log('Valor base calculado:', valorBase);
-    console.log('Precio promedio comparables:', precioPromedioComparables);
-    console.log('Valor final ajustado por comparables:', valorAjustadoPorComparables);
     
     return valorAjustadoPorComparables;
   };
@@ -3536,6 +3533,8 @@ const PropertyValuation = () => {
                   setActiveTab(newValue);
                 } catch (error) {
                   console.error('Error changing tab:', error);
+                  // Fallback al tab de áreas si hay error
+                  setActiveTab('areas');
                 }
               }} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
@@ -3825,7 +3824,7 @@ const PropertyValuation = () => {
                          <Select 
                            value={propertyData.ubicacion} 
                            onValueChange={(value) => {
-                             console.log('Ubicación seleccionada:', value);
+                             
                              handleInputChange('ubicacion', value);
                            }}
                          >
@@ -3850,7 +3849,7 @@ const PropertyValuation = () => {
                          <Select 
                            value={propertyData.estadoGeneral} 
                            onValueChange={(value) => {
-                             console.log('Estado general seleccionado:', value);
+                             
                              handleInputChange('estadoGeneral', value);
                            }}
                          >

@@ -85,9 +85,9 @@ const FeaturesSection = () => {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <Card 
-              key={index} 
+              key={feature.title} 
               className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 bg-card/50 backdrop-blur-sm"
             >
               <CardContent className="p-6">
