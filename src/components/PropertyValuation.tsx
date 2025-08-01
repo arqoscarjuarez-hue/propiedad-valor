@@ -8,8 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2 } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import DemoWalkthrough from '@/components/DemoWalkthrough';
 
 import jsPDF from 'jspdf';
 import { 
@@ -1465,6 +1466,7 @@ const PropertyValuation = () => {
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
+  const [showDemo, setShowDemo] = useState(false); // Estado para mostrar demo
 
   // Guardar datos del último avalúo completado
   useEffect(() => {
@@ -1637,6 +1639,14 @@ const PropertyValuation = () => {
       URL.revokeObjectURL(prev[index].preview);
       return newImages;
     });
+  };
+
+  const handleShowDemo = () => {
+    setShowDemo(true);
+  };
+
+  const handleCloseDemo = () => {
+    setShowDemo(false);
   };
 
   const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
@@ -3516,6 +3526,25 @@ const PropertyValuation = () => {
               </p>
             </Card>
           )}
+          
+          {/* Botón de Demo */}
+          {valuation && (
+            <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-3">
+                  ¿Necesitas ayuda para usar el sistema?
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={handleShowDemo}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  Ver Demo de Uso
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
 
         {/* Formulario Principal */}
@@ -4578,6 +4607,9 @@ const PropertyValuation = () => {
           </Card>
         </div>
       </div>
+      
+      {/* Demo Walkthrough */}
+      {showDemo && <DemoWalkthrough onClose={handleCloseDemo} />}
     </div>
   );
 };
