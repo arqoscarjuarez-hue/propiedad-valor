@@ -124,6 +124,28 @@ const translations = {
     qualityAndCondition: 'Calidad y Estado de la Propiedad',
     constructionAge: 'Antigüedad de la Construcción',
     yearsSinceConstruction: 'Años desde la construcción original',
+    
+    // Location Quality options
+    excellentZone: 'Excelente - Zona exclusiva/premium',
+    goodZone: 'Buena - Zona residencial consolidada', 
+    regularZone: 'Regular - Zona en desarrollo',
+    badZone: 'Mala - Zona con problemas urbanos',
+    locationQualityPlaceholder: 'Selecciona la calidad de ubicación',
+    evaluateServices: 'Evalúa servicios, seguridad, accesibilidad',
+    
+    // General Condition options
+    generalConditionLabel: 'Estado General de Conservación',
+    conditionPlaceholder: 'Selecciona el estado de conservación',
+    newCondition: 'NUEVO - Sin uso, como recién construido',
+    goodCondition: 'BUENO - Muy bien conservado, mínimo desgaste', 
+    mediumCondition: 'MEDIO - Conservación promedio, uso normal',
+    regularCondition: 'REGULAR - Desgaste visible, necesita mantenimiento',
+    simpleRepairsCondition: 'REPARACIONES SENCILLAS - Pintura, detalles menores',
+    mediumRepairsCondition: 'REPARACIONES MEDIAS - Cambio de pisos, plomería',
+    importantRepairsCondition: 'REPARACIONES IMPORTANTES - Estructura, instalaciones',
+    seriousDamageCondition: 'DAÑOS GRAVES - Problemas estructurales serios',
+    wasteCondition: 'EN DESECHO - Demolición parcial necesaria',
+    affectsPropertyValue: 'Afecta directamente el valor de la propiedad',
     age: 'Antigüedad (años)',
     ageDescription: 'Años desde construcción',
     locationQuality: 'Calidad de Ubicación',
@@ -322,6 +344,28 @@ const translations = {
     qualityAndCondition: 'Quality and Property Condition',
     constructionAge: 'Construction Age',
     yearsSinceConstruction: 'Years since original construction',
+    
+    // Location Quality options
+    excellentZone: 'Excellent - Exclusive/premium area',
+    goodZone: 'Good - Established residential area',
+    regularZone: 'Regular - Developing area', 
+    badZone: 'Poor - Area with urban problems',
+    locationQualityPlaceholder: 'Select location quality',
+    evaluateServices: 'Evaluate services, security, accessibility',
+    
+    // General Condition options
+    generalConditionLabel: 'General Condition',
+    conditionPlaceholder: 'Select conservation condition',
+    newCondition: 'NEW - Unused, like newly built',
+    goodCondition: 'GOOD - Very well maintained, minimal wear',
+    mediumCondition: 'MEDIUM - Average conservation, normal use',
+    regularCondition: 'REGULAR - Visible wear, needs maintenance',
+    simpleRepairsCondition: 'SIMPLE REPAIRS - Paint, minor details',
+    mediumRepairsCondition: 'MEDIUM REPAIRS - Floor change, plumbing',
+    importantRepairsCondition: 'IMPORTANT REPAIRS - Structure, installations',
+    seriousDamageCondition: 'SERIOUS DAMAGE - Serious structural problems',
+    wasteCondition: 'WASTE - Partial demolition needed',
+    affectsPropertyValue: 'Directly affects property value',
     age: 'Age (years)',
     ageDescription: 'Years since construction',
     locationQuality: 'Location Quality',
@@ -519,6 +563,28 @@ const translations = {
     qualityAndCondition: 'Qualité et État de la Propriété',
     constructionAge: 'Âge de la Construction',
     yearsSinceConstruction: 'Années depuis la construction originale',
+    
+    // Location Quality options
+    excellentZone: 'Excellent - Zone exclusive/premium',
+    goodZone: 'Bon - Zone résidentielle établie',
+    regularZone: 'Régulier - Zone en développement',
+    badZone: 'Mauvais - Zone avec problèmes urbains',
+    locationQualityPlaceholder: 'Sélectionnez la qualité de l\'emplacement',
+    evaluateServices: 'Évaluer services, sécurité, accessibilité',
+    
+    // General Condition options  
+    generalConditionLabel: 'État Général de Conservation',
+    conditionPlaceholder: 'Sélectionnez l\'état de conservation',
+    newCondition: 'NOUVEAU - Inutilisé, comme nouvellement construit',
+    goodCondition: 'BON - Très bien entretenu, usure minimale',
+    mediumCondition: 'MOYEN - Conservation moyenne, usage normal',
+    regularCondition: 'RÉGULIER - Usure visible, nécessite entretien',
+    simpleRepairsCondition: 'RÉPARATIONS SIMPLES - Peinture, détails mineurs',
+    mediumRepairsCondition: 'RÉPARATIONS MOYENNES - Changement sols, plomberie',
+    importantRepairsCondition: 'RÉPARATIONS IMPORTANTES - Structure, installations',
+    seriousDamageCondition: 'DOMMAGES GRAVES - Problèmes structurels sérieux',
+    wasteCondition: 'DÉCHET - Démolition partielle nécessaire',
+    affectsPropertyValue: 'Affecte directement la valeur de la propriété',
     age: 'Âge (années)',
     ageDescription: 'Années depuis la construction',
     locationQuality: 'Qualité de l\'Emplacement',
@@ -715,6 +781,28 @@ const translations = {
     qualityAndCondition: 'Qualität und Zustand der Immobilie',
     constructionAge: 'Alter der Konstruktion',
     yearsSinceConstruction: 'Jahre seit der ursprünglichen Konstruktion',
+    
+    // Location Quality options
+    excellentZone: 'Exzellent - Exklusive/Premium-Zone',
+    goodZone: 'Gut - Etablierte Wohngegend',
+    regularZone: 'Regulär - Entwicklungsgebiet',
+    badZone: 'Schlecht - Gebiet mit städtischen Problemen',
+    locationQualityPlaceholder: 'Standortqualität auswählen',
+    evaluateServices: 'Bewerten Sie Dienstleistungen, Sicherheit, Zugänglichkeit',
+    
+    // General Condition options
+    generalConditionLabel: 'Allgemeiner Erhaltungszustand',
+    conditionPlaceholder: 'Erhaltungszustand auswählen',
+    newCondition: 'NEU - Unbenutzt, wie neu gebaut',
+    goodCondition: 'GUT - Sehr gut gepflegt, minimaler Verschleiß',
+    mediumCondition: 'MITTEL - Durchschnittliche Erhaltung, normale Nutzung',
+    regularCondition: 'REGULÄR - Sichtbarer Verschleiß, benötigt Wartung',
+    simpleRepairsCondition: 'EINFACHE REPARATUREN - Farbe, kleinere Details',
+    mediumRepairsCondition: 'MITTLERE REPARATUREN - Bodenwechsel, Rohrleitungen',
+    importantRepairsCondition: 'WICHTIGE REPARATUREN - Struktur, Installationen',
+    seriousDamageCondition: 'SCHWERE SCHÄDEN - Ernsthafte strukturelle Probleme',
+    wasteCondition: 'ABFALL - Teilabriss erforderlich',
+    affectsPropertyValue: 'Beeinflusst direkt den Immobilienwert',
     
     // Características
     propertyCharacteristics: 'Immobilieneigenschaften',
@@ -915,6 +1003,28 @@ const translations = {
     constructionAge: 'Età della Costruzione',
     yearsSinceConstruction: 'Anni dalla costruzione originale',
     
+    // Location Quality options
+    excellentZone: 'Eccellente - Zona esclusiva/premium',
+    goodZone: 'Buona - Zona residenziale consolidata',
+    regularZone: 'Regolare - Zona in sviluppo',
+    badZone: 'Cattiva - Zona con problemi urbani',
+    locationQualityPlaceholder: 'Seleziona qualità della posizione',
+    evaluateServices: 'Valuta servizi, sicurezza, accessibilità',
+    
+    // General Condition options
+    generalConditionLabel: 'Stato Generale di Conservazione',
+    conditionPlaceholder: 'Seleziona stato di conservazione',
+    newCondition: 'NUOVO - Inutilizzato, come appena costruito',
+    goodCondition: 'BUONO - Molto ben conservato, usura minima',
+    mediumCondition: 'MEDIO - Conservazione media, uso normale',
+    regularCondition: 'REGOLARE - Usura visibile, necessita manutenzione',
+    simpleRepairsCondition: 'RIPARAZIONI SEMPLICI - Pittura, dettagli minori',
+    mediumRepairsCondition: 'RIPARAZIONI MEDIE - Cambio pavimenti, idraulica',
+    importantRepairsCondition: 'RIPARAZIONI IMPORTANTI - Struttura, impianti',
+    seriousDamageCondition: 'DANNI GRAVI - Problemi strutturali seri',
+    wasteCondition: 'SCARTO - Demolizione parziale necessaria',
+    affectsPropertyValue: 'Influisce direttamente sul valore della proprietà',
+    
      // Características
     age: 'Età (anni)',
     ageDescription: 'Anni dalla costruzione',
@@ -1112,6 +1222,28 @@ const translations = {
     qualityAndCondition: 'Qualidade e Estado da Propriedade',
     constructionAge: 'Idade da Construção',
     yearsSinceConstruction: 'Anos desde a construção original',
+    
+    // Location Quality options
+    excellentZone: 'Excelente - Zona exclusiva/premium',
+    goodZone: 'Boa - Zona residencial consolidada',
+    regularZone: 'Regular - Zona em desenvolvimento',
+    badZone: 'Ruim - Zona com problemas urbanos',
+    locationQualityPlaceholder: 'Selecione qualidade da localização',
+    evaluateServices: 'Avalie serviços, segurança, acessibilidade',
+    
+    // General Condition options
+    generalConditionLabel: 'Estado Geral de Conservação',
+    conditionPlaceholder: 'Selecione estado de conservação',
+    newCondition: 'NOVO - Sem uso, como recém construído',
+    goodCondition: 'BOM - Muito bem conservado, desgaste mínimo',
+    mediumCondition: 'MÉDIO - Conservação média, uso normal',
+    regularCondition: 'REGULAR - Desgaste visível, precisa manutenção',
+    simpleRepairsCondition: 'REPAROS SIMPLES - Pintura, detalhes menores',
+    mediumRepairsCondition: 'REPAROS MÉDIOS - Troca pisos, encanamento',
+    importantRepairsCondition: 'REPAROS IMPORTANTES - Estrutura, instalações',
+    seriousDamageCondition: 'DANOS GRAVES - Problemas estruturais sérios',
+    wasteCondition: 'DESPERDÍCIO - Demolição parcial necessária',
+    affectsPropertyValue: 'Afeta diretamente o valor da propriedade',
     
      // Características
     age: 'Idade (anos)',
@@ -3892,22 +4024,22 @@ const PropertyValuation = () => {
                            }}
                          >
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecciona la calidad de ubicación" />
+                            <SelectValue placeholder={translations[selectedLanguage].locationQualityPlaceholder} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="excelente">Excelente - Zona exclusiva/premium</SelectItem>
-                            <SelectItem value="buena">Buena - Zona residencial consolidada</SelectItem>
-                            <SelectItem value="regular">Regular - Zona en desarrollo</SelectItem>
-                            <SelectItem value="mala">Mala - Zona con problemas urbanos</SelectItem>
+                             <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+                             <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                             <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
+                             <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
                           </SelectContent>
                         </Select>
-                        <p className="text-xs text-muted-foreground mt-1">Evalúa servicios, seguridad, accesibilidad</p>
+                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].evaluateServices}</p>
                       </div>
                       
                       <div>
                         <Label className="flex items-center gap-2">
                           <Star className="h-4 w-4" />
-                          Estado General de Conservación
+                           {translations[selectedLanguage].generalConditionLabel}
                         </Label>
                          <Select 
                            value={propertyData.estadoGeneral} 
@@ -3917,21 +4049,21 @@ const PropertyValuation = () => {
                            }}
                          >
                           <SelectTrigger>
-                            <SelectValue placeholder="Selecciona el estado de conservación" />
+                            <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="nuevo">NUEVO - Sin uso, como recién construido</SelectItem>
-                            <SelectItem value="bueno">BUENO - Muy bien conservado, mínimo desgaste</SelectItem>
-                            <SelectItem value="medio">MEDIO - Conservación promedio, uso normal</SelectItem>
-                            <SelectItem value="regular">REGULAR - Desgaste visible, necesita mantenimiento</SelectItem>
-                            <SelectItem value="reparaciones-sencillas">REPARACIONES SENCILLAS - Pintura, detalles menores</SelectItem>
-                            <SelectItem value="reparaciones-medias">REPARACIONES MEDIAS - Cambio de pisos, plomería</SelectItem>
-                            <SelectItem value="reparaciones-importantes">REPARACIONES IMPORTANTES - Estructura, instalaciones</SelectItem>
-                            <SelectItem value="danos-graves">DAÑOS GRAVES - Problemas estructurales serios</SelectItem>
-                            <SelectItem value="en-desecho">EN DESECHO - Demolición parcial necesaria</SelectItem>
+                             <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
+                             <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
+                             <SelectItem value="medio">{translations[selectedLanguage].mediumCondition}</SelectItem>
+                             <SelectItem value="regular">{translations[selectedLanguage].regularCondition}</SelectItem>
+                             <SelectItem value="reparaciones-sencillas">{translations[selectedLanguage].simpleRepairsCondition}</SelectItem>
+                             <SelectItem value="reparaciones-medias">{translations[selectedLanguage].mediumRepairsCondition}</SelectItem>
+                             <SelectItem value="reparaciones-importantes">{translations[selectedLanguage].importantRepairsCondition}</SelectItem>
+                             <SelectItem value="danos-graves">{translations[selectedLanguage].seriousDamageCondition}</SelectItem>
+                             <SelectItem value="en-desecho">{translations[selectedLanguage].wasteCondition}</SelectItem>
                           </SelectContent>
                         </Select>
-                        <p className="text-xs text-muted-foreground mt-1">Afecta directamente el valor de la propiedad</p>
+                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
                       </div>
                     </div>
                   </div>
