@@ -135,13 +135,23 @@ const Index = () => {
               Únete a miles de profesionales que confían en nuestro sistema para 
               obtener valuaciones precisas y reportes de calidad bancaria.
             </p>
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6"
-              onClick={handleStartValuation}
-            >
-              Comenzar Valuación Ahora
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={handleStartValuation}
+              >
+                Comenzar Valuación Ahora
+              </Button>
+              <Button 
+                variant="outline"
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={handleShowDemo}
+              >
+                Ver Demo de Uso
+              </Button>
+            </div>
           </div>
         </section>
       )}
