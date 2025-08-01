@@ -3815,7 +3815,7 @@ const PropertyValuation = () => {
                 </TabsContent>
 
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Características Generales y Específicas</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyCharacteristics}</h3>
                   
                   {/* Información Temporal */}
                   <div className="mb-6">
@@ -4614,7 +4614,7 @@ const PropertyValuation = () => {
                 <div className="text-center py-8">
                   <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground">
-                    {selectedLanguage === 'es' ? 
+                    {translations[selectedLanguage].propertyData === 'Datos de la Propiedad' ? 
                       'Completa los datos de la propiedad y presiona "Calcular Valuación" para ver el resultado.' :
                       'Complete the property data and press "Calculate Valuation" to see the result.'
                     }
