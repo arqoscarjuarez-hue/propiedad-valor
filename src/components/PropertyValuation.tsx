@@ -1189,11 +1189,10 @@ const translations = {
      
      // Disclaimer
      disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.'
-  },
-
-  zh: {
-    propertyValuator: '房产评估师',
-    professionalSystem: '专业评估系统',
+  }
+};
+type Language = keyof typeof translations;
+interface PropertyData {
     languageSelector: '语言选择',
     propertyData: '房产数据',
     areas: '面积',
@@ -3833,8 +3832,6 @@ const PropertyValuation = () => {
                 <SelectItem value="de" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇩🇪 Deutsch</SelectItem>
                 <SelectItem value="it" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇮🇹 Italiano</SelectItem>
                 <SelectItem value="pt" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇵🇹 Português</SelectItem>
-                <SelectItem value="zh" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇨🇳 中文</SelectItem>
-                <SelectItem value="hi" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">🇮🇳 हिन्दी</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
