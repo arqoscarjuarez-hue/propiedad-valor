@@ -4096,101 +4096,125 @@ const PropertyValuation = () => {
                   </Select>
                 </TabsContent>
 
-                <TabsContent value="espacios" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].spacesDistribution}</h3>
-                   
-                   {/* Espacios Habitacionales */}
+                 <TabsContent value="espacios" className="space-y-4 mt-6 px-1">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].spacesDistribution}</h3>
+                    
+                    {/* Espacios Habitacionales */}
+                    <div className="mb-6">
+                      <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].livingSpaces}</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        {[
+                          { key: 'recamaras', label: translations[selectedLanguage].bedrooms, description: translations[selectedLanguage].bedroomsDescription },
+                          { key: 'salas', label: translations[selectedLanguage].livingRooms, description: translations[selectedLanguage].livingRoomsDescription },
+                          { key: 'comedor', label: translations[selectedLanguage].diningRoom, description: translations[selectedLanguage].diningRoomDescription },
+                          { key: 'banos', label: translations[selectedLanguage].bathrooms, description: translations[selectedLanguage].bathroomsDescription }
+                         ].map(({ key, label, description }) => (
+                          <div key={key} className="space-y-2">
+                            <Label htmlFor={key} className="text-sm font-medium block">{label}</Label>
+                            <Input
+                              id={key}
+                              type="number"
+                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
+                               onChange={(e) => {
+                                 const value = e.target.value;
+                                 handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
+                               }}
+                              placeholder="0"
+                              className="text-center h-10"
+                              min="0"
+                              step="1"
+                            />
+                            <p className="text-xs text-muted-foreground leading-tight">{description}</p>
+                          </div>
+                        ))}
+                     </div>
+                   </div>
+
+                   {/* Espacios de Servicio */}
                    <div className="mb-6">
-                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].livingSpaces}</h4>
-                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                       {[
-                         { key: 'recamaras', label: translations[selectedLanguage].bedrooms, description: translations[selectedLanguage].bedroomsDescription },
-                         { key: 'salas', label: translations[selectedLanguage].livingRooms, description: translations[selectedLanguage].livingRoomsDescription },
-                         { key: 'comedor', label: translations[selectedLanguage].diningRoom, description: translations[selectedLanguage].diningRoomDescription },
-                         { key: 'banos', label: translations[selectedLanguage].bathrooms, description: translations[selectedLanguage].bathroomsDescription }
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].serviceSpaces}</h4>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        {[
+                          { key: 'cocina', label: translations[selectedLanguage].kitchen, description: translations[selectedLanguage].kitchenDescription },
+                          { key: 'areaServicio', label: translations[selectedLanguage].serviceArea, description: translations[selectedLanguage].serviceAreaDescription },
+                          { key: 'bodega', label: translations[selectedLanguage].storage, description: translations[selectedLanguage].storageDescription },
+                          { key: 'cochera', label: translations[selectedLanguage].garage, description: translations[selectedLanguage].garageDescription }
                         ].map(({ key, label, description }) => (
-                         <div key={key} className="space-y-1">
-                           <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
-                           <Input
-                             id={key}
-                             type="number"
-                             value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
-                              }}
-                             placeholder="0"
-                             className="text-center"
-                           />
-                           <p className="text-xs text-muted-foreground">{description}</p>
-                         </div>
-                       ))}
-                    </div>
-                  </div>
+                          <div key={key} className="space-y-2">
+                            <Label htmlFor={key} className="text-sm font-medium block">{label}</Label>
+                            <Input
+                              id={key}
+                              type="number"
+                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
+                               onChange={(e) => {
+                                 const value = e.target.value;
+                                 handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
+                               }}
+                              placeholder="0"
+                              className="text-center h-10"
+                              min="0"
+                              step="1"
+                            />
+                            <p className="text-xs text-muted-foreground leading-tight">{description}</p>
+                          </div>
+                        ))}
+                     </div>
+                   </div>
 
-                  {/* Espacios de Servicio */}
-                  <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].serviceSpaces}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                       {[
-                         { key: 'cocina', label: translations[selectedLanguage].kitchen, description: translations[selectedLanguage].kitchenDescription },
-                         { key: 'areaServicio', label: translations[selectedLanguage].serviceArea, description: translations[selectedLanguage].serviceAreaDescription },
-                         { key: 'bodega', label: translations[selectedLanguage].storage, description: translations[selectedLanguage].storageDescription },
-                         { key: 'cochera', label: translations[selectedLanguage].garage, description: translations[selectedLanguage].garageDescription }
-                       ].map(({ key, label, description }) => (
-                         <div key={key} className="space-y-1">
-                           <Label htmlFor={key} className="text-sm font-medium">{label}</Label>
-                           <Input
-                             id={key}
-                             type="number"
-                             value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
-                              }}
-                             placeholder="0"
-                             className="text-center"
-                           />
-                           <p className="text-xs text-muted-foreground">{description}</p>
-                         </div>
-                       ))}
-                    </div>
-                  </div>
+                   {/* Espacios Adicionales */}
+                   <div className="mb-6">
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalSpaces}</h4>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                       <div className="space-y-2">
+                         <Label htmlFor="otros" className="text-sm font-medium block">{translations[selectedLanguage].others}</Label>
+                         <Input
+                           id="otros"
+                           type="number"
+                           value={propertyData.otros || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              handleInputChange('otros', value === '' ? 0 : parseFloat(value) || 0);
+                            }}
+                           placeholder="0"
+                           className="text-center h-10"
+                           min="0"
+                           step="1"
+                         />
+                         <p className="text-xs text-muted-foreground leading-tight">{translations[selectedLanguage].othersDescription}</p>
+                       </div>
+                     </div>
+                   </div>
 
-                  {/* Espacios Adicionales */}
-                  <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalSpaces}</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <Label htmlFor="otros" className="text-sm font-medium">{translations[selectedLanguage].others}</Label>
-                        <Input
-                          id="otros"
-                          type="number"
-                          value={propertyData.otros || ''}
-                           onChange={(e) => {
-                             const value = e.target.value;
-                             handleInputChange('otros', value === '' ? 0 : parseFloat(value) || 0);
-                           }}
-                          placeholder="0"
-                          className="text-center"
-                        />
-                        <p className="text-xs text-muted-foreground">{translations[selectedLanguage].othersDescription}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Resumen de espacios */}
-                  <div className="bg-muted p-4 rounded-lg">
-                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].spacesSummary}</h4>
-                     <div className="grid grid-cols-2 gap-2 text-xs">
-                       <div>Total {translations[selectedLanguage].bedrooms}: <span className="font-medium">{propertyData.recamaras}</span></div>
-                       <div>Total {translations[selectedLanguage].bathrooms}: <span className="font-medium">{propertyData.banos}</span></div>
-                       <div>Total {translations[selectedLanguage].livingRooms}: <span className="font-medium">{propertyData.salas}</span></div>
-                       <div>{translations[selectedLanguage].garage}: <span className="font-medium">{propertyData.cochera}</span></div>
-                       <div>{translations[selectedLanguage].serviceSpaces}: <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span></div>
-                       <div>{translations[selectedLanguage].others}: <span className="font-medium">{propertyData.otros}</span></div>
-                    </div>
-                  </div>
+                   {/* Resumen de espacios */}
+                   <div className="bg-muted p-3 sm:p-4 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-3">{translations[selectedLanguage].spacesSummary}</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="flex justify-between py-1">
+                          <span>Total {translations[selectedLanguage].bedrooms}:</span>
+                          <span className="font-medium">{propertyData.recamaras}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>Total {translations[selectedLanguage].bathrooms}:</span>
+                          <span className="font-medium">{propertyData.banos}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>Total {translations[selectedLanguage].livingRooms}:</span>
+                          <span className="font-medium">{propertyData.salas}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>{translations[selectedLanguage].garage}:</span>
+                          <span className="font-medium">{propertyData.cochera}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>{translations[selectedLanguage].serviceSpaces}:</span>
+                          <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span>
+                        </div>
+                        <div className="flex justify-between py-1">
+                          <span>{translations[selectedLanguage].others}:</span>
+                          <span className="font-medium">{propertyData.otros}</span>
+                        </div>
+                     </div>
+                   </div>
                 </TabsContent>
 
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
