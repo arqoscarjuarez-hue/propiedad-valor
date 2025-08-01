@@ -437,6 +437,20 @@ const translations = {
      // Ubicación
     clickOnMap: 'Click on the map to select the exact location of the property',
     currentAddress: 'Current address',
+    locationSketch: 'Location Sketch',
+    viewMap: 'View Map',
+    editData: 'Edit Data',
+    mapInstructions: 'Mark the exact location of the property on the map. This will help provide a more accurate valuation.',
+    registeredAddress: 'Registered Address:',
+    coordinates: 'Coordinates:',
+    editLocationInstructions: 'Manually edit the property location data.',
+    fullAddress: 'Full Address',
+    fullAddressPlaceholder: 'E.g.: 123 Street, Neighborhood, City, State, ZIP',
+    coordinatesNote: 'Map coordinates remain unchanged',
+    latitude: 'Latitude',
+    longitude: 'Longitude',
+    latitudePlaceholder: 'E.g.: 19.4326',
+    longitudePlaceholder: 'E.g.: -99.1332',
     
     // Fotografías
     propertyPhotos: 'Property Photos',
@@ -674,9 +688,23 @@ const translations = {
     regularLocation: 'Régulier',
     badLocation: 'Mauvais',
     
-     // Ubicación
-    clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
-    currentAddress: 'Adresse actuelle',
+      // Ubicación
+     clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
+     currentAddress: 'Adresse actuelle',
+     locationSketch: 'Croquis de Localisation',
+     viewMap: 'Voir la Carte',
+     editData: 'Modifier les Données',
+     mapInstructions: 'Marquez l\'emplacement exact de la propriété sur la carte. Cela aidera à fournir une évaluation plus précise.',
+     registeredAddress: 'Adresse Enregistrée:',
+     coordinates: 'Coordonnées:',
+     editLocationInstructions: 'Modifier manuellement les données de localisation de la propriété.',
+     fullAddress: 'Adresse Complète',
+     fullAddressPlaceholder: 'Ex: 123 Rue, Quartier, Ville, État, CP',
+     coordinatesNote: 'Les coordonnées de la carte restent inchangées',
+     latitude: 'Latitude',
+     longitude: 'Longitude',
+     latitudePlaceholder: 'Ex: 19.4326',
+     longitudePlaceholder: 'Ex: -99.1332',
     
     // Fotografías
     propertyPhotos: 'Photos de la Propriété',
@@ -917,8 +945,22 @@ const translations = {
     badLocation: 'Schlecht',
     
      // Ubicación
-    clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
-    currentAddress: 'Aktuelle Adresse',
+     clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
+     currentAddress: 'Aktuelle Adresse',
+     locationSketch: 'Standortskizze',
+     viewMap: 'Karte Anzeigen',
+     editData: 'Daten Bearbeiten',
+     mapInstructions: 'Markieren Sie den genauen Standort der Immobilie auf der Karte. Dies hilft bei einer genaueren Bewertung.',
+     registeredAddress: 'Registrierte Adresse:',
+     coordinates: 'Koordinaten:',
+     editLocationInstructions: 'Bearbeiten Sie manuell die Standortdaten der Immobilie.',
+     fullAddress: 'Vollständige Adresse',
+     fullAddressPlaceholder: 'Z.B.: Straße 123, Stadtteil, Stadt, Land, PLZ',
+     coordinatesNote: 'Kartenkoordinaten bleiben unverändert',
+     latitude: 'Breitengrad',
+     longitude: 'Längengrad',
+     latitudePlaceholder: 'Z.B.: 19.4326',
+     longitudePlaceholder: 'Z.B.: -99.1332',
     
     // Fotografías
     propertyPhotos: 'Immobilienfotos',
@@ -1399,8 +1441,22 @@ const translations = {
     badLocation: 'Ruim',
     
      // Ubicación
-    clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
-    currentAddress: 'Endereço atual',
+     clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
+     currentAddress: 'Endereço atual',
+     locationSketch: 'Esboço de Localização',
+     viewMap: 'Ver Mapa',
+     editData: 'Editar Dados',
+     mapInstructions: 'Marque a localização exata da propriedade no mapa. Isso ajudará a fornecer uma avaliação mais precisa.',
+     registeredAddress: 'Endereço Registrado:',
+     coordinates: 'Coordenadas:',
+     editLocationInstructions: 'Edite manualmente os dados de localização da propriedade.',
+     fullAddress: 'Endereço Completo',
+     fullAddressPlaceholder: 'Ex: Rua 123, Bairro, Cidade, Estado, CEP',
+     coordinatesNote: 'As coordenadas do mapa permanecem inalteradas',
+     latitude: 'Latitude',
+     longitude: 'Longitude',
+     latitudePlaceholder: 'Ex: 19.4326',
+     longitudePlaceholder: 'Ex: -99.1332',
     
     // Fotografías
     propertyPhotos: 'Fotos da Propriedade',
@@ -4410,94 +4466,94 @@ const PropertyValuation = () => {
                    </div>
                  </TabsContent>
 
-                   <TabsContent value="ubicacion" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Croquis de Ubicación</h3>
-                    
-                    <Tabs defaultValue="mapa" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="mapa">Ver Mapa</TabsTrigger>
-                        <TabsTrigger value="editar">Editar Datos</TabsTrigger>
-                      </TabsList>
-                      
-                      <TabsContent value="mapa" className="space-y-4 mt-4">
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.
-                        </p>
+                    <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                     <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].locationSketch}</h3>
+                     
+                     <Tabs defaultValue="mapa" className="w-full">
+                       <TabsList className="grid w-full grid-cols-2">
+                         <TabsTrigger value="mapa">{translations[selectedLanguage].viewMap}</TabsTrigger>
+                         <TabsTrigger value="editar">{translations[selectedLanguage].editData}</TabsTrigger>
+                       </TabsList>
+                       
+                       <TabsContent value="mapa" className="space-y-4 mt-4">
+                         <p className="text-sm text-muted-foreground mb-4">
+                           {translations[selectedLanguage].mapInstructions}
+                         </p>
                         <SimpleLocationMap
                           onLocationChange={handleLocationChange}
                           initialLat={propertyData.latitud}
                           initialLng={propertyData.longitud}
                           initialAddress={propertyData.direccionCompleta}
                         />
-                        {propertyData.direccionCompleta && (
-                          <div className="p-3 bg-muted rounded-lg">
-                            <div className="flex items-start gap-2">
-                              <MapPin className="h-4 w-4 text-primary mt-0.5" />
-                              <div>
-                                <p className="text-sm font-medium">Dirección Registrada:</p>
-                                <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                         {propertyData.direccionCompleta && (
+                           <div className="p-3 bg-muted rounded-lg">
+                             <div className="flex items-start gap-2">
+                               <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                               <div>
+                                 <p className="text-sm font-medium">{translations[selectedLanguage].registeredAddress}</p>
+                                 <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                                 <p className="text-xs text-muted-foreground mt-1">
+                                   {translations[selectedLanguage].coordinates} {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                                 </p>
+                               </div>
+                             </div>
+                           </div>
+                         )}
                       </TabsContent>
                       
-                      <TabsContent value="editar" className="space-y-4 mt-4">
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Edita manualmente los datos de ubicación de la propiedad.
-                        </p>
-                        
-                         <div className="space-y-4">
-                           <div>
-                             <Label htmlFor="direccion-completa">Dirección Completa</Label>
-                             <Input
-                               id="direccion-completa"
-                               value={propertyData.direccionCompleta || ''}
-                               onChange={(e) => {
-                                 // Solo actualizar la dirección, mantener las coordenadas del mapa
-                                 setPropertyData(prev => ({
-                                   ...prev,
-                                   direccionCompleta: e.target.value
-                                 }));
-                               }}
-                               placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
-                               className="mt-1"
-                             />
-                             <p className="text-xs text-muted-foreground mt-1">
-                               Las coordenadas del mapa se mantienen sin cambios
-                             </p>
-                           </div>
+                       <TabsContent value="editar" className="space-y-4 mt-4">
+                         <p className="text-sm text-muted-foreground mb-4">
+                           {translations[selectedLanguage].editLocationInstructions}
+                         </p>
+                         
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="direccion-completa">{translations[selectedLanguage].fullAddress}</Label>
+                              <Input
+                                id="direccion-completa"
+                                value={propertyData.direccionCompleta || ''}
+                                onChange={(e) => {
+                                  // Solo actualizar la dirección, mantener las coordenadas del mapa
+                                  setPropertyData(prev => ({
+                                    ...prev,
+                                    direccionCompleta: e.target.value
+                                  }));
+                                }}
+                                placeholder={translations[selectedLanguage].fullAddressPlaceholder}
+                                className="mt-1"
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {translations[selectedLanguage].coordinatesNote}
+                              </p>
+                            </div>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="latitud">Latitud</Label>
-                              <Input
-                                id="latitud"
-                                type="number"
-                                step="any"
-                                value={propertyData.latitud || ''}
-                                onChange={(e) => handleInputChange('latitud', parseFloat(e.target.value) || 0)}
-                                placeholder="Ej: 19.4326"
-                                className="mt-1"
-                              />
-                            </div>
-                            
-                            <div>
-                              <Label htmlFor="longitud">Longitud</Label>
-                              <Input
-                                id="longitud"
-                                type="number"
-                                step="any"
-                                value={propertyData.longitud || ''}
-                                onChange={(e) => handleInputChange('longitud', parseFloat(e.target.value) || 0)}
-                                placeholder="Ej: -99.1332"
-                                className="mt-1"
-                              />
-                            </div>
-                          </div>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div>
+                               <Label htmlFor="latitud">{translations[selectedLanguage].latitude}</Label>
+                               <Input
+                                 id="latitud"
+                                 type="number"
+                                 step="any"
+                                 value={propertyData.latitud || ''}
+                                 onChange={(e) => handleInputChange('latitud', parseFloat(e.target.value) || 0)}
+                                 placeholder={translations[selectedLanguage].latitudePlaceholder}
+                                 className="mt-1"
+                               />
+                             </div>
+                             
+                             <div>
+                               <Label htmlFor="longitud">{translations[selectedLanguage].longitude}</Label>
+                               <Input
+                                 id="longitud"
+                                 type="number"
+                                 step="any"
+                                 value={propertyData.longitud || ''}
+                                 onChange={(e) => handleInputChange('longitud', parseFloat(e.target.value) || 0)}
+                                 placeholder={translations[selectedLanguage].longitudePlaceholder}
+                                 className="mt-1"
+                               />
+                             </div>
+                           </div>
                           
                           <div>
                             <Label htmlFor="ubicacion-calidad">Calidad de la Ubicación</Label>
