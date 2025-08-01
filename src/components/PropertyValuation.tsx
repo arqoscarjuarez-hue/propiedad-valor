@@ -194,8 +194,22 @@ const translations = {
     badLocation: 'Mala',
      
      // Ubicación
-    clickOnMap: 'Haz clic en el mapa para seleccionar la ubicación exacta del inmueble',
-    currentAddress: 'Dirección actual',
+     clickOnMap: 'Haz clic en el mapa para seleccionar la ubicación exacta de la propiedad',
+     currentAddress: 'Dirección actual',
+     locationSketch: 'Croquis de Ubicación',
+     viewMap: 'Ver Mapa',
+     editData: 'Editar Datos',
+     mapInstructions: 'Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.',
+     registeredAddress: 'Dirección Registrada:',
+     coordinates: 'Coordenadas:',
+     editLocationInstructions: 'Edita manualmente los datos de ubicación de la propiedad.',
+     fullAddress: 'Dirección Completa',
+     fullAddressPlaceholder: 'Ej: Calle 123, Colonia, Ciudad, Estado, CP',
+     coordinatesNote: 'Las coordenadas del mapa se mantienen sin cambios',
+     latitude: 'Latitud',
+     longitude: 'Longitud',
+     latitudePlaceholder: 'Ej: 19.4326',
+     longitudePlaceholder: 'Ej: -99.1332',
     
     // Fotografías
     propertyPhotos: 'Fotografías del Inmueble',
@@ -434,7 +448,8 @@ const translations = {
     regularLocation: 'Regular',
     badLocation: 'Bad',
     
-     // Ubicación
+    
+    // Ubicación
     clickOnMap: 'Click on the map to select the exact location of the property',
     currentAddress: 'Current address',
     locationSketch: 'Location Sketch',
@@ -452,8 +467,8 @@ const translations = {
     latitudePlaceholder: 'E.g.: 19.4326',
     longitudePlaceholder: 'E.g.: -99.1332',
     
+    
     // Fotografías
-    propertyPhotos: 'Property Photos',
     uploadPhotos: 'Upload Photos',
     photosDescription: 'Upload interior and exterior images of the property',
     removePhoto: 'Remove photo',
@@ -688,27 +703,28 @@ const translations = {
     regularLocation: 'Régulier',
     badLocation: 'Mauvais',
     
-      // Ubicación
-     clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
-     currentAddress: 'Adresse actuelle',
-     locationSketch: 'Croquis de Localisation',
-     viewMap: 'Voir la Carte',
-     editData: 'Modifier les Données',
-     mapInstructions: 'Marquez l\'emplacement exact de la propriété sur la carte. Cela aidera à fournir une évaluation plus précise.',
-     registeredAddress: 'Adresse Enregistrée:',
-     coordinates: 'Coordonnées:',
-     editLocationInstructions: 'Modifier manuellement les données de localisation de la propriété.',
-     fullAddress: 'Adresse Complète',
-     fullAddressPlaceholder: 'Ex: 123 Rue, Quartier, Ville, État, CP',
-     coordinatesNote: 'Les coordonnées de la carte restent inchangées',
-     latitude: 'Latitude',
-     longitude: 'Longitude',
-     latitudePlaceholder: 'Ex: 19.4326',
-     longitudePlaceholder: 'Ex: -99.1332',
+    
+
+    
+    // Ubicación
+    clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
+    currentAddress: 'Adresse actuelle',
+    locationSketch: 'Croquis de Localisation',
+    viewMap: 'Voir la Carte',
+    editData: 'Modifier les Données',
+    mapInstructions: 'Marquez l\'emplacement exact de la propriété sur la carte. Cela aidera à fournir une évaluation plus précise.',
+    registeredAddress: 'Adresse Enregistrée:',
+    coordinates: 'Coordonnées:',
+    editLocationInstructions: 'Modifier manuellement les données de localisation de la propriété.',
+    fullAddress: 'Adresse Complète',
+    fullAddressPlaceholder: 'Ex: 123 Rue, Quartier, Ville, État, CP',
+    coordinatesNote: 'Les coordonnées de la carte restent inchangées',
+    latitude: 'Latitude',
+    longitude: 'Longitude',
+    latitudePlaceholder: 'Ex: 19.4326',
+    longitudePlaceholder: 'Ex: -99.1332',
     
     // Fotografías
-    propertyPhotos: 'Photos de la Propriété',
-    uploadPhotos: 'Télécharger des Photos',
     photosDescription: 'Téléchargez des images intérieures et extérieures de la propriété',
     removePhoto: 'Supprimer la photo',
     
@@ -944,27 +960,28 @@ const translations = {
     regularLocation: 'Regulär',
     badLocation: 'Schlecht',
     
-     // Ubicación
-     clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
-     currentAddress: 'Aktuelle Adresse',
-     locationSketch: 'Standortskizze',
-     viewMap: 'Karte Anzeigen',
-     editData: 'Daten Bearbeiten',
-     mapInstructions: 'Markieren Sie den genauen Standort der Immobilie auf der Karte. Dies hilft bei einer genaueren Bewertung.',
-     registeredAddress: 'Registrierte Adresse:',
-     coordinates: 'Koordinaten:',
-     editLocationInstructions: 'Bearbeiten Sie manuell die Standortdaten der Immobilie.',
-     fullAddress: 'Vollständige Adresse',
-     fullAddressPlaceholder: 'Z.B.: Straße 123, Stadtteil, Stadt, Land, PLZ',
-     coordinatesNote: 'Kartenkoordinaten bleiben unverändert',
-     latitude: 'Breitengrad',
-     longitude: 'Längengrad',
-     latitudePlaceholder: 'Z.B.: 19.4326',
-     longitudePlaceholder: 'Z.B.: -99.1332',
+    
+
+    
+    // Ubicación
+    clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
+    currentAddress: 'Aktuelle Adresse',
+    locationSketch: 'Standortskizze',
+    viewMap: 'Karte Anzeigen',
+    editData: 'Daten Bearbeiten',
+    mapInstructions: 'Markieren Sie den genauen Standort der Immobilie auf der Karte. Dies hilft bei einer genaueren Bewertung.',
+    registeredAddress: 'Registrierte Adresse:',
+    coordinates: 'Koordinaten:',
+    editLocationInstructions: 'Bearbeiten Sie manuell die Standortdaten der Immobilie.',
+    fullAddress: 'Vollständige Adresse',
+    fullAddressPlaceholder: 'Z.B.: Straße 123, Stadtteil, Stadt, Land, PLZ',
+    coordinatesNote: 'Kartenkoordinaten bleiben unverändert',
+    latitude: 'Breitengrad',
+    longitude: 'Längengrad',
+    latitudePlaceholder: 'Z.B.: 19.4326',
+    longitudePlaceholder: 'Z.B.: -99.1332',
     
     // Fotografías
-    propertyPhotos: 'Immobilienfotos',
-    uploadPhotos: 'Fotos Hochladen',
     photosDescription: 'Innen- und Außenbilder der Immobilie hochladen',
     removePhoto: 'Foto entfernen',
     
@@ -1203,9 +1220,22 @@ const translations = {
     clickOnMap: 'Clicca sulla mappa per selezionare la posizione esatta della proprietà',
     currentAddress: 'Indirizzo attuale',
     
+    locationSketch: 'Schizzo della Posizione',
+    viewMap: 'Visualizza Mappa',
+    editData: 'Modifica Dati',
+    mapInstructions: 'Contrassegna la posizione esatta della proprietà sulla mappa. Questo aiuterà a fornire una valutazione più accurata.',
+    registeredAddress: 'Indirizzo Registrato:',
+    coordinates: 'Coordinate:',
+    editLocationInstructions: 'Modifica manualmente i dati di posizione della proprietà.',
+    fullAddress: 'Indirizzo Completo',
+    fullAddressPlaceholder: 'Es: Via 123, Quartiere, Città, Provincia, CAP',
+    coordinatesNote: 'Le coordinate della mappa rimangono invariate',
+    latitude: 'Latitudine',
+    longitude: 'Longitudine',
+    latitudePlaceholder: 'Es: 19.4326',
+    longitudePlaceholder: 'Es: -99.1332',
+
     // Fotografías
-    propertyPhotos: 'Foto della Proprietà',
-    uploadPhotos: 'Carica Foto',
     photosDescription: 'Carica immagini interne ed esterne della proprietà',
     removePhoto: 'Rimuovi foto',
     
@@ -1440,23 +1470,24 @@ const translations = {
     regularLocation: 'Regular',
     badLocation: 'Ruim',
     
-     // Ubicación
-     clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
-     currentAddress: 'Endereço atual',
-     locationSketch: 'Esboço de Localização',
-     viewMap: 'Ver Mapa',
-     editData: 'Editar Dados',
-     mapInstructions: 'Marque a localização exata da propriedade no mapa. Isso ajudará a fornecer uma avaliação mais precisa.',
-     registeredAddress: 'Endereço Registrado:',
-     coordinates: 'Coordenadas:',
-     editLocationInstructions: 'Edite manualmente os dados de localização da propriedade.',
-     fullAddress: 'Endereço Completo',
-     fullAddressPlaceholder: 'Ex: Rua 123, Bairro, Cidade, Estado, CEP',
-     coordinatesNote: 'As coordenadas do mapa permanecem inalteradas',
-     latitude: 'Latitude',
-     longitude: 'Longitude',
-     latitudePlaceholder: 'Ex: 19.4326',
-     longitudePlaceholder: 'Ex: -99.1332',
+    // Ubicación
+    clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
+    currentAddress: 'Endereço atual',
+    locationSketch: 'Esboço de Localização',
+    viewMap: 'Ver Mapa',
+    editData: 'Editar Dados',
+    mapInstructions: 'Marque a localização exata da propriedade no mapa. Isso ajudará a fornecer uma avaliação mais precisa.',
+    registeredAddress: 'Endereço Registrado:',
+    coordinates: 'Coordenadas:',
+    editLocationInstructions: 'Edite manualmente os dados de localização da propriedade.',
+    fullAddress: 'Endereço Completo',
+    fullAddressPlaceholder: 'Ex: Rua 123, Bairro, Cidade, Estado, CEP',
+    coordinatesNote: 'As coordenadas do mapa permanecem inalteradas',
+    latitude: 'Latitude',
+    longitude: 'Longitude',
+    latitudePlaceholder: 'Ex: 19.4326',
+    longitudePlaceholder: 'Ex: -99.1332',
+    
     
     // Fotografías
     propertyPhotos: 'Fotos da Propriedade',
