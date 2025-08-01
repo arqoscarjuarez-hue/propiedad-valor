@@ -146,6 +146,28 @@ const translations = {
     seriousDamageCondition: 'DAÑOS GRAVES - Problemas estructurales serios',
     wasteCondition: 'EN DESECHO - Demolición parcial necesaria',
     affectsPropertyValue: 'Afecta directamente el valor de la propiedad',
+    
+    // Summary sections
+    spacesSummary: 'Resumen de Espacios:',
+    characteristicsSummary: 'Resumen de Características:',
+    servicesSummary: 'Resumen de Servicios:',
+    basicServicesSummary: 'Básicos:',
+    additionalServicesSummary: 'Adicionales:',
+    propertyAge: 'Antigüedad:',
+    propertyLocation: 'Ubicación:',
+    propertyCondition: 'Estado:',
+    notSpecified: 'No especificada',
+    noSpecified: 'No especificado',
+    
+    // Letterhead and demo
+    letterheadType: 'Tipo de Membrete para Reportes',
+    selectLetterhead: 'Seleccionar tipo de membrete',
+    viewDemo: 'Ver Demo de Uso',
+    
+    // Error messages
+    errorTitle: 'Error',
+    errorUpdatingData: 'Error al actualizar los datos de la propiedad',
+    errorMinimumArea: 'Debe ingresar al menos un área de construcción mayor a 0',
     age: 'Antigüedad (años)',
     ageDescription: 'Años desde construcción',
     locationQuality: 'Calidad de Ubicación',
@@ -170,9 +192,8 @@ const translations = {
     goodLocation: 'Buena',
     regularLocation: 'Regular',
     badLocation: 'Mala',
-    
-    // Ubicación
-    propertyLocation: 'Ubicación de la Propiedad',
+     
+     // Ubicación
     clickOnMap: 'Haz clic en el mapa para seleccionar la ubicación exacta del inmueble',
     currentAddress: 'Dirección actual',
     
@@ -366,6 +387,28 @@ const translations = {
     seriousDamageCondition: 'SERIOUS DAMAGE - Serious structural problems',
     wasteCondition: 'WASTE - Partial demolition needed',
     affectsPropertyValue: 'Directly affects property value',
+    
+    // Summary sections
+    spacesSummary: 'Spaces Summary:',
+    characteristicsSummary: 'Characteristics Summary:',
+    servicesSummary: 'Services Summary:',
+    basicServicesSummary: 'Basic:',
+    additionalServicesSummary: 'Additional:',
+    propertyAge: 'Age:',
+    propertyLocation: 'Location:',
+    propertyCondition: 'Condition:',
+    notSpecified: 'Not specified',
+    noSpecified: 'Not specified',
+    
+    // Letterhead and demo
+    letterheadType: 'Letterhead Type for Reports',
+    selectLetterhead: 'Select letterhead type',
+    viewDemo: 'View Usage Demo',
+    
+    // Error messages
+    errorTitle: 'Error',
+    errorUpdatingData: 'Error updating property data',
+    errorMinimumArea: 'Must enter at least one construction area greater than 0',
     age: 'Age (years)',
     ageDescription: 'Years since construction',
     locationQuality: 'Location Quality',
@@ -391,8 +434,7 @@ const translations = {
     regularLocation: 'Regular',
     badLocation: 'Bad',
     
-    // Ubicación
-    propertyLocation: 'Property Location',
+     // Ubicación
     clickOnMap: 'Click on the map to select the exact location of the property',
     currentAddress: 'Current address',
     
@@ -585,6 +627,28 @@ const translations = {
     seriousDamageCondition: 'DOMMAGES GRAVES - Problèmes structurels sérieux',
     wasteCondition: 'DÉCHET - Démolition partielle nécessaire',
     affectsPropertyValue: 'Affecte directement la valeur de la propriété',
+    
+    // Summary sections
+    spacesSummary: 'Résumé des Espaces:',
+    characteristicsSummary: 'Résumé des Caractéristiques:',
+    servicesSummary: 'Résumé des Services:',
+    basicServicesSummary: 'De base:',
+    additionalServicesSummary: 'Supplémentaires:',
+    propertyAge: 'Âge:',
+    propertyLocation: 'Emplacement:',
+    propertyCondition: 'État:',
+    notSpecified: 'Non spécifié',
+    noSpecified: 'Non spécifié',
+    
+    // Letterhead and demo
+    letterheadType: 'Type d\'En-tête pour Rapports',
+    selectLetterhead: 'Sélectionner type d\'en-tête',
+    viewDemo: 'Voir Démo d\'Utilisation',
+    
+    // Error messages
+    errorTitle: 'Erreur',
+    errorUpdatingData: 'Erreur lors de la mise à jour des données de propriété',
+    errorMinimumArea: 'Doit saisir au moins une surface de construction supérieure à 0',
     age: 'Âge (années)',
     ageDescription: 'Années depuis la construction',
     locationQuality: 'Qualité de l\'Emplacement',
@@ -610,8 +674,7 @@ const translations = {
     regularLocation: 'Régulier',
     badLocation: 'Mauvais',
     
-    // Ubicación
-    propertyLocation: 'Localisation de la Propriété',
+     // Ubicación
     clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
     currentAddress: 'Adresse actuelle',
     
@@ -804,6 +867,28 @@ const translations = {
     wasteCondition: 'ABFALL - Teilabriss erforderlich',
     affectsPropertyValue: 'Beeinflusst direkt den Immobilienwert',
     
+    // Summary sections
+    spacesSummary: 'Raumzusammenfassung:',
+    characteristicsSummary: 'Merkmalszusammenfassung:',
+    servicesSummary: 'Dienstleistungszusammenfassung:',
+    basicServicesSummary: 'Grundlegend:',
+    additionalServicesSummary: 'Zusätzlich:',
+    propertyAge: 'Alter:',
+    propertyLocation: 'Lage:',
+    propertyCondition: 'Zustand:',
+    notSpecified: 'Nicht angegeben',
+    noSpecified: 'Nicht angegeben',
+    
+    // Letterhead and demo
+    letterheadType: 'Briefkopf-Typ für Berichte',
+    selectLetterhead: 'Briefkopf-Typ auswählen',
+    viewDemo: 'Nutzungsdemonstration anzeigen',
+    
+    // Error messages
+    errorTitle: 'Fehler',
+    errorUpdatingData: 'Fehler beim Aktualisieren der Immobiliendaten',
+    errorMinimumArea: 'Mindestens eine Baufläche größer als 0 eingeben',
+    
     // Características
     propertyCharacteristics: 'Immobilieneigenschaften',
     age: 'Alter (Jahre)',
@@ -831,8 +916,7 @@ const translations = {
     regularLocation: 'Regulär',
     badLocation: 'Schlecht',
     
-    // Ubicación
-    propertyLocation: 'Immobilienlage',
+     // Ubicación
     clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
     currentAddress: 'Aktuelle Adresse',
     
@@ -1025,6 +1109,28 @@ const translations = {
     wasteCondition: 'SCARTO - Demolizione parziale necessaria',
     affectsPropertyValue: 'Influisce direttamente sul valore della proprietà',
     
+    // Summary sections
+    spacesSummary: 'Riassunto Spazi:',
+    characteristicsSummary: 'Riassunto Caratteristiche:',
+    servicesSummary: 'Riassunto Servizi:',
+    basicServicesSummary: 'Base:',
+    additionalServicesSummary: 'Aggiuntivi:',
+    propertyAge: 'Età:',
+    propertyLocation: 'Posizione:',
+    propertyCondition: 'Condizione:',
+    notSpecified: 'Non specificato',
+    noSpecified: 'Non specificato',
+    
+    // Letterhead and demo
+    letterheadType: 'Tipo di Intestazione per Rapporti',
+    selectLetterhead: 'Seleziona tipo di intestazione',
+    viewDemo: 'Visualizza Demo di Utilizzo',
+    
+    // Error messages
+    errorTitle: 'Errore',
+    errorUpdatingData: 'Errore nell\'aggiornamento dei dati della proprietà',
+    errorMinimumArea: 'Deve inserire almeno un\'area di costruzione maggiore di 0',
+    
      // Características
     age: 'Età (anni)',
     ageDescription: 'Anni dalla costruzione',
@@ -1051,8 +1157,7 @@ const translations = {
     regularLocation: 'Regolare',
     badLocation: 'Cattiva',
     
-    // Ubicación
-    propertyLocation: 'Posizione della Proprietà',
+     // Ubicación
     clickOnMap: 'Clicca sulla mappa per selezionare la posizione esatta della proprietà',
     currentAddress: 'Indirizzo attuale',
     
@@ -1245,6 +1350,28 @@ const translations = {
     wasteCondition: 'DESPERDÍCIO - Demolição parcial necessária',
     affectsPropertyValue: 'Afeta diretamente o valor da propriedade',
     
+    // Summary sections
+    spacesSummary: 'Resumo de Espaços:',
+    characteristicsSummary: 'Resumo de Características:',
+    servicesSummary: 'Resumo de Serviços:',
+    basicServicesSummary: 'Básicos:',
+    additionalServicesSummary: 'Adicionais:',
+    propertyAge: 'Idade:',
+    propertyLocation: 'Localização:',
+    propertyCondition: 'Condição:',
+    notSpecified: 'Não especificado',
+    noSpecified: 'Não especificado',
+    
+    // Letterhead and demo
+    letterheadType: 'Tipo de Cabeçalho para Relatórios',
+    selectLetterhead: 'Selecionar tipo de cabeçalho',
+    viewDemo: 'Ver Demo de Uso',
+    
+    // Error messages
+    errorTitle: 'Erro',
+    errorUpdatingData: 'Erro ao atualizar dados da propriedade',
+    errorMinimumArea: 'Deve inserir pelo menos uma área de construção maior que 0',
+    
      // Características
     age: 'Idade (anos)',
     ageDescription: 'Anos desde a construção',
@@ -1271,8 +1398,7 @@ const translations = {
     regularLocation: 'Regular',
     badLocation: 'Ruim',
     
-    // Ubicación
-    propertyLocation: 'Localização da Propriedade',
+     // Ubicación
     clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
     currentAddress: 'Endereço atual',
     
@@ -1715,8 +1841,8 @@ const PropertyValuation = () => {
     } catch (error) {
       console.error('Error updating property data:', error);
       toast({
-        title: "Error",
-        description: "Error al actualizar los datos de la propiedad",
+        title: translations[selectedLanguage].errorTitle,
+        description: translations[selectedLanguage].errorUpdatingData,
         variant: "destructive"
       });
     }
@@ -2019,8 +2145,8 @@ const PropertyValuation = () => {
       
       if (areaTotal <= 0) {
         toast({
-          title: "Error",
-          description: "Debe ingresar al menos un área de construcción mayor a 0",
+          title: translations[selectedLanguage].errorTitle,
+          description: translations[selectedLanguage].errorMinimumArea,
           variant: "destructive"
         });
         return;
@@ -3668,10 +3794,10 @@ const PropertyValuation = () => {
           {/* Selector de tipo de membrete */}
           {valuation && (
             <Card className="p-4 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-200 dark:border-amber-800">
-              <Label className="text-sm font-bold mb-3 block text-amber-900 dark:text-amber-100">Tipo de Membrete para Reportes</Label>
+              <Label className="text-sm font-bold mb-3 block text-amber-900 dark:text-amber-100">{translations[selectedLanguage].letterheadType}</Label>
               <Select value={selectedLetterhead} onValueChange={setSelectedLetterhead}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Seleccionar tipo de membrete" />
+                  <SelectValue placeholder={translations[selectedLanguage].selectLetterhead} />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(letterheadConfigs).map(([key, config]) => (
@@ -3706,7 +3832,7 @@ const PropertyValuation = () => {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
                 >
                   <Play className="w-4 h-4 mr-2" />
-                  Ver Demo de Uso
+                   {translations[selectedLanguage].viewDemo}
                 </Button>
               </div>
             </Card>
@@ -3968,7 +4094,7 @@ const PropertyValuation = () => {
 
                   {/* Resumen de espacios */}
                   <div className="bg-muted p-4 rounded-lg">
-                     <h4 className="text-sm font-semibold mb-2">Resumen de Espacios:</h4>
+                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].spacesSummary}</h4>
                      <div className="grid grid-cols-2 gap-2 text-xs">
                        <div>Total {translations[selectedLanguage].bedrooms}: <span className="font-medium">{propertyData.recamaras}</span></div>
                        <div>Total {translations[selectedLanguage].bathrooms}: <span className="font-medium">{propertyData.banos}</span></div>
@@ -4070,16 +4196,16 @@ const PropertyValuation = () => {
 
                   {/* Resumen de características */}
                   <div className="bg-muted p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold mb-2">Resumen de Características:</h4>
+                    <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].characteristicsSummary}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                       <div>
-                        <span className="font-medium">Antigüedad:</span> {propertyData.antiguedad} años
+                        <span className="font-medium">{translations[selectedLanguage].propertyAge}</span> {propertyData.antiguedad} {translations[selectedLanguage].years}
                       </div>
                       <div>
-                        <span className="font-medium">Ubicación:</span> {propertyData.ubicacion || 'No especificada'}
+                        <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
                       </div>
                       <div className="md:col-span-2">
-                        <span className="font-medium">Estado:</span> {propertyData.estadoGeneral || 'No especificado'}
+                        <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
                       </div>
                     </div>
                   </div>
@@ -4254,10 +4380,10 @@ const PropertyValuation = () => {
 
                    {/* Resumen de servicios */}
                    <div className="bg-muted p-4 rounded-lg">
-                     <h4 className="text-sm font-semibold mb-2">Resumen de Servicios:</h4>
+                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].servicesSummary}</h4>
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                        <div className="flex justify-between">
-                         <span>Básicos:</span>
+                         <span>{translations[selectedLanguage].basicServicesSummary}</span>
                          <span className="font-medium">
                            {[propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje].filter(Boolean).length}/4
                          </span>
