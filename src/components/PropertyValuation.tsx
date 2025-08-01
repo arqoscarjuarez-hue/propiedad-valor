@@ -116,6 +116,7 @@ const translations = {
     garageDescription: 'Espacios de estacionamiento',
     others: 'Otros Espacios',
     othersDescription: 'Estudios, oficinas, etc.',
+    additionalSpaces: 'Espacios Adicionales',
     
     // Características
     propertyCharacteristics: 'Características de la Propiedad',
@@ -309,6 +310,7 @@ const translations = {
     garageDescription: 'Parking spaces',
     others: 'Other Spaces',
     othersDescription: 'Studies, offices, etc.',
+    additionalSpaces: 'Additional Spaces',
     
     // Características
     propertyCharacteristics: 'Property Features',
@@ -501,6 +503,7 @@ const translations = {
     garageDescription: 'Places de parking',
     others: 'Autres Espaces',
     othersDescription: 'Bureaux, études, etc.',
+    additionalSpaces: 'Espaces Supplémentaires',
     
     // Características
     propertyCharacteristics: 'Caractéristiques de la Propriété',
@@ -693,6 +696,7 @@ const translations = {
     garageDescription: 'Parkplätze',
     others: 'Andere Räume',
     othersDescription: 'Büros, Arbeitszimmer, etc.',
+    additionalSpaces: 'Zusätzliche Räume',
     
     // Características
     propertyCharacteristics: 'Immobilieneigenschaften',
@@ -885,6 +889,7 @@ const translations = {
     garageDescription: 'Posti auto',
     others: 'Altri Spazi',
     othersDescription: 'Studi, uffici, ecc.',
+    additionalSpaces: 'Spazi Aggiuntivi',
     
     // Características
     propertyCharacteristics: 'Caratteristiche della Proprietà',
@@ -1077,6 +1082,7 @@ const translations = {
     garageDescription: 'Vagas de estacionamento',
     others: 'Outros Espaços',
     othersDescription: 'Escritórios, estudos, etc.',
+    additionalSpaces: 'Espaços Adicionais',
     
     // Características
     propertyCharacteristics: 'Características da Propriedade',
@@ -3780,10 +3786,10 @@ const PropertyValuation = () => {
 
                   {/* Espacios Adicionales */}
                   <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Espacios Adicionales</h4>
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalSpaces}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <Label htmlFor="otros" className="text-sm font-medium">Otros Espacios</Label>
+                        <Label htmlFor="otros" className="text-sm font-medium">{translations[selectedLanguage].others}</Label>
                         <Input
                           id="otros"
                           type="number"
