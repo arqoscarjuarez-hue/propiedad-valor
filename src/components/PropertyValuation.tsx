@@ -4523,34 +4523,38 @@ const PropertyValuation = () => {
                     })()}
                    </div>
                    
-                   {/* Selector de Comparables */}
-                   {allComparativeProperties.length > 0 && (
+                    {/* Selector de Comparables */}
+                    {(allComparativeProperties.length > 0 || comparativeProperties.length > 0) && (
                      <div className="pt-4 border-t">
-                       <Label className="text-sm font-medium mb-3 block">
-                         Seleccionar Comparables (3 de 10)
-                       </Label>
-                       <div className="space-y-3 max-h-80 overflow-y-auto">
-                         {allComparativeProperties.map((comp, index) => (
-                           <div 
-                             key={index}
-                             className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                               selectedComparatives.includes(index) 
-                                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                                 : 'border-gray-200 hover:border-gray-300'
-                             }`}
-                             onClick={() => {
-                               if (selectedComparatives.includes(index)) {
-                                 if (selectedComparatives.length > 1) {
-                                   setSelectedComparatives(selectedComparatives.filter(i => i !== index));
-                                 }
-                               } else if (selectedComparatives.length < 3) {
-                                 setSelectedComparatives([...selectedComparatives, index]);
-                               } else {
-                                 // Reemplazar el último seleccionado
-                                 const newSelection = [...selectedComparatives.slice(0, 2), index];
-                                 setSelectedComparatives(newSelection);
-                               }
-                             }}
+                        <Label className="text-sm font-medium mb-3 block">
+                          {allComparativeProperties.length > 0 ? 'Seleccionar Comparables (3 de 10)' : 'Propiedades Comparables Utilizadas'}
+                        </Label>
+                        <div className="space-y-3 max-h-80 overflow-y-auto">
+                          {(allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties).map((comp, index) => (
+                            <div 
+                              key={index}
+                              className={`p-3 border rounded-lg ${
+                                allComparativeProperties.length > 0 ? 
+                                  `cursor-pointer transition-all ${
+                                    selectedComparatives.includes(index) 
+                                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                                      : 'border-gray-200 hover:border-gray-300'
+                                  }` :
+                                  'border-gray-200 bg-green-50 dark:bg-green-900/20'
+                              }`}
+                              onClick={allComparativeProperties.length > 0 ? () => {
+                                if (selectedComparatives.includes(index)) {
+                                  if (selectedComparatives.length > 1) {
+                                    setSelectedComparatives(selectedComparatives.filter(i => i !== index));
+                                  }
+                                } else if (selectedComparatives.length < 3) {
+                                  setSelectedComparatives([...selectedComparatives, index]);
+                                } else {
+                                  // Reemplazar el último seleccionado
+                                  const newSelection = [...selectedComparatives.slice(0, 2), index];
+                                  setSelectedComparatives(newSelection);
+                                }
+                              } : undefined}
                            >
                              <div className="flex justify-between items-start">
                                <div className="flex-1">
@@ -4565,29 +4569,43 @@ const PropertyValuation = () => {
                                    {formatCurrency(comp.precio, selectedCurrency)}
                                  </p>
                                </div>
-                               <div className="ml-2">
-                                 {selectedComparatives.includes(index) && (
-                                   <Badge variant="default" className="text-xs">
-                                     #{selectedComparatives.indexOf(index) + 1}
-                                   </Badge>
-                                 )}
-                               </div>
+                                <div className="ml-2">
+                                  {allComparativeProperties.length > 0 ? (
+                                    selectedComparatives.includes(index) && (
+                                      <Badge variant="default" className="text-xs">
+                                        #{selectedComparatives.indexOf(index) + 1}
+                                      </Badge>
+                                    )
+                                  ) : (
+                                    <Badge variant="secondary" className="text-xs">
+                                      #{index + 1}
+                                    </Badge>
+                                  )}
+                                </div>
                              </div>
                            </div>
                          ))}
-                       </div>
-                        <p className="text-xs text-gray-500 mt-2">
-                          Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
-                        </p>
-                        <Button 
-                          onClick={regenerateComparatives} 
-                          variant="outline" 
-                          className="w-full mt-3"
-                          size="sm"
-                        >
-                          <Shuffle className="mr-2 h-4 w-4" />
-                          Buscar Nuevos Comparables Cercanos
-                        </Button>
+                        </div>
+                        {allComparativeProperties.length > 0 ? (
+                          <>
+                            <p className="text-xs text-gray-500 mt-2">
+                              Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
+                            </p>
+                            <Button 
+                              onClick={regenerateComparatives} 
+                              variant="outline" 
+                              className="w-full mt-3"
+                              size="sm"
+                            >
+                              <Shuffle className="mr-2 h-4 w-4" />
+                              Buscar Nuevos Comparables Cercanos
+                            </Button>
+                          </>
+                        ) : (
+                          <p className="text-xs text-gray-500 mt-2">
+                            Propiedades utilizadas en la valuación actual
+                          </p>
+                        )}
                       </div>
                     )}
                      
