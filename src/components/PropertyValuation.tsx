@@ -120,6 +120,10 @@ const translations = {
     
     // Características
     propertyCharacteristics: 'Características de la Propiedad',
+    temporalInfo: 'Información Temporal',
+    qualityAndCondition: 'Calidad y Estado de la Propiedad',
+    constructionAge: 'Antigüedad de la Construcción',
+    yearsSinceConstruction: 'Años desde la construcción original',
     age: 'Antigüedad (años)',
     ageDescription: 'Años desde construcción',
     locationQuality: 'Calidad de Ubicación',
@@ -314,6 +318,10 @@ const translations = {
     
     // Características
     propertyCharacteristics: 'Property Features',
+    temporalInfo: 'Temporal Information',
+    qualityAndCondition: 'Quality and Property Condition',
+    constructionAge: 'Construction Age',
+    yearsSinceConstruction: 'Years since original construction',
     age: 'Age (years)',
     ageDescription: 'Years since construction',
     locationQuality: 'Location Quality',
@@ -507,6 +515,10 @@ const translations = {
     
     // Características
     propertyCharacteristics: 'Caractéristiques de la Propriété',
+    temporalInfo: 'Informations Temporelles',
+    qualityAndCondition: 'Qualité et État de la Propriété',
+    constructionAge: 'Âge de la Construction',
+    yearsSinceConstruction: 'Années depuis la construction originale',
     age: 'Âge (années)',
     ageDescription: 'Années depuis la construction',
     locationQuality: 'Qualité de l\'Emplacement',
@@ -697,6 +709,12 @@ const translations = {
     others: 'Andere Räume',
     othersDescription: 'Büros, Arbeitszimmer, etc.',
     additionalSpaces: 'Zusätzliche Räume',
+    
+    // Características
+    temporalInfo: 'Zeitliche Informationen',
+    qualityAndCondition: 'Qualität und Zustand der Immobilie',
+    constructionAge: 'Alter der Konstruktion',
+    yearsSinceConstruction: 'Jahre seit der ursprünglichen Konstruktion',
     
     // Características
     propertyCharacteristics: 'Immobilieneigenschaften',
@@ -892,7 +910,12 @@ const translations = {
     additionalSpaces: 'Spazi Aggiuntivi',
     
     // Características
-    propertyCharacteristics: 'Caratteristiche della Proprietà',
+    temporalInfo: 'Informazioni Temporali',
+    qualityAndCondition: 'Qualità e Condizioni della Proprietà',
+    constructionAge: 'Età della Costruzione',
+    yearsSinceConstruction: 'Anni dalla costruzione originale',
+    
+     // Características
     age: 'Età (anni)',
     ageDescription: 'Anni dalla costruzione',
     locationQuality: 'Qualità della Posizione',
@@ -1085,7 +1108,12 @@ const translations = {
     additionalSpaces: 'Espaços Adicionais',
     
     // Características
-    propertyCharacteristics: 'Características da Propriedade',
+    temporalInfo: 'Informações Temporais',
+    qualityAndCondition: 'Qualidade e Estado da Propriedade',
+    constructionAge: 'Idade da Construção',
+    yearsSinceConstruction: 'Anos desde a construção original',
+    
+     // Características
     age: 'Idade (anos)',
     ageDescription: 'Anos desde a construção',
     locationQuality: 'Qualidade da Localização',
@@ -3821,16 +3849,16 @@ const PropertyValuation = () => {
                 </TabsContent>
 
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyCharacteristics}</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].characteristics}</h3>
                   
                   {/* Información Temporal */}
                   <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Información Temporal</h4>
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].temporalInfo}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="antiguedad" className="flex items-center gap-2">
                           <Calendar className="h-4 w-4" />
-                          Antigüedad de la Construcción (años)
+                          {translations[selectedLanguage].constructionAge} ({translations[selectedLanguage].years})
                         </Label>
                         <Input
                           id="antiguedad"
@@ -3842,19 +3870,19 @@ const PropertyValuation = () => {
                            }}
                           placeholder="0"
                         />
-                        <p className="text-xs text-muted-foreground mt-1">Años desde la construcción original</p>
+                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].yearsSinceConstruction}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Calidad y Estado */}
                   <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">Calidad y Estado de la Propiedad</h4>
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].qualityAndCondition}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          Calidad de Ubicación
+                           {translations[selectedLanguage].locationQuality}
                         </Label>
                          <Select 
                            value={propertyData.ubicacion} 
