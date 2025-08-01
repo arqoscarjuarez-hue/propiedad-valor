@@ -2195,7 +2195,7 @@ const PropertyValuation = () => {
       
       doc.setFontSize(12);
       doc.text(config.subtitle, pageWidth / 2, 28, { align: "center" });
-      doc.text("AVALÚO INMOBILIARIO PROFESIONAL", pageWidth / 2, 35, { align: "center" });
+      doc.text(translations[selectedLanguage].marketAnalysis, pageWidth / 2, 35, { align: "center" });
       
       doc.setTextColor(0, 0, 0);
       yPosition = 50;
@@ -2234,7 +2234,7 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("1. INFORMACIÓN GENERAL DEL INMUEBLE", marginLeft, yPosition + 6);
+      doc.text(`1. ${translations[selectedLanguage].generalInfo}`, marginLeft, yPosition + 6);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
@@ -2245,53 +2245,53 @@ const PropertyValuation = () => {
 
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
-      doc.text("Tipo de Propiedad:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].type}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
       doc.text(propertyData.tipoPropiedad.toUpperCase(), marginLeft + 45, yPosition);
       yPosition += 6;
 
       doc.setFont("helvetica", "bold");
-      doc.text("Área Total Construida:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].totalBuiltArea}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
-      doc.text(`${areaTotal.toLocaleString()} m²`, marginLeft + 50, yPosition);
+      doc.text(`${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
       yPosition += 6;
 
       doc.setFont("helvetica", "bold");
-      doc.text("Área del Terreno:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].landArea}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
-      doc.text(`${propertyData.areaTerreno.toLocaleString()} m²`, marginLeft + 40, yPosition);
+      doc.text(`${propertyData.areaTerreno.toLocaleString()} ${translations[selectedLanguage].sqm}`, marginLeft + 40, yPosition);
       yPosition += 6;
 
       doc.setFont("helvetica", "bold");
-      doc.text("Antigüedad:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].age}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
-      doc.text(`${propertyData.antiguedad} años`, marginLeft + 30, yPosition);
+      doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 30, yPosition);
       yPosition += 6;
 
       // Ubicación y estado
-      const ubicacionTexto = propertyData.ubicacion === 'excelente' ? 'Excelente' :
-                             propertyData.ubicacion === 'buena' ? 'Buena' :
-                             propertyData.ubicacion === 'regular' ? 'Regular' : 'Deficiente';
+      const ubicacionTexto = propertyData.ubicacion === 'excelente' ? translations[selectedLanguage].excellent :
+                             propertyData.ubicacion === 'buena' ? translations[selectedLanguage].goodLocation :
+                             propertyData.ubicacion === 'regular' ? translations[selectedLanguage].regularLocation : translations[selectedLanguage].badLocation;
       
-      const estadoTexto = propertyData.estadoGeneral === 'nuevo' ? 'Nuevo' :
-                         propertyData.estadoGeneral === 'bueno' ? 'Bueno' :
-                         propertyData.estadoGeneral === 'medio' ? 'Medio' :
-                         propertyData.estadoGeneral === 'regular' ? 'Regular' :
-                         propertyData.estadoGeneral === 'reparaciones-sencillas' ? 'Reparaciones Sencillas' :
-                         propertyData.estadoGeneral === 'reparaciones-medias' ? 'Reparaciones Medias' :
-                         propertyData.estadoGeneral === 'reparaciones-importantes' ? 'Reparaciones Importantes' :
-                         propertyData.estadoGeneral === 'danos-graves' ? 'Daños Graves' :
-                         propertyData.estadoGeneral === 'en-desecho' ? 'En Desecho' :
-                         propertyData.estadoGeneral === 'inservibles' ? 'Inservibles' : 'No Especificado';
+      const estadoTexto = propertyData.estadoGeneral === 'nuevo' ? translations[selectedLanguage].new :
+                         propertyData.estadoGeneral === 'bueno' ? translations[selectedLanguage].good :
+                         propertyData.estadoGeneral === 'medio' ? translations[selectedLanguage].medium :
+                         propertyData.estadoGeneral === 'regular' ? translations[selectedLanguage].regular :
+                         propertyData.estadoGeneral === 'reparaciones-sencillas' ? translations[selectedLanguage].simpleRepairs :
+                         propertyData.estadoGeneral === 'reparaciones-medias' ? translations[selectedLanguage].mediumRepairs :
+                         propertyData.estadoGeneral === 'reparaciones-importantes' ? translations[selectedLanguage].importantRepairs :
+                         propertyData.estadoGeneral === 'danos-graves' ? translations[selectedLanguage].seriousDamage :
+                         propertyData.estadoGeneral === 'en-desecho' ? translations[selectedLanguage].waste :
+                         propertyData.estadoGeneral === 'inservibles' ? translations[selectedLanguage].useless : 'No Especificado';
 
       doc.setFont("helvetica", "bold");
-      doc.text("Calidad de Ubicación:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].locationQuality}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
       doc.text(ubicacionTexto, marginLeft + 50, yPosition);
       yPosition += 6;
 
       doc.setFont("helvetica", "bold");
-      doc.text("Estado General:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].generalCondition}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
       doc.text(estadoTexto, marginLeft + 40, yPosition);
       yPosition += 15;
@@ -2304,13 +2304,13 @@ const PropertyValuation = () => {
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        doc.text("2. UBICACIÓN DEL INMUEBLE", marginLeft, yPosition + 6);
+        doc.text(`2. ${translations[selectedLanguage].propertyLocationPDF}`, marginLeft, yPosition + 6);
         doc.setTextColor(0, 0, 0);
         yPosition += 18;
 
         doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
-        doc.text("Dirección:", marginLeft, yPosition);
+        doc.text(`${translations[selectedLanguage].address}:`, marginLeft, yPosition);
         doc.setFont("helvetica", "normal");
         const addressLines = doc.splitTextToSize(propertyData.direccionCompleta, contentWidth - 25);
         doc.text(addressLines, marginLeft + 25, yPosition);
@@ -2327,7 +2327,7 @@ const PropertyValuation = () => {
           const googleMapsUrl = `https://www.google.com/maps?q=${propertyData.latitud},${propertyData.longitud}`;
           doc.setFont("helvetica", "normal");
           doc.setTextColor(0, 0, 255); // Azul para el enlace
-          doc.textWithLink("Ver ubicación en Google Maps", marginLeft, yPosition, { url: googleMapsUrl });
+          doc.textWithLink(translations[selectedLanguage].viewInGoogleMaps, marginLeft, yPosition, { url: googleMapsUrl });
           doc.setTextColor(0, 0, 0); // Regresar a negro
           yPosition += 10;
         }
@@ -2340,7 +2340,7 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS", marginLeft, yPosition + 6);
+      doc.text(`3. ${translations[selectedLanguage].propertyAreas}`, marginLeft, yPosition + 6);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
@@ -2349,17 +2349,17 @@ const PropertyValuation = () => {
       
       // Áreas por nivel
       const areas = [
-        { nivel: "Sótano", area: propertyData.areaSotano },
-        { nivel: "Primer Nivel", area: propertyData.areaPrimerNivel },
-        { nivel: "Segundo Nivel", area: propertyData.areaSegundoNivel },
-        { nivel: "Tercer Nivel", area: propertyData.areaTercerNivel },
-        { nivel: "Cuarto Nivel", area: propertyData.areaCuartoNivel }
+        { nivel: translations[selectedLanguage].basement, area: propertyData.areaSotano },
+        { nivel: translations[selectedLanguage].firstFloor, area: propertyData.areaPrimerNivel },
+        { nivel: translations[selectedLanguage].secondFloor, area: propertyData.areaSegundoNivel },
+        { nivel: translations[selectedLanguage].thirdFloor, area: propertyData.areaTercerNivel },
+        { nivel: translations[selectedLanguage].fourthFloor, area: propertyData.areaCuartoNivel }
       ];
 
       areas.forEach(({ nivel, area }) => {
         doc.text(`${nivel}:`, marginLeft + 5, yPosition);
         doc.setFont("helvetica", "normal");
-        doc.text(`${area} m²`, marginLeft + 50, yPosition);
+        doc.text(`${area} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
         doc.setFont("helvetica", "bold");
         yPosition += 5;
       });
@@ -2368,13 +2368,13 @@ const PropertyValuation = () => {
       doc.setFillColor(240, 248, 255);
       doc.rect(marginLeft, yPosition - 3, contentWidth, 8, 'F');
       doc.setFontSize(12);
-      doc.text(`TOTAL ÁREA CONSTRUIDA: ${areaTotal} m²`, marginLeft + 5, yPosition + 3);
+      doc.text(`${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: ${areaTotal} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition + 3);
       yPosition += 15;
 
       // Área libre
       const areaLibre = propertyData.areaTerreno - areaTotal;
       doc.setFontSize(11);
-      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} m²`, marginLeft + 5, yPosition);
+      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
       yPosition += 6;
       
       const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
@@ -2388,26 +2388,26 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("4. ESPACIOS Y CARACTERÍSTICAS", marginLeft, yPosition + 6);
+      doc.text(`4. ${translations[selectedLanguage].propertySpaces}`, marginLeft, yPosition + 6);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
       // Espacios habitacionales
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      doc.text("Espacios Habitacionales:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].livingSpaces}:`, marginLeft, yPosition);
       yPosition += 8;
 
       const espacios = [
-        { nombre: "Recámaras", cantidad: propertyData.recamaras },
-        { nombre: "Salas", cantidad: propertyData.salas },
-        { nombre: "Comedores", cantidad: propertyData.comedor },
-        { nombre: "Cocinas", cantidad: propertyData.cocina },
-        { nombre: "Baños", cantidad: propertyData.banos },
-        { nombre: "Áreas de Servicio", cantidad: propertyData.areaServicio },
-        { nombre: "Bodegas", cantidad: propertyData.bodega },
-        { nombre: "Cocheras", cantidad: propertyData.cochera },
-        { nombre: "Otros Espacios", cantidad: propertyData.otros }
+        { nombre: translations[selectedLanguage].bedrooms, cantidad: propertyData.recamaras },
+        { nombre: translations[selectedLanguage].livingRooms, cantidad: propertyData.salas },
+        { nombre: translations[selectedLanguage].diningRoom, cantidad: propertyData.comedor },
+        { nombre: translations[selectedLanguage].kitchen, cantidad: propertyData.cocina },
+        { nombre: translations[selectedLanguage].bathrooms, cantidad: propertyData.banos },
+        { nombre: translations[selectedLanguage].serviceArea, cantidad: propertyData.areaServicio },
+        { nombre: translations[selectedLanguage].storage, cantidad: propertyData.bodega },
+        { nombre: translations[selectedLanguage].garage, cantidad: propertyData.cochera },
+        { nombre: translations[selectedLanguage].others, cantidad: propertyData.otros }
       ];
 
       doc.setFontSize(11);
@@ -2429,23 +2429,23 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("5. SERVICIOS DISPONIBLES", marginLeft, yPosition + 6);
+      doc.text(`5. ${translations[selectedLanguage].availableServices}`, marginLeft, yPosition + 6);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
       // Servicios básicos
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      doc.text("Servicios Básicos:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].basicServices}:`, marginLeft, yPosition);
       yPosition += 8;
 
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       const serviciosBasicos = [
-        { nombre: "Agua Potable", disponible: propertyData.servicios.agua },
-        { nombre: "Electricidad", disponible: propertyData.servicios.electricidad },
-        { nombre: "Gas Natural/LP", disponible: propertyData.servicios.gas },
-        { nombre: "Drenaje", disponible: propertyData.servicios.drenaje }
+        { nombre: translations[selectedLanguage].water, disponible: propertyData.servicios.agua },
+        { nombre: translations[selectedLanguage].electricity, disponible: propertyData.servicios.electricidad },
+        { nombre: translations[selectedLanguage].gas, disponible: propertyData.servicios.gas },
+        { nombre: translations[selectedLanguage].drainage, disponible: propertyData.servicios.drenaje }
       ];
 
       serviciosBasicos.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
@@ -2455,22 +2455,22 @@ const PropertyValuation = () => {
 
       yPosition += 5;
       doc.setFont("helvetica", "bold");
-      doc.text("Servicios Adicionales:", marginLeft, yPosition);
+      doc.text(`${translations[selectedLanguage].additionalServices}:`, marginLeft, yPosition);
       yPosition += 8;
 
       doc.setFont("helvetica", "normal");
       const serviciosAdicionales = [
-        { nombre: "Internet", disponible: propertyData.servicios.internet },
-        { nombre: "TV por Cable", disponible: propertyData.servicios.cable },
-        { nombre: "Teléfono", disponible: propertyData.servicios.telefono },
-        { nombre: "Seguridad Privada", disponible: propertyData.servicios.seguridad },
-        { nombre: "Alberca", disponible: propertyData.servicios.alberca },
-        { nombre: "Jardín", disponible: propertyData.servicios.jardin },
-        { nombre: "Elevador", disponible: propertyData.servicios.elevador },
-        { nombre: "Aire Acondicionado", disponible: propertyData.servicios.aireAcondicionado },
-        { nombre: "Calefacción", disponible: propertyData.servicios.calefaccion },
-        { nombre: "Paneles Solares", disponible: propertyData.servicios.panelesSolares },
-        { nombre: "Tinaco/Cisterna", disponible: propertyData.servicios.tinaco }
+        { nombre: translations[selectedLanguage].internet, disponible: propertyData.servicios.internet },
+        { nombre: translations[selectedLanguage].cable, disponible: propertyData.servicios.cable },
+        { nombre: translations[selectedLanguage].phone, disponible: propertyData.servicios.telefono },
+        { nombre: translations[selectedLanguage].security, disponible: propertyData.servicios.seguridad },
+        { nombre: translations[selectedLanguage].swimmingPool, disponible: propertyData.servicios.alberca },
+        { nombre: translations[selectedLanguage].garden, disponible: propertyData.servicios.jardin },
+        { nombre: translations[selectedLanguage].elevator, disponible: propertyData.servicios.elevador },
+        { nombre: translations[selectedLanguage].airConditioning, disponible: propertyData.servicios.aireAcondicionado },
+        { nombre: translations[selectedLanguage].heating, disponible: propertyData.servicios.calefaccion },
+        { nombre: translations[selectedLanguage].solarPanels, disponible: propertyData.servicios.panelesSolares },
+        { nombre: translations[selectedLanguage].waterTank, disponible: propertyData.servicios.tinaco }
       ];
 
       serviciosAdicionales.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
@@ -2488,7 +2488,7 @@ const PropertyValuation = () => {
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        doc.text("6. ANÁLISIS DE MERCADO Y COMPARABLES", marginLeft, yPosition + 6);
+        doc.text(`6. ${translations[selectedLanguage].marketAnalysisTitle}`, marginLeft, yPosition + 6);
         doc.setTextColor(0, 0, 0);
         yPosition += 18;
 
@@ -2500,11 +2500,11 @@ const PropertyValuation = () => {
           yPosition += 10;
 
           doc.setFontSize(11);
-          doc.text(`Precio Promedio: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          doc.text(`${translations[selectedLanguage].averagePrice}: ${formatCurrency(analysis.avgPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
           yPosition += 6;
-          doc.text(`Precio Mínimo: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          doc.text(`${translations[selectedLanguage].minPrice}: ${formatCurrency(analysis.minPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
           yPosition += 6;
-          doc.text(`Precio Máximo: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
+          doc.text(`${translations[selectedLanguage].maxPrice}: ${formatCurrency(analysis.maxPrice, selectedCurrency)}`, marginLeft + 5, yPosition);
           yPosition += 6;
           
           const variacion = ((valuation - analysis.avgPrice) / analysis.avgPrice * 100).toFixed(1);
@@ -2515,7 +2515,7 @@ const PropertyValuation = () => {
         // Tabla de comparables (resumen)
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text("Propiedades Comparables Utilizadas:", marginLeft, yPosition);
+        doc.text(`${translations[selectedLanguage].comparativeProperties}:`, marginLeft, yPosition);
         yPosition += 10;
 
         comparativeProperties.forEach((comp, index) => {
@@ -2526,13 +2526,13 @@ const PropertyValuation = () => {
           yPosition += 6;
 
           doc.setFont("helvetica", "normal");
-          doc.text(`• Dirección: ${comp.address}`, marginLeft + 5, yPosition);
+          doc.text(`• ${translations[selectedLanguage].address}: ${comp.address}`, marginLeft + 5, yPosition);
           yPosition += 5;
-          doc.text(`• Área Construida: ${comp.areaConstruida} m²`, marginLeft + 5, yPosition);
+          doc.text(`• ${translations[selectedLanguage].builtArea}: ${comp.areaConstruida} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
           yPosition += 5;
-          doc.text(`• Precio: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft + 5, yPosition);
+          doc.text(`• ${translations[selectedLanguage].price}: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft + 5, yPosition);
           yPosition += 5;
-          doc.text(`• Precio por m²: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft + 5, yPosition);
+          doc.text(`• ${translations[selectedLanguage].pricePerSqm}: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft + 5, yPosition);
           yPosition += 8;
         });
       }
@@ -2544,7 +2544,7 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("7. RESULTADO DE VALUACIÓN", marginLeft, yPosition + 6);
+      doc.text(`7. ${translations[selectedLanguage].estimatedValuePDF || translations[selectedLanguage].estimatedValue}`, marginLeft, yPosition + 6);
       doc.setTextColor(0, 0, 0);
       yPosition += 18;
 
@@ -2555,7 +2555,7 @@ const PropertyValuation = () => {
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(18);
       doc.setFont("helvetica", "bold");
-      doc.text("VALOR ESTIMADO:", marginLeft + 5, yPosition + 8);
+      doc.text(`${translations[selectedLanguage].estimatedValue.toUpperCase()}:`, marginLeft + 5, yPosition + 8);
       
       doc.setFontSize(20);
       doc.text(formatCurrency(valuation, selectedCurrency), marginLeft + 5, yPosition + 18);
@@ -2835,64 +2835,64 @@ const PropertyValuation = () => {
               alignment: AlignmentType.CENTER
             }),
             new Paragraph({
-              text: "AVALÚO INMOBILIARIO PROFESIONAL",
+              text: translations[selectedLanguage].marketAnalysis,
               alignment: AlignmentType.CENTER
             }),
             new Paragraph({ text: "" }), // Espacio
 
             // 1. INFORMACIÓN GENERAL DEL INMUEBLE
             new Paragraph({
-              text: "1. INFORMACIÓN GENERAL DEL INMUEBLE",
+              text: `1. ${translations[selectedLanguage].generalInfo}`,
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Tipo de Propiedad: ", bold: true }),
+                new TextRun({ text: `${translations[selectedLanguage].type}: `, bold: true }),
                 new TextRun({ text: propertyData.tipoPropiedad.toUpperCase() })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Área Total Construida: ", bold: true }),
-                new TextRun({ text: `${areaTotal.toLocaleString()} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea}: `, bold: true }),
+                new TextRun({ text: `${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Área del Terreno: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].landArea}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Antigüedad: ", bold: true }),
-                new TextRun({ text: `${propertyData.antiguedad} años` })
+                new TextRun({ text: `${translations[selectedLanguage].age}: `, bold: true }),
+                new TextRun({ text: `${propertyData.antiguedad} ${translations[selectedLanguage].years}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Calidad de Ubicación: ", bold: true }),
+                new TextRun({ text: `${translations[selectedLanguage].locationQuality}: `, bold: true }),
                 new TextRun({ 
-                  text: propertyData.ubicacion === 'excelente' ? 'Excelente' :
-                        propertyData.ubicacion === 'buena' ? 'Buena' :
-                        propertyData.ubicacion === 'regular' ? 'Regular' : 'Deficiente'
+                  text: propertyData.ubicacion === 'excelente' ? translations[selectedLanguage].excellent :
+                        propertyData.ubicacion === 'buena' ? translations[selectedLanguage].goodLocation :
+                        propertyData.ubicacion === 'regular' ? translations[selectedLanguage].regularLocation : translations[selectedLanguage].badLocation
                 })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Estado General: ", bold: true }),
+                new TextRun({ text: `${translations[selectedLanguage].generalCondition}: `, bold: true }),
                 new TextRun({ 
-                  text: propertyData.estadoGeneral === 'nuevo' ? 'Nuevo' :
-                        propertyData.estadoGeneral === 'bueno' ? 'Bueno' :
-                        propertyData.estadoGeneral === 'medio' ? 'Medio' :
-                        propertyData.estadoGeneral === 'regular' ? 'Regular' :
-                        propertyData.estadoGeneral === 'reparaciones-sencillas' ? 'Reparaciones Sencillas' :
-                        propertyData.estadoGeneral === 'reparaciones-medias' ? 'Reparaciones Medias' :
-                        propertyData.estadoGeneral === 'reparaciones-importantes' ? 'Reparaciones Importantes' :
-                        propertyData.estadoGeneral === 'danos-graves' ? 'Daños Graves' :
-                        propertyData.estadoGeneral === 'en-desecho' ? 'En Desecho' :
-                        propertyData.estadoGeneral === 'inservibles' ? 'Inservibles' : 'No Especificado'
+                  text: propertyData.estadoGeneral === 'nuevo' ? translations[selectedLanguage].new :
+                        propertyData.estadoGeneral === 'bueno' ? translations[selectedLanguage].good :
+                        propertyData.estadoGeneral === 'medio' ? translations[selectedLanguage].medium :
+                        propertyData.estadoGeneral === 'regular' ? translations[selectedLanguage].regular :
+                        propertyData.estadoGeneral === 'reparaciones-sencillas' ? translations[selectedLanguage].simpleRepairs :
+                        propertyData.estadoGeneral === 'reparaciones-medias' ? translations[selectedLanguage].mediumRepairs :
+                        propertyData.estadoGeneral === 'reparaciones-importantes' ? translations[selectedLanguage].importantRepairs :
+                        propertyData.estadoGeneral === 'danos-graves' ? translations[selectedLanguage].seriousDamage :
+                        propertyData.estadoGeneral === 'en-desecho' ? translations[selectedLanguage].waste :
+                        propertyData.estadoGeneral === 'inservibles' ? translations[selectedLanguage].useless : 'No Especificado'
                 })
               ]
             }),
@@ -2901,12 +2901,12 @@ const PropertyValuation = () => {
             // 2. UBICACIÓN DEL INMUEBLE
             ...(propertyData.direccionCompleta ? [
               new Paragraph({
-                text: "2. UBICACIÓN DEL INMUEBLE",
+                text: `2. ${translations[selectedLanguage].propertyLocationPDF}`,
                 heading: HeadingLevel.HEADING_1
               }),
               new Paragraph({
                 children: [
-                  new TextRun({ text: "Dirección: ", bold: true }),
+                  new TextRun({ text: `${translations[selectedLanguage].address}: `, bold: true }),
                   new TextRun({ text: propertyData.direccionCompleta })
                 ]
               }),
@@ -2932,43 +2932,43 @@ const PropertyValuation = () => {
 
             // 3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS
             new Paragraph({
-              text: "3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS",
+              text: `3. ${translations[selectedLanguage].propertyAreas}`,
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Sótano: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaSotano} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].basement}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaSotano} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Primer Nivel: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaPrimerNivel} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].firstFloor}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaPrimerNivel} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Segundo Nivel: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaSegundoNivel} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].secondFloor}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaSegundoNivel} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Tercer Nivel: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaTercerNivel} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].thirdFloor}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaTercerNivel} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Cuarto Nivel: ", bold: true }),
-                new TextRun({ text: `${propertyData.areaCuartoNivel} m²` })
+                new TextRun({ text: `${translations[selectedLanguage].fourthFloor}: `, bold: true }),
+                new TextRun({ text: `${propertyData.areaCuartoNivel} ${translations[selectedLanguage].sqm}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "TOTAL ÁREA CONSTRUIDA: ", bold: true }),
-                new TextRun({ text: `${areaTotal} m²`, bold: true })
+                new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: `, bold: true }),
+                new TextRun({ text: `${areaTotal} ${translations[selectedLanguage].sqm}`, bold: true })
               ]
             }),
             new Paragraph({
@@ -2987,65 +2987,65 @@ const PropertyValuation = () => {
 
             // 4. ESPACIOS Y CARACTERÍSTICAS
             new Paragraph({
-              text: "4. ESPACIOS Y CARACTERÍSTICAS",
+              text: `4. ${translations[selectedLanguage].propertySpaces}`,
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Espacios Habitacionales:", bold: true })
+                new TextRun({ text: `${translations[selectedLanguage].livingSpaces}:`, bold: true })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Recámaras: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].bedrooms}: `, bold: true }),
                 new TextRun({ text: `${propertyData.recamaras}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Salas: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].livingRooms}: `, bold: true }),
                 new TextRun({ text: `${propertyData.salas}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Comedores: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].diningRoom}: `, bold: true }),
                 new TextRun({ text: `${propertyData.comedor}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Cocinas: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].kitchen}: `, bold: true }),
                 new TextRun({ text: `${propertyData.cocina}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Baños: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].bathrooms}: `, bold: true }),
                 new TextRun({ text: `${propertyData.banos}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Áreas de Servicio: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].serviceArea}: `, bold: true }),
                 new TextRun({ text: `${propertyData.areaServicio}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Bodegas: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].storage}: `, bold: true }),
                 new TextRun({ text: `${propertyData.bodega}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Cocheras: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].garage}: `, bold: true }),
                 new TextRun({ text: `${propertyData.cochera}` })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "• Otros Espacios: ", bold: true }),
+                new TextRun({ text: `• ${translations[selectedLanguage].others}: `, bold: true }),
                 new TextRun({ text: `${propertyData.otros}` })
               ]
             }),
@@ -3053,35 +3053,35 @@ const PropertyValuation = () => {
 
             // 5. SERVICIOS DISPONIBLES
             new Paragraph({
-              text: "5. SERVICIOS DISPONIBLES",
+              text: `5. ${translations[selectedLanguage].availableServices}`,
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Servicios Básicos:", bold: true })
+                new TextRun({ text: `${translations[selectedLanguage].basicServices}:`, bold: true })
               ]
             }),
-            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: "✓ Agua Potable" })] })] : []),
-            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: "✓ Electricidad" })] })] : []),
-            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: "✓ Gas Natural/LP" })] })] : []),
-            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: "✓ Drenaje" })] })] : []),
+            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].water}` })] })] : []),
+            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].electricity}` })] })] : []),
+            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].gas}` })] })] : []),
+            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].drainage}` })] })] : []),
             
             new Paragraph({
               children: [
-                new TextRun({ text: "Servicios Adicionales:", bold: true })
+                new TextRun({ text: `${translations[selectedLanguage].additionalServices}:`, bold: true })
               ]
             }),
-            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: "✓ Internet" })] })] : []),
-            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: "✓ TV por Cable" })] })] : []),
-            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: "✓ Teléfono" })] })] : []),
-            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: "✓ Seguridad Privada" })] })] : []),
-            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: "✓ Alberca" })] })] : []),
-            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: "✓ Jardín" })] })] : []),
-            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: "✓ Elevador" })] })] : []),
-            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: "✓ Aire Acondicionado" })] })] : []),
-            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: "✓ Calefacción" })] })] : []),
-            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: "✓ Paneles Solares" })] })] : []),
-            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: "✓ Tinaco/Cisterna" })] })] : []),
+            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].internet}` })] })] : []),
+            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].cable}` })] })] : []),
+            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].phone}` })] })] : []),
+            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].security}` })] })] : []),
+            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].swimmingPool}` })] })] : []),
+            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].garden}` })] })] : []),
+            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].elevator}` })] })] : []),
+            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].airConditioning}` })] })] : []),
+            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].heating}` })] })] : []),
+            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].solarPanels}` })] })] : []),
+            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].waterTank}` })] })] : []),
 
             new Paragraph({ text: "" }), // Espacio
 
@@ -3090,7 +3090,7 @@ const PropertyValuation = () => {
               const analysis = getMarketAnalysis();
               return [
                 new Paragraph({
-                  text: "6. ANÁLISIS DE MERCADO Y COMPARABLES",
+                  text: `6. ${translations[selectedLanguage].marketAnalysisTitle}`,
                   heading: HeadingLevel.HEADING_1
                 }),
                 ...(analysis ? [
@@ -3101,19 +3101,19 @@ const PropertyValuation = () => {
                   }),
                   new Paragraph({
                     children: [
-                      new TextRun({ text: "Precio Promedio: ", bold: true }),
+                      new TextRun({ text: `${translations[selectedLanguage].averagePrice}: `, bold: true }),
                       new TextRun({ text: formatCurrency(analysis.avgPrice, selectedCurrency) })
                     ]
                   }),
                   new Paragraph({
                     children: [
-                      new TextRun({ text: "Precio Mínimo: ", bold: true }),
+                      new TextRun({ text: `${translations[selectedLanguage].minPrice}: `, bold: true }),
                       new TextRun({ text: formatCurrency(analysis.minPrice, selectedCurrency) })
                     ]
                   }),
                   new Paragraph({
                     children: [
-                      new TextRun({ text: "Precio Máximo: ", bold: true }),
+                      new TextRun({ text: `${translations[selectedLanguage].maxPrice}: `, bold: true }),
                       new TextRun({ text: formatCurrency(analysis.maxPrice, selectedCurrency) })
                     ]
                   }),
@@ -3131,12 +3131,12 @@ const PropertyValuation = () => {
                   rows: [
                     new DocxTableRow({
                       children: [
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Propiedad", bold: true })] })] }),
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Área (m²)", bold: true })] })] }),
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Recámaras", bold: true })] })] }),
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Baños", bold: true })] })] }),
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Antigüedad", bold: true })] })] }),
-                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Precio", bold: true })] })] })
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: translations[selectedLanguage].property, bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: `${translations[selectedLanguage].builtArea} (${translations[selectedLanguage].sqm})`, bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: translations[selectedLanguage].bedrooms, bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: translations[selectedLanguage].bathrooms, bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: translations[selectedLanguage].age, bold: true })] })] }),
+                new DocxTableCell({ children: [new Paragraph({ children: [new TextRun({ text: translations[selectedLanguage].price, bold: true })] })] })
                       ]
                     }),
                     ...comparativeProperties.map((comp: ComparativeProperty) => 
@@ -3159,18 +3159,18 @@ const PropertyValuation = () => {
 
             // 7. RESULTADO DE VALUACIÓN
             new Paragraph({
-              text: "7. RESULTADO DE VALUACIÓN",
+              text: `7. ${translations[selectedLanguage].estimatedValuePDF || translations[selectedLanguage].estimatedValue}`,
               heading: HeadingLevel.HEADING_1
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "VALOR ESTIMADO: ", bold: true, size: 32 }),
+                new TextRun({ text: `${translations[selectedLanguage].estimatedValue.toUpperCase()}: `, bold: true, size: 32 }),
                 new TextRun({ text: formatCurrency(valuation, selectedCurrency), bold: true, size: 32 })
               ]
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Precio por m² construido: ", bold: true }),
+                new TextRun({ text: `${translations[selectedLanguage].pricePerSqm}: `, bold: true }),
                 new TextRun({ text: formatCurrency(valuation / areaTotal, selectedCurrency) })
               ]
             }),
