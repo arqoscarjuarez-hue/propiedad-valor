@@ -126,19 +126,19 @@ const translations = {
     yearsSinceConstruction: 'Años desde la construcción original',
     
     // Location Quality options
-    excellentZone: 'Excelente - Zona exclusiva/premium',
-    goodZone: 'Buena - Zona residencial consolidada', 
-    regularZone: 'Regular - Zona en desarrollo',
-    badZone: 'Mala - Zona con problemas urbanos',
+    excellentZone: 'Excelente',
+    goodZone: 'Buena',
+    regularZone: 'Regular',
+    badZone: 'Mala',
     locationQualityPlaceholder: 'Selecciona la calidad de ubicación',
     evaluateServices: 'Evalúa servicios, seguridad, accesibilidad',
     
     // General Condition options
     generalConditionLabel: 'Estado General de Conservación',
     conditionPlaceholder: 'Selecciona el estado de conservación',
-    newCondition: 'NUEVO - Sin uso, como recién construido',
-    goodCondition: 'BUENO - Muy bien conservado, mínimo desgaste', 
-    mediumCondition: 'MEDIO - Conservación promedio, uso normal',
+    newCondition: 'Excelente',
+    goodCondition: 'Buena', 
+    mediumCondition: 'Regular',
     regularCondition: 'REGULAR - Desgaste visible, necesita mantenimiento',
     simpleRepairsCondition: 'REPARACIONES SENCILLAS - Pintura, detalles menores',
     mediumRepairsCondition: 'REPARACIONES MEDIAS - Cambio de pisos, plomería',
@@ -381,19 +381,19 @@ const translations = {
     yearsSinceConstruction: 'Years since original construction',
     
     // Location Quality options
-    excellentZone: 'Excellent - Exclusive/premium area',
-    goodZone: 'Good - Established residential area',
-    regularZone: 'Regular - Developing area', 
-    badZone: 'Poor - Area with urban problems',
+    excellentZone: 'Excellent',
+    goodZone: 'Good',
+    regularZone: 'Regular', 
+    badZone: 'Poor',
     locationQualityPlaceholder: 'Select location quality',
     evaluateServices: 'Evaluate services, security, accessibility',
     
     // General Condition options
     generalConditionLabel: 'General Condition',
     conditionPlaceholder: 'Select conservation condition',
-    newCondition: 'NEW - Unused, like newly built',
-    goodCondition: 'GOOD - Very well maintained, minimal wear',
-    mediumCondition: 'MEDIUM - Average conservation, normal use',
+    newCondition: 'Excellent',
+    goodCondition: 'Good',
+    mediumCondition: 'Regular',
     regularCondition: 'REGULAR - Visible wear, needs maintenance',
     simpleRepairsCondition: 'SIMPLE REPAIRS - Paint, minor details',
     mediumRepairsCondition: 'MEDIUM REPAIRS - Floor change, plumbing',
@@ -4263,12 +4263,10 @@ const PropertyValuation = () => {
                           <SelectTrigger>
                             <SelectValue placeholder={translations[selectedLanguage].locationQualityPlaceholder} />
                           </SelectTrigger>
-                          <SelectContent>
-                             <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
-                             <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
-                             <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
-                             <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
-                          </SelectContent>
+                           <SelectContent>
+                              <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+                              <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].evaluateServices}</p>
                       </div>
@@ -4288,17 +4286,10 @@ const PropertyValuation = () => {
                           <SelectTrigger>
                             <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
                           </SelectTrigger>
-                          <SelectContent>
-                             <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
-                             <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
-                             <SelectItem value="medio">{translations[selectedLanguage].mediumCondition}</SelectItem>
-                             <SelectItem value="regular">{translations[selectedLanguage].regularCondition}</SelectItem>
-                             <SelectItem value="reparaciones-sencillas">{translations[selectedLanguage].simpleRepairsCondition}</SelectItem>
-                             <SelectItem value="reparaciones-medias">{translations[selectedLanguage].mediumRepairsCondition}</SelectItem>
-                             <SelectItem value="reparaciones-importantes">{translations[selectedLanguage].importantRepairsCondition}</SelectItem>
-                             <SelectItem value="danos-graves">{translations[selectedLanguage].seriousDamageCondition}</SelectItem>
-                             <SelectItem value="en-desecho">{translations[selectedLanguage].wasteCondition}</SelectItem>
-                          </SelectContent>
+                           <SelectContent>
+                              <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
+                              <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
+                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
                       </div>
