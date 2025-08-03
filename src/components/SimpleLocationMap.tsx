@@ -543,71 +543,39 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         )}
       </div>
 
-      {/* Mapa interactivo con marcador arrastrable */}
+      {/* Mapa interactivo - clic para ubicar */}
       <div className="relative">
         <div 
           ref={mapRef}
-          className="h-64 rounded-lg overflow-hidden border bg-muted cursor-crosshair relative"
+          className="h-64 rounded-lg overflow-hidden border bg-muted cursor-crosshair relative hover:cursor-pointer"
           onClick={handleMapClick}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
         >
           <iframe
             width="100%"
             height="100%"
-            style={{ border: 0, pointerEvents: isDragging ? 'none' : 'auto' }}
+            style={{ border: 0, pointerEvents: 'auto' }}
             loading="lazy"
             allowFullScreen
             src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
           />
           
-          {/* Marcador arrastrable personalizado */}
-          <div 
-            ref={markerRef}
-            className={`absolute z-20 transform -translate-x-1/2 -translate-y-full transition-all duration-200 ${
-              isDragging 
-                ? 'scale-125 cursor-grabbing' 
-                : 'hover:scale-110 cursor-grab'
-            }`}
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -100%)',
-              // Área de agarre más grande
-              padding: '8px'
-            }}
-            onMouseDown={handleMarkerMouseDown}
-            title="Arrastra para mover la ubicación del inmueble"
-          >
-            <div className="relative">
-              {/* Marcador principal */}
-              <MapPin 
-                className={`h-10 w-10 drop-shadow-xl transition-colors duration-200 ${
-                  isDragging ? 'text-blue-500' : 'text-red-500'
-                }`} 
-                fill="currentColor" 
-              />
-              
-              {/* Animación de pulso solo cuando no se está arrastrando */}
-              {!isDragging && (
+          {/* Marcador de ubicación solo cuando hay una posición seleccionada */}
+          {currentAddress && (
+            <div 
+              className="absolute z-20 transform -translate-x-1/2 -translate-y-full pointer-events-none"
+              style={{
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -100%)'
+              }}
+            >
+              <div className="relative">
+                <MapPin className="h-10 w-10 text-red-500 drop-shadow-xl" fill="currentColor" />
                 <div className="absolute inset-0 animate-ping">
                   <MapPin className="h-10 w-10 text-red-500 opacity-50" fill="currentColor" />
                 </div>
-              )}
-              
-              {/* Círculo de ayuda visual para el área de agarre */}
-              <div 
-                className={`absolute inset-0 -m-2 rounded-full border-2 border-dashed transition-opacity duration-200 ${
-                  isDragging 
-                    ? 'border-blue-400 opacity-60' 
-                    : 'border-transparent opacity-0 hover:border-gray-400 hover:opacity-40'
-                }`}
-              />
+              </div>
             </div>
-          </div>
-          
-          {isDragging && (
-            <div className="absolute inset-0 bg-blue-500 bg-opacity-10 pointer-events-none" />
           )}
         </div>
         
@@ -619,9 +587,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         </div>
         
         <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1">
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Move className="h-3 w-3" />
-            <span>Arrastra el marcador o haz clic en el mapa</span>
+          <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
+            <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
+            <span>Haz clic en el mapa para ubicar el inmueble</span>
           </div>
         </div>
       </div>
@@ -664,8 +632,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <li>Busca una dirección específica en el primer campo</li>
           <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
           <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
-          <li><strong>Arrastra el marcador</strong> en el mapa para ajustar la ubicación exacta</li>
-          <li><strong>Haz clic en el mapa</strong> para colocar el marcador en una nueva ubicación</li>
+          <li><strong>Haz clic en el mapa</strong> para colocar el marcador en la ubicación exacta</li>
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
         </ul>
