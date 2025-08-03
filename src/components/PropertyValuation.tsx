@@ -255,7 +255,7 @@ const translations = {
     
     // PDF Content
     residentialValuation: 'VALUACIÓN RESIDENCIAL',
-    apartmentValuation: 'VALUACIÓN DE DEPARTAMENTO',
+    apartmentValuation: 'VALUACIÓN DE APARTAMENTO',
     landValuation: 'VALUACIÓN DE TERRENO',
     commercialValuation: 'VALUACIÓN COMERCIAL',
     residentialSubtitle: 'Avalúo Profesional de Casa Habitación',
@@ -2167,7 +2167,7 @@ const PropertyValuation = () => {
       
       const propertyTypeQueries = {
         'casa': 'casas en venta',
-        'departamento': 'departamentos en venta',
+        'departamento': 'apartamentos en venta',
         'terreno': 'terrenos en venta',
         'comercial': 'locales comerciales en venta',
         'bodega': 'bodegas en venta'
