@@ -2369,7 +2369,7 @@ const PropertyValuation = () => {
       const factorTipoAcceso = {
         'mainStreet': 1.10,        // +10%
         'vehicularPassage': 1.00,  // 0% (sin afectación)
-        'pedestrianPassage': 0.85, // -15%
+        'pedestrianPassage': 0.92, // -8%
         'rightOfWay': 0.80         // -20%
       };
       
