@@ -35,6 +35,12 @@ serve(async (req) => {
     });
 
     const moderationData = await moderationResponse.json();
+    
+    if (!moderationData || !moderationData.results || !moderationData.results[0]) {
+      console.error('Invalid moderation response:', moderationData);
+      throw new Error('Invalid moderation response from OpenAI');
+    }
+    
     const flagged = moderationData.results[0].flagged;
     const categories = moderationData.results[0].categories;
 

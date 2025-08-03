@@ -23,20 +23,16 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
 
   const fetchComments = async () => {
     try {
-      // Using any type to bypass TypeScript issues since the table doesn't exist in types yet
-      const response = await fetch(`https://bgxajhehysoonuzskzoi.supabase.co/rest/v1/comments?select=*&order=created_at.desc`, {
-        headers: {
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneGFqaGVoeXNvb251enNrem9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyNTk2MzQsImV4cCI6MjA2OTgzNTYzNH0.y6iMvZr_-MdSmzr0hxcvmn4CpHbvYS0f84geh7XSpws',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneGFqaGVoeXNvb251enNrem9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyNTk2MzQsImV4cCI6MjA2OTgzNTYzNH0.y6iMvZr_-MdSmzr0hxcvmn4CpHbvYS0f84geh7XSpws',
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch comments');
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
       
-      const data = await response.json();
       setComments(data || []);
     } catch (error) {
       console.error('Error fetching comments:', error);
