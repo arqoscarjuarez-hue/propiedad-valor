@@ -24,6 +24,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [showCoordinatesInfo, setShowCoordinatesInfo] = useState(false);
+  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -292,6 +293,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     const pixelX = e.clientX - mapRect.left;
     const pixelY = e.clientY - mapRect.top;
     
+    // Guardar la posición exacta del clic para mostrar el marcador
+    setMarkerPosition({ x: pixelX, y: pixelY });
+    
     const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
     setPosition([newCoords.lat, newCoords.lng]);
     reverseGeocode(newCoords.lat, newCoords.lng);
@@ -476,22 +480,24 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
           />
           
-          {/* Marcador fijo que aparece al hacer clic - NO arrastrable */}
-          <div 
-            className="absolute z-20 transform -translate-x-1/2 -translate-y-full pointer-events-none"
-            style={{
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -100%)'
-            }}
-          >
-            <div className="relative">
-              <MapPin className="h-8 w-8 text-red-500 drop-shadow-xl" fill="currentColor" />
-              <div className="absolute inset-0 animate-ping">
-                <MapPin className="h-8 w-8 text-red-500 opacity-50" fill="currentColor" />
+          {/* Marcador fijo que aparece exactamente donde se hace clic */}
+          {markerPosition && (
+            <div 
+              className="absolute z-20 transform -translate-x-1/2 -translate-y-full pointer-events-none"
+              style={{
+                left: `${markerPosition.x}px`,
+                top: `${markerPosition.y}px`,
+                transform: 'translate(-50%, -100%)'
+              }}
+            >
+              <div className="relative">
+                <MapPin className="h-8 w-8 text-red-500 drop-shadow-xl" fill="currentColor" />
+                <div className="absolute inset-0 animate-ping">
+                  <MapPin className="h-8 w-8 text-red-500 opacity-50" fill="currentColor" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
           
         </div>
         
