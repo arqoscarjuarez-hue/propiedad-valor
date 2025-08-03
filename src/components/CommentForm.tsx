@@ -40,9 +40,14 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         }
       });
 
-      if (error) throw error;
+      console.log('Function response:', data, error);
 
-      if (data.success) {
+      if (error) {
+        console.error('Function invocation error:', error);
+        throw error;
+      }
+
+      if (data && data.success) {
         setContent("");
         onCommentAdded();
         
@@ -53,11 +58,17 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             variant: "destructive",
           });
         } else {
+          const message = data.note ? 
+            `Tu comentario ha sido publicado. ${data.note}` : 
+            "Tu comentario ha sido publicado exitosamente";
+          
           toast({
             title: "Comentario publicado",
-            description: "Tu comentario ha sido publicado exitosamente",
+            description: message,
           });
         }
+      } else {
+        throw new Error(data?.error || 'Unknown error occurred');
       }
     } catch (error) {
       console.error('Error submitting comment:', error);

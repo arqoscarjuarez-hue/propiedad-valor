@@ -34,11 +34,57 @@ serve(async (req) => {
       }),
     });
 
+    if (!moderationResponse.ok) {
+      console.error('OpenAI API error:', moderationResponse.status, moderationResponse.statusText);
+      const errorText = await moderationResponse.text();
+      console.error('OpenAI error details:', errorText);
+      throw new Error(`OpenAI API error: ${moderationResponse.status}`);
+    }
+
     const moderationData = await moderationResponse.json();
+    console.log('OpenAI moderation response:', moderationData);
     
     if (!moderationData || !moderationData.results || !moderationData.results[0]) {
-      console.error('Invalid moderation response:', moderationData);
-      throw new Error('Invalid moderation response from OpenAI');
+      console.error('Invalid moderation response structure:', moderationData);
+      // Default to approved if moderation fails
+      const flagged = false;
+      const categories = {};
+      
+      console.log('Using default values due to invalid response');
+      
+      // Initialize Supabase client
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      // Insert comment with default approval
+      const { data, error } = await supabase
+        .from('comments')
+        .insert({
+          content,
+          user_id,
+          is_approved: true,
+          moderation_status: 'approved',
+          moderation_flags: null,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
+
+      console.log('Comment saved with default approval:', data);
+
+      return new Response(JSON.stringify({
+        success: true,
+        comment: data,
+        moderated: false,
+        note: 'Moderation service unavailable, comment approved by default'
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
     
     const flagged = moderationData.results[0].flagged;
