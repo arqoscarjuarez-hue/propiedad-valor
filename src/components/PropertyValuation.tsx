@@ -126,10 +126,10 @@ const translations = {
     yearsSinceConstruction: 'Años desde la construcción original',
     
     // Location Quality options
-    excellentZone: 'EXCELENTE - Zona de alta plusvalía, servicios completos',
-    goodZone: 'BUENA - Zona establecida con buenos servicios y acceso',
-    regularZone: 'REGULAR - Zona en desarrollo, servicios básicos',
-    badZone: 'MALA - Zona con limitaciones de servicios o acceso',
+    excellentZone: 'Excelente',
+    goodZone: 'Buena',
+    regularZone: 'Regular',
+    badZone: 'Mala',
     locationQualityPlaceholder: 'Selecciona la calidad de ubicación',
     evaluateServices: 'Evalúa servicios, seguridad, accesibilidad',
     
@@ -381,10 +381,10 @@ const translations = {
     yearsSinceConstruction: 'Years since original construction',
     
     // Location Quality options
-    excellentZone: 'EXCELLENT - High value area, complete services',
-    goodZone: 'GOOD - Established area with good services and access',
-    regularZone: 'REGULAR - Developing area, basic services', 
-    badZone: 'POOR - Area with limited services or access',
+    excellentZone: 'Excellent',
+    goodZone: 'Good',
+    regularZone: 'Regular', 
+    badZone: 'Bad',
     locationQualityPlaceholder: 'Select location quality',
     evaluateServices: 'Evaluate services, security, accessibility',
     
