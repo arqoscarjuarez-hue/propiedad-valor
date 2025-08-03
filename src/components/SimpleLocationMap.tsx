@@ -476,24 +476,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
           />
           
-          {/* Marcador de ubicación solo cuando hay una posición seleccionada */}
-          {currentAddress && (
-            <div 
-              className="absolute z-20 transform -translate-x-1/2 -translate-y-full pointer-events-none"
-              style={{
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -100%)'
-              }}
-            >
-              <div className="relative">
-                <MapPin className="h-10 w-10 text-red-500 drop-shadow-xl" fill="currentColor" />
-                <div className="absolute inset-0 animate-ping">
-                  <MapPin className="h-10 w-10 text-red-500 opacity-50" fill="currentColor" />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
         
         <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
