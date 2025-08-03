@@ -64,10 +64,10 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="font-display text-xl lg:text-2xl font-bold text-foreground">
-                  Valuador Inmobiliario Pro
+                  Sistema profesional de avalúos
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Sistema profesional de avalúos
+                  Evaluación de propiedades
                 </p>
               </div>
             </div>
@@ -162,7 +162,7 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
               <h3 className="font-display text-lg font-semibold text-foreground mb-4">
-                Valuador Inmobiliario Pro
+                Sistema profesional de avalúos
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 El sistema de valuación más avanzado y confiable de América. 
@@ -189,7 +189,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 Valuador Inmobiliario Pro. Sistema profesional de evaluación de propiedades.</p>
+            <p>&copy; 2024 Sistema profesional de avalúos. Evaluación de propiedades.</p>
             <p className="mt-2 text-sm">Metodología certificada • Reportes de calidad bancaria • Precisión garantizada</p>
           </div>
         </div>
