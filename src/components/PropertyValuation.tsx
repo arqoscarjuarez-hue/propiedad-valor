@@ -2365,12 +2365,21 @@ const PropertyValuation = () => {
       const serviciosAdicionalesPresentes = serviciosAdicionales.filter(servicio => propertyData.servicios[servicio]).length;
       const factorServiciosAdicionales = 1 + (serviciosAdicionalesPresentes * 0.01); // +1.0% por cada servicio adicional
       
+      // Factor de ajuste por tipo de acceso
+      const factorTipoAcceso = {
+        'mainStreet': 1.01,        // +1%
+        'vehicularPassage': 0.98,  // -2%
+        'pedestrianPassage': 0.96, // -4%
+        'rightOfWay': 0.94         // -6%
+      };
+      
       const valorFinal = (valorBase * 
                          (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
                          (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
                          factorAntiguedad *
                          factorServiciosBasicos *
-                         factorServiciosAdicionales) + bonificacionEspacios;
+                         factorServiciosAdicionales *
+                         (factorTipoAcceso[propertyData.tipoAcceso as keyof typeof factorTipoAcceso] || 1)) + bonificacionEspacios;
       
       // Convertir a la moneda seleccionada
       const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
