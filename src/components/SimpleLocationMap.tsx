@@ -5,6 +5,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Navigation, Zap, Info, Move } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+// Leaflet imports
+declare global {
+  interface Window {
+    L: any;
+  }
+}
+
 interface SimpleLocationMapProps {
   onLocationChange?: (lat: number, lng: number, address: string) => void;
   initialLat?: number;
@@ -24,36 +31,78 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [showCoordinatesInfo, setShowCoordinatesInfo] = useState(false);
-  const [markerPosition, setMarkerPosition] = useState<{ x: number; y: number } | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const leafletMapRef = useRef<any>(null);
+  const markerRef = useRef<any>(null);
   const { toast } = useToast();
 
-  // Función para convertir coordenadas de píxeles a coordenadas geográficas
-  const pixelToLatLng = (pixelX: number, pixelY: number, mapWidth: number, mapHeight: number, bounds: any) => {
-    const lat = bounds.north - (pixelY / mapHeight) * (bounds.north - bounds.south);
-    const lng = bounds.west + (pixelX / mapWidth) * (bounds.east - bounds.west);
-    return { lat, lng };
-  };
-
-  // Función para convertir coordenadas geográficas a píxeles
-  const latLngToPixel = (lat: number, lng: number, mapWidth: number, mapHeight: number, bounds: any) => {
-    const x = ((lng - bounds.west) / (bounds.east - bounds.west)) * mapWidth;
-    const y = ((bounds.north - lat) / (bounds.north - bounds.south)) * mapHeight;
-    return { x, y };
-  };
-
-  // Calcular los límites del mapa basado en la posición actual
-  const getMapBounds = () => {
-    const zoom = 15;
-    const latDiff = 0.01; // Aproximadamente 1km
-    const lngDiff = 0.01;
-    return {
-      north: position[0] + latDiff,
-      south: position[0] - latDiff,
-      east: position[1] + lngDiff,
-      west: position[1] - lngDiff
+  // Cargar Leaflet dinámicamente
+  useEffect(() => {
+    const loadLeaflet = async () => {
+      if (window.L) {
+        initMap();
+        return;
+      }
+      
+      // Cargar CSS
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+      
+      // Cargar JS
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.onload = () => initMap();
+      document.head.appendChild(script);
     };
+    
+    loadLeaflet();
+  }, []);
+
+  const initMap = () => {
+    if (!mapRef.current || leafletMapRef.current) return;
+    
+    const L = window.L;
+    
+    // Crear el mapa
+    leafletMapRef.current = L.map(mapRef.current).setView([position[0], position[1]], 15);
+    
+    // Agregar tiles de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(leafletMapRef.current);
+    
+    // Agregar marcador inicial
+    markerRef.current = L.marker([position[0], position[1]], {
+      draggable: false
+    }).addTo(leafletMapRef.current);
+    
+    // Event listener para clics en el mapa
+    leafletMapRef.current.on('click', function(e: any) {
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      
+      // Mover marcador
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      }
+      
+      // Actualizar posición
+      setPosition([lat, lng]);
+      reverseGeocode(lat, lng);
+    });
   };
+
+  // Actualizar mapa cuando cambia la posición
+  useEffect(() => {
+    if (leafletMapRef.current && window.L) {
+      leafletMapRef.current.setView([position[0], position[1]], 15);
+      if (markerRef.current) {
+        markerRef.current.setLatLng([position[0], position[1]]);
+      }
+    }
+  }, [position]);
 
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
   const searchLocation = async (query: string) => {
@@ -108,13 +157,11 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Remover espacios extra
       let input = dmsString.trim();
       
-      
       // Detectar dirección
       const isNegative = /[SW]/i.test(input);
       
       // Extraer todos los números (grados, minutos, segundos)
       const numbers = input.match(/\d+(?:\.\d+)?/g);
-      
       
       if (!numbers || numbers.length < 3) {
         throw new Error('Se requieren al menos 3 números: grados, minutos, segundos');
@@ -123,8 +170,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       const degrees = parseFloat(numbers[0]);
       const minutes = parseFloat(numbers[1]);
       const seconds = parseFloat(numbers[2]);
-      
-      
       
       // Validaciones básicas
       if (minutes >= 60) throw new Error('Minutos deben ser < 60');
@@ -135,7 +180,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       
       // Aplicar signo
       if (isNegative) decimal = -decimal;
-      
       
       return decimal;
       
@@ -156,8 +200,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       
       // Detectar si es formato DMS (contiene ° o ')
       if (coordsInput.includes('°') || coordsInput.includes("'") || coordsInput.includes('"')) {
-        
-        
         // Formato DMS - puede venir con coma o sin coma
         let parts: string[];
         
@@ -175,12 +217,10 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           }
         }
         
-        
         if (parts.length === 2) {
           try {
             lat = parseDMS(parts[0].trim());
             lng = parseDMS(parts[1].trim());
-            
           } catch (dmsError) {
             console.error('DMS parsing error:', dmsError);
             throw new Error('Error parseando coordenadas DMS: ' + (dmsError instanceof Error ? dmsError.message : 'formato inválido'));
@@ -281,24 +321,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const handlePositionChange = (lat: number, lng: number) => {
     setPosition([lat, lng]);
     reverseGeocode(lat, lng);
-  };
-
-  // Manejar clics en el mapa para colocar el marcador
-  const handleMapClick = (e: React.MouseEvent) => {
-    if (!mapRef.current) return;
-    
-    const mapRect = mapRef.current.getBoundingClientRect();
-    const bounds = getMapBounds();
-    
-    const pixelX = e.clientX - mapRect.left;
-    const pixelY = e.clientY - mapRect.top;
-    
-    // Guardar la posición exacta del clic para mostrar el marcador
-    setMarkerPosition({ x: pixelX, y: pixelY });
-    
-    const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
-    setPosition([newCoords.lat, newCoords.lng]);
-    reverseGeocode(newCoords.lat, newCoords.lng);
   };
 
   // Obtener ubicación actual del usuario
@@ -464,59 +486,25 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         )}
       </div>
 
-      {/* Mapa interactivo - clic para ubicar */}
+      {/* Mapa interactivo Leaflet */}
       <div className="relative">
         <div 
           ref={mapRef}
-          className="h-64 rounded-lg overflow-hidden border bg-muted relative"
-        >
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ border: 0, pointerEvents: 'none' }}
-            loading="lazy"
-            allowFullScreen
-            src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
-          />
-          
-          {/* Overlay transparente para capturar clics */}
-          <div 
-            className="absolute inset-0 z-10 bg-transparent cursor-crosshair"
-            onClick={handleMapClick}
-          />
-          
-          {/* Marcador fijo que aparece exactamente donde se hace clic */}
-          {markerPosition && (
-            <div 
-              className="absolute z-20 transform -translate-x-1/2 -translate-y-full pointer-events-none"
-              style={{
-                left: `${markerPosition.x}px`,
-                top: `${markerPosition.y}px`,
-                transform: 'translate(-50%, -100%)'
-              }}
-            >
-              <div className="relative">
-                <MapPin className="h-8 w-8 text-red-500 drop-shadow-xl" fill="currentColor" />
-                <div className="absolute inset-0 animate-ping">
-                  <MapPin className="h-8 w-8 text-red-500 opacity-50" fill="currentColor" />
-                </div>
-              </div>
-            </div>
-          )}
-          
-        </div>
+          className="h-96 rounded-lg overflow-hidden border bg-muted relative"
+          style={{ minHeight: '400px' }}
+        />
         
-        <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
+        <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 z-[1000]">
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="h-3 w-3" />
             <span>{position[0].toFixed(4)}, {position[1].toFixed(4)}</span>
           </div>
         </div>
         
-        <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1">
+        <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1 z-[1000]">
           <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
-            <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
-            <span>Haz clic en el mapa para ubicar el inmueble</span>
+            <Move className="h-3 w-3" />
+            <span>Arrastra para navegar • Haz clic para ubicar</span>
           </div>
         </div>
       </div>
@@ -559,6 +547,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <li>Busca una dirección específica en el primer campo</li>
           <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
           <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
+          <li><strong>Mueve el mapa</strong> arrastrando para explorar diferentes áreas</li>
           <li><strong>Haz clic en el mapa</strong> para colocar el marcador en la ubicación exacta</li>
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
