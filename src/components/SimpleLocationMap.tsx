@@ -24,10 +24,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [showCoordinatesInfo, setShowCoordinatesInfo] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const mapRef = useRef<HTMLDivElement>(null);
-  const markerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   // Función para convertir coordenadas de píxeles a coordenadas geográficas
@@ -285,52 +282,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     reverseGeocode(lat, lng);
   };
 
-  // Manejar el inicio del arrastre del marcador
-  const handleMarkerMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-    
-    const mapRect = mapRef.current?.getBoundingClientRect();
-    const markerRect = markerRef.current?.getBoundingClientRect();
-    
-    if (mapRect && markerRect) {
-      setDragOffset({
-        x: e.clientX - (markerRect.left + markerRect.width / 2),
-        y: e.clientY - (markerRect.top + markerRect.height)
-      });
-    }
-  };
-
-  // Manejar el movimiento del marcador durante el arrastre
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !mapRef.current) return;
-    
-    const mapRect = mapRef.current.getBoundingClientRect();
-    const bounds = getMapBounds();
-    
-    const pixelX = e.clientX - mapRect.left - dragOffset.x;
-    const pixelY = e.clientY - mapRect.top - dragOffset.y;
-    
-    const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
-    
-    // Validar que las coordenadas estén dentro de los límites del mapa
-    if (newCoords.lat >= bounds.south && newCoords.lat <= bounds.north &&
-        newCoords.lng >= bounds.west && newCoords.lng <= bounds.east) {
-      setPosition([newCoords.lat, newCoords.lng]);
-    }
-  };
-
-  // Finalizar el arrastre del marcador
-  const handleMouseUp = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      reverseGeocode(position[0], position[1]);
-    }
-  };
-
-  // Manejar clics en el mapa para mover el marcador
+  // Manejar clics en el mapa para colocar el marcador
   const handleMapClick = (e: React.MouseEvent) => {
-    if (isDragging || !mapRef.current) return;
+    if (!mapRef.current) return;
     
     const mapRect = mapRef.current.getBoundingClientRect();
     const bounds = getMapBounds();
@@ -342,43 +296,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     setPosition([newCoords.lat, newCoords.lng]);
     reverseGeocode(newCoords.lat, newCoords.lng);
   };
-
-  // Agregar event listeners globales para el arrastre
-  useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (!isDragging || !mapRef.current) return;
-      
-      const mapRect = mapRef.current.getBoundingClientRect();
-      const bounds = getMapBounds();
-      
-      const pixelX = e.clientX - mapRect.left - dragOffset.x;
-      const pixelY = e.clientY - mapRect.top - dragOffset.y;
-      
-      const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
-      
-      if (newCoords.lat >= bounds.south && newCoords.lat <= bounds.north &&
-          newCoords.lng >= bounds.west && newCoords.lng <= bounds.east) {
-        setPosition([newCoords.lat, newCoords.lng]);
-      }
-    };
-
-    const handleGlobalMouseUp = () => {
-      if (isDragging) {
-        setIsDragging(false);
-        reverseGeocode(position[0], position[1]);
-      }
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleGlobalMouseMove);
-      document.addEventListener('mouseup', handleGlobalMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
-      document.removeEventListener('mouseup', handleGlobalMouseUp);
-    };
-  }, [isDragging, dragOffset, position]);
 
   // Obtener ubicación actual del usuario
   const getCurrentLocation = () => {
