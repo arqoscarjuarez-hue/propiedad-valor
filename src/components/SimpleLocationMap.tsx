@@ -36,6 +36,21 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const markerRef = useRef<any>(null);
   const { toast } = useToast();
 
+  // Función para convertir coordenadas decimales a formato DMS
+  const convertToDMS = (decimal: number, isLatitude: boolean): string => {
+    const direction = isLatitude 
+      ? (decimal >= 0 ? 'N' : 'S') 
+      : (decimal >= 0 ? 'E' : 'W');
+    
+    const absoluteDecimal = Math.abs(decimal);
+    const degrees = Math.floor(absoluteDecimal);
+    const minutesFloat = (absoluteDecimal - degrees) * 60;
+    const minutes = Math.floor(minutesFloat);
+    const seconds = (minutesFloat - minutes) * 60;
+    
+    return `${degrees}°${minutes.toString().padStart(2, '0')}'${seconds.toFixed(2).padStart(5, '0')}"${direction}`;
+  };
+
   // Cargar Leaflet dinámicamente
   useEffect(() => {
     const loadLeaflet = async () => {
@@ -479,7 +494,10 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
               <p className="text-sm font-medium">Dirección Encontrada:</p>
               <p className="text-xs text-muted-foreground">{currentAddress}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Coordenadas: {position[0].toFixed(6)}, {position[1].toFixed(6)}
+                <strong>Coordenadas Decimales:</strong> {position[0].toFixed(6)}, {position[1].toFixed(6)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <strong>Coordenadas DMS:</strong> {convertToDMS(position[0], true)}, {convertToDMS(position[1], false)}
               </p>
             </div>
           </div>
