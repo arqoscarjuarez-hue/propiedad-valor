@@ -468,16 +468,21 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       <div className="relative">
         <div 
           ref={mapRef}
-          className="h-64 rounded-lg overflow-hidden border bg-muted cursor-crosshair relative hover:cursor-pointer"
-          onClick={handleMapClick}
+          className="h-64 rounded-lg overflow-hidden border bg-muted relative"
         >
           <iframe
             width="100%"
             height="100%"
-            style={{ border: 0, pointerEvents: 'auto' }}
+            style={{ border: 0, pointerEvents: 'none' }}
             loading="lazy"
             allowFullScreen
             src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
+          />
+          
+          {/* Overlay transparente para capturar clics */}
+          <div 
+            className="absolute inset-0 z-10 bg-transparent cursor-crosshair"
+            onClick={handleMapClick}
           />
           
           {/* Marcador fijo que aparece exactamente donde se hace clic */}
