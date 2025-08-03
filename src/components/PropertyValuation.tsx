@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/lib/supabase';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
 
@@ -4130,7 +4131,23 @@ const PropertyValuation = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="areaTerreno">{translations[selectedLanguage].landArea}</Label>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Label htmlFor="areaTerreno">{translations[selectedLanguage].landArea}</Label>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-4 w-4 p-0">
+                                  <Info className="h-3 w-3" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="max-w-xs text-sm">
+                                  El área de terreno, para apartamentos en niveles superiores al primero, deberá ser igual al área de construcción total
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                        <Input
                          id="areaTerreno"
                          type="number"
