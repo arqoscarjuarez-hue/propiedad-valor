@@ -4403,9 +4403,16 @@ const PropertyValuation = () => {
                       <div>
                         <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
                       </div>
-                      <div className="md:col-span-2">
-                        <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
-                      </div>
+                       <div className="md:col-span-2">
+                         <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
+                       </div>
+                       <div className="md:col-span-2">
+                         <span className="font-medium">{translations[selectedLanguage].accessType}:</span> {
+                           propertyData.tipoAcceso ? 
+                           translations[selectedLanguage][propertyData.tipoAcceso as keyof typeof translations[typeof selectedLanguage]] || propertyData.tipoAcceso
+                           : translations[selectedLanguage].notSpecified
+                         }
+                       </div>
                     </div>
                   </div>
                  </TabsContent>
