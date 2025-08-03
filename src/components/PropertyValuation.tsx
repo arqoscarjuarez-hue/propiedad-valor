@@ -2348,12 +2348,12 @@ const PropertyValuation = () => {
         ? Math.max(0, 1 - (propertyData.antiguedad / vidaUtilTotal))
         : 1; // Para terrenos sin depreciación
       
-      // Bonificación por espacios (convertido a USD)
-      const bonificacionEspacios = (propertyData.recamaras * 2800) +   // $2,800 per bedroom
-                                  (propertyData.banos * 1600) +        // $1,600 per bathroom
-                                  (propertyData.cochera * 2200) +      // $2,200 per garage
-                                  (propertyData.salas * 1300) +        // $1,300 per living room
-                                  (propertyData.cocina * 1900);        // $1,900 per kitchen
+      // Bonificación por espacios (convertido a USD) - Reducidas 80%
+      const bonificacionEspacios = (propertyData.recamaras * 560) +    // $560 per bedroom (antes $2,800)
+                                  (propertyData.banos * 320) +          // $320 per bathroom (antes $1,600)
+                                  (propertyData.cochera * 440) +        // $440 per garage (antes $2,200)
+                                  (propertyData.salas * 260) +          // $260 per living room (antes $1,300)
+                                  (propertyData.cocina * 380);          // $380 per kitchen (antes $1,900)
       
       // Calcular penalización por servicios básicos faltantes
       const serviciosBasicos = ['agua', 'electricidad', 'gas', 'drenaje'] as const;
