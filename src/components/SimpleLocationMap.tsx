@@ -1,65 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Search, Navigation, Zap, Info } from 'lucide-react';
+import { MapPin, Search, Navigation, Zap, Info, Move } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import 'leaflet/dist/leaflet.css';
-
-// Fix for default markers in react-leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
 
 interface SimpleLocationMapProps {
   onLocationChange?: (lat: number, lng: number, address: string) => void;
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
-}
-
-// Component to handle map events and marker dragging
-function DraggableMarker({ position, setPosition, onDragEnd }: {
-  position: [number, number];
-  setPosition: (pos: [number, number]) => void;
-  onDragEnd: (lat: number, lng: number) => void;
-}) {
-  const markerRef = useRef<L.Marker>(null);
-
-  const eventHandlers = {
-    dragend() {
-      const marker = markerRef.current;
-      if (marker != null) {
-        const newPos = marker.getLatLng();
-        const newPosition: [number, number] = [newPos.lat, newPos.lng];
-        setPosition(newPosition);
-        onDragEnd(newPos.lat, newPos.lng);
-      }
-    },
-  };
-
-  // Handle map clicks to move marker
-  useMapEvents({
-    click(e) {
-      const newPosition: [number, number] = [e.latlng.lat, e.latlng.lng];
-      setPosition(newPosition);
-      onDragEnd(e.latlng.lat, e.latlng.lng);
-    },
-  });
-
-  return (
-    <Marker
-      draggable
-      eventHandlers={eventHandlers}
-      position={position}
-      ref={markerRef}
-    />
-  );
 }
 
 const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
@@ -74,7 +24,38 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [showCoordinatesInfo, setShowCoordinatesInfo] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const mapRef = useRef<HTMLDivElement>(null);
+  const markerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Función para convertir coordenadas de píxeles a coordenadas geográficas
+  const pixelToLatLng = (pixelX: number, pixelY: number, mapWidth: number, mapHeight: number, bounds: any) => {
+    const lat = bounds.north - (pixelY / mapHeight) * (bounds.north - bounds.south);
+    const lng = bounds.west + (pixelX / mapWidth) * (bounds.east - bounds.west);
+    return { lat, lng };
+  };
+
+  // Función para convertir coordenadas geográficas a píxeles
+  const latLngToPixel = (lat: number, lng: number, mapWidth: number, mapHeight: number, bounds: any) => {
+    const x = ((lng - bounds.west) / (bounds.east - bounds.west)) * mapWidth;
+    const y = ((bounds.north - lat) / (bounds.north - bounds.south)) * mapHeight;
+    return { x, y };
+  };
+
+  // Calcular los límites del mapa basado en la posición actual
+  const getMapBounds = () => {
+    const zoom = 15;
+    const latDiff = 0.01; // Aproximadamente 1km
+    const lngDiff = 0.01;
+    return {
+      north: position[0] + latDiff,
+      south: position[0] - latDiff,
+      east: position[1] + lngDiff,
+      west: position[1] - lngDiff
+    };
+  };
 
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
   const searchLocation = async (query: string) => {
@@ -304,9 +285,100 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     reverseGeocode(lat, lng);
   };
 
-  const handleMarkerDragEnd = (lat: number, lng: number) => {
-    reverseGeocode(lat, lng);
+  // Manejar el inicio del arrastre del marcador
+  const handleMarkerMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    
+    const mapRect = mapRef.current?.getBoundingClientRect();
+    const markerRect = markerRef.current?.getBoundingClientRect();
+    
+    if (mapRect && markerRect) {
+      setDragOffset({
+        x: e.clientX - (markerRect.left + markerRect.width / 2),
+        y: e.clientY - (markerRect.top + markerRect.height)
+      });
+    }
   };
+
+  // Manejar el movimiento del marcador durante el arrastre
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !mapRef.current) return;
+    
+    const mapRect = mapRef.current.getBoundingClientRect();
+    const bounds = getMapBounds();
+    
+    const pixelX = e.clientX - mapRect.left - dragOffset.x;
+    const pixelY = e.clientY - mapRect.top - dragOffset.y;
+    
+    const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
+    
+    // Validar que las coordenadas estén dentro de los límites del mapa
+    if (newCoords.lat >= bounds.south && newCoords.lat <= bounds.north &&
+        newCoords.lng >= bounds.west && newCoords.lng <= bounds.east) {
+      setPosition([newCoords.lat, newCoords.lng]);
+    }
+  };
+
+  // Finalizar el arrastre del marcador
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      reverseGeocode(position[0], position[1]);
+    }
+  };
+
+  // Manejar clics en el mapa para mover el marcador
+  const handleMapClick = (e: React.MouseEvent) => {
+    if (isDragging || !mapRef.current) return;
+    
+    const mapRect = mapRef.current.getBoundingClientRect();
+    const bounds = getMapBounds();
+    
+    const pixelX = e.clientX - mapRect.left;
+    const pixelY = e.clientY - mapRect.top;
+    
+    const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
+    setPosition([newCoords.lat, newCoords.lng]);
+    reverseGeocode(newCoords.lat, newCoords.lng);
+  };
+
+  // Agregar event listeners globales para el arrastre
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !mapRef.current) return;
+      
+      const mapRect = mapRef.current.getBoundingClientRect();
+      const bounds = getMapBounds();
+      
+      const pixelX = e.clientX - mapRect.left - dragOffset.x;
+      const pixelY = e.clientY - mapRect.top - dragOffset.y;
+      
+      const newCoords = pixelToLatLng(pixelX, pixelY, mapRect.width, mapRect.height, bounds);
+      
+      if (newCoords.lat >= bounds.south && newCoords.lat <= bounds.north &&
+          newCoords.lng >= bounds.west && newCoords.lng <= bounds.east) {
+        setPosition([newCoords.lat, newCoords.lng]);
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        reverseGeocode(position[0], position[1]);
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, dragOffset, position]);
 
   // Obtener ubicación actual del usuario
   const getCurrentLocation = () => {
@@ -473,29 +545,57 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
 
       {/* Mapa interactivo con marcador arrastrable */}
       <div className="relative">
-        <div className="h-64 rounded-lg overflow-hidden border bg-muted">
-          <MapContainer
-            center={position}
-            zoom={15}
-            style={{ height: '100%', width: '100%' }}
-            key={`${position[0]}-${position[1]}`}
+        <div 
+          ref={mapRef}
+          className="h-64 rounded-lg overflow-hidden border bg-muted cursor-crosshair relative"
+          onClick={handleMapClick}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
+          <iframe
+            width="100%"
+            height="100%"
+            style={{ border: 0, pointerEvents: isDragging ? 'none' : 'auto' }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik`}
+          />
+          
+          {/* Marcador arrastrable personalizado */}
+          <div 
+            ref={markerRef}
+            className={`absolute z-10 cursor-move transform -translate-x-1/2 -translate-y-full transition-transform ${isDragging ? 'scale-110' : 'hover:scale-105'}`}
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -100%)'
+            }}
+            onMouseDown={handleMarkerMouseDown}
           >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <DraggableMarker 
-              position={position} 
-              setPosition={setPosition}
-              onDragEnd={handleMarkerDragEnd}
-            />
-          </MapContainer>
+            <div className="relative">
+              <MapPin className="h-8 w-8 text-red-500 drop-shadow-lg" fill="currentColor" />
+              <div className="absolute inset-0 animate-ping">
+                <MapPin className="h-8 w-8 text-red-500 opacity-75" fill="currentColor" />
+              </div>
+            </div>
+          </div>
+          
+          {isDragging && (
+            <div className="absolute inset-0 bg-blue-500 bg-opacity-10 pointer-events-none" />
+          )}
         </div>
         
         <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="h-3 w-3" />
             <span>{position[0].toFixed(4)}, {position[1].toFixed(4)}</span>
+          </div>
+        </div>
+        
+        <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1">
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Move className="h-3 w-3" />
+            <span>Arrastra el marcador o haz clic en el mapa</span>
           </div>
         </div>
       </div>
