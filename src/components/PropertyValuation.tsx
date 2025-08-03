@@ -4291,7 +4291,6 @@ const PropertyValuation = () => {
             <SelectContent>
                <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
                <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
-               <SelectItem value="medio">{translations[selectedLanguage].mediumCondition}</SelectItem>
                <SelectItem value="regular">{translations[selectedLanguage].regularCondition}</SelectItem>
                <SelectItem value="reparaciones-sencillas">{translations[selectedLanguage].simpleRepairsCondition}</SelectItem>
                <SelectItem value="reparaciones-medias">{translations[selectedLanguage].mediumRepairsCondition}</SelectItem>
