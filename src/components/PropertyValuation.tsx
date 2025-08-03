@@ -2691,7 +2691,7 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "bold");
       doc.text(`${translations[selectedLanguage].type}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
-      doc.text(propertyData.tipoPropiedad.toUpperCase(), marginLeft + 45, yPosition);
+      doc.text(letterheadConfigs[propertyData.tipoPropiedad as keyof typeof letterheadConfigs]?.name?.toUpperCase() || propertyData.tipoPropiedad.toUpperCase(), marginLeft + 45, yPosition);
       yPosition += 6;
 
       doc.setFont("helvetica", "bold");
@@ -3292,7 +3292,7 @@ const PropertyValuation = () => {
             new Paragraph({
               children: [
                 new TextRun({ text: `${translations[selectedLanguage].type}: `, bold: true }),
-                new TextRun({ text: propertyData.tipoPropiedad.toUpperCase() })
+                new TextRun({ text: letterheadConfigs[propertyData.tipoPropiedad as keyof typeof letterheadConfigs]?.name?.toUpperCase() || propertyData.tipoPropiedad.toUpperCase() })
               ]
             }),
             new Paragraph({
