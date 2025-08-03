@@ -1963,7 +1963,7 @@ const PropertyValuation = () => {
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     try {
       // Campos que deben mantenerse como string
-      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion'];
+      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso'];
       
       let sanitizedValue = value;
       
