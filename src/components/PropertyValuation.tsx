@@ -126,19 +126,19 @@ const translations = {
     yearsSinceConstruction: 'Años desde la construcción original',
     
     // Location Quality options
-    excellentZone: 'Excelente',
-    goodZone: 'Buena',
-    regularZone: 'Regular',
-    badZone: 'Mala',
+    excellentZone: 'EXCELENTE - Zona de alta plusvalía, servicios completos',
+    goodZone: 'BUENA - Zona establecida con buenos servicios y acceso',
+    regularZone: 'REGULAR - Zona en desarrollo, servicios básicos',
+    badZone: 'MALA - Zona con limitaciones de servicios o acceso',
     locationQualityPlaceholder: 'Selecciona la calidad de ubicación',
     evaluateServices: 'Evalúa servicios, seguridad, accesibilidad',
     
     // General Condition options
     generalConditionLabel: 'Estado General de Conservación',
     conditionPlaceholder: 'Selecciona el estado de conservación',
-    newCondition: 'Excelente',
-    goodCondition: 'Buena', 
-    mediumCondition: 'Regular',
+    newCondition: 'EXCELENTE - Construcción nueva o recién remodelada',
+    goodCondition: 'BUENA - Conservación adecuada, mantenimiento al corriente', 
+    mediumCondition: 'REGULAR - Desgaste visible, necesita mantenimiento',
     regularCondition: 'REGULAR - Desgaste visible, necesita mantenimiento',
     simpleRepairsCondition: 'REPARACIONES SENCILLAS - Pintura, detalles menores',
     mediumRepairsCondition: 'REPARACIONES MEDIAS - Cambio de pisos, plomería',
@@ -381,19 +381,19 @@ const translations = {
     yearsSinceConstruction: 'Years since original construction',
     
     // Location Quality options
-    excellentZone: 'Excellent',
-    goodZone: 'Good',
-    regularZone: 'Regular', 
-    badZone: 'Poor',
+    excellentZone: 'EXCELLENT - High value area, complete services',
+    goodZone: 'GOOD - Established area with good services and access',
+    regularZone: 'REGULAR - Developing area, basic services', 
+    badZone: 'POOR - Area with limited services or access',
     locationQualityPlaceholder: 'Select location quality',
     evaluateServices: 'Evaluate services, security, accessibility',
     
     // General Condition options
     generalConditionLabel: 'General Condition',
     conditionPlaceholder: 'Select conservation condition',
-    newCondition: 'Excellent',
-    goodCondition: 'Good',
-    mediumCondition: 'Regular',
+    newCondition: 'EXCELLENT - New construction or recently remodeled',
+    goodCondition: 'GOOD - Adequate conservation, up-to-date maintenance',
+    mediumCondition: 'REGULAR - Visible wear, needs maintenance',
     regularCondition: 'REGULAR - Visible wear, needs maintenance',
     simpleRepairsCondition: 'SIMPLE REPAIRS - Paint, minor details',
     mediumRepairsCondition: 'MEDIUM REPAIRS - Floor change, plumbing',
