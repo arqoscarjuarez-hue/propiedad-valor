@@ -419,7 +419,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         <div className="space-y-2">
           <div className="flex gap-2">
             <Input
-              placeholder="Buscar coordenadas del inmueble valuado: 19.432608, -99.133209 ó 19°25'57.39&quot;N, 99°8'0.35&quot;W"
+              placeholder="Escribir coordenadas del inmueble valuado"
               value={searchCoordinates}
               onChange={(e) => setSearchCoordinates(e.target.value)}
               onKeyPress={(e) => {
