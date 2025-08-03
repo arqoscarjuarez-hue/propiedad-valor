@@ -4263,10 +4263,12 @@ const PropertyValuation = () => {
                           <SelectTrigger>
                             <SelectValue placeholder={translations[selectedLanguage].locationQualityPlaceholder} />
                           </SelectTrigger>
-                           <SelectContent>
-                              <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
-                              <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
-                           </SelectContent>
+            <SelectContent>
+               <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+               <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+               <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
+               <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
+            </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].evaluateServices}</p>
                       </div>
@@ -4286,10 +4288,17 @@ const PropertyValuation = () => {
                           <SelectTrigger>
                             <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
                           </SelectTrigger>
-                           <SelectContent>
-                              <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
-                              <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
-                           </SelectContent>
+            <SelectContent>
+               <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
+               <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
+               <SelectItem value="medio">{translations[selectedLanguage].mediumCondition}</SelectItem>
+               <SelectItem value="regular">{translations[selectedLanguage].regularCondition}</SelectItem>
+               <SelectItem value="reparaciones-sencillas">{translations[selectedLanguage].simpleRepairsCondition}</SelectItem>
+               <SelectItem value="reparaciones-medias">{translations[selectedLanguage].mediumRepairsCondition}</SelectItem>
+               <SelectItem value="reparaciones-importantes">{translations[selectedLanguage].importantRepairsCondition}</SelectItem>
+               <SelectItem value="danos-graves">{translations[selectedLanguage].seriousDamageCondition}</SelectItem>
+               <SelectItem value="en-desecho">{translations[selectedLanguage].wasteCondition}</SelectItem>
+            </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
                       </div>
