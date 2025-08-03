@@ -4379,7 +4379,15 @@ const PropertyValuation = () => {
                             }}
                           >
                            <SelectTrigger>
-                             <SelectValue placeholder={translations[selectedLanguage].accessTypePlaceholder} />
+                             <SelectValue placeholder={translations[selectedLanguage].accessTypePlaceholder}>
+                               {propertyData.tipoAcceso ? (
+                                 propertyData.tipoAcceso === 'mainStreet' ? translations[selectedLanguage].mainStreet :
+                                 propertyData.tipoAcceso === 'vehicularPassage' ? translations[selectedLanguage].vehicularPassage :
+                                 propertyData.tipoAcceso === 'pedestrianPassage' ? translations[selectedLanguage].pedestrianPassage :
+                                 propertyData.tipoAcceso === 'rightOfWay' ? translations[selectedLanguage].rightOfWay :
+                                 propertyData.tipoAcceso
+                               ) : translations[selectedLanguage].accessTypePlaceholder}
+                             </SelectValue>
                            </SelectTrigger>
              <SelectContent>
                 <SelectItem value="mainStreet">{translations[selectedLanguage].mainStreet}</SelectItem>
