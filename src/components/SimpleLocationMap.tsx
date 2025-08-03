@@ -1,15 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Navigation, Zap, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default markers in react-leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 interface SimpleLocationMapProps {
   onLocationChange?: (lat: number, lng: number, address: string) => void;
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
+}
+
+// Component to handle map events and marker dragging
+function DraggableMarker({ position, setPosition, onDragEnd }: {
+  position: [number, number];
+  setPosition: (pos: [number, number]) => void;
+  onDragEnd: (lat: number, lng: number) => void;
+}) {
+  const markerRef = useRef<L.Marker>(null);
+
+  const eventHandlers = {
+    dragend() {
+      const marker = markerRef.current;
+      if (marker != null) {
+        const newPos = marker.getLatLng();
+        const newPosition: [number, number] = [newPos.lat, newPos.lng];
+        setPosition(newPosition);
+        onDragEnd(newPos.lat, newPos.lng);
+      }
+    },
+  };
+
+  // Handle map clicks to move marker
+  useMapEvents({
+    click(e) {
+      const newPosition: [number, number] = [e.latlng.lat, e.latlng.lng];
+      setPosition(newPosition);
+      onDragEnd(e.latlng.lat, e.latlng.lng);
+    },
+  });
+
+  return (
+    <Marker
+      draggable
+      eventHandlers={eventHandlers}
+      position={position}
+      ref={markerRef}
+    />
+  );
 }
 
 const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
@@ -254,6 +304,10 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     reverseGeocode(lat, lng);
   };
 
+  const handleMarkerDragEnd = (lat: number, lng: number) => {
+    reverseGeocode(lat, lng);
+  };
+
   // Obtener ubicación actual del usuario
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -417,17 +471,25 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         )}
       </div>
 
-      {/* Vista del mapa estático */}
+      {/* Mapa interactivo con marcador arrastrable */}
       <div className="relative">
         <div className="h-64 rounded-lg overflow-hidden border bg-muted">
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            src={`https://www.openstreetmap.org/export/embed.html?bbox=${position[1] - 0.01},${position[0] - 0.01},${position[1] + 0.01},${position[0] + 0.01}&layer=mapnik&marker=${position[0]},${position[1]}`}
-          />
+          <MapContainer
+            center={position}
+            zoom={15}
+            style={{ height: '100%', width: '100%' }}
+            key={`${position[0]}-${position[1]}`}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <DraggableMarker 
+              position={position} 
+              setPosition={setPosition}
+              onDragEnd={handleMarkerDragEnd}
+            />
+          </MapContainer>
         </div>
         
         <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
@@ -476,6 +538,8 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <li>Busca una dirección específica en el primer campo</li>
           <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
           <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
+          <li><strong>Arrastra el marcador</strong> en el mapa para ajustar la ubicación exacta</li>
+          <li><strong>Haz clic en el mapa</strong> para colocar el marcador en una nueva ubicación</li>
           <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
           <li>Las coordenadas se usan automáticamente en la valuación</li>
         </ul>
