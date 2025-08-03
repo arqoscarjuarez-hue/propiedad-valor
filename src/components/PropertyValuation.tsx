@@ -2367,10 +2367,10 @@ const PropertyValuation = () => {
       
       // Factor de ajuste por tipo de acceso
       const factorTipoAcceso = {
-        'mainStreet': 1.01,        // +1%
-        'vehicularPassage': 0.98,  // -2%
-        'pedestrianPassage': 0.96, // -4%
-        'rightOfWay': 0.94         // -6%
+        'mainStreet': 1.10,        // +10%
+        'vehicularPassage': 0.90,  // -10%
+        'pedestrianPassage': 0.85, // -15%
+        'rightOfWay': 0.80         // -20%
       };
       
       const valorFinal = (valorBase * 
