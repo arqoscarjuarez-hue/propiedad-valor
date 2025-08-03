@@ -2709,7 +2709,7 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "bold");
       doc.text(`${translations[selectedLanguage].age}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
-      doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 30, yPosition);
+      doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 50, yPosition);
       yPosition += 6;
 
       // Ubicación y estado
