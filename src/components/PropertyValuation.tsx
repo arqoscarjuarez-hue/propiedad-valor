@@ -2370,7 +2370,7 @@ const PropertyValuation = () => {
         'mainStreet': 1.10,        // +10%
         'vehicularPassage': 1.00,  // 0% (sin afectación)
         'pedestrianPassage': 0.92, // -8%
-        'rightOfWay': 0.80         // -20%
+        'rightOfWay': 0.88         // -12%
       };
       
       const valorFinal = (valorBase * 
