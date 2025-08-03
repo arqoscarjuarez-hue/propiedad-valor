@@ -564,19 +564,45 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           {/* Marcador arrastrable personalizado */}
           <div 
             ref={markerRef}
-            className={`absolute z-10 cursor-move transform -translate-x-1/2 -translate-y-full transition-transform ${isDragging ? 'scale-110' : 'hover:scale-105'}`}
+            className={`absolute z-20 transform -translate-x-1/2 -translate-y-full transition-all duration-200 ${
+              isDragging 
+                ? 'scale-125 cursor-grabbing' 
+                : 'hover:scale-110 cursor-grab'
+            }`}
             style={{
               left: '50%',
               top: '50%',
-              transform: 'translate(-50%, -100%)'
+              transform: 'translate(-50%, -100%)',
+              // Área de agarre más grande
+              padding: '8px'
             }}
             onMouseDown={handleMarkerMouseDown}
+            title="Arrastra para mover la ubicación del inmueble"
           >
             <div className="relative">
-              <MapPin className="h-8 w-8 text-red-500 drop-shadow-lg" fill="currentColor" />
-              <div className="absolute inset-0 animate-ping">
-                <MapPin className="h-8 w-8 text-red-500 opacity-75" fill="currentColor" />
-              </div>
+              {/* Marcador principal */}
+              <MapPin 
+                className={`h-10 w-10 drop-shadow-xl transition-colors duration-200 ${
+                  isDragging ? 'text-blue-500' : 'text-red-500'
+                }`} 
+                fill="currentColor" 
+              />
+              
+              {/* Animación de pulso solo cuando no se está arrastrando */}
+              {!isDragging && (
+                <div className="absolute inset-0 animate-ping">
+                  <MapPin className="h-10 w-10 text-red-500 opacity-50" fill="currentColor" />
+                </div>
+              )}
+              
+              {/* Círculo de ayuda visual para el área de agarre */}
+              <div 
+                className={`absolute inset-0 -m-2 rounded-full border-2 border-dashed transition-opacity duration-200 ${
+                  isDragging 
+                    ? 'border-blue-400 opacity-60' 
+                    : 'border-transparent opacity-0 hover:border-gray-400 hover:opacity-40'
+                }`}
+              />
             </div>
           </div>
           
