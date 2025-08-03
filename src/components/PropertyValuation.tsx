@@ -147,6 +147,15 @@ const translations = {
     wasteCondition: 'EN DESECHO - Demolición parcial necesaria',
     affectsPropertyValue: 'Afecta directamente el valor de la propiedad',
     
+    // Access Type options
+    accessType: 'Tipo de acceso',
+    accessTypePlaceholder: 'Selecciona el tipo de acceso',
+    mainStreet: 'Calle principal',
+    vehicularPassage: 'Pasaje vehicular',
+    pedestrianPassage: 'Pasaje peatonal',
+    rightOfWay: 'Servidumbre de paso',
+    affectsAccessibility: 'Afecta la accesibilidad de la propiedad',
+    
     // Summary sections
     spacesSummary: 'Resumen de Espacios:',
     characteristicsSummary: 'Resumen de Características:',
@@ -401,6 +410,15 @@ const translations = {
     seriousDamageCondition: 'SERIOUS DAMAGE - Serious structural problems',
     wasteCondition: 'WASTE - Partial demolition needed',
     affectsPropertyValue: 'Directly affects property value',
+    
+    // Access Type options
+    accessType: 'Access Type',
+    accessTypePlaceholder: 'Select access type',
+    mainStreet: 'Main street',
+    vehicularPassage: 'Vehicular passage',
+    pedestrianPassage: 'Pedestrian passage',
+    rightOfWay: 'Right of way',
+    affectsAccessibility: 'Affects property accessibility',
     
     // Summary sections
     spacesSummary: 'Spaces Summary:',
@@ -657,6 +675,15 @@ const translations = {
     wasteCondition: 'DÉCHET - Démolition partielle nécessaire',
     affectsPropertyValue: 'Affecte directement la valeur de la propriété',
     
+    // Access Type options
+    accessType: 'Type d\'accès',
+    accessTypePlaceholder: 'Sélectionnez le type d\'accès',
+    mainStreet: 'Rue principale',
+    vehicularPassage: 'Passage véhiculaire',
+    pedestrianPassage: 'Passage piétonnier',
+    rightOfWay: 'Servitude de passage',
+    affectsAccessibility: 'Affecte l\'accessibilité de la propriété',
+    
     // Summary sections
     spacesSummary: 'Résumé des Espaces:',
     characteristicsSummary: 'Résumé des Caractéristiques:',
@@ -910,6 +937,15 @@ const translations = {
     seriousDamageCondition: 'SCHWERE SCHÄDEN - Ernsthafte strukturelle Probleme',
     wasteCondition: 'ABFALL - Teilabriss erforderlich',
     affectsPropertyValue: 'Beeinflusst direkt den Immobilienwert',
+    
+    // Access Type options
+    accessType: 'Zugangsart',
+    accessTypePlaceholder: 'Zugangsart auswählen',
+    mainStreet: 'Hauptstraße',
+    vehicularPassage: 'Fahrzeugdurchgang',
+    pedestrianPassage: 'Fußgängerdurchgang',
+    rightOfWay: 'Wegerecht',
+    affectsAccessibility: 'Beeinflusst die Zugänglichkeit der Immobilie',
     
     // Summary sections
     spacesSummary: 'Raumzusammenfassung:',
@@ -1168,6 +1204,15 @@ const translations = {
     wasteCondition: 'SCARTO - Demolizione parziale necessaria',
     affectsPropertyValue: 'Influisce direttamente sul valore della proprietà',
     
+    // Access Type options
+    accessType: 'Tipo di accesso',
+    accessTypePlaceholder: 'Seleziona il tipo di accesso',
+    mainStreet: 'Strada principale',
+    vehicularPassage: 'Passaggio veicolare',
+    pedestrianPassage: 'Passaggio pedonale',
+    rightOfWay: 'Servitù di passaggio',
+    affectsAccessibility: 'Influisce sull\'accessibilità della proprietà',
+    
     // Summary sections
     spacesSummary: 'Riassunto Spazi:',
     characteristicsSummary: 'Riassunto Caratteristiche:',
@@ -1422,6 +1467,15 @@ const translations = {
     wasteCondition: 'DESPERDÍCIO - Demolição parcial necessária',
     affectsPropertyValue: 'Afeta diretamente o valor da propriedade',
     
+    // Access Type options
+    accessType: 'Tipo de acesso',
+    accessTypePlaceholder: 'Selecione o tipo de acesso',
+    mainStreet: 'Rua principal',
+    vehicularPassage: 'Passagem veicular',
+    pedestrianPassage: 'Passagem pedestre',
+    rightOfWay: 'Servidão de passagem',
+    affectsAccessibility: 'Afeta a acessibilidade da propriedade',
+    
     // Summary sections
     spacesSummary: 'Resumo de Espaços:',
     characteristicsSummary: 'Resumo de Características:',
@@ -1600,6 +1654,7 @@ interface PropertyData {
   antiguedad: number;
   ubicacion: string;
   estadoGeneral: string;
+  tipoAcceso?: string;
   
   // Ubicación geográfica
   latitud?: number;
@@ -1688,6 +1743,7 @@ const PropertyValuation = () => {
     antiguedad: 5,
     ubicacion: 'good',
     estadoGeneral: 'good',
+    tipoAcceso: 'mainStreet',
     latitud: 19.4326,
     longitud: -99.1332,
     direccionCompleta: 'Av. Insurgentes Sur 1234, Col. Del Valle, CDMX',
@@ -4300,11 +4356,35 @@ const PropertyValuation = () => {
             </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
-                      </div>
-                    </div>
-                  </div>
+                       </div>
+                       
+                       <div>
+                         <Label className="flex items-center gap-2">
+                           <MapPin className="h-4 w-4" />
+                            {translations[selectedLanguage].accessType}
+                         </Label>
+                          <Select 
+                            value={propertyData.tipoAcceso || ''} 
+                            onValueChange={(value) => {
+                              handleInputChange('tipoAcceso', value);
+                            }}
+                          >
+                           <SelectTrigger>
+                             <SelectValue placeholder={translations[selectedLanguage].accessTypePlaceholder} />
+                           </SelectTrigger>
+             <SelectContent>
+                <SelectItem value="mainStreet">{translations[selectedLanguage].mainStreet}</SelectItem>
+                <SelectItem value="vehicularPassage">{translations[selectedLanguage].vehicularPassage}</SelectItem>
+                <SelectItem value="pedestrianPassage">{translations[selectedLanguage].pedestrianPassage}</SelectItem>
+                <SelectItem value="rightOfWay">{translations[selectedLanguage].rightOfWay}</SelectItem>
+             </SelectContent>
+                         </Select>
+                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsAccessibility}</p>
+                       </div>
+                     </div>
+                   </div>
 
-                  {/* Resumen de características */}
+                   {/* Resumen de características */}
                   <div className="bg-muted p-4 rounded-lg">
                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].characteristicsSummary}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
