@@ -8,6 +8,18 @@
     <meta name="author" content="Sistema profesional de avalúos" />
     <meta name="keywords" content="avalúo inmobiliario, sistema profesional de avalúos, valuación propiedades online, calculadora valor casa, tasación departamento, avalúo terreno gratis, reporte avalúo PDF, análisis mercado inmobiliario, comparables propiedades, valuación inmobiliaria profesional, precio mi casa, valor propiedad, software avalúos, herramientas tasación" />
     <link rel="canonical" href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.tsx" as="script" />
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="modulepreload" href="/src/main.tsx" />
+    
+    <!-- Critical CSS inline -->
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .loading { opacity: 0; animation: fadeIn 0.3s ease-in-out forwards; }
+      @keyframes fadeIn { to { opacity: 1; } }
+    </style>
 
     <!-- Open Graph -->
     <meta property="og:title" content="Sistema profesional de avalúos - Evaluación Profesional" />
@@ -95,8 +107,11 @@
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
     <link rel="dns-prefetch" href="//api.exchangerate-api.com" />
+    <link rel="dns-prefetch" href="//maps.googleapis.com" />
+    <link rel="prefetch" href="/manifest.json" />
 
     <!-- Theme color for mobile browsers -->
     <meta name="theme-color" content="#1e7d8c" />
@@ -107,6 +122,7 @@
 
   <body>
     <div id="root"></div>
+    <link rel="manifest" href="/manifest.json" />
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

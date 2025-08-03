@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import PropertyValuation from "@/components/PropertyValuation";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import HeroSection from "@/components/HeroSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import DemoWalkthrough from "@/components/DemoWalkthrough";
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+// Lazy load components for better performance
+const PropertyValuation = lazy(() => import("@/components/PropertyValuation"));
+const PWAInstallPrompt = lazy(() => import("@/components/PWAInstallPrompt"));
+const HeroSection = lazy(() => import("@/components/HeroSection"));
+const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
+const DemoWalkthrough = lazy(() => import("@/components/DemoWalkthrough"));
 
 const Index = () => {
   const [showValuation, setShowValuation] = useState(false);
@@ -104,10 +107,18 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      {!showValuation && <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />}
+      {!showValuation && (
+        <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
+          <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />
+        </Suspense>
+      )}
       
       {/* Features Section */}
-      {!showValuation && <FeaturesSection />}
+      {!showValuation && (
+        <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+          <FeaturesSection />
+        </Suspense>
+      )}
 
       {/* SEO Content Section */}
       {!showValuation && (
@@ -174,7 +185,9 @@ const Index = () => {
               Complete los datos de la propiedad para obtener una valuación precisa
             </p>
           </div>
-          <PropertyValuation />
+          <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+            <PropertyValuation />
+          </Suspense>
         </main>
       )}
 
@@ -261,10 +274,16 @@ const Index = () => {
       )}
       
       {/* Demo Walkthrough */}
-      {showDemo && <DemoWalkthrough onClose={handleCloseDemo} />}
+      {showDemo && (
+        <Suspense fallback={<div className="fixed inset-0 bg-black/50 z-50" />}>
+          <DemoWalkthrough onClose={handleCloseDemo} />
+        </Suspense>
+      )}
       
       {/* PWA Install Prompt */}
-      <PWAInstallPrompt />
+      <Suspense fallback={null}>
+        <PWAInstallPrompt />
+      </Suspense>
     </div>
   );
 };
