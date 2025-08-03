@@ -109,6 +109,60 @@ const Index = () => {
       {/* Features Section */}
       {!showValuation && <FeaturesSection />}
 
+      {/* SEO Content Section */}
+      {!showValuation && (
+        <section className="py-16 bg-muted/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-4">
+                ¿Cómo saber el valor de mi casa o departamento?
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Nuestro sistema profesional de avalúos inmobiliarios te permite conocer el precio real de tu propiedad de forma gratuita e instantánea.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="font-semibold text-lg mb-3">Avalúo de Casas</h3>
+                <p className="text-muted-foreground">
+                  Calcula el valor comercial de tu casa habitación con nuestro sistema de <strong>tasación inmobiliaria profesional</strong>. 
+                  Análisis completo de comparables del mercado actual.
+                </p>
+              </div>
+              
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="font-semibold text-lg mb-3">Valuación de Departamentos</h3>
+                <p className="text-muted-foreground">
+                  <strong>Precio de departamento</strong> basado en ubicación, amenidades y características. 
+                  Reporte PDF con análisis detallado del mercado inmobiliario.
+                </p>
+              </div>
+              
+              <div className="bg-card p-6 rounded-lg border">
+                <h3 className="font-semibold text-lg mb-3">Tasación de Terrenos</h3>
+                <p className="text-muted-foreground">
+                  <strong>Avalúo de terreno comercial y residencial</strong>. Calculadora especializada para 
+                  determinar el valor por metro cuadrado según zona y uso de suelo.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-12 text-center">
+              <h3 className="font-display text-2xl font-bold text-foreground mb-4">
+                Software de Valuación Inmobiliaria más Usado en América
+              </h3>
+              <p className="text-muted-foreground max-w-4xl mx-auto">
+                Herramientas profesionales de <strong>avalúo inmobiliario online</strong> que incluyen análisis de mercado, 
+                comparables automatizados, reportes certificados y <strong>calculadora de valor de propiedades</strong> 
+                para casas, departamentos, terrenos comerciales y residenciales. 
+                Sistema confiable para obtener el <strong>precio real de tu propiedad</strong>.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Valuation Section */}
       {showValuation && (
         <main id="valuation-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">

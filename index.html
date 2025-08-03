@@ -28,21 +28,67 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": ["WebApplication", "FinancialService"],
       "name": "Sistema profesional de avalúos",
       "description": "Sistema profesional de avalúos inmobiliarios online. Calculadora gratuita para valuar casas, departamentos y terrenos con reportes PDF profesionales y análisis de mercado comparativo.",
       "url": "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
-      "applicationCategory": "FinanceApplication",
+      "applicationCategory": ["FinanceApplication", "BusinessApplication"],
       "operatingSystem": "Web Browser",
+      "serviceType": "Avalúo inmobiliario",
+      "areaServed": {
+        "@type": "Place",
+        "name": "América"
+      },
+      "keywords": ["avalúo inmobiliario", "valuación propiedades", "tasación casa", "precio departamento", "valor terreno", "reporte avalúo PDF"],
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "description": "Avalúo gratuito de propiedades"
       },
       "creator": {
         "@type": "Organization",
         "name": "Sistema profesional de avalúos"
+      },
+      "mainEntity": {
+        "@type": "Service",
+        "name": "Calculadora de valor de propiedades",
+        "description": "Servicio profesional de avalúo inmobiliario online para casas, departamentos y terrenos"
       }
+    }
+    </script>
+
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cómo saber el valor de mi casa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usa nuestro sistema profesional de avalúos inmobiliarios online. Ingresa los datos de tu propiedad y obtendrás un reporte PDF con el valor comercial basado en comparables del mercado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Es gratis el avalúo de propiedades?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, nuestro sistema de valuación inmobiliaria es completamente gratuito. Obtienes reportes profesionales sin costo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué tipos de propiedades puedo valuar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes valuar casas, departamentos, terrenos comerciales y residenciales en toda América con nuestro sistema de tasación inmobiliaria."
+          }
+        }
+      ]
     }
     </script>
 

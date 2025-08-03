@@ -19,17 +19,18 @@ const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () =>
             </Badge>
             
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Valuaciones
-              <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Profesionales</span>
+              Avalúo y Valuación
+              <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Inmobiliaria Online</span>
               <span className="text-2xl sm:text-3xl lg:text-4xl font-normal text-muted-foreground">
-                en minutos
+                Gratis y Profesional
               </span>
             </h1>
             
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Sistema avanzado de valuación inmobiliaria con análisis de mercado, 
-              comparables inteligentes y reportes profesionales. Confiado por más de 
-              <span className="font-semibold text-primary"> 12,000+ profesionales</span>.
+              <strong>Calculadora de valor de propiedades</strong> con sistema profesional de avalúos. 
+              Obtén el <strong>precio real de tu casa, departamento o terreno</strong> con reportes PDF certificados. 
+              <strong>Tasación inmobiliaria gratuita</strong> usada por más de 
+              <span className="font-semibold text-primary"> 12,000+ profesionales</span> en toda América.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
@@ -39,7 +40,7 @@ const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () =>
                 onClick={onStartValuation}
               >
                 <Calculator className="w-5 h-5 mr-2" />
-                Iniciar Valuación Gratuita
+                Avalúo Gratuito Ahora
               </Button>
               
               <Button 
