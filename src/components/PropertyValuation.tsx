@@ -3237,30 +3237,37 @@ const PropertyValuation = () => {
         });
       }
 
-      // Footer final con información de compartir
-      checkNewPage(40);
-      yPosition += 20;
+      // NUEVA PÁGINA FINAL para sección de compartir
+      doc.addPage();
+      currentPageNumber++;
+      addPageNumber(currentPageNumber);
+      yPosition = marginTop + 80; // Posición centrada en la página
       
-      // Sección de compartir y contacto
+      // Sección de compartir centrada en la última página
       doc.setFillColor(248, 250, 252);
-      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 35, 'F');
+      doc.rect(marginLeft - 5, yPosition - 20, contentWidth + 10, 80, 'F');
       
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("COMPARTE ESTE AVALÚO", pageWidth / 2, yPosition, { align: "center" });
+      
+      yPosition += 20;
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition, { align: "center" });
+      
+      yPosition += 15;
+      const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("COMPARTE ESTE AVALÚO", pageWidth / 2, yPosition + 8, { align: "center" });
+      doc.textWithLink(`📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok`, pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
       
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
+      yPosition += 20;
+      doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
-      doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition + 16, { align: "center" });
-      
-      const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
-      doc.setFont("helvetica", "bold");
-      doc.textWithLink(`📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok`, pageWidth / 2, yPosition + 24, { align: "center", url: shareWebsiteUrl });
-      
-      doc.setFont("helvetica", "normal");
-      doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition + 32, { align: "center" });
+      doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition, { align: "center" });
 
       // Guardar PDF
       const fileName = `avaluo-inmobiliario-${Date.now()}.pdf`;
