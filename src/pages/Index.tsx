@@ -102,6 +102,7 @@ const Index = () => {
                 </Button>
               )}
               
+              <ShareButtons />
               {/* Live stats */}
               <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
                 <div className="text-center">
@@ -233,6 +234,10 @@ const Index = () => {
             >
               💬 Ver Comentarios
             </Button>
+            <ShareButtons 
+              title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
+              description="Sistema de valuación más avanzado de América. ¡Obtén tu avalúo profesional ahora!"
+            />
             <div className="text-center flex-1">
               <h2 className="font-display text-3xl font-bold text-foreground mb-2">
                 Realizar Valuación Profesional
