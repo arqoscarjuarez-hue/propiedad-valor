@@ -3878,10 +3878,7 @@ const PropertyValuation = () => {
                       new TextRun({ text: observacion })
                     ]
                   });
-                })(),
-                new Paragraph({ text: "" }), // Espacio
-                new Paragraph({ text: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" }), // Separador
-                new Paragraph({ text: "" }) // Espacio
+                })()
               ])
             ] : [])
           ]
