@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommentSystem } from "@/components/CommentSystem";
+import { ShareButtons } from "@/components/ShareButtons";
 
 // Lazy load components for better performance
 const PropertyValuation = lazy(() => import("@/components/PropertyValuation"));
@@ -140,6 +141,10 @@ const Index = () => {
             <Button variant="outline" onClick={handleBackToHome}>
               ← Volver al inicio
             </Button>
+            <ShareButtons 
+              title="Sistema de Comentarios - Avalúos Profesionales"
+              description="Comparte tu experiencia y lee comentarios sobre nuestro sistema de valuación inmobiliaria"
+            />
           </div>
           <CommentSystem />
         </div>
@@ -307,9 +312,12 @@ const Index = () => {
               </ul>
             </div>
           </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 Sistema profesional de avalúos. Evaluación de propiedades.</p>
-            <p className="mt-2 text-sm">Metodología certificada • Reportes de calidad bancaria • Precisión garantizada</p>
+          <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left text-muted-foreground">
+              <p>&copy; 2024 Sistema profesional de avalúos. Evaluación de propiedades.</p>
+              <p className="mt-1 text-sm">Metodología certificada • Reportes de calidad bancaria • Precisión garantizada</p>
+            </div>
+            <ShareButtons />
           </div>
         </div>
       </footer>
