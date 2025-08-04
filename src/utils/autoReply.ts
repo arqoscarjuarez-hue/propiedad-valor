@@ -45,11 +45,16 @@ const detectLanguage = (text: string): Language => {
 
 export const createAutoReply = async (originalCommentId: string, originalContent: string) => {
   try {
+    console.log('Starting auto reply creation for comment:', originalCommentId);
+    console.log('Original content:', originalContent);
+    
     // Detectar el idioma del comentario original
     const detectedLanguage = detectLanguage(originalContent);
+    console.log('Detected language:', detectedLanguage);
     
     // Obtener la respuesta automática en el idioma detectado
     const autoReplyText = commentTranslations[detectedLanguage].autoReply;
+    console.log('Auto reply text:', autoReplyText);
     
     // Crear la respuesta automática
     const { data, error } = await supabase
@@ -60,14 +65,15 @@ export const createAutoReply = async (originalCommentId: string, originalContent
         is_approved: true,
         moderation_status: 'approved',
         parent_comment_id: originalCommentId // Referencia al comentario original
-      });
+      })
+      .select();
     
     if (error) {
       console.error('Error creating auto reply:', error);
       return false;
     }
     
-    console.log(`Auto reply created in ${detectedLanguage} for comment ${originalCommentId}`);
+    console.log('Auto reply created successfully:', data);
     return true;
   } catch (error) {
     console.error('Error in createAutoReply:', error);

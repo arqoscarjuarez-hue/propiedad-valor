@@ -72,9 +72,11 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           });
           
           // Crear respuesta automática después de un breve delay
-          if (data.commentId) {
+          if (data.comment && data.comment.id) {
             setTimeout(async () => {
-              await createAutoReply(data.commentId, content.trim());
+              console.log('Creating auto reply for comment:', data.comment.id);
+              const autoReplySuccess = await createAutoReply(data.comment.id, content.trim());
+              console.log('Auto reply creation result:', autoReplySuccess);
               onCommentAdded(); // Refrescar la lista para mostrar la respuesta automática
             }, 2000); // Esperar 2 segundos antes de crear la respuesta
           }

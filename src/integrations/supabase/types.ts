@@ -22,6 +22,7 @@ export type Database = {
           is_approved: boolean
           moderation_flags: string[] | null
           moderation_status: string
+          parent_comment_id: string | null
           updated_at: string
           user_id: string
         }
@@ -32,6 +33,7 @@ export type Database = {
           is_approved?: boolean
           moderation_flags?: string[] | null
           moderation_status?: string
+          parent_comment_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -42,10 +44,19 @@ export type Database = {
           is_approved?: boolean
           moderation_flags?: string[] | null
           moderation_status?: string
+          parent_comment_id?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
