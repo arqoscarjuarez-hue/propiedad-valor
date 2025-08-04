@@ -220,6 +220,14 @@ const Index = () => {
             <Button variant="outline" onClick={handleBackToHome}>
               ← Volver al inicio
             </Button>
+            <Button 
+              variant="default" 
+              size="lg"
+              onClick={handleShowComments}
+              className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            >
+              💬 Ver Comentarios
+            </Button>
             <div className="text-center flex-1">
               <h2 className="font-display text-3xl font-bold text-foreground mb-2">
                 Realizar Valuación Profesional
