@@ -3263,7 +3263,8 @@ const PropertyValuation = () => {
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
       
-      // Redes sociales en formato vertical - grupo de 2
+      // Redes sociales en formato vertical - grupo de 2 con color de enlace web
+      doc.setTextColor(0, 0, 238); // Color azul de enlaces web
       doc.textWithLink("WhatsApp                    Facebook", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
       yPosition += 10;
       doc.textWithLink("Twitter                     Instagram", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
