@@ -24,7 +24,11 @@ export const commentTranslations = {
     loadingComments: 'Cargando comentarios...',
     noComments: 'No hay comentarios aún. ¡Sé el primero en comentar!',
     user: 'Usuario',
-    flagged: 'Marcado'
+    flagged: 'Marcado',
+    
+    // Respuesta automática
+    autoReply: 'Sus comentarios son de mucha ayuda para nuestro programa y se tomarán en cuenta todas las recomendaciones. ¡Gracias por apoyarnos en nuestro emprendimiento!',
+    systemResponse: 'Respuesta del Sistema'
   },
   en: {
     // CommentSystem
@@ -51,7 +55,11 @@ export const commentTranslations = {
     loadingComments: 'Loading comments...',
     noComments: 'No comments yet. Be the first to comment!',
     user: 'User',
-    flagged: 'Flagged'
+    flagged: 'Flagged',
+    
+    // Respuesta automática
+    autoReply: 'Your comments are very helpful for our program and all recommendations will be taken into account. Thank you for supporting us in our venture!',
+    systemResponse: 'System Response'
   },
   fr: {
     // CommentSystem
@@ -78,7 +86,11 @@ export const commentTranslations = {
     loadingComments: 'Chargement des commentaires...',
     noComments: 'Aucun commentaire pour le moment. Soyez le premier à commenter!',
     user: 'Utilisateur',
-    flagged: 'Signalé'
+    flagged: 'Signalé',
+    
+    // Respuesta automática
+    autoReply: 'Vos commentaires sont très utiles pour notre programme et toutes les recommandations seront prises en compte. Merci de nous soutenir dans notre entreprise!',
+    systemResponse: 'Réponse du Système'
   },
   de: {
     // CommentSystem
@@ -105,7 +117,11 @@ export const commentTranslations = {
     loadingComments: 'Kommentare werden geladen...',
     noComments: 'Noch keine Kommentare. Seien Sie der Erste, der kommentiert!',
     user: 'Benutzer',
-    flagged: 'Markiert'
+    flagged: 'Markiert',
+    
+    // Respuesta automática
+    autoReply: 'Ihre Kommentare sind sehr hilfreich für unser Programm und alle Empfehlungen werden berücksichtigt. Vielen Dank, dass Sie uns in unserem Unternehmen unterstützen!',
+    systemResponse: 'Systemantwort'
   },
   it: {
     // CommentSystem
@@ -132,7 +148,11 @@ export const commentTranslations = {
     loadingComments: 'Caricamento commenti...',
     noComments: 'Nessun commento ancora. Sii il primo a commentare!',
     user: 'Utente',
-    flagged: 'Segnalato'
+    flagged: 'Segnalato',
+    
+    // Respuesta automática
+    autoReply: 'I vostri commenti sono molto utili per il nostro programma e tutte le raccomandazioni saranno prese in considerazione. Grazie per supportarci nella nostra impresa!',
+    systemResponse: 'Risposta del Sistema'
   },
   pt: {
     // CommentSystem
@@ -159,6 +179,10 @@ export const commentTranslations = {
     loadingComments: 'Carregando comentários...',
     noComments: 'Nenhum comentário ainda. Seja o primeiro a comentar!',
     user: 'Usuário',
-    flagged: 'Sinalizado'
+    flagged: 'Sinalizado',
+    
+    // Respuesta automática
+    autoReply: 'Seus comentários são muito úteis para nosso programa e todas as recomendações serão levadas em consideração. Obrigado por nos apoiar em nosso empreendimento!',
+    systemResponse: 'Resposta do Sistema'
   }
 };

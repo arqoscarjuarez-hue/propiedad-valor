@@ -13,6 +13,7 @@ interface Comment {
   moderation_status: string;
   moderation_flags: string[] | null;
   created_at: string;
+  parent_comment_id?: string | null;
 }
 
 interface CommentsListProps {
@@ -63,33 +64,45 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
 
   return (
     <div className="space-y-4">
-      {comments.map((comment) => (
-        <Card key={comment.id} className={comment.is_approved ? '' : 'opacity-50 border-destructive'}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                {t.user}: {comment.user_id}
-              </span>
-              <div className="flex gap-2">
-                <Badge variant={comment.is_approved ? "default" : "destructive"}>
-                  {comment.moderation_status}
-                </Badge>
-                {comment.moderation_flags && comment.moderation_flags.length > 0 && (
-                  <Badge variant="outline">
-                    {t.flagged}: {comment.moderation_flags.join(', ')}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-2">
-              {new Date(comment.created_at).toLocaleString('es-ES')}
-            </p>
-            <p>{comment.content}</p>
-          </CardContent>
-        </Card>
-      ))}
+      {comments.map((comment) => {
+        const isSystemReply = comment.user_id === 'sistema-automatico';
+        const isReply = comment.parent_comment_id !== null;
+        
+        return (
+          <div key={comment.id} className={isReply ? "ml-8 mt-2" : ""}>
+            <Card className={`${comment.is_approved ? '' : 'opacity-50 border-destructive'} ${isSystemReply ? 'bg-primary/5 border-primary/20' : ''}`}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {isSystemReply ? t.systemResponse : `${t.user}: ${comment.user_id}`}
+                  </span>
+                  <div className="flex gap-2">
+                    {isSystemReply && (
+                      <Badge variant="secondary" className="bg-primary/10 text-primary">
+                        🤖 Sistema
+                      </Badge>
+                    )}
+                    <Badge variant={comment.is_approved ? "default" : "destructive"}>
+                      {comment.moderation_status}
+                    </Badge>
+                    {comment.moderation_flags && comment.moderation_flags.length > 0 && (
+                      <Badge variant="outline">
+                        {t.flagged}: {comment.moderation_flags.join(', ')}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {new Date(comment.created_at).toLocaleString(selectedLanguage === 'es' ? 'es-ES' : selectedLanguage === 'en' ? 'en-US' : selectedLanguage === 'fr' ? 'fr-FR' : selectedLanguage === 'de' ? 'de-DE' : selectedLanguage === 'it' ? 'it-IT' : 'pt-PT')}
+                </p>
+                <p className={isSystemReply ? 'font-medium text-primary' : ''}>{comment.content}</p>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      })}
     </div>
   );
 }

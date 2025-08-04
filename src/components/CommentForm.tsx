@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { commentTranslations } from "@/translations/commentTranslations";
+import { createAutoReply } from "@/utils/autoReply";
 import { supabase } from "@/integrations/supabase/client";
 
 interface CommentFormProps {
@@ -53,7 +54,6 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
       if (data && data.success) {
         setContent("");
-        onCommentAdded();
         
         if (data.moderated) {
           toast({
@@ -70,7 +70,17 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             title: t.commentPublished,
             description: message,
           });
+          
+          // Crear respuesta automática después de un breve delay
+          if (data.commentId) {
+            setTimeout(async () => {
+              await createAutoReply(data.commentId, content.trim());
+              onCommentAdded(); // Refrescar la lista para mostrar la respuesta automática
+            }, 2000); // Esperar 2 segundos antes de crear la respuesta
+          }
         }
+        
+        onCommentAdded();
       } else {
         throw new Error(data?.error || 'Unknown error occurred');
       }
