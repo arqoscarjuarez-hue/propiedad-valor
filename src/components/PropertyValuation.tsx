@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/lib/supabase';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
@@ -33,6 +33,7 @@ import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
+import { ShareButtons } from './ShareButtons';
 
 
 import PropertyComparison from './PropertyComparison';
@@ -3947,9 +3948,23 @@ const PropertyValuation = () => {
                   <Download className="mr-2 h-4 w-4" />
                   {translations[selectedLanguage].downloadWord}
                 </Button>
-              </div>
-            </Card>
-          )}
+                </div>
+              </Card>
+            )}
+
+            {/* Botón de Compartir */}
+            {valuation && (
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
+                <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
+                  <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  Compartir Valuación
+                </Label>
+                <ShareButtons 
+                  title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
+                  description="He obtenido una valuación profesional de mi propiedad. ¡Descubre el valor de la tuya también!"
+                />
+              </Card>
+            )}
           
           {/* Selector de tipo de membrete */}
           {valuation && (
