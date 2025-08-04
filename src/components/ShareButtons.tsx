@@ -9,7 +9,10 @@ import {
   Linkedin, 
   Mail, 
   Copy,
-  Check
+  Check,
+  Youtube,
+  Instagram,
+  Music
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -44,10 +47,18 @@ export function ShareButtons({
       color: 'text-green-600 hover:text-green-700'
     },
     {
-      name: 'Telegram',
-      icon: Send,
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-      color: 'text-blue-500 hover:text-blue-600'
+      name: 'Instagram',
+      icon: Instagram,
+      url: `https://www.instagram.com/`,
+      color: 'text-pink-600 hover:text-pink-700',
+      action: 'copy' // Instagram no tiene API directa, copiamos enlace
+    },
+    {
+      name: 'TikTok',
+      icon: Music,
+      url: `https://www.tiktok.com/`,
+      color: 'text-black hover:text-gray-800',
+      action: 'copy'
     },
     {
       name: 'Facebook',
@@ -60,6 +71,19 @@ export function ShareButtons({
       icon: Twitter,
       url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
       color: 'text-gray-800 hover:text-gray-900'
+    },
+    {
+      name: 'Telegram',
+      icon: Send,
+      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+      color: 'text-blue-500 hover:text-blue-600'
+    },
+    {
+      name: 'YouTube',
+      icon: Youtube,
+      url: `https://www.youtube.com/`,
+      color: 'text-red-600 hover:text-red-700',
+      action: 'copy'
     },
     {
       name: 'LinkedIn',
@@ -93,8 +117,17 @@ export function ShareButtons({
     }
   };
 
-  const handleShare = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+  const handleShare = (social: any) => {
+    if (social.action === 'copy') {
+      // Para redes que no tienen API directa, copiamos el enlace y abrimos la red social
+      copyToClipboard();
+      setTimeout(() => {
+        window.open(social.url, '_blank', 'noopener,noreferrer');
+      }, 500);
+    } else {
+      // Para redes con API de compartir directo
+      window.open(social.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -113,7 +146,7 @@ export function ShareButtons({
         {shareLinks.map((social) => (
           <DropdownMenuItem
             key={social.name}
-            onClick={() => handleShare(social.url)}
+            onClick={() => handleShare(social)}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
           >
             <social.icon className={`h-4 w-4 ${social.color}`} />
