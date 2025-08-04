@@ -28,7 +28,7 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'Sus comentarios son muy importantes y de mucha ayuda para nuestro programa. Se tomarán en cuenta todas las recomendaciones. ¡Gracias por apoyarnos en nuestro emprendimiento! Si nuestro sistema le ha sido útil, le invitamos a compartirlo con otros usando el botón "Compartir" para que más personas puedan beneficiarse de esta herramienta profesional.',
-    systemResponse: 'Respuesta del Sistema'
+    systemResponse: 'Respuesta'
   },
   en: {
     // CommentSystem
@@ -59,7 +59,7 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'Your comments are very important and very helpful for our program. All recommendations will be taken into account. Thank you for supporting us in our venture! If our system has been useful to you, we invite you to share it with others using the "Share" button so more people can benefit from this professional tool.',
-    systemResponse: 'System Response'
+    systemResponse: 'Response'
   },
   fr: {
     // CommentSystem
@@ -90,7 +90,7 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'Vos commentaires sont très importants et très utiles pour notre programme. Toutes les recommandations seront prises en compte. Merci de nous soutenir dans notre entreprise! Si notre système vous a été utile, nous vous invitons à le partager avec d\'autres en utilisant le bouton "Partager" pour que plus de personnes puissent bénéficier de cet outil professionnel.',
-    systemResponse: 'Réponse du Système'
+    systemResponse: 'Réponse'
   },
   de: {
     // CommentSystem
@@ -121,7 +121,7 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'Ihre Kommentare sind sehr wichtig und sehr hilfreich für unser Programm. Alle Empfehlungen werden berücksichtigt. Vielen Dank, dass Sie uns in unserem Unternehmen unterstützen! Wenn unser System für Sie nützlich war, laden wir Sie ein, es mit anderen über die Schaltfläche "Teilen" zu teilen, damit mehr Menschen von diesem professionellen Tool profitieren können.',
-    systemResponse: 'Systemantwort'
+    systemResponse: 'Antwort'
   },
   it: {
     // CommentSystem
@@ -152,7 +152,7 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'I vostri commenti sono molto importanti e molto utili per il nostro programma. Tutte le raccomandazioni saranno prese in considerazione. Grazie per supportarci nella nostra impresa! Se il nostro sistema vi è stato utile, vi invitiamo a condividerlo con altri utilizzando il pulsante "Condividi" in modo che più persone possano beneficiare di questo strumento professionale.',
-    systemResponse: 'Risposta del Sistema'
+    systemResponse: 'Risposta'
   },
   pt: {
     // CommentSystem
@@ -183,6 +183,6 @@ export const commentTranslations = {
     
     // Respuesta automática
     autoReply: 'Seus comentários são muito importantes e muito úteis para nosso programa. Todas as recomendações serão levadas em consideração. Obrigado por nos apoiar em nosso empreendimento! Se nosso sistema foi útil para você, convidamos você a compartilhá-lo com outros usando o botão "Compartilhar" para que mais pessoas possam se beneficiar desta ferramenta profissional.',
-    systemResponse: 'Resposta do Sistema'
+    systemResponse: 'Resposta'
   }
 };
