@@ -341,7 +341,14 @@ const translations = {
       wordGeneratedDesc: 'El avalúo completo se ha descargado correctamente',
       
       // Disclaimer
-      disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.'
+      disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'El área de terreno, para apartamentos en niveles superiores al primero, deberá ser igual al área de construcción total',
+      observationsPlaceholder: 'Información adicional sobre el inmueble (máximo 500 caracteres)',
+      selectServiceError: 'Debe seleccionar un servicio para continuar',
+      maxCharactersNote: 'caracteres máximo',
+      additionalInfo: 'Información adicional'
   },
   en: {
     // UI Labels principales
@@ -643,8 +650,15 @@ const translations = {
      wordGenerated: 'Word Document Generated',
      wordGeneratedDesc: 'The complete appraisal has been downloaded successfully',
      
-     // Disclaimer
-     disclaimerText: 'This valuation is an estimate based on the provided data. It is recommended to consult with a certified appraiser for official valuations.'
+      // Disclaimer
+      disclaimerText: 'This valuation is an estimate based on the provided data. It is recommended to consult with a certified appraiser for official valuations.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'The land area, for apartments on floors above the first, should equal the total construction area',
+      observationsPlaceholder: 'Additional information about the property (maximum 500 characters)',
+      selectServiceError: 'You must select a service to continue',
+      maxCharactersNote: 'maximum characters',
+      additionalInfo: 'Additional information'
   },
   fr: {
     // UI Labels principales
@@ -946,8 +960,15 @@ const translations = {
      wordGenerated: 'Document Word Généré',
      wordGeneratedDesc: 'L\'évaluation complète a été téléchargée avec succès',
      
-     // Disclaimer
-     disclaimerText: 'Cette évaluation est une estimation basée sur les données fournies. Il est recommandé de consulter un évaluateur certifié pour les évaluations officielles.'
+      // Disclaimer
+      disclaimerText: 'Cette évaluation est une estimation basée sur les données fournies. Il est recommandé de consulter un évaluateur certifié pour les évaluations officielles.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'La superficie du terrain, pour les appartements aux étages supérieurs au premier, doit être égale à la superficie totale de construction',
+      observationsPlaceholder: 'Informations supplémentaires sur la propriété (maximum 500 caractères)',
+      selectServiceError: 'Vous devez sélectionner un service pour continuer',
+      maxCharactersNote: 'caractères maximum',
+      additionalInfo: 'Informations supplémentaires'
   },
   de: {
     // UI Labels principales
@@ -1251,8 +1272,15 @@ const translations = {
      wordGenerated: 'Word-Dokument Generiert',
      wordGeneratedDesc: 'Die vollständige Bewertung wurde erfolgreich heruntergeladen',
      
-     // Disclaimer
-     disclaimerText: 'Diese Bewertung ist eine Schätzung basierend auf den bereitgestellten Daten. Es wird empfohlen, einen zertifizierten Gutachter für offizielle Bewertungen zu konsultieren.'
+      // Disclaimer
+      disclaimerText: 'Diese Bewertung ist eine Schätzung basierend auf den bereitgestellten Daten. Es wird empfohlen, einen zertifizierten Gutachter für offizielle Bewertungen zu konsultieren.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'Die Grundstücksfläche sollte bei Wohnungen in Stockwerken über dem ersten der gesamten Baufläche entsprechen',
+      observationsPlaceholder: 'Zusätzliche Informationen zur Immobilie (maximal 500 Zeichen)',
+      selectServiceError: 'Sie müssen einen Service auswählen, um fortzufahren',
+      maxCharactersNote: 'maximale Zeichen',
+      additionalInfo: 'Zusätzliche Informationen'
   },
   it: {
     // UI Labels principales
@@ -1553,8 +1581,15 @@ const translations = {
      wordGenerated: 'Documento Word Generato',
      wordGeneratedDesc: 'La valutazione completa è stata scaricata con successo',
      
-     // Disclaimer
-     disclaimerText: 'Questa valutazione è una stima basata sui dati forniti. Si raccomanda di consultare un perito certificato per valutazioni ufficiali.'
+      // Disclaimer
+      disclaimerText: 'Questa valutazione è una stima basata sui dati forniti. Si raccomanda di consultare un perito certificato per valutazioni ufficiali.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'L\'area del terreno, per appartamenti ai piani superiori al primo, deve essere uguale all\'area totale di costruzione',
+      observationsPlaceholder: 'Informazioni aggiuntive sulla proprietà (massimo 500 caratteri)',
+      selectServiceError: 'Devi selezionare un servizio per continuare',
+      maxCharactersNote: 'caratteri massimi',
+      additionalInfo: 'Informazioni aggiuntive'
   },
   pt: {
     // UI Labels principales
@@ -1857,8 +1892,15 @@ const translations = {
      wordGenerated: 'Documento Word Gerado',
      wordGeneratedDesc: 'A avaliação completa foi baixada com sucesso',
      
-     // Disclaimer
-     disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.'
+      // Disclaimer
+      disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.',
+      
+      // Tooltips y explicaciones
+      landAreaTooltip: 'A área do terreno, para apartamentos em andares acima do primeiro, deve ser igual à área total de construção',
+      observationsPlaceholder: 'Informações adicionais sobre a propriedade (máximo 500 caracteres)',
+      selectServiceError: 'Você deve selecionar um serviço para continuar',
+      maxCharactersNote: 'caracteres máximo',
+      additionalInfo: 'Informações adicionais'
   }
 };
 type Language = keyof typeof translations;
@@ -4568,11 +4610,11 @@ const PropertyValuation = () => {
                                   <Info className="h-3 w-3" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>
-                                <p className="max-w-xs text-sm">
-                                  El área de terreno, para apartamentos en niveles superiores al primero, deberá ser igual al área de construcción total
-                                </p>
-                              </TooltipContent>
+                               <TooltipContent>
+                                 <p className="max-w-xs text-sm">
+                                   {translations[selectedLanguage].landAreaTooltip}
+                                 </p>
+                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
                         </div>
