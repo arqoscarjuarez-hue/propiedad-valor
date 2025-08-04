@@ -2633,6 +2633,12 @@ const PropertyValuation = () => {
       doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.rect(0, 0, pageWidth, 40, 'F');
       
+      // Agregar URL del sitio web en la esquina superior izquierda
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.text("www.tu-sitio-web.com", marginLeft, 8);
+      
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
