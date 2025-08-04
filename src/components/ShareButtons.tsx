@@ -92,6 +92,12 @@ export function ShareButtons({
       color: 'text-blue-700 hover:text-blue-800'
     },
     {
+      name: 'Gmail',
+      icon: Mail,
+      url: `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodedTitle}&body=${encodedDescription}%20${encodedUrl}`,
+      color: 'text-red-500 hover:text-red-600'
+    },
+    {
       name: 'Email',
       icon: Mail,
       url: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%20${encodedUrl}`,
