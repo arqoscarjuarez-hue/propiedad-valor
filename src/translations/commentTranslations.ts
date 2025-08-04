@@ -27,7 +27,7 @@ export const commentTranslations = {
     flagged: 'Marcado',
     
     // Respuesta automática
-    autoReply: 'Sus comentarios son de mucha ayuda para nuestro programa y se tomarán en cuenta todas las recomendaciones. ¡Gracias por apoyarnos en nuestro emprendimiento!',
+    autoReply: 'Sus comentarios son muy importantes y de mucha ayuda para nuestro programa. Se tomarán en cuenta todas las recomendaciones. ¡Gracias por apoyarnos en nuestro emprendimiento!',
     systemResponse: 'Respuesta del Sistema'
   },
   en: {
@@ -58,7 +58,7 @@ export const commentTranslations = {
     flagged: 'Flagged',
     
     // Respuesta automática
-    autoReply: 'Your comments are very helpful for our program and all recommendations will be taken into account. Thank you for supporting us in our venture!',
+    autoReply: 'Your comments are very important and very helpful for our program. All recommendations will be taken into account. Thank you for supporting us in our venture!',
     systemResponse: 'System Response'
   },
   fr: {
@@ -89,7 +89,7 @@ export const commentTranslations = {
     flagged: 'Signalé',
     
     // Respuesta automática
-    autoReply: 'Vos commentaires sont très utiles pour notre programme et toutes les recommandations seront prises en compte. Merci de nous soutenir dans notre entreprise!',
+    autoReply: 'Vos commentaires sont très importants et très utiles pour notre programme. Toutes les recommandations seront prises en compte. Merci de nous soutenir dans notre entreprise!',
     systemResponse: 'Réponse du Système'
   },
   de: {
@@ -120,7 +120,7 @@ export const commentTranslations = {
     flagged: 'Markiert',
     
     // Respuesta automática
-    autoReply: 'Ihre Kommentare sind sehr hilfreich für unser Programm und alle Empfehlungen werden berücksichtigt. Vielen Dank, dass Sie uns in unserem Unternehmen unterstützen!',
+    autoReply: 'Ihre Kommentare sind sehr wichtig und sehr hilfreich für unser Programm. Alle Empfehlungen werden berücksichtigt. Vielen Dank, dass Sie uns in unserem Unternehmen unterstützen!',
     systemResponse: 'Systemantwort'
   },
   it: {
@@ -151,7 +151,7 @@ export const commentTranslations = {
     flagged: 'Segnalato',
     
     // Respuesta automática
-    autoReply: 'I vostri commenti sono molto utili per il nostro programma e tutte le raccomandazioni saranno prese in considerazione. Grazie per supportarci nella nostra impresa!',
+    autoReply: 'I vostri commenti sono molto importanti e molto utili per il nostro programma. Tutte le raccomandazioni saranno prese in considerazione. Grazie per supportarci nella nostra impresa!',
     systemResponse: 'Risposta del Sistema'
   },
   pt: {
@@ -182,7 +182,7 @@ export const commentTranslations = {
     flagged: 'Sinalizado',
     
     // Respuesta automática
-    autoReply: 'Seus comentários são muito úteis para nosso programa e todas as recomendações serão levadas em consideração. Obrigado por nos apoiar em nosso empreendimento!',
+    autoReply: 'Seus comentários são muito importantes e muito úteis para nosso programa. Todas as recomendações serão levadas em consideração. Obrigado por nos apoiar em nosso empreendimento!',
     systemResponse: 'Resposta do Sistema'
   }
 };
