@@ -3881,56 +3881,80 @@ const PropertyValuation = () => {
                 })(),
                 new Paragraph({ text: "" }), // Espacio
                 new Paragraph({ text: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" }), // Separador
-                new Paragraph({ text: "" }), // Espacio
-                
-                // Sección de compartir
-                new Paragraph({
-                  children: [
-                    new TextRun({ 
-                      text: "COMPARTE ESTE AVALÚO", 
-                      bold: true, 
-                      size: 28,
-                      color: "2563eb"
-                    })
-                  ],
-                  alignment: AlignmentType.CENTER
-                }),
-                new Paragraph({ text: "" }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Comparte este avalúo profesional en redes sociales:" })
-                  ],
-                  alignment: AlignmentType.CENTER
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ 
-                      text: "📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok",
-                      bold: true,
-                      color: "2563eb"
-                    })
-                  ],
-                  alignment: AlignmentType.CENTER
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ 
-                      text: "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
-                      color: "2563eb",
-                      underline: {}
-                    })
-                  ],
-                  alignment: AlignmentType.CENTER
-                }),
-                new Paragraph({ text: "" }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "¡Obtén tu propio avalúo profesional en nuestro sistema!" })
-                  ],
-                  alignment: AlignmentType.CENTER
-                })
+                new Paragraph({ text: "" }) // Espacio
               ])
             ] : [])
+          ]
+        },
+        
+        // NUEVA SECCIÓN (PÁGINA) PARA COMPARTIR
+        {
+          properties: {},
+          children: [
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({ text: "" }), // Espacio
+            
+            // Sección de compartir en nueva página
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "COMPARTE ESTE AVALÚO", 
+                  bold: true, 
+                  size: 32,
+                  color: "2563eb"
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "Comparte este avalúo profesional en redes sociales:",
+                  size: 24
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok",
+                  bold: true,
+                  color: "2563eb",
+                  size: 28
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
+                  color: "2563eb",
+                  underline: {},
+                  size: 24
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "¡Obtén tu propio avalúo profesional en nuestro sistema!",
+                  size: 24
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            })
           ]
         }]
       });
