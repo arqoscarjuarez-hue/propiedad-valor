@@ -3930,13 +3930,22 @@ const PropertyValuation = () => {
               alignment: AlignmentType.CENTER
             }),
             new Paragraph({ text: "" }),
+            
+            // Enlaces separados para cada red social con sus URLs específicas
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok",
+                  text: "WhatsApp",
                   bold: true,
-                  color: "2563eb",
-                  size: 28
+                  color: "25D366",
+                  size: 24
+                }),
+                new TextRun({ text: "   |   " }),
+                new TextRun({ 
+                  text: "Facebook",
+                  bold: true,
+                  color: "1877F2",
+                  size: 24
                 })
               ],
               alignment: AlignmentType.CENTER
@@ -3945,10 +3954,58 @@ const PropertyValuation = () => {
             new Paragraph({
               children: [
                 new TextRun({ 
+                  text: "Twitter",
+                  bold: true,
+                  color: "1DA1F2",
+                  size: 24
+                }),
+                new TextRun({ text: "   |   " }),
+                new TextRun({ 
+                  text: "Instagram",
+                  bold: true,
+                  color: "E4405F",
+                  size: 24
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "TikTok",
+                  bold: true,
+                  color: "000000",
+                  size: 24
+                }),
+                new TextRun({ text: "   |   " }),
+                new TextRun({ 
+                  text: "LinkedIn",
+                  bold: true,
+                  color: "0A66C2",
+                  size: 24
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({ text: "" }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "Visita nuestro sitio web:",
+                  size: 18,
+                  bold: true
+                })
+              ],
+              alignment: AlignmentType.CENTER
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
                   text: "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
                   color: "2563eb",
                   underline: {},
-                  size: 24
+                  size: 20
                 })
               ],
               alignment: AlignmentType.CENTER
