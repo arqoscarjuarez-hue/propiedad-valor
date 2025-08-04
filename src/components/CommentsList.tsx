@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/hooks/useLanguage";
+import { commentTranslations } from "@/translations/commentTranslations";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Comment {
@@ -18,6 +20,8 @@ interface CommentsListProps {
 }
 
 export function CommentsList({ refreshTrigger }: CommentsListProps) {
+  const { selectedLanguage } = useLanguage();
+  const t = commentTranslations[selectedLanguage];
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,13 +50,13 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
   }, [refreshTrigger]);
 
   if (loading) {
-    return <div className="text-center py-4">Cargando comentarios...</div>;
+    return <div className="text-center py-4">{t.loadingComments}</div>;
   }
 
   if (comments.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        No hay comentarios aún. ¡Sé el primero en comentar!
+        {t.noComments}
       </div>
     );
   }
@@ -64,7 +68,7 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">
-                Usuario: {comment.user_id}
+                {t.user}: {comment.user_id}
               </span>
               <div className="flex gap-2">
                 <Badge variant={comment.is_approved ? "default" : "destructive"}>
@@ -72,7 +76,7 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
                 </Badge>
                 {comment.moderation_flags && comment.moderation_flags.length > 0 && (
                   <Badge variant="outline">
-                    Flagged: {comment.moderation_flags.join(', ')}
+                    {t.flagged}: {comment.moderation_flags.join(', ')}
                   </Badge>
                 )}
               </div>

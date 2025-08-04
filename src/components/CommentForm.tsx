@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
+import { commentTranslations } from "@/translations/commentTranslations";
 import { supabase } from "@/integrations/supabase/client";
 
 interface CommentFormProps {
@@ -10,6 +12,8 @@ interface CommentFormProps {
 }
 
 export function CommentForm({ onCommentAdded }: CommentFormProps) {
+  const { selectedLanguage } = useLanguage();
+  const t = commentTranslations[selectedLanguage];
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -19,8 +23,8 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
     
     if (!content.trim()) {
       toast({
-        title: "Error",
-        description: "Por favor escribe un comentario",
+        title: t.error,
+        description: t.writeCommentError,
         variant: "destructive",
       });
       return;
@@ -53,17 +57,17 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         
         if (data.moderated) {
           toast({
-            title: "Comentario moderado",
-            description: "Tu comentario fue bloqueado por contenido inapropiado",
+            title: t.commentModerated,
+            description: t.moderatedDescription,
             variant: "destructive",
           });
         } else {
           const message = data.note ? 
-            `Tu comentario ha sido publicado. ${data.note}` : 
-            "Tu comentario ha sido publicado exitosamente";
+            `${t.publishedWithNote}. ${data.note}` : 
+            t.publishedDescription;
           
           toast({
-            title: "Comentario publicado",
+            title: t.commentPublished,
             description: message,
           });
         }
@@ -73,8 +77,8 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
     } catch (error) {
       console.error('Error submitting comment:', error);
       toast({
-        title: "Error",
-        description: "No se pudo enviar el comentario. Intenta de nuevo.",
+        title: t.error,
+        description: t.sendError,
         variant: "destructive",
       });
     } finally {
@@ -85,19 +89,19 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Agregar Comentario</CardTitle>
+        <CardTitle>{t.addComment}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Escribe tu comentario aquí..."
+            placeholder={t.commentPlaceholder}
             rows={4}
             disabled={isSubmitting}
           />
           <Button type="submit" disabled={isSubmitting || !content.trim()}>
-            {isSubmitting ? "Enviando..." : "Publicar Comentario"}
+            {isSubmitting ? t.sending : t.publishComment}
           </Button>
         </form>
       </CardContent>
