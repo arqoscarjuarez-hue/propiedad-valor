@@ -297,12 +297,51 @@ const translations = {
     newComparativesGenerated: 'Se han generado nuevas propiedades cercanas',
     currencyChanged: 'Moneda Cambiada',
     valuationNowIn: 'Valuación ahora se muestra en',
-     priceAdjusted: 'Precio Ajustado',
-     adjustment: 'Ajuste',
-     newValue: 'Nuevo valor',
-     
-     // Disclaimer
-     disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.'
+      priceAdjusted: 'Precio Ajustado',
+      adjustment: 'Ajuste',
+      newValue: 'Nuevo valor',
+      
+      // PDF Additional labels
+      professionalAppraisalSystem: 'Sistema profesional de avalúos, Evaluación de propiedades',
+      coordinatesLabel: 'Coordenadas:',
+      marketSummary: 'Resumen del Mercado:',
+      propertyPhotographs: 'FOTOGRAFÍAS DEL INMUEBLE',
+      comparablesAnnex: 'ANEXO: FICHAS DETALLADAS DE COMPARABLES',
+      realProperty: '(Propiedad Real)',
+      referenceProperty: '(Propiedad de Referencia)',
+      locationCharacteristics: 'UBICACIÓN Y CARACTERÍSTICAS:',
+      viewOnGoogleMaps: 'Ver ubicación en Google Maps',
+      physicalCharacteristics: 'CARACTERÍSTICAS FÍSICAS:',
+      priceInformation: 'INFORMACIÓN DE PRECIO:',
+      
+      // Share section
+      shareAppraisal: 'COMPARTE ESTE AVALÚO',
+      shareAppraisalText: 'Comparte este avalúo profesional en redes sociales:',
+      clickSelectedLink: 'Hacer Click en el enlace seleccionado',
+      whatsapp: 'WhatsApp',
+      facebook: 'Facebook',
+      twitter: 'Twitter',
+      instagram: 'Instagram',
+      tiktok: 'TikTok',
+      linkedin: 'LinkedIn',
+      visitWebsite: 'Visita nuestro sitio web:',
+      getYourAppraisal: '¡Obtén tu propio avalúo profesional en nuestro sistema!',
+      
+      // Error messages
+      errorGeneric: 'Error',
+      errorCalculatingValuation: 'Ocurrió un error al calcular la valuación. Por favor intenta nuevamente.',
+      errorPDFGeneration: 'Primero debes calcular la valuación para generar el PDF',
+      errorWordGeneration: 'Primero debes calcular la valuación para generar el documento Word',
+      errorGeneratingPDF: 'No se pudo generar el PDF',
+      errorGeneratingWord: 'No se pudo generar el documento Word',
+      searchingComparables: 'Buscando nuevas propiedades comparables cercanas...',
+      pdfGenerated: 'PDF Generado',
+      pdfGeneratedDesc: 'El avalúo completo se ha descargado correctamente',
+      wordGenerated: 'Documento Word Generado',
+      wordGeneratedDesc: 'El avalúo completo se ha descargado correctamente',
+      
+      // Disclaimer
+      disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.'
   },
   en: {
     // UI Labels principales
@@ -564,6 +603,45 @@ const translations = {
      priceAdjusted: 'Price Adjusted',
      adjustment: 'Adjustment',
      newValue: 'New value',
+     
+      // PDF Additional labels
+      professionalAppraisalSystem: 'Professional appraisal system, Property evaluation',
+      coordinatesLabel: 'Coordinates:',
+     marketSummary: 'Market Summary:',
+     propertyPhotographs: 'PROPERTY PHOTOGRAPHS',
+     comparablesAnnex: 'ANNEX: DETAILED COMPARABLE SHEETS',
+     realProperty: '(Real Property)',
+     referenceProperty: '(Reference Property)',
+     locationCharacteristics: 'LOCATION AND CHARACTERISTICS:',
+     viewOnGoogleMaps: 'View location on Google Maps',
+     physicalCharacteristics: 'PHYSICAL CHARACTERISTICS:',
+     priceInformation: 'PRICE INFORMATION:',
+     
+     // Share section
+     shareAppraisal: 'SHARE THIS APPRAISAL',
+     shareAppraisalText: 'Share this professional appraisal on social media:',
+     clickSelectedLink: 'Click on the selected link',
+     whatsapp: 'WhatsApp',
+     facebook: 'Facebook',
+     twitter: 'Twitter',
+     instagram: 'Instagram',
+     tiktok: 'TikTok',
+     linkedin: 'LinkedIn',
+     visitWebsite: 'Visit our website:',
+     getYourAppraisal: 'Get your own professional appraisal on our system!',
+     
+     // Error messages
+     errorGeneric: 'Error',
+     errorCalculatingValuation: 'An error occurred while calculating the valuation. Please try again.',
+     errorPDFGeneration: 'You must first calculate the valuation to generate the PDF',
+     errorWordGeneration: 'You must first calculate the valuation to generate the Word document',
+     errorGeneratingPDF: 'Could not generate PDF',
+     errorGeneratingWord: 'Could not generate Word document',
+     searchingComparables: 'Searching for new comparable nearby properties...',
+     pdfGenerated: 'PDF Generated',
+     pdfGeneratedDesc: 'The complete appraisal has been downloaded successfully',
+     wordGenerated: 'Word Document Generated',
+     wordGeneratedDesc: 'The complete appraisal has been downloaded successfully',
      
      // Disclaimer
      disclaimerText: 'This valuation is an estimate based on the provided data. It is recommended to consult with a certified appraiser for official valuations.'
@@ -828,6 +906,45 @@ const translations = {
      priceAdjusted: 'Prix Ajusté',
      adjustment: 'Ajustement',
      newValue: 'Nouvelle valeur',
+     
+     // PDF Additional labels
+     professionalAppraisalSystem: 'Système professionnel d\'évaluations, Évaluation de propriétés',
+     coordinatesLabel: 'Coordonnées:',
+     marketSummary: 'Résumé du Marché:',
+     propertyPhotographs: 'PHOTOGRAPHIES DE LA PROPRIÉTÉ',
+     comparablesAnnex: 'ANNEXE: FICHES DÉTAILLÉES DES COMPARABLES',
+     realProperty: '(Propriété Réelle)',
+     referenceProperty: '(Propriété de Référence)',
+     locationCharacteristics: 'LOCALISATION ET CARACTÉRISTIQUES:',
+     viewOnGoogleMaps: 'Voir l\'emplacement sur Google Maps',
+     physicalCharacteristics: 'CARACTÉRISTIQUES PHYSIQUES:',
+     priceInformation: 'INFORMATIONS DE PRIX:',
+     
+     // Share section
+     shareAppraisal: 'PARTAGEZ CETTE ÉVALUATION',
+     shareAppraisalText: 'Partagez cette évaluation professionnelle sur les réseaux sociaux:',
+     clickSelectedLink: 'Cliquez sur le lien sélectionné',
+     whatsapp: 'WhatsApp',
+     facebook: 'Facebook',
+     twitter: 'Twitter',
+     instagram: 'Instagram',
+     tiktok: 'TikTok',
+     linkedin: 'LinkedIn',
+     visitWebsite: 'Visitez notre site web:',
+     getYourAppraisal: 'Obtenez votre propre évaluation professionnelle sur notre système!',
+     
+     // Error messages
+     errorGeneric: 'Erreur',
+     errorCalculatingValuation: 'Une erreur s\'est produite lors du calcul de l\'évaluation. Veuillez réessayer.',
+     errorPDFGeneration: 'Vous devez d\'abord calculer l\'évaluation pour générer le PDF',
+     errorWordGeneration: 'Vous devez d\'abord calculer l\'évaluation pour générer le document Word',
+     errorGeneratingPDF: 'Impossible de générer le PDF',
+     errorGeneratingWord: 'Impossible de générer le document Word',
+     searchingComparables: 'Recherche de nouvelles propriétés comparables à proximité...',
+     pdfGenerated: 'PDF Généré',
+     pdfGeneratedDesc: 'L\'évaluation complète a été téléchargée avec succès',
+     wordGenerated: 'Document Word Généré',
+     wordGeneratedDesc: 'L\'évaluation complète a été téléchargée avec succès',
      
      // Disclaimer
      disclaimerText: 'Cette évaluation est une estimation basée sur les données fournies. Il est recommandé de consulter un évaluateur certifié pour les évaluations officielles.'
@@ -1095,6 +1212,45 @@ const translations = {
      adjustment: 'Anpassung',
      newValue: 'Neuer Wert',
      
+     // PDF Additional labels
+     professionalAppraisalSystem: 'Professionelles Bewertungssystem, Immobilienbewertung',
+     coordinatesLabel: 'Koordinaten:',
+     marketSummary: 'Marktzusammenfassung:',
+     propertyPhotographs: 'IMMOBILIENFOTOS',
+     comparablesAnnex: 'ANHANG: DETAILLIERTE VERGLEICHSBLÄTTER',
+     realProperty: '(Echte Immobilie)',
+     referenceProperty: '(Referenzimmobilie)',
+     locationCharacteristics: 'LAGE UND EIGENSCHAFTEN:',
+     viewOnGoogleMaps: 'Standort auf Google Maps anzeigen',
+     physicalCharacteristics: 'PHYSISCHE EIGENSCHAFTEN:',
+     priceInformation: 'PREISINFORMATIONEN:',
+     
+     // Share section
+     shareAppraisal: 'TEILEN SIE DIESE BEWERTUNG',
+     shareAppraisalText: 'Teilen Sie diese professionelle Bewertung in sozialen Medien:',
+     clickSelectedLink: 'Klicken Sie auf den ausgewählten Link',
+     whatsapp: 'WhatsApp',
+     facebook: 'Facebook',
+     twitter: 'Twitter',
+     instagram: 'Instagram',
+     tiktok: 'TikTok',
+     linkedin: 'LinkedIn',
+     visitWebsite: 'Besuchen Sie unsere Website:',
+     getYourAppraisal: 'Holen Sie sich Ihre eigene professionelle Bewertung auf unserem System!',
+     
+     // Error messages
+     errorGeneric: 'Fehler',
+     errorCalculatingValuation: 'Ein Fehler ist bei der Berechnung der Bewertung aufgetreten. Bitte versuchen Sie es erneut.',
+     errorPDFGeneration: 'Sie müssen zuerst die Bewertung berechnen, um das PDF zu generieren',
+     errorWordGeneration: 'Sie müssen zuerst die Bewertung berechnen, um das Word-Dokument zu generieren',
+     errorGeneratingPDF: 'PDF konnte nicht generiert werden',
+     errorGeneratingWord: 'Word-Dokument konnte nicht generiert werden',
+     searchingComparables: 'Suche nach neuen vergleichbaren Immobilien in der Nähe...',
+     pdfGenerated: 'PDF Generiert',
+     pdfGeneratedDesc: 'Die vollständige Bewertung wurde erfolgreich heruntergeladen',
+     wordGenerated: 'Word-Dokument Generiert',
+     wordGeneratedDesc: 'Die vollständige Bewertung wurde erfolgreich heruntergeladen',
+     
      // Disclaimer
      disclaimerText: 'Diese Bewertung ist eine Schätzung basierend auf den bereitgestellten Daten. Es wird empfohlen, einen zertifizierten Gutachter für offizielle Bewertungen zu konsultieren.'
   },
@@ -1357,6 +1513,45 @@ const translations = {
      priceAdjusted: 'Prezzo Aggiustato',
      adjustment: 'Aggiustamento',
      newValue: 'Nuovo valore',
+     
+     // PDF Additional labels
+     professionalAppraisalSystem: 'Sistema professionale di valutazioni, Valutazione di proprietà',
+     coordinatesLabel: 'Coordinate:',
+     marketSummary: 'Riassunto del Mercato:',
+     propertyPhotographs: 'FOTOGRAFIE DELLA PROPRIETÀ',
+     comparablesAnnex: 'ALLEGATO: SCHEDE DETTAGLIATE DEI COMPARABILI',
+     realProperty: '(Proprietà Reale)',
+     referenceProperty: '(Proprietà di Riferimento)',
+     locationCharacteristics: 'UBICAZIONE E CARATTERISTICHE:',
+     viewOnGoogleMaps: 'Visualizza posizione su Google Maps',
+     physicalCharacteristics: 'CARATTERISTICHE FISICHE:',
+     priceInformation: 'INFORMAZIONI SUL PREZZO:',
+     
+     // Share section
+     shareAppraisal: 'CONDIVIDI QUESTA VALUTAZIONE',
+     shareAppraisalText: 'Condividi questa valutazione professionale sui social media:',
+     clickSelectedLink: 'Clicca sul link selezionato',
+     whatsapp: 'WhatsApp',
+     facebook: 'Facebook',
+     twitter: 'Twitter',
+     instagram: 'Instagram',
+     tiktok: 'TikTok',
+     linkedin: 'LinkedIn',
+     visitWebsite: 'Visita il nostro sito web:',
+     getYourAppraisal: 'Ottieni la tua valutazione professionale sul nostro sistema!',
+     
+     // Error messages
+     errorGeneric: 'Errore',
+     errorCalculatingValuation: 'Si è verificato un errore durante il calcolo della valutazione. Riprova.',
+     errorPDFGeneration: 'Devi prima calcolare la valutazione per generare il PDF',
+     errorWordGeneration: 'Devi prima calcolare la valutazione per generare il documento Word',
+     errorGeneratingPDF: 'Impossibile generare il PDF',
+     errorGeneratingWord: 'Impossibile generare il documento Word',
+     searchingComparables: 'Ricerca di nuove proprietà comparabili nelle vicinanze...',
+     pdfGenerated: 'PDF Generato',
+     pdfGeneratedDesc: 'La valutazione completa è stata scaricata con successo',
+     wordGenerated: 'Documento Word Generato',
+     wordGeneratedDesc: 'La valutazione completa è stata scaricata con successo',
      
      // Disclaimer
      disclaimerText: 'Questa valutazione è una stima basata sui dati forniti. Si raccomanda di consultare un perito certificato per valutazioni ufficiali.'
@@ -1622,6 +1817,45 @@ const translations = {
      priceAdjusted: 'Preço Ajustado',
      adjustment: 'Ajuste',
      newValue: 'Novo valor',
+     
+     // PDF Additional labels
+     professionalAppraisalSystem: 'Sistema profissional de avaliações, Avaliação de propriedades',
+     coordinatesLabel: 'Coordenadas:',
+     marketSummary: 'Resumo do Mercado:',
+     propertyPhotographs: 'FOTOGRAFIAS DA PROPRIEDADE',
+     comparablesAnnex: 'ANEXO: FICHAS DETALHADAS DOS COMPARÁVEIS',
+     realProperty: '(Propriedade Real)',
+     referenceProperty: '(Propriedade de Referência)',
+     locationCharacteristics: 'LOCALIZAÇÃO E CARACTERÍSTICAS:',
+     viewOnGoogleMaps: 'Ver localização no Google Maps',
+     physicalCharacteristics: 'CARACTERÍSTICAS FÍSICAS:',
+     priceInformation: 'INFORMAÇÕES DE PREÇO:',
+     
+     // Share section
+     shareAppraisal: 'COMPARTILHE ESTA AVALIAÇÃO',
+     shareAppraisalText: 'Compartilhe esta avaliação profissional nas redes sociais:',
+     clickSelectedLink: 'Clique no link selecionado',
+     whatsapp: 'WhatsApp',
+     facebook: 'Facebook',
+     twitter: 'Twitter',
+     instagram: 'Instagram',
+     tiktok: 'TikTok',
+     linkedin: 'LinkedIn',
+     visitWebsite: 'Visite nosso site:',
+     getYourAppraisal: 'Obtenha sua própria avaliação profissional em nosso sistema!',
+     
+     // Error messages
+     errorGeneric: 'Erro',
+     errorCalculatingValuation: 'Ocorreu um erro ao calcular a avaliação. Tente novamente.',
+     errorPDFGeneration: 'Você deve primeiro calcular a avaliação para gerar o PDF',
+     errorWordGeneration: 'Você deve primeiro calcular a avaliação para gerar o documento Word',
+     errorGeneratingPDF: 'Não foi possível gerar o PDF',
+     errorGeneratingWord: 'Não foi possível gerar o documento Word',
+     searchingComparables: 'Procurando novas propriedades comparáveis próximas...',
+     pdfGenerated: 'PDF Gerado',
+     pdfGeneratedDesc: 'A avaliação completa foi baixada com sucesso',
+     wordGenerated: 'Documento Word Gerado',
+     wordGeneratedDesc: 'A avaliação completa foi baixada com sucesso',
      
      // Disclaimer
      disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.'
@@ -2453,8 +2687,8 @@ const PropertyValuation = () => {
     } catch (error) {
       console.error('Error in calculateValuation:', error);
       toast({
-        title: "Error",
-        description: "Ocurrió un error al calcular la valuación. Por favor intenta nuevamente.",
+        title: translations[selectedLanguage].errorGeneric,
+        description: translations[selectedLanguage].errorCalculatingValuation,
         variant: "destructive"
       });
     } finally {
@@ -2492,7 +2726,7 @@ const PropertyValuation = () => {
     if (valuation) {
       toast({
         title: translations[selectedLanguage].calculatingValuation,
-        description: 'Buscando nuevas propiedades comparables cercanas...',
+        description: translations[selectedLanguage].searchingComparables,
       });
 
       // Convertir valuación actual de vuelta a USD base para generar comparativas
@@ -2606,8 +2840,8 @@ const PropertyValuation = () => {
   const generatePDF = async () => {
     if (!valuation) {
       toast({
-        title: "Error",
-        description: "Primero debes calcular la valuación para generar el PDF",
+        title: translations[selectedLanguage].errorGeneric,
+        description: translations[selectedLanguage].errorPDFGeneration,
         variant: "destructive"
       });
       return;
@@ -2639,7 +2873,7 @@ const PropertyValuation = () => {
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
       const websiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
-      doc.textWithLink("Sistema profesional de avalúos, Evaluación de propiedades", pageWidth / 2, 12, { align: "center", url: websiteUrl });
+      doc.textWithLink(translations[selectedLanguage].professionalAppraisalSystem, pageWidth / 2, 12, { align: "center", url: websiteUrl });
       
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(22);
@@ -2771,7 +3005,7 @@ const PropertyValuation = () => {
 
         if (propertyData.latitud && propertyData.longitud) {
           doc.setFont("helvetica", "bold");
-          doc.text("Coordenadas:", marginLeft, yPosition);
+          doc.text(translations[selectedLanguage].coordinatesLabel, marginLeft, yPosition);
           doc.setFont("helvetica", "normal");
           doc.text(`${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft + 30, yPosition);
           yPosition += 6;
@@ -2949,7 +3183,7 @@ const PropertyValuation = () => {
         if (analysis) {
           doc.setFontSize(12);
           doc.setFont("helvetica", "bold");
-          doc.text("Resumen del Mercado:", marginLeft, yPosition);
+          doc.text(translations[selectedLanguage].marketSummary, marginLeft, yPosition);
           yPosition += 10;
 
           doc.setFontSize(11);
@@ -3041,7 +3275,7 @@ const PropertyValuation = () => {
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        doc.text("8. FOTOGRAFÍAS DEL INMUEBLE", marginLeft, yPosition + 6);
+        doc.text(`8. ${translations[selectedLanguage].propertyPhotographs}`, marginLeft, yPosition + 6);
         doc.setTextColor(0, 0, 0);
         yPosition += 18;
 
@@ -3256,12 +3490,12 @@ const PropertyValuation = () => {
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition, { align: "center" });
+      doc.text(translations[selectedLanguage].shareAppraisalText, pageWidth / 2, yPosition, { align: "center" });
       
       yPosition += 12;
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
-      doc.text("Hacer Click en el enlace seleccionado", pageWidth / 2, yPosition, { align: "center" });
+      doc.text(translations[selectedLanguage].clickSelectedLink, pageWidth / 2, yPosition, { align: "center" });
       
       yPosition += 20; // Más espacio vertical
       const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
@@ -3287,8 +3521,8 @@ const PropertyValuation = () => {
       doc.save(fileName);
 
       toast({
-        title: "PDF Generado",
-        description: "El avalúo completo se ha descargado correctamente",
+        title: translations[selectedLanguage].pdfGenerated,
+        description: translations[selectedLanguage].pdfGeneratedDesc,
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
