@@ -11,76 +11,79 @@ import {
   Gift,
   TrendingUp
 } from 'lucide-react';
-
-const features = [
-  {
-    icon: BarChart3,
-    title: "Análisis de Mercado",
-    description: "Comparables automáticos con propiedades similares en tu zona geográfica",
-    gradient: "from-blue-500 to-blue-600"
-  },
-  {
-    icon: MapPin,
-    title: "Geolocalización Precisa",
-    description: "Integración con Google Maps para ubicación exacta y factores de localización",
-    gradient: "from-green-500 to-green-600"
-  },
-  {
-    icon: FileText,
-    title: "Reportes Profesionales",
-    description: "Documentos PDF y Word listos para bancos, notarías y clientes",
-    gradient: "from-purple-500 to-purple-600"
-  },
-  {
-    icon: Camera,
-    title: "Galería de Fotos",
-    description: "Hasta 12 fotografías incluidas en reportes con análisis visual",
-    gradient: "from-orange-500 to-orange-600"
-  },
-  {
-    icon: Shield,
-    title: "Datos Seguros",
-    description: "Encriptación de grado bancario y cumplimiento con regulaciones internacionales",
-    gradient: "from-red-500 to-red-600"
-  },
-  {
-    icon: Globe,
-    title: "Cobertura Total",
-    description: "Disponible en todo el continente americano con monedas locales",
-    gradient: "from-indigo-500 to-indigo-600"
-  },
-  {
-    icon: Clock,
-    title: "Resultados Instantáneos",
-    description: "Valuación completa en menos de 3 minutos con actualización en tiempo real",
-    gradient: "from-teal-500 to-teal-600"
-  },
-  {
-    icon: Gift,
-    title: "Totalmente Gratuito",
-    description: "Sin costos ocultos, sin suscripciones. Valuaciones profesionales completamente gratis",
-    gradient: "from-yellow-500 to-yellow-600"
-  },
-  {
-    icon: TrendingUp,
-    title: "Tendencias del Mercado",
-    description: "Análisis de tendencias históricas y proyecciones de valor futuro",
-    gradient: "from-pink-500 to-pink-600"
-  }
-];
+import { useLanguage } from '@/hooks/useLanguage';
+import { indexTranslations } from '@/translations/indexTranslations';
 
 const FeaturesSection = () => {
+  const { selectedLanguage } = useLanguage();
+  const t = indexTranslations[selectedLanguage];
+
+  const features = [
+    {
+      icon: BarChart3,
+      title: t.featureMarketAnalysis,
+      description: t.featureMarketDesc,
+      gradient: "from-blue-500 to-blue-600"
+    },
+    {
+      icon: MapPin,
+      title: t.featureGeolocation,
+      description: t.featureGeoDesc,
+      gradient: "from-green-500 to-green-600"
+    },
+    {
+      icon: FileText,
+      title: t.featureReports,
+      description: t.featureReportsDesc,
+      gradient: "from-purple-500 to-purple-600"
+    },
+    {
+      icon: Camera,
+      title: t.featurePhotos,
+      description: t.featurePhotosDesc,
+      gradient: "from-orange-500 to-orange-600"
+    },
+    {
+      icon: Shield,
+      title: t.featureSecurity,
+      description: t.featureSecurityDesc,
+      gradient: "from-red-500 to-red-600"
+    },
+    {
+      icon: Globe,
+      title: t.featureGlobal,
+      description: t.featureGlobalDesc,
+      gradient: "from-indigo-500 to-indigo-600"
+    },
+    {
+      icon: Clock,
+      title: t.featureInstant,
+      description: t.featureInstantDesc,
+      gradient: "from-teal-500 to-teal-600"
+    },
+    {
+      icon: Gift,
+      title: t.featureFree,
+      description: t.featureFreeDesc,
+      gradient: "from-yellow-500 to-yellow-600"
+    },
+    {
+      icon: TrendingUp,
+      title: t.featureTrends,
+      description: t.featureTrendsDesc,
+      gradient: "from-pink-500 to-pink-600"
+    }
+  ];
+
   return (
     <section className="py-16 bg-gradient-to-br from-muted/30 to-muted/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            ¿Por qué elegir nuestro sistema?
+            {t.featuresTitle}
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Tecnología de vanguardia que combina inteligencia artificial, 
-            análisis de mercado y metodología profesional para obtener las 
-            valuaciones más precisas del mercado.
+            {t.featuresDescription}
           </p>
         </div>
         
@@ -111,25 +114,25 @@ const FeaturesSection = () => {
             <div className="text-4xl font-bold text-primary mb-2 group-hover:scale-110 transition-transform duration-300">
               12,450+
             </div>
-            <div className="text-muted-foreground font-medium">Propiedades Valuadas</div>
+            <div className="text-muted-foreground font-medium">{t.statsProperties}</div>
           </div>
           <div className="group">
             <div className="text-4xl font-bold text-secondary mb-2 group-hover:scale-110 transition-transform duration-300">
               98.5%
             </div>
-            <div className="text-muted-foreground font-medium">Precisión Promedio</div>
+            <div className="text-muted-foreground font-medium">{t.statsPrecision}</div>
           </div>
           <div className="group">
             <div className="text-4xl font-bold text-yellow-500 mb-2 group-hover:scale-110 transition-transform duration-300">
               45
             </div>
-            <div className="text-muted-foreground font-medium">Países Cubiertos</div>
+            <div className="text-muted-foreground font-medium">{t.statsCountries}</div>
           </div>
           <div className="group">
             <div className="text-4xl font-bold text-green-500 mb-2 group-hover:scale-110 transition-transform duration-300">
               24/7
             </div>
-            <div className="text-muted-foreground font-medium">Disponibilidad</div>
+            <div className="text-muted-foreground font-medium">{t.statsAvailability}</div>
           </div>
         </div>
       </div>
