@@ -2827,7 +2827,7 @@ const PropertyValuation = () => {
       // Área libre (sin construir) - se calcula restando solo el primer nivel del terreno
       const areaLibre = propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0);
       doc.setFontSize(11);
-      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
+      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre.toFixed(2) : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
       yPosition += 6;
       
       const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
@@ -3472,7 +3472,7 @@ const PropertyValuation = () => {
             new Paragraph({
               children: [
                 new TextRun({ text: "Área Libre (sin construir): ", bold: true }),
-                new TextRun({ text: `${propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) > 0 ? propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) : 0} m²` })
+                new TextRun({ text: `${propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) > 0 ? (propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0)).toFixed(2) : 0} m²` })
               ]
             }),
             new Paragraph({
