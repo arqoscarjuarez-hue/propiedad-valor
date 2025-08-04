@@ -352,7 +352,17 @@ const translations = {
      optional: 'Opcional',
      propertyValuationResults: 'Resultados de Valuación',
      downloadDocuments: 'Descargar Documentos',
-     shareValuation: 'Compartir Valuación'
+     shareValuation: 'Compartir Valuación',
+     currencyValuation: 'Moneda de Valuación',
+     needHelpSystem: '¿Necesitas ayuda para usar el sistema?',
+     multilingual: 'Multiidioma',
+     interfaceReports: 'Toda la interfaz y reportes se traducen automáticamente',
+     // Currency selector
+     exchangeRateUpdated: 'Tipos de Cambio Actualizados',
+     exchangeRateError: 'No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.',
+     exchangeRateNote: 'Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.',
+     exchangeRateLabel: 'Tipo de cambio',
+     lastUpdateText: 'Última actualización'
   },
   en: {
     // UI Labels principales
@@ -666,7 +676,17 @@ const translations = {
        optional: 'Optional',
        propertyValuationResults: 'Valuation Results',
        downloadDocuments: 'Download Documents',
-       shareValuation: 'Share Valuation'
+       shareValuation: 'Share Valuation',
+       currencyValuation: 'Valuation Currency',
+       needHelpSystem: 'Need help using the system?',
+       multilingual: 'Multilingual',
+       interfaceReports: 'All interface and reports are automatically translated',
+       // Currency selector  
+       exchangeRateUpdated: 'Exchange Rates Updated',
+       exchangeRateError: 'Could not update exchange rates. Previous rates will be used.',
+       exchangeRateNote: 'Exchange rates are obtained from ExchangeRate-API and updated in real time.',
+       exchangeRateLabel: 'Exchange rate',
+       lastUpdateText: 'Last update'
   },
   fr: {
     // UI Labels principales
@@ -980,7 +1000,17 @@ const translations = {
        optional: 'Optionnel',
        propertyValuationResults: 'Résultats d\'Évaluation',
        downloadDocuments: 'Télécharger Documents',
-       shareValuation: 'Partager Évaluation'
+       shareValuation: 'Partager Évaluation',
+       currencyValuation: 'Devise d\'Évaluation',
+       needHelpSystem: 'Besoin d\'aide pour utiliser le système?',
+       multilingual: 'Multilingue',
+       interfaceReports: 'Toute l\'interface et les rapports sont traduits automatiquement',
+       // Currency selector
+       exchangeRateUpdated: 'Taux de Change Mis à Jour',
+       exchangeRateError: 'Impossible de mettre à jour les taux de change. Les taux précédents seront utilisés.',
+       exchangeRateNote: 'Les taux de change sont obtenus d\'ExchangeRate-API et mis à jour en temps réel.',
+       exchangeRateLabel: 'Taux de change',
+       lastUpdateText: 'Dernière mise à jour'
   },
   de: {
     // UI Labels principales
@@ -1296,7 +1326,17 @@ const translations = {
        optional: 'Optional',
        propertyValuationResults: 'Bewertungsergebnisse',
        downloadDocuments: 'Dokumente Herunterladen',
-       shareValuation: 'Bewertung Teilen'
+       shareValuation: 'Bewertung Teilen',
+       currencyValuation: 'Bewertungswährung',
+       needHelpSystem: 'Benötigen Sie Hilfe bei der Nutzung des Systems?',
+       multilingual: 'Mehrsprachig',
+       interfaceReports: 'Die gesamte Benutzeroberfläche und Berichte werden automatisch übersetzt',
+       // Currency selector
+       exchangeRateUpdated: 'Wechselkurse Aktualisiert',
+       exchangeRateError: 'Wechselkurse konnten nicht aktualisiert werden. Vorherige Kurse werden verwendet.',
+       exchangeRateNote: 'Wechselkurse werden von ExchangeRate-API bezogen und in Echtzeit aktualisiert.',
+       exchangeRateLabel: 'Wechselkurs',
+       lastUpdateText: 'Letzte Aktualisierung'
   },
   it: {
     // UI Labels principales
@@ -1609,7 +1649,17 @@ const translations = {
        optional: 'Opzionale',
        propertyValuationResults: 'Risultati di Valutazione',
        downloadDocuments: 'Scarica Documenti',
-       shareValuation: 'Condividi Valutazione'
+       shareValuation: 'Condividi Valutazione',
+       currencyValuation: 'Valuta di Valutazione',
+       needHelpSystem: 'Hai bisogno di aiuto per usare il sistema?',
+       multilingual: 'Multilingue',
+       interfaceReports: 'Tutta l\'interfaccia e i report vengono tradotti automaticamente',
+       // Currency selector
+       exchangeRateUpdated: 'Tassi di Cambio Aggiornati',
+       exchangeRateError: 'Impossibile aggiornare i tassi di cambio. Verranno utilizzati i tassi precedenti.',
+       exchangeRateNote: 'I tassi di cambio sono ottenuti da ExchangeRate-API e aggiornati in tempo reale.',
+       exchangeRateLabel: 'Tasso di cambio',
+       lastUpdateText: 'Ultimo aggiornamento'
   },
   pt: {
     // UI Labels principales
@@ -1924,7 +1974,17 @@ const translations = {
        optional: 'Opcional',
        propertyValuationResults: 'Resultados de Avaliação',
        downloadDocuments: 'Baixar Documentos',
-       shareValuation: 'Compartilhar Avaliação'
+       shareValuation: 'Compartilhar Avaliação',
+       currencyValuation: 'Moeda de Avaliação',
+       needHelpSystem: 'Precisa de ajuda para usar o sistema?',
+       multilingual: 'Multilíngue',
+       interfaceReports: 'Toda a interface e relatórios são traduzidos automaticamente',
+       // Currency selector
+       exchangeRateUpdated: 'Taxas de Câmbio Atualizadas',
+       exchangeRateError: 'Não foi possível atualizar as taxas de câmbio. Taxas anteriores serão usadas.',
+       exchangeRateNote: 'As taxas de câmbio são obtidas do ExchangeRate-API e atualizadas em tempo real.',
+       exchangeRateLabel: 'Taxa de câmbio',
+       lastUpdateText: 'Última atualização'
   }
 };
 type Language = keyof typeof translations;
@@ -4365,6 +4425,13 @@ const PropertyValuation = () => {
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
+            title={translations[selectedLanguage].currencyValuation}
+            exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
+            exchangeRateError={translations[selectedLanguage].exchangeRateError}
+            errorTitle={translations[selectedLanguage].errorTitle}
+            lastUpdateText={translations[selectedLanguage].lastUpdateText}
+            exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
+            exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
           />
           
            {/* Selector de Idioma */}
@@ -4389,7 +4456,7 @@ const PropertyValuation = () => {
               </SelectContent>
             </Select>
             <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
-              Toda la interfaz y reportes se traducen automáticamente
+              {translations[selectedLanguage].interfaceReports}
             </p>
           </Card>
           
@@ -4471,7 +4538,7 @@ const PropertyValuation = () => {
             <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
               <div className="text-center">
                 <p className="text-sm text-muted-foreground mb-3">
-                  ¿Necesitas ayuda para usar el sistema?
+                  {translations[selectedLanguage].needHelpSystem}
                 </p>
                 <Button 
                   variant="outline" 

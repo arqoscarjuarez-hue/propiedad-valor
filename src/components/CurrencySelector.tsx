@@ -15,6 +15,13 @@ export interface Currency {
 interface CurrencySelectorProps {
   selectedCurrency: Currency;
   onCurrencyChange: (currency: Currency) => void;
+  title?: string;
+  exchangeRateUpdated?: string;
+  exchangeRateError?: string;
+  errorTitle?: string;
+  lastUpdateText?: string;
+  exchangeRateNote?: string;
+  exchangeRateLabel?: string;
 }
 
 const popularCurrencies = [
@@ -63,7 +70,14 @@ const popularCurrencies = [
 
 const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   selectedCurrency,
-  onCurrencyChange
+  onCurrencyChange,
+  title = "Moneda de Valuación",
+  exchangeRateUpdated = "Tipos de Cambio Actualizados",
+  exchangeRateError = "No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.",
+  errorTitle = "Error",
+  lastUpdateText = "Última actualización",
+  exchangeRateNote = "Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.",
+  exchangeRateLabel = "Tipo de cambio"
 }) => {
   const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -98,15 +112,15 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 
       setLastUpdate(new Date());
       toast({
-        title: "Tipos de Cambio Actualizados",
-        description: `Última actualización: ${new Date().toLocaleTimeString()}`,
+        title: exchangeRateUpdated,
+        description: `${lastUpdateText}: ${new Date().toLocaleTimeString()}`,
       });
 
     } catch (error) {
       console.error('Error updating exchange rates:', error);
       toast({
-        title: "Error",
-        description: "No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.",
+        title: errorTitle,
+        description: exchangeRateError,
         variant: "destructive"
       });
     } finally {
@@ -153,7 +167,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <DollarSign className="h-5 w-5" />
-          Moneda de Valuación
+          {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -194,7 +208,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
         {selectedCurrency.code !== 'USD' && (
           <div className="p-3 bg-muted rounded-lg">
             <div className="flex justify-between items-center text-sm">
-              <span>Tipo de cambio (USD → {selectedCurrency.code}):</span>
+              <span>{exchangeRateLabel} (USD → {selectedCurrency.code}):</span>
               <span className="font-mono font-medium">
                 1 USD = {selectedCurrency.rate?.toLocaleString(undefined, { 
                   minimumFractionDigits: 2, 
@@ -207,12 +221,12 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 
         {lastUpdate && (
           <p className="text-xs text-muted-foreground text-center">
-            Última actualización: {lastUpdate.toLocaleString()}
+            {lastUpdateText}: {lastUpdate && lastUpdate.toLocaleString()}
           </p>
         )}
 
         <div className="text-xs text-muted-foreground">
-          <p>Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.</p>
+          <p>{exchangeRateNote}</p>
         </div>
       </CardContent>
     </Card>
