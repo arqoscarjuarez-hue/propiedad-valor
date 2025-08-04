@@ -1910,7 +1910,9 @@ const translations = {
       observationsPlaceholder: 'Informações adicionais sobre a propriedade (máximo 500 caracteres)',
       selectServiceError: 'Você deve selecionar um serviço para continuar',
       maxCharactersNote: 'caracteres máximo',
-      additionalInfo: 'Informações adicionais'
+       additionalInfo: 'Informações adicionais',
+       optional: 'Opcional',
+       propertyValuationResults: 'Resultados de Avaliação'
   }
 };
 type Language = keyof typeof translations;
