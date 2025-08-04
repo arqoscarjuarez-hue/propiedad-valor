@@ -372,7 +372,14 @@ const translations = {
      landAreaLabel: 'Área de Terreno',
      locationLabel: 'Ubicación',
      pricePerBuiltM2: 'Precio por m² construido',
-     marketComparison: 'Comparación mercado'
+     marketComparison: 'Comparación mercado',
+     // Report sections
+     annexDetailedComparables: 'ANEXO: FICHAS DETALLADAS DE COMPARABLES',
+     physicalCharacteristicsReport: 'CARACTERÍSTICAS FÍSICAS:',
+     comparativeAnalysisReport: 'ANÁLISIS COMPARATIVO:',
+     builtAreaReport: 'Área Construida',
+     priceDifferencePerM2: 'Diferencia de precio por m²',
+     completeDataMessage: 'Completa los datos de la propiedad y presiona "Calcular Valuación" para ver el resultado.'
   },
   en: {
     // UI Labels principales
@@ -706,7 +713,14 @@ const translations = {
        landAreaLabel: 'Land Area',
        locationLabel: 'Location',
        pricePerBuiltM2: 'Price per built m²',
-       marketComparison: 'Market comparison'
+       marketComparison: 'Market comparison',
+       // Report sections
+       annexDetailedComparables: 'ANNEX: DETAILED COMPARABLE SHEETS',
+       physicalCharacteristicsReport: 'PHYSICAL CHARACTERISTICS:',
+       comparativeAnalysisReport: 'COMPARATIVE ANALYSIS:',
+       builtAreaReport: 'Built Area',
+       priceDifferencePerM2: 'Price difference per m²',
+       completeDataMessage: 'Complete the property data and press "Calculate Valuation" to see the result.'
   },
   fr: {
     // UI Labels principales
@@ -1040,7 +1054,14 @@ const translations = {
        landAreaLabel: 'Surface du Terrain',
        locationLabel: 'Emplacement',
        pricePerBuiltM2: 'Prix par m² construit',
-       marketComparison: 'Comparaison marché'
+       marketComparison: 'Comparaison marché',
+       // Report sections
+       annexDetailedComparables: 'ANNEXE: FICHES DÉTAILLÉES DES COMPARABLES',
+       physicalCharacteristicsReport: 'CARACTÉRISTIQUES PHYSIQUES:',
+       comparativeAnalysisReport: 'ANALYSE COMPARATIVE:',
+       builtAreaReport: 'Surface Construite',
+       priceDifferencePerM2: 'Différence de prix par m²',
+       completeDataMessage: 'Complétez les données de la propriété et appuyez sur "Calculer Évaluation" pour voir le résultat.'
   },
   de: {
     // UI Labels principales
@@ -1376,7 +1397,14 @@ const translations = {
        landAreaLabel: 'Grundstücksfläche',
        locationLabel: 'Lage',
        pricePerBuiltM2: 'Preis pro gebautem m²',
-       marketComparison: 'Marktvergleich'
+       marketComparison: 'Marktvergleich',
+       // Report sections
+       annexDetailedComparables: 'ANHANG: DETAILLIERTE VERGLEICHSBLÄTTER',
+       physicalCharacteristicsReport: 'PHYSISCHE EIGENSCHAFTEN:',
+       comparativeAnalysisReport: 'VERGLEICHSANALYSE:',
+       builtAreaReport: 'Baufläche',
+       priceDifferencePerM2: 'Preisunterschied pro m²',
+       completeDataMessage: 'Vervollständigen Sie die Immobiliendaten und drücken Sie "Bewertung Berechnen", um das Ergebnis zu sehen.'
   },
   it: {
     // UI Labels principales
@@ -1709,7 +1737,14 @@ const translations = {
        landAreaLabel: 'Area del Terreno',
        locationLabel: 'Posizione',
        pricePerBuiltM2: 'Prezzo per m² costruito',
-       marketComparison: 'Confronto mercato'
+       marketComparison: 'Confronto mercato',
+       // Report sections
+       annexDetailedComparables: 'ALLEGATO: SCHEDE DETTAGLIATE DEI COMPARABILI',
+       physicalCharacteristicsReport: 'CARATTERISTICHE FISICHE:',
+       comparativeAnalysisReport: 'ANALISI COMPARATIVA:',
+       builtAreaReport: 'Area Costruita',
+       priceDifferencePerM2: 'Differenza di prezzo per m²',
+       completeDataMessage: 'Completa i dati della proprietà e premi "Calcola Valutazione" per vedere il risultato.'
   },
   pt: {
     // UI Labels principales
@@ -2044,7 +2079,14 @@ const translations = {
        landAreaLabel: 'Área do Terreno',
        locationLabel: 'Localização',
        pricePerBuiltM2: 'Preço por m² construído',
-       marketComparison: 'Comparação mercado'
+       marketComparison: 'Comparação mercado',
+       // Report sections
+       annexDetailedComparables: 'ANEXO: FICHAS DETALHADAS DOS COMPARÁVEIS',
+       physicalCharacteristicsReport: 'CARACTERÍSTICAS FÍSICAS:',
+       comparativeAnalysisReport: 'ANÁLISE COMPARATIVA:',
+       builtAreaReport: 'Área Construída',
+       priceDifferencePerM2: 'Diferença de preço por m²',
+       completeDataMessage: 'Complete os dados da propriedade e pressione "Calcular Avaliação" para ver o resultado.'
   }
 };
 type Language = keyof typeof translations;
@@ -3528,7 +3570,7 @@ const PropertyValuation = () => {
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        doc.text("ANEXO: FICHAS DETALLADAS DE COMPARABLES", marginLeft, yPosition + 6);
+        doc.text(translations[selectedLanguage].annexDetailedComparables, marginLeft, yPosition + 6);
         doc.setTextColor(0, 0, 0);
         yPosition += 25;
 
@@ -3590,11 +3632,11 @@ const PropertyValuation = () => {
 
           // Características físicas
           doc.setFont("helvetica", "bold");
-          doc.text("CARACTERÍSTICAS FÍSICAS:", marginLeft + 5, yPosition);
+          doc.text(translations[selectedLanguage].physicalCharacteristicsReport, marginLeft + 5, yPosition);
           yPosition += 8;
 
           doc.setFont("helvetica", "normal");
-          doc.text(`Área Construida: ${comp.areaConstruida} m²`, marginLeft + 10, yPosition);
+          doc.text(`${translations[selectedLanguage].builtAreaReport}: ${comp.areaConstruida} m²`, marginLeft + 10, yPosition);
           yPosition += 6;
           doc.text(`Recámaras: ${comp.recamaras}`, marginLeft + 10, yPosition);
           doc.text(`Baños: ${comp.banos}`, marginLeft + 80, yPosition);
@@ -3620,11 +3662,11 @@ const PropertyValuation = () => {
           const variance = ((pricePerM2Comp - pricePerM2Property) / pricePerM2Property * 100);
           
           doc.setFont("helvetica", "bold");
-          doc.text("ANÁLISIS COMPARATIVO:", marginLeft + 5, yPosition);
+          doc.text(translations[selectedLanguage].comparativeAnalysisReport, marginLeft + 5, yPosition);
           yPosition += 8;
 
           doc.setFont("helvetica", "normal");
-          doc.text(`Diferencia de precio por m²: ${variance > 0 ? '+' : ''}${variance.toFixed(1)}%`, marginLeft + 10, yPosition);
+          doc.text(`${translations[selectedLanguage].priceDifferencePerM2}: ${variance > 0 ? '+' : ''}${variance.toFixed(1)}%`, marginLeft + 10, yPosition);
           yPosition += 6;
           
           if (comp.rating && comp.isReal) {
@@ -4146,7 +4188,7 @@ const PropertyValuation = () => {
             // ANEXO: FICHAS DETALLADAS DE COMPARABLES (al final del documento)
             ...(comparativeProperties.length > 0 ? [
               new Paragraph({
-                text: "ANEXO: FICHAS DETALLADAS DE COMPARABLES",
+                text: translations[selectedLanguage].annexDetailedComparables,
                 heading: HeadingLevel.HEADING_1,
                 pageBreakBefore: true
               }),
@@ -4205,12 +4247,12 @@ const PropertyValuation = () => {
                 // Características físicas
                 new Paragraph({
                   children: [
-                    new TextRun({ text: "CARACTERÍSTICAS FÍSICAS:", bold: true, underline: {} })
+                    new TextRun({ text: translations[selectedLanguage].physicalCharacteristicsReport, bold: true, underline: {} })
                   ]
                 }),
                 new Paragraph({
                   children: [
-                    new TextRun({ text: "Área Construida: ", bold: true }),
+                    new TextRun({ text: `${translations[selectedLanguage].builtAreaReport}: `, bold: true }),
                     new TextRun({ text: `${comp.areaConstruida} m²` })
                   ]
                 }),
@@ -4255,7 +4297,7 @@ const PropertyValuation = () => {
                 // Análisis comparativo
                 new Paragraph({
                   children: [
-                    new TextRun({ text: "ANÁLISIS COMPARATIVO:", bold: true, underline: {} })
+                    new TextRun({ text: translations[selectedLanguage].comparativeAnalysisReport, bold: true, underline: {} })
                   ]
                 }),
                 (() => {
@@ -4265,7 +4307,7 @@ const PropertyValuation = () => {
                   
                   return new Paragraph({
                     children: [
-                      new TextRun({ text: "Diferencia de precio por m²: ", bold: true }),
+                      new TextRun({ text: `${translations[selectedLanguage].priceDifferencePerM2}: `, bold: true }),
                       new TextRun({ text: `${variance > 0 ? '+' : ''}${variance.toFixed(1)}%` })
                     ]
                   });
@@ -5750,10 +5792,7 @@ const PropertyValuation = () => {
                 <div className="text-center py-8">
                   <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground">
-                    {translations[selectedLanguage].propertyData === 'Datos de la Propiedad' ? 
-                      'Completa los datos de la propiedad y presiona "Calcular Valuación" para ver el resultado.' :
-                      'Complete the property data and press "Calculate Valuation" to see the result.'
-                    }
+                    {translations[selectedLanguage].completeDataMessage}
                   </p>
                 </div>
               )}
