@@ -348,7 +348,9 @@ const translations = {
       observationsPlaceholder: 'Información adicional sobre el inmueble (máximo 500 caracteres)',
       selectServiceError: 'Debe seleccionar un servicio para continuar',
       maxCharactersNote: 'caracteres máximo',
-      additionalInfo: 'Información adicional'
+     additionalInfo: 'Información adicional',
+     optional: 'Opcional',
+     propertyValuationResults: 'Resultados de Valuación'
   },
   en: {
     // UI Labels principales
@@ -658,7 +660,9 @@ const translations = {
       observationsPlaceholder: 'Additional information about the property (maximum 500 characters)',
       selectServiceError: 'You must select a service to continue',
       maxCharactersNote: 'maximum characters',
-      additionalInfo: 'Additional information'
+       additionalInfo: 'Additional information',
+       optional: 'Optional',
+       propertyValuationResults: 'Valuation Results'
   },
   fr: {
     // UI Labels principales
@@ -968,7 +972,9 @@ const translations = {
       observationsPlaceholder: 'Informations supplémentaires sur la propriété (maximum 500 caractères)',
       selectServiceError: 'Vous devez sélectionner un service pour continuer',
       maxCharactersNote: 'caractères maximum',
-      additionalInfo: 'Informations supplémentaires'
+       additionalInfo: 'Informations supplémentaires',
+       optional: 'Optionnel',
+       propertyValuationResults: 'Résultats d\'Évaluation'
   },
   de: {
     // UI Labels principales
@@ -1280,7 +1286,9 @@ const translations = {
       observationsPlaceholder: 'Zusätzliche Informationen zur Immobilie (maximal 500 Zeichen)',
       selectServiceError: 'Sie müssen einen Service auswählen, um fortzufahren',
       maxCharactersNote: 'maximale Zeichen',
-      additionalInfo: 'Zusätzliche Informationen'
+       additionalInfo: 'Zusätzliche Informationen',
+       optional: 'Optional',
+       propertyValuationResults: 'Bewertungsergebnisse'
   },
   it: {
     // UI Labels principales
@@ -1589,7 +1597,9 @@ const translations = {
       observationsPlaceholder: 'Informazioni aggiuntive sulla proprietà (massimo 500 caratteri)',
       selectServiceError: 'Devi selezionare un servizio per continuare',
       maxCharactersNote: 'caratteri massimi',
-      additionalInfo: 'Informazioni aggiuntive'
+       additionalInfo: 'Informazioni aggiuntive',
+       optional: 'Opzionale',
+       propertyValuationResults: 'Risultati di Valutazione'
   },
   pt: {
     // UI Labels principales
@@ -5235,7 +5245,7 @@ const PropertyValuation = () => {
                  <TabsContent value="fotos" className="space-y-4 mt-6">
                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                      <Camera className="h-5 w-5" />
-                     Fotos del Inmueble (Opcional)
+                     {translations[selectedLanguage].photos} ({translations[selectedLanguage].optional})
                    </h3>
                    <p className="text-sm text-muted-foreground mb-4">
                      Agrega fotos del inmueble para incluirlas en el reporte de valuación. Formatos aceptados: JPG, PNG, WebP
@@ -5290,7 +5300,7 @@ const PropertyValuation = () => {
                    <TabsContent value="ajustes" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                       Ajuste de Precio
+                        {translations[selectedLanguage].priceAdjustment}
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
                       Ajusta el valor del avalúo hasta en un ±30% según consideraciones especiales del mercado o características únicas de la propiedad.
