@@ -43,17 +43,16 @@ const detectLanguage = (text: string): Language => {
   return scores[detectedLang] > 0 ? detectedLang : 'es';
 };
 
-export const createAutoReply = async (originalCommentId: string, originalContent: string) => {
+export const createAutoReply = async (originalCommentId: string, originalContent: string, userLanguage: Language) => {
   try {
     console.log('Starting auto reply creation for comment:', originalCommentId);
     console.log('Original content:', originalContent);
     
-    // Detectar el idioma del comentario original
-    const detectedLanguage = detectLanguage(originalContent);
-    console.log('Detected language:', detectedLanguage);
+    // Usar el idioma seleccionado por el usuario
+    console.log('User selected language:', userLanguage);
     
-    // Obtener la respuesta automática en el idioma detectado
-    const autoReplyText = commentTranslations[detectedLanguage].autoReply;
+    // Obtener la respuesta automática en el idioma del usuario
+    const autoReplyText = commentTranslations[userLanguage].autoReply;
     console.log('Auto reply text:', autoReplyText);
     
     // Crear la respuesta automática
