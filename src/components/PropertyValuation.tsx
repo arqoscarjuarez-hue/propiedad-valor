@@ -28,6 +28,8 @@ import {
 } from 'docx';
 import { saveAs } from 'file-saver';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
@@ -2360,7 +2362,7 @@ const PropertyValuation = () => {
     symbol: '$',
     rate: 1
   });
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>('es');
+  const { selectedLanguage, setSelectedLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState('areas');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
@@ -4522,8 +4524,9 @@ const PropertyValuation = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Selectores de Moneda e Idioma */}
+        {/* Selectores de Idioma y Moneda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
+          <LanguageSelector />
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
