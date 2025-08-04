@@ -3254,8 +3254,8 @@ const PropertyValuation = () => {
       
       yPosition += 25; // Más espacio vertical entre líneas
       doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
       doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition, { align: "center" });
       
       yPosition += 20; // Más espacio vertical
@@ -3920,7 +3920,9 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ 
                   text: "Comparte este avalúo profesional en redes sociales:",
-                  size: 24
+                  size: 32,
+                  bold: true,
+                  color: "2563eb"
                 })
               ],
               alignment: AlignmentType.CENTER
