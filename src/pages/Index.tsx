@@ -68,6 +68,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Floating Language Selector - Always visible */}
+      <div className="fixed top-4 right-4 z-50">
+        <div className="flex items-center gap-2 bg-card/95 backdrop-blur-sm border border-border/50 rounded-lg px-3 py-2 shadow-lg">
+          <span className="text-xs font-medium text-muted-foreground hidden sm:block">
+            🌐 Idioma:
+          </span>
+          <LanguageSelector />
+        </div>
+      </div>
+      
       {/* Enhanced Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -97,6 +107,14 @@ const Index = () => {
             
             {/* Navigation */}
             <div className="flex items-center space-x-4">
+              {/* Language Selector - Prominente */}
+               <div className="flex items-center gap-3 bg-card/80 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-sm">
+                 <span className="text-sm font-medium text-muted-foreground hidden sm:block">
+                   Idioma:
+                 </span>
+                <LanguageSelector />
+              </div>
+              
               {!showComments && !showValuation && (
                 <Button 
                   variant="default" 
@@ -108,7 +126,6 @@ const Index = () => {
                 </Button>
               )}
               
-              <LanguageSelector />
               <ShareButtons />
               {/* Live stats */}
               <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
