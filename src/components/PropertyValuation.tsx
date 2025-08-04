@@ -2824,8 +2824,8 @@ const PropertyValuation = () => {
       doc.text(`${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: ${areaTotal} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition + 3);
       yPosition += 15;
 
-      // Área libre
-      const areaLibre = propertyData.areaTerreno - areaTotal;
+      // Área libre (sin construir) - se calcula restando solo el primer nivel del terreno
+      const areaLibre = propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0);
       doc.setFontSize(11);
       doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
       yPosition += 6;
@@ -3472,7 +3472,7 @@ const PropertyValuation = () => {
             new Paragraph({
               children: [
                 new TextRun({ text: "Área Libre (sin construir): ", bold: true }),
-                new TextRun({ text: `${propertyData.areaTerreno - areaTotal > 0 ? propertyData.areaTerreno - areaTotal : 0} m²` })
+                new TextRun({ text: `${propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) > 0 ? propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) : 0} m²` })
               ]
             }),
             new Paragraph({
