@@ -350,7 +350,9 @@ const translations = {
       maxCharactersNote: 'caracteres máximo',
      additionalInfo: 'Información adicional',
      optional: 'Opcional',
-     propertyValuationResults: 'Resultados de Valuación'
+     propertyValuationResults: 'Resultados de Valuación',
+     downloadDocuments: 'Descargar Documentos',
+     shareValuation: 'Compartir Valuación'
   },
   en: {
     // UI Labels principales
@@ -662,7 +664,9 @@ const translations = {
       maxCharactersNote: 'maximum characters',
        additionalInfo: 'Additional information',
        optional: 'Optional',
-       propertyValuationResults: 'Valuation Results'
+       propertyValuationResults: 'Valuation Results',
+       downloadDocuments: 'Download Documents',
+       shareValuation: 'Share Valuation'
   },
   fr: {
     // UI Labels principales
@@ -974,7 +978,9 @@ const translations = {
       maxCharactersNote: 'caractères maximum',
        additionalInfo: 'Informations supplémentaires',
        optional: 'Optionnel',
-       propertyValuationResults: 'Résultats d\'Évaluation'
+       propertyValuationResults: 'Résultats d\'Évaluation',
+       downloadDocuments: 'Télécharger Documents',
+       shareValuation: 'Partager Évaluation'
   },
   de: {
     // UI Labels principales
@@ -1288,7 +1294,9 @@ const translations = {
       maxCharactersNote: 'maximale Zeichen',
        additionalInfo: 'Zusätzliche Informationen',
        optional: 'Optional',
-       propertyValuationResults: 'Bewertungsergebnisse'
+       propertyValuationResults: 'Bewertungsergebnisse',
+       downloadDocuments: 'Dokumente Herunterladen',
+       shareValuation: 'Bewertung Teilen'
   },
   it: {
     // UI Labels principales
@@ -1599,7 +1607,9 @@ const translations = {
       maxCharactersNote: 'caratteri massimi',
        additionalInfo: 'Informazioni aggiuntive',
        optional: 'Opzionale',
-       propertyValuationResults: 'Risultati di Valutazione'
+       propertyValuationResults: 'Risultati di Valutazione',
+       downloadDocuments: 'Scarica Documenti',
+       shareValuation: 'Condividi Valutazione'
   },
   pt: {
     // UI Labels principales
@@ -1912,7 +1922,9 @@ const translations = {
       maxCharactersNote: 'caracteres máximo',
        additionalInfo: 'Informações adicionais',
        optional: 'Opcional',
-       propertyValuationResults: 'Resultados de Avaliação'
+       propertyValuationResults: 'Resultados de Avaliação',
+       downloadDocuments: 'Baixar Documentos',
+       shareValuation: 'Compartilhar Avaliação'
   }
 };
 type Language = keyof typeof translations;
@@ -4386,7 +4398,7 @@ const PropertyValuation = () => {
              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
                <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
                  <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                 Descargar Documentos
+                  {translations[selectedLanguage].downloadDocuments}
                </Label>
                <div className="space-y-2 sm:space-y-3">
                  <Button 
@@ -4417,7 +4429,7 @@ const PropertyValuation = () => {
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
                 <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
                   <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                  Compartir Valuación
+                   {translations[selectedLanguage].shareValuation}
                 </Label>
                 <ShareButtons 
                   title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
