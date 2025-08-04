@@ -3271,9 +3271,10 @@ const PropertyValuation = () => {
       doc.textWithLink("TikTok                      LinkedIn", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
       
       yPosition += 15; // Más espacio vertical
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "normal");
-      doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition, { align: "center" });
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.textWithLink("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
 
       // Guardar PDF
       const fileName = `avaluo-inmobiliario-${Date.now()}.pdf`;
@@ -3953,7 +3954,10 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ 
                   text: "¡Obtén tu propio avalúo profesional en nuestro sistema!",
-                  size: 24
+                  size: 28,
+                  bold: true,
+                  color: "2563eb",
+                  underline: {}
                 })
               ],
               alignment: AlignmentType.CENTER
