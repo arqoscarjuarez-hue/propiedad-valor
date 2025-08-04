@@ -45,17 +45,23 @@ const detectLanguage = (text: string): Language => {
 
 export const createAutoReply = async (originalCommentId: string, originalContent: string, userLanguage: Language) => {
   try {
-    console.log('Starting auto reply creation for comment:', originalCommentId);
-    console.log('Original content:', originalContent);
+    console.log('=== INICIANDO CREACIÓN DE RESPUESTA AUTOMÁTICA ===');
+    console.log('ID del comentario original:', originalCommentId);
+    console.log('Contenido original:', originalContent);
+    console.log('Idioma seleccionado por el usuario:', userLanguage);
     
-    // Usar el idioma seleccionado por el usuario
-    console.log('User selected language:', userLanguage);
+    // Verificar que el idioma es válido
+    if (!commentTranslations[userLanguage]) {
+      console.error('Idioma no válido:', userLanguage);
+      return false;
+    }
     
     // Obtener la respuesta automática en el idioma del usuario
     const autoReplyText = commentTranslations[userLanguage].autoReply;
-    console.log('Auto reply text:', autoReplyText);
+    console.log('Texto de respuesta automática:', autoReplyText);
     
     // Crear la respuesta automática
+    console.log('Insertando respuesta automática en la base de datos...');
     const { data, error } = await supabase
       .from('comments')
       .insert({
@@ -63,19 +69,22 @@ export const createAutoReply = async (originalCommentId: string, originalContent
         user_id: 'sistema-automatico',
         is_approved: true,
         moderation_status: 'approved',
-        parent_comment_id: originalCommentId // Referencia al comentario original
+        parent_comment_id: originalCommentId
       })
       .select();
     
     if (error) {
-      console.error('Error creating auto reply:', error);
+      console.error('❌ Error al crear respuesta automática:', error);
+      console.error('Detalles del error:', JSON.stringify(error, null, 2));
       return false;
     }
     
-    console.log('Auto reply created successfully:', data);
+    console.log('✅ Respuesta automática creada exitosamente:', data);
+    console.log('=== RESPUESTA AUTOMÁTICA COMPLETADA ===');
     return true;
   } catch (error) {
-    console.error('Error in createAutoReply:', error);
+    console.error('❌ Error general en createAutoReply:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     return false;
   }
 };
