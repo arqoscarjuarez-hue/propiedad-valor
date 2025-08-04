@@ -3243,28 +3243,28 @@ const PropertyValuation = () => {
       addPageNumber(currentPageNumber);
       yPosition = marginTop + 80; // Posición centrada en la página
       
-      // Sección de compartir centrada en la última página
+      // Sección de compartir centrada en la última página con más espacio horizontal
       doc.setFillColor(248, 250, 252);
-      doc.rect(marginLeft - 5, yPosition - 20, contentWidth + 10, 80, 'F');
+      doc.rect(10, yPosition - 25, pageWidth - 20, 100, 'F'); // Mayor área horizontal
       
       doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.text("COMPARTE ESTE AVALÚO", pageWidth / 2, yPosition, { align: "center" });
       
-      yPosition += 20;
+      yPosition += 25; // Más espacio vertical entre líneas
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
       doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition, { align: "center" });
       
-      yPosition += 15;
+      yPosition += 20; // Más espacio vertical
       const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
       doc.textWithLink(`📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok`, pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
       
-      yPosition += 20;
+      yPosition += 25; // Más espacio vertical
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition, { align: "center" });
