@@ -4,6 +4,9 @@ import { ArrowUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommentSystem } from "@/components/CommentSystem";
 import { ShareButtons } from "@/components/ShareButtons";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/hooks/useLanguage";
+import { indexTranslations } from "@/translations/indexTranslations";
 
 // Lazy load components for better performance
 const PropertyValuation = lazy(() => import("@/components/PropertyValuation"));
@@ -13,6 +16,9 @@ const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
 const DemoWalkthrough = lazy(() => import("@/components/DemoWalkthrough"));
 
 const Index = () => {
+  const { selectedLanguage } = useLanguage();
+  const t = indexTranslations[selectedLanguage];
+  
   const [showValuation, setShowValuation] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
@@ -81,10 +87,10 @@ const Index = () => {
               </div>
               <div>
                 <h1 className="font-display text-xl lg:text-2xl font-bold text-foreground">
-                  Sistema profesional de avalúos
+                  {t.systemTitle}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Evaluación de propiedades
+                  {t.systemSubtitle}
                 </p>
               </div>
             </div>
@@ -98,24 +104,25 @@ const Index = () => {
                   onClick={handleShowComments}
                   className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                 >
-                  💬 Ver Comentarios
+                  {t.viewComments}
                 </Button>
               )}
               
+              <LanguageSelector />
               <ShareButtons />
               {/* Live stats */}
               <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary" aria-label="12,450 propiedades valuadas">12,450+</div>
-                  <div className="text-xs text-muted-foreground">Propiedades</div>
+                  <div className="text-xs text-muted-foreground">{t.properties}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-secondary" aria-label="98.5% de precisión">98.5%</div>
-                  <div className="text-xs text-muted-foreground">Precisión</div>
+                  <div className="text-xs text-muted-foreground">{t.precision}</div>
                 </div>
                 <div className="flex items-center space-x-2" role="status" aria-label="Sistema en línea">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
-                  <span className="text-sm text-green-500 font-medium">En Línea</span>
+                  <span className="text-sm text-green-500 font-medium">{t.online}</span>
                 </div>
               </div>
               
@@ -123,11 +130,11 @@ const Index = () => {
               <div className="flex lg:hidden items-center space-x-4">
                 <div className="text-center">
                   <div className="text-lg font-bold text-primary">12K+</div>
-                  <div className="text-xs text-muted-foreground">Valuadas</div>
+                  <div className="text-xs text-muted-foreground">{t.valued}</div>
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-green-500 font-medium">Online</span>
+                  <span className="text-sm text-green-500 font-medium">{t.online}</span>
                 </div>
               </div>
             </div>
@@ -140,7 +147,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6 flex items-center justify-between">
             <Button variant="outline" onClick={handleBackToHome}>
-              ← Volver al inicio
+              {t.backToHome}
             </Button>
             <ShareButtons 
               title="Sistema de Comentarios - Avalúos Profesionales"
@@ -171,48 +178,42 @@ const Index = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="font-display text-3xl font-bold text-foreground mb-4">
-                ¿Cómo saber el valor de mi casa o departamento?
+                {t.heroTitle}
               </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Nuestro sistema profesional de avalúos inmobiliarios te permite conocer el precio real de tu propiedad de forma gratuita e instantánea.
+                {t.heroDescription}
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-card p-6 rounded-lg border">
-                <h3 className="font-semibold text-lg mb-3">Avalúo de Casas</h3>
+                <h3 className="font-semibold text-lg mb-3">{t.houseAppraisal}</h3>
                 <p className="text-muted-foreground">
-                  Calcula el valor comercial de tu casa habitación con nuestro sistema de <strong>tasación inmobiliaria profesional</strong>. 
-                  Análisis completo de comparables del mercado actual.
+                  {t.houseDescription}
                 </p>
               </div>
               
               <div className="bg-card p-6 rounded-lg border">
-                <h3 className="font-semibold text-lg mb-3">Valuación de Departamentos</h3>
+                <h3 className="font-semibold text-lg mb-3">{t.apartmentValuation}</h3>
                 <p className="text-muted-foreground">
-                  <strong>Precio de departamento</strong> basado en ubicación, amenidades y características. 
-                  Reporte PDF con análisis detallado del mercado inmobiliario.
+                  {t.apartmentDescription}
                 </p>
               </div>
               
               <div className="bg-card p-6 rounded-lg border">
-                <h3 className="font-semibold text-lg mb-3">Tasación de Terrenos</h3>
+                <h3 className="font-semibold text-lg mb-3">{t.landAppraisal}</h3>
                 <p className="text-muted-foreground">
-                  <strong>Avalúo de terreno comercial y residencial</strong>. Calculadora especializada para 
-                  determinar el valor por metro cuadrado según zona y uso de suelo.
+                  {t.landDescription}
                 </p>
               </div>
             </div>
             
             <div className="mt-12 text-center">
               <h3 className="font-display text-2xl font-bold text-foreground mb-4">
-                Software de Valuación Inmobiliaria más Usado en América
+                {t.softwareTitle}
               </h3>
               <p className="text-muted-foreground max-w-4xl mx-auto">
-                Herramientas profesionales de <strong>avalúo inmobiliario online</strong> que incluyen análisis de mercado, 
-                comparables automatizados, reportes certificados y <strong>calculadora de valor de propiedades</strong> 
-                para casas, departamentos, terrenos comerciales y residenciales. 
-                Sistema confiable para obtener el <strong>precio real de tu propiedad</strong>.
+                {t.softwareDescription}
               </p>
             </div>
           </div>
@@ -224,7 +225,7 @@ const Index = () => {
         <main id="valuation-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
           <div className="mb-8 flex items-center justify-between">
             <Button variant="outline" onClick={handleBackToHome}>
-              ← Volver al inicio
+              {t.backToHome}
             </Button>
             <Button 
               variant="default" 
@@ -232,7 +233,7 @@ const Index = () => {
               onClick={handleShowComments}
               className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
-              💬 Ver Comentarios
+              {t.viewComments}
             </Button>
             <ShareButtons 
               title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
@@ -240,10 +241,10 @@ const Index = () => {
             />
             <div className="text-center flex-1">
               <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-                Realizar Valuación Profesional
+                {t.performValuation}
               </h2>
               <p className="text-muted-foreground">
-                Complete los datos de la propiedad para obtener una valuación precisa
+                {t.performDescription}
               </p>
             </div>
           </div>
@@ -258,11 +259,10 @@ const Index = () => {
         <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              ¿Listo para obtener una valuación profesional?
+              {t.ctaTitle}
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Únete a miles de profesionales que confían en nuestro sistema para 
-              obtener valuaciones precisas y reportes de calidad bancaria.
+              {t.ctaDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -270,7 +270,7 @@ const Index = () => {
                 className="text-lg px-8 py-6"
                 onClick={handleStartValuation}
               >
-                Comenzar Valuación Ahora
+                {t.startValuation}
               </Button>
               <Button 
                 variant="outline"
@@ -278,7 +278,7 @@ const Index = () => {
                 className="text-lg px-8 py-6"
                 onClick={handleShowDemo}
               >
-                Ver Demo de Uso
+                {t.viewDemo}
               </Button>
             </div>
           </div>
@@ -291,36 +291,35 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
             <div>
               <h3 className="font-display text-lg font-semibold text-foreground mb-4">
-                Sistema profesional de avalúos
+                {t.systemTitle}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                El sistema de valuación más avanzado y confiable de América. 
-                Tecnología de vanguardia al servicio de profesionales inmobiliarios.
+                {t.softwareDescription}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Características</h4>
+              <h4 className="font-semibold text-foreground mb-4">{t.features}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Análisis de mercado automático</li>
-                <li>✓ Reportes profesionales PDF/Word</li>
-                <li>✓ Integración con Google Maps</li>
-                <li>✓ Soporte para múltiples monedas</li>
+                <li>{t.automaticAnalysis}</li>
+                <li>{t.professionalReports}</li>
+                <li>{t.mapsIntegration}</li>
+                <li>{t.multiCurrency}</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Cobertura</h4>
+              <h4 className="font-semibold text-foreground mb-4">{t.coverage}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>🌎 Todo el continente americano</li>
-                <li>🏠 Casas, departamentos, terrenos</li>
-                <li>🏢 Propiedades comerciales</li>
-                <li>📱 Optimizado para móviles</li>
+                <li>{t.americaCoverage}</li>
+                <li>{t.propertyTypes}</li>
+                <li>{t.commercialProperties}</li>
+                <li>{t.mobileOptimized}</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-center sm:text-left text-muted-foreground">
-              <p>&copy; 2024 Sistema profesional de avalúos. Evaluación de propiedades.</p>
-              <p className="mt-1 text-sm">Metodología certificada • Reportes de calidad bancaria • Precisión garantizada</p>
+              <p>{t.copyright}</p>
+              <p className="mt-1 text-sm">{t.certification}</p>
             </div>
             <ShareButtons />
           </div>
