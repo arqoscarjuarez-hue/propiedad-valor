@@ -3258,6 +3258,11 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "bold");
       doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition, { align: "center" });
       
+      yPosition += 12;
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text("Hacer Click en el enlace seleccionado", pageWidth / 2, yPosition, { align: "center" });
+      
       yPosition += 20; // Más espacio vertical
       const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
       doc.setFontSize(14);
@@ -3914,15 +3919,12 @@ const PropertyValuation = () => {
               ],
               alignment: AlignmentType.CENTER
             }),
-            new Paragraph({ text: "" }),
-            new Paragraph({ text: "" }),
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "Comparte este avalúo profesional en redes sociales:",
-                  size: 32,
-                  bold: true,
-                  color: "2563eb"
+                  text: "Hacer Click en el enlace seleccionado",
+                  size: 20,
+                  color: "666666"
                 })
               ],
               alignment: AlignmentType.CENTER
