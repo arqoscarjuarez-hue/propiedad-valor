@@ -362,7 +362,17 @@ const translations = {
      exchangeRateError: 'No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.',
      exchangeRateNote: 'Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.',
      exchangeRateLabel: 'Tipo de cambio',
-     lastUpdateText: 'Última actualización'
+     lastUpdateText: 'Última actualización',
+     // Valuation results panel
+     valuationResultsTitle: 'Resultado de Valuación',
+     basedOnComparablesText: 'Basado en 3 comparables',
+     originalBaseValue: 'Valor base original',
+     adjustmentLabel: 'Ajuste',
+     totalBuiltAreaLabel: 'Área Total Construida',
+     landAreaLabel: 'Área de Terreno',
+     locationLabel: 'Ubicación',
+     pricePerBuiltM2: 'Precio por m² construido',
+     marketComparison: 'Comparación mercado'
   },
   en: {
     // UI Labels principales
@@ -686,7 +696,17 @@ const translations = {
        exchangeRateError: 'Could not update exchange rates. Previous rates will be used.',
        exchangeRateNote: 'Exchange rates are obtained from ExchangeRate-API and updated in real time.',
        exchangeRateLabel: 'Exchange rate',
-       lastUpdateText: 'Last update'
+       lastUpdateText: 'Last update',
+       // Valuation results panel
+       valuationResultsTitle: 'Valuation Results',
+       basedOnComparablesText: 'Based on 3 comparables',
+       originalBaseValue: 'Original base value',
+       adjustmentLabel: 'Adjustment',
+       totalBuiltAreaLabel: 'Total Built Area',
+       landAreaLabel: 'Land Area',
+       locationLabel: 'Location',
+       pricePerBuiltM2: 'Price per built m²',
+       marketComparison: 'Market comparison'
   },
   fr: {
     // UI Labels principales
@@ -1010,7 +1030,17 @@ const translations = {
        exchangeRateError: 'Impossible de mettre à jour les taux de change. Les taux précédents seront utilisés.',
        exchangeRateNote: 'Les taux de change sont obtenus d\'ExchangeRate-API et mis à jour en temps réel.',
        exchangeRateLabel: 'Taux de change',
-       lastUpdateText: 'Dernière mise à jour'
+       lastUpdateText: 'Dernière mise à jour',
+       // Valuation results panel
+       valuationResultsTitle: 'Résultats d\'Évaluation',
+       basedOnComparablesText: 'Basé sur 3 comparables',
+       originalBaseValue: 'Valeur de base originale',
+       adjustmentLabel: 'Ajustement',
+       totalBuiltAreaLabel: 'Surface Totale Construite',
+       landAreaLabel: 'Surface du Terrain',
+       locationLabel: 'Emplacement',
+       pricePerBuiltM2: 'Prix par m² construit',
+       marketComparison: 'Comparaison marché'
   },
   de: {
     // UI Labels principales
@@ -1336,7 +1366,17 @@ const translations = {
        exchangeRateError: 'Wechselkurse konnten nicht aktualisiert werden. Vorherige Kurse werden verwendet.',
        exchangeRateNote: 'Wechselkurse werden von ExchangeRate-API bezogen und in Echtzeit aktualisiert.',
        exchangeRateLabel: 'Wechselkurs',
-       lastUpdateText: 'Letzte Aktualisierung'
+       lastUpdateText: 'Letzte Aktualisierung',
+       // Valuation results panel
+       valuationResultsTitle: 'Bewertungsergebnisse',
+       basedOnComparablesText: 'Basierend auf 3 Vergleichsobjekten',
+       originalBaseValue: 'Ursprünglicher Grundwert',
+       adjustmentLabel: 'Anpassung',
+       totalBuiltAreaLabel: 'Gesamte Baufläche',
+       landAreaLabel: 'Grundstücksfläche',
+       locationLabel: 'Lage',
+       pricePerBuiltM2: 'Preis pro gebautem m²',
+       marketComparison: 'Marktvergleich'
   },
   it: {
     // UI Labels principales
@@ -1659,7 +1699,17 @@ const translations = {
        exchangeRateError: 'Impossibile aggiornare i tassi di cambio. Verranno utilizzati i tassi precedenti.',
        exchangeRateNote: 'I tassi di cambio sono ottenuti da ExchangeRate-API e aggiornati in tempo reale.',
        exchangeRateLabel: 'Tasso di cambio',
-       lastUpdateText: 'Ultimo aggiornamento'
+       lastUpdateText: 'Ultimo aggiornamento',
+       // Valuation results panel
+       valuationResultsTitle: 'Risultati di Valutazione',
+       basedOnComparablesText: 'Basato su 3 comparabili',
+       originalBaseValue: 'Valore base originale',
+       adjustmentLabel: 'Aggiustamento',
+       totalBuiltAreaLabel: 'Area Totale Costruita',
+       landAreaLabel: 'Area del Terreno',
+       locationLabel: 'Posizione',
+       pricePerBuiltM2: 'Prezzo per m² costruito',
+       marketComparison: 'Confronto mercato'
   },
   pt: {
     // UI Labels principales
@@ -1984,7 +2034,17 @@ const translations = {
        exchangeRateError: 'Não foi possível atualizar as taxas de câmbio. Taxas anteriores serão usadas.',
        exchangeRateNote: 'As taxas de câmbio são obtidas do ExchangeRate-API e atualizadas em tempo real.',
        exchangeRateLabel: 'Taxa de câmbio',
-       lastUpdateText: 'Última atualização'
+       lastUpdateText: 'Última atualização',
+       // Valuation results panel
+       valuationResultsTitle: 'Resultados de Avaliação',
+       basedOnComparablesText: 'Baseado em 3 comparáveis',
+       originalBaseValue: 'Valor base original',
+       adjustmentLabel: 'Ajuste',
+       totalBuiltAreaLabel: 'Área Total Construída',
+       landAreaLabel: 'Área do Terreno',
+       locationLabel: 'Localização',
+       pricePerBuiltM2: 'Preço por m² construído',
+       marketComparison: 'Comparação mercado'
   }
 };
 type Language = keyof typeof translations;
@@ -5530,7 +5590,7 @@ const PropertyValuation = () => {
         <div className="lg:col-span-1">
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl">Resultado de Valuación</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">{translations[selectedLanguage].valuationResultsTitle}</CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               {valuation && valuation > 0 ? (
@@ -5541,15 +5601,15 @@ const PropertyValuation = () => {
                       {formatCurrency(valuation, selectedCurrency)}
                     </p>
                     <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
-                    <p className="text-xs text-muted-foreground mt-1">Basado en 3 comparables</p>
+                    <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].basedOnComparablesText}</p>
                     
                     {/* Mostrar información del ajuste si existe */}
                     {priceAdjustment !== 0 && baseValuation && (
                       <div className="mt-3 p-3 bg-muted rounded-lg">
-                        <p className="text-xs text-muted-foreground">Valor base original:</p>
+                        <p className="text-xs text-muted-foreground">{translations[selectedLanguage].originalBaseValue}:</p>
                         <p className="text-sm font-medium">{formatCurrency(baseValuation, selectedCurrency)}</p>
                         <Badge variant={priceAdjustment > 0 ? "default" : "destructive"} className="mt-1">
-                          Ajuste: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
+                          {translations[selectedLanguage].adjustmentLabel}: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
                         </Badge>
                       </div>
                     )}
@@ -5557,18 +5617,18 @@ const PropertyValuation = () => {
                   
                   <div className="space-y-2 text-sm">
                      <div className="flex justify-between">
-                       <span>Área Total Construida:</span>
+                       <span>{translations[selectedLanguage].totalBuiltAreaLabel}:</span>
                        <span className="font-medium">
                          {(propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel).toLocaleString()} m²
                        </span>
                      </div>
                     <div className="flex justify-between">
-                      <span>Área de Terreno:</span>
+                      <span>{translations[selectedLanguage].landAreaLabel}:</span>
                       <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
                     </div>
                     {propertyData.direccionCompleta && (
                       <div className="flex justify-between">
-                        <span>Ubicación:</span>
+                        <span>{translations[selectedLanguage].locationLabel}:</span>
                         <span className="font-medium text-xs">
                           {propertyData.direccionCompleta.length > 30 
                             ? `${propertyData.direccionCompleta.substring(0, 30)}...` 
@@ -5578,7 +5638,7 @@ const PropertyValuation = () => {
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span>Precio por m² construido:</span>
+                      <span>{translations[selectedLanguage].pricePerBuiltM2}:</span>
                       <span className="font-medium">
                          {formatCurrency(
                            valuation / (propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel || 1), 
@@ -5590,7 +5650,7 @@ const PropertyValuation = () => {
                       const analysis = getMarketAnalysis();
                       return analysis ? (
                         <div className="flex justify-between">
-                          <span>Comparación mercado:</span>
+                          <span>{translations[selectedLanguage].marketComparison}:</span>
                           <span className={`font-medium ${analysis.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
                             {analysis.difference > 0 ? '+' : ''}{analysis.difference.toFixed(1)}%
                           </span>
