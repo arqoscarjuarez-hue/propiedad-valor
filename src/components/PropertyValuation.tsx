@@ -3262,9 +3262,15 @@ const PropertyValuation = () => {
       const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.textWithLink(`📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok`, pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
       
-      yPosition += 25; // Más espacio vertical
+      // Redes sociales en formato vertical - grupo de 2
+      doc.textWithLink("WhatsApp                    Facebook", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
+      yPosition += 10;
+      doc.textWithLink("Twitter                     Instagram", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
+      yPosition += 10;
+      doc.textWithLink("TikTok                      LinkedIn", pageWidth / 2, yPosition, { align: "center", url: shareWebsiteUrl });
+      
+      yPosition += 15; // Más espacio vertical
       doc.setFontSize(11);
       doc.setFont("helvetica", "normal");
       doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition, { align: "center" });
