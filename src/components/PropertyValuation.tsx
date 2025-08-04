@@ -3237,6 +3237,31 @@ const PropertyValuation = () => {
         });
       }
 
+      // Footer final con información de compartir
+      checkNewPage(40);
+      yPosition += 20;
+      
+      // Sección de compartir y contacto
+      doc.setFillColor(248, 250, 252);
+      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 35, 'F');
+      
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text("COMPARTE ESTE AVALÚO", pageWidth / 2, yPosition + 8, { align: "center" });
+      
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Comparte este avalúo profesional en redes sociales:", pageWidth / 2, yPosition + 16, { align: "center" });
+      
+      const shareWebsiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
+      doc.setFont("helvetica", "bold");
+      doc.textWithLink(`📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok`, pageWidth / 2, yPosition + 24, { align: "center", url: shareWebsiteUrl });
+      
+      doc.setFont("helvetica", "normal");
+      doc.text("¡Obtén tu propio avalúo profesional en nuestro sistema!", pageWidth / 2, yPosition + 32, { align: "center" });
+
       // Guardar PDF
       const fileName = `avaluo-inmobiliario-${Date.now()}.pdf`;
       doc.save(fileName);
@@ -3849,7 +3874,54 @@ const PropertyValuation = () => {
                 })(),
                 new Paragraph({ text: "" }), // Espacio
                 new Paragraph({ text: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" }), // Separador
-                new Paragraph({ text: "" }) // Espacio
+                new Paragraph({ text: "" }), // Espacio
+                
+                // Sección de compartir
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: "COMPARTE ESTE AVALÚO", 
+                      bold: true, 
+                      size: 28,
+                      color: "2563eb"
+                    })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({ text: "" }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "Comparte este avalúo profesional en redes sociales:" })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: "📱 WhatsApp | 📘 Facebook | 🐦 Twitter | 📸 Instagram | 🎵 TikTok",
+                      bold: true,
+                      color: "2563eb"
+                    })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ 
+                      text: "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
+                      color: "2563eb",
+                      underline: {}
+                    })
+                  ],
+                  alignment: AlignmentType.CENTER
+                }),
+                new Paragraph({ text: "" }),
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: "¡Obtén tu propio avalúo profesional en nuestro sistema!" })
+                  ],
+                  alignment: AlignmentType.CENTER
+                })
               ])
             ] : [])
           ]
