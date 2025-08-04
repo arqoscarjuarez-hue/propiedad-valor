@@ -2638,7 +2638,7 @@ const PropertyValuation = () => {
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
       const websiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
-      doc.textWithLink("Sistema profesional de avalúos - " + websiteUrl, marginLeft, 12, { url: websiteUrl });
+      doc.textWithLink("Sistema profesional de avalúos, Evaluación de propiedades", marginLeft, 12, { url: websiteUrl });
       
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(22);
