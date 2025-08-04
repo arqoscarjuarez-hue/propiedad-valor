@@ -2633,12 +2633,12 @@ const PropertyValuation = () => {
       doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.rect(0, 0, pageWidth, 40, 'F');
       
-      // Agregar URL del sitio web en la parte superior con enlace
+      // Agregar URL del sitio web centrado y resaltado
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
+      doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
       const websiteUrl = "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com";
-      doc.textWithLink("Sistema profesional de avalúos, Evaluación de propiedades", marginLeft, 12, { url: websiteUrl });
+      doc.textWithLink("Sistema profesional de avalúos, Evaluación de propiedades", pageWidth / 2, 12, { align: "center", url: websiteUrl });
       
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(22);
