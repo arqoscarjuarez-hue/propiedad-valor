@@ -92,11 +92,12 @@ const Index = () => {
             <div className="flex items-center space-x-4">
               {!showComments && !showValuation && (
                 <Button 
-                  variant="outline" 
+                  variant="default" 
+                  size="lg"
                   onClick={handleShowComments}
-                  className="hidden sm:flex"
+                  className="hidden sm:flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                 >
-                  Ver Comentarios
+                  💬 Ver Comentarios
                 </Button>
               )}
               
