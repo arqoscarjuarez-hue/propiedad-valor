@@ -74,7 +74,10 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">
-                    {isSystemReply ? t.systemResponse : `${t.user}: ${comment.user_id}`}
+                    {isSystemReply ? t.systemResponse : 
+                     comment.user_id === 'visitante' ? 'Visitante' : 
+                     comment.user_id === 'sistema-automatico' ? t.systemResponse : 
+                     `${t.user}`}
                   </span>
                   <div className="flex gap-2">
                     {isSystemReply && (

@@ -34,9 +34,9 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
     setIsSubmitting(true);
 
     try {
-      // For demo purposes, we'll use a dummy user_id
+      // For demo purposes, we'll use a friendly user identifier
       // In a real app, you'd get this from auth
-      const user_id = "demo-user-123";
+      const user_id = "visitante";
 
       const { data, error } = await supabase.functions.invoke('moderate-comment', {
         body: {
