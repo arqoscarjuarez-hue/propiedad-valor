@@ -527,17 +527,35 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         </div>
 
         {currentAddress && (
-          <div className="flex items-start gap-2 p-3 bg-muted rounded-lg">
-            <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <p className="text-sm font-medium">Dirección Encontrada:</p>
-              <p className="text-xs text-muted-foreground">{currentAddress}</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                <strong>Coordenadas Decimales:</strong> {position[0].toFixed(6)}, {position[1].toFixed(6)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                <strong>Coordenadas DMS:</strong> {convertToDMS(position[0], true)}, {convertToDMS(position[1], false)}
-              </p>
+          <div className="space-y-3 p-3 bg-muted rounded-lg">
+            <div className="flex items-start gap-2">
+              <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Dirección Encontrada:</p>
+                <div className="mt-2">
+                  <Input
+                    type="text"
+                    value={currentAddress}
+                    onChange={(e) => setCurrentAddress(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        searchLocation(currentAddress);
+                      }
+                    }}
+                    placeholder="Puedes editar la dirección si es incorrecta..."
+                    className="text-sm"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    💡 Edita la dirección y presiona Enter para buscar nuevamente
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  <strong>Coordenadas Decimales:</strong> {position[0].toFixed(6)}, {position[1].toFixed(6)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  <strong>Coordenadas DMS:</strong> {convertToDMS(position[0], true)}, {convertToDMS(position[1], false)}
+                </p>
+              </div>
             </div>
           </div>
         )}
