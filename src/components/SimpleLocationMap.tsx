@@ -434,7 +434,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           </span>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          Si tu ubicación es actual haz clic en editar datos
+          Si tu ubicación NO es actual haz clic en editar datos
         </p>
         
         {showCoordinatesInfo && (
