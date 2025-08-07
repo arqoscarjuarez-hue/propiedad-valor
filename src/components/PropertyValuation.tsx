@@ -56,7 +56,7 @@ const translations = {
     characteristics: 'Características',
     location: 'Ubicación',
     photos: 'Fotografías',
-    valuation: 'Valuación',
+    valuation: 'Ajuste de Valor',
     
     // Sección de áreas
     constructionAreas: 'Áreas de Construcción (m²)',
