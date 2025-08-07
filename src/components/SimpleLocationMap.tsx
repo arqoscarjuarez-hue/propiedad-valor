@@ -504,29 +504,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         )}
       </div>
 
-      {/* Mapa interactivo Leaflet */}
-      <div className="relative">
-        <div 
-          ref={mapRef}
-          className="h-96 rounded-lg overflow-hidden border bg-muted relative"
-          style={{ minHeight: '400px' }}
-        />
-        
-        <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 z-[1000]">
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <MapPin className="h-3 w-3" />
-            <span>{position[0].toFixed(4)}, {position[1].toFixed(4)}</span>
-          </div>
-        </div>
-        
-        <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1 z-[1000]">
-          <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
-            <Move className="h-3 w-3" />
-            <span>Arrastra para navegar • Haz clic para ubicar</span>
-          </div>
-        </div>
-      </div>
-
       {/* Botones para abrir en diferentes aplicaciones de mapas */}
       <div className="space-y-2">
         <p className="text-sm font-medium">Abrir ubicación en:</p>
@@ -557,6 +534,30 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           </Button>
         </div>
       </div>
+
+      {/* Mapa interactivo Leaflet */}
+      <div className="relative">
+        <div 
+          ref={mapRef}
+          className="h-96 rounded-lg overflow-hidden border bg-muted relative"
+          style={{ minHeight: '400px' }}
+        />
+        
+        <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2 z-[1000]">
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <MapPin className="h-3 w-3" />
+            <span>{position[0].toFixed(4)}, {position[1].toFixed(4)}</span>
+          </div>
+        </div>
+        
+        <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-1 z-[1000]">
+          <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
+            <Move className="h-3 w-3" />
+            <span>Arrastra para navegar • Haz clic para ubicar</span>
+          </div>
+        </div>
+      </div>
+
 
       {/* Instrucciones */}
       <div className="text-xs text-muted-foreground space-y-1">
