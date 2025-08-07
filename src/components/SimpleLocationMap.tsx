@@ -433,6 +433,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             Ver formatos de coordenadas válidos
           </span>
         </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Si tu ubicación es actual haz clic en editar datos
+        </p>
         
         {showCoordinatesInfo && (
           <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
