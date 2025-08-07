@@ -27,8 +27,8 @@ export const commentTranslations = {
     flagged: 'Marcado',
     
     // Respuesta automática
-    autoReply: '¡Muchas gracias por su valioso comentario! Sus opiniones son extremadamente importantes para nosotros y nos ayudan a mejorar constantemente nuestro sistema. Agradecemos profundamente su tiempo y confianza en nuestro programa. Si encuentra útil nuestra herramienta, lo invitamos cordialmente a compartirla con otros usando el botón "Compartir" para que más personas puedan beneficiarse de esta solución profesional. ¡Su apoyo significa mucho para nosotros!',
-    systemResponse: 'Respuesta'
+    autoReply: 'mili responde: ¡Muchas gracias por su valioso comentario! Sus opiniones son extremadamente importantes para nosotros y nos ayudan a mejorar constantemente nuestro sistema. Agradecemos profundamente su tiempo y confianza en nuestro programa. Si encuentra útil nuestra herramienta, lo invitamos cordialmente a compartirla con otros usando el botón "Compartir" para que más personas puedan beneficiarse de esta solución profesional. ¡Su apoyo significa mucho para nosotros!',
+    systemResponse: 'mili responde'
   },
   en: {
     // CommentSystem
@@ -58,8 +58,8 @@ export const commentTranslations = {
     flagged: 'Flagged',
     
     // Respuesta automática
-    autoReply: 'Thank you so much for your valuable feedback! Your opinions are extremely important to us and help us continuously improve our system. We deeply appreciate your time and trust in our program. If you find our tool useful, we cordially invite you to share it with others using the "Share" button so more people can benefit from this professional solution. Your support means a lot to us!',
-    systemResponse: 'Response'
+    autoReply: 'mili responds: Thank you so much for your valuable feedback! Your opinions are extremely important to us and help us continuously improve our system. We deeply appreciate your time and trust in our program. If you find our tool useful, we cordially invite you to share it with others using the "Share" button so more people can benefit from this professional solution. Your support means a lot to us!',
+    systemResponse: 'mili responds'
   },
   fr: {
     // CommentSystem
@@ -89,8 +89,8 @@ export const commentTranslations = {
     flagged: 'Signalé',
     
     // Respuesta automática
-    autoReply: 'Merci beaucoup pour vos précieux commentaires ! Vos opinions sont extrêmement importantes pour nous et nous aident à améliorer continuellement notre système. Nous apprécions profondément votre temps et votre confiance en notre programme. Si vous trouvez notre outil utile, nous vous invitons cordialement à le partager avec d\'autres en utilisant le bouton "Partager" pour que plus de personnes puissent bénéficier de cette solution professionnelle. Votre soutien compte beaucoup pour nous !',
-    systemResponse: 'Réponse'
+    autoReply: 'mili répond: Merci beaucoup pour vos précieux commentaires ! Vos opinions sont extrêmement importantes pour nous et nous aident à améliorer continuellement notre système. Nous apprécions profondément votre temps et votre confiance en notre programme. Si vous trouvez notre outil utile, nous vous invitons cordialement à le partager avec d\'autres en utilisant le bouton "Partager" pour que plus de personnes puissent bénéficier de cette solution professionnelle. Votre soutien compte beaucoup pour nous !',
+    systemResponse: 'mili répond'
   },
   de: {
     // CommentSystem
@@ -120,8 +120,8 @@ export const commentTranslations = {
     flagged: 'Markiert',
     
     // Respuesta automática
-    autoReply: 'Vielen Dank für Ihr wertvolles Feedback! Ihre Meinungen sind für uns äußerst wichtig und helfen uns, unser System kontinuierlich zu verbessern. Wir schätzen Ihre Zeit und Ihr Vertrauen in unser Programm sehr. Wenn Sie unser Tool nützlich finden, laden wir Sie herzlich ein, es mit anderen über die Schaltfläche "Teilen" zu teilen, damit mehr Menschen von dieser professionellen Lösung profitieren können. Ihre Unterstützung bedeutet uns sehr viel!',
-    systemResponse: 'Antwort'
+    autoReply: 'mili antwortet: Vielen Dank für Ihr wertvolles Feedback! Ihre Meinungen sind für uns äußerst wichtig und helfen uns, unser System kontinuierlich zu verbessern. Wir schätzen Ihre Zeit und Ihr Vertrauen in unser Programm sehr. Wenn Sie unser Tool nützlich finden, laden wir Sie herzlich ein, es mit anderen über die Schaltfläche "Teilen" zu teilen, damit mehr Menschen von dieser professionellen Lösung profitieren können. Ihre Unterstützung bedeutet uns sehr viel!',
+    systemResponse: 'mili antwortet'
   },
   it: {
     // CommentSystem
@@ -151,8 +151,8 @@ export const commentTranslations = {
     flagged: 'Segnalato',
     
     // Respuesta automática
-    autoReply: 'Grazie mille per il vostro prezioso feedback! Le vostre opinioni sono estremamente importanti per noi e ci aiutano a migliorare continuamente il nostro sistema. Apprezziamo profondamente il vostro tempo e la fiducia nel nostro programma. Se trovate il nostro strumento utile, vi invitiamo cordialmente a condividerlo con altri utilizzando il pulsante "Condividi" in modo che più persone possano beneficiare di questa soluzione professionale. Il vostro supporto significa molto per noi!',
-    systemResponse: 'Risposta'
+    autoReply: 'mili risponde: Grazie mille per il vostro prezioso feedback! Le vostre opinioni sono estremamente importanti per noi e ci aiutano a migliorare continuamente il nostro sistema. Apprezziamo profondamente il vostro tempo e la fiducia nel nostro programma. Se trovate il nostro strumento utile, vi invitiamo cordialmente a condividerlo con altri utilizzando il pulsante "Condividi" in modo che più persone possano beneficiare di questa soluzione professionale. Il vostro supporto significa molto per noi!',
+    systemResponse: 'mili risponde'
   },
   pt: {
     // CommentSystem
@@ -182,7 +182,7 @@ export const commentTranslations = {
     flagged: 'Sinalizado',
     
     // Respuesta automática
-    autoReply: 'Muito obrigado pelo seu valioso feedback! Suas opiniões são extremamente importantes para nós e nos ajudam a melhorar continuamente nosso sistema. Apreciamos profundamente seu tempo e confiança em nosso programa. Se você acha nossa ferramenta útil, convidamos cordialmente você a compartilhá-la com outros usando o botão "Compartilhar" para que mais pessoas possam se beneficiar desta solução profissional. Seu apoio significa muito para nós!',
-    systemResponse: 'Resposta'
+    autoReply: 'mili responde: Muito obrigado pelo seu valioso feedback! Suas opiniões são extremamente importantes para nós e nos ajudam a melhorar continuamente nosso sistema. Apreciamos profundamente seu tempo e confiança em nosso programa. Se você acha nossa ferramenta útil, convidamos cordialmente você a compartilhá-la com outros usando o botão "Compartilhar" para que mais pessoas possam se beneficiar desta solução profissional. Seu apoio significa muito para nós!',
+    systemResponse: 'mili responde'
   }
 };
