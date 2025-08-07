@@ -207,12 +207,12 @@ const translations = {
     badLocation: 'Mala',
      
      // Ubicación
+     locationSketch: 'Croquis de Ubicación',
+     mapInstructions: 'Croquis de Ubicación: Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.',
      clickOnMap: 'Haz clic en el mapa para seleccionar la ubicación exacta de la propiedad',
      currentAddress: 'Dirección actual',
-     locationSketch: 'Croquis de Ubicación',
      viewMap: 'Ver Mapa',
      editData: 'Editar Datos',
-     mapInstructions: 'Marca la ubicación exacta de la propiedad en el mapa. Esto ayudará a proporcionar una valuación más precisa.',
      registeredAddress: 'Dirección Registrada:',
      coordinates: 'Coordenadas:',
      editLocationInstructions: 'Edita manualmente los datos de ubicación de la propiedad.',
@@ -549,12 +549,12 @@ const translations = {
     
     
     // Ubicación
+    locationSketch: 'Location Sketch',
+    mapInstructions: 'Location Sketch: Mark the exact location of the property on the map. This will help provide a more accurate valuation.',
     clickOnMap: 'Click on the map to select the exact location of the property',
     currentAddress: 'Current address',
-    locationSketch: 'Location Sketch',
     viewMap: 'View Map',
     editData: 'Edit Data',
-    mapInstructions: 'Mark the exact location of the property on the map. This will help provide a more accurate valuation.',
     registeredAddress: 'Registered Address:',
     coordinates: 'Coordinates:',
     editLocationInstructions: 'Manually edit the property location data.',
@@ -892,12 +892,12 @@ const translations = {
 
     
     // Ubicación
+    locationSketch: 'Croquis de Localisation',
+    mapInstructions: 'Croquis de Localisation: Marquez l\'emplacement exact de la propriété sur la carte. Cela aidera à fournir une évaluation plus précise.',
     clickOnMap: 'Cliquez sur la carte pour sélectionner l\'emplacement exact de la propriété',
     currentAddress: 'Adresse actuelle',
-    locationSketch: 'Croquis de Localisation',
     viewMap: 'Voir la Carte',
     editData: 'Modifier les Données',
-    mapInstructions: 'Marquez l\'emplacement exact de la propriété sur la carte. Cela aidera à fournir une évaluation plus précise.',
     registeredAddress: 'Adresse Enregistrée:',
     coordinates: 'Coordonnées:',
     editLocationInstructions: 'Modifier manuellement les données de localisation de la propriété.',
@@ -1235,12 +1235,12 @@ const translations = {
 
     
     // Ubicación
+    locationSketch: 'Standortskizze',
+    mapInstructions: 'Standortskizze: Markieren Sie den genauen Standort der Immobilie auf der Karte. Dies hilft bei einer genaueren Bewertung.',
     clickOnMap: 'Klicken Sie auf die Karte, um den genauen Standort der Immobilie auszuwählen',
     currentAddress: 'Aktuelle Adresse',
-    locationSketch: 'Standortskizze',
     viewMap: 'Karte Anzeigen',
     editData: 'Daten Bearbeiten',
-    mapInstructions: 'Markieren Sie den genauen Standort der Immobilie auf der Karte. Dies hilft bei einer genaueren Bewertung.',
     registeredAddress: 'Registrierte Adresse:',
     coordinates: 'Koordinaten:',
     editLocationInstructions: 'Bearbeiten Sie manuell die Standortdaten der Immobilie.',
@@ -1574,13 +1574,12 @@ const translations = {
     badLocation: 'Cattiva',
     
      // Ubicación
+    locationSketch: 'Schizzo della Posizione',
+    mapInstructions: 'Schizzo della Posizione: Contrassegna la posizione esatta della proprietà sulla mappa. Questo aiuterà a fornire una valutazione più accurata.',
     clickOnMap: 'Clicca sulla mappa per selezionare la posizione esatta della proprietà',
     currentAddress: 'Indirizzo attuale',
-    
-    locationSketch: 'Schizzo della Posizione',
     viewMap: 'Visualizza Mappa',
     editData: 'Modifica Dati',
-    mapInstructions: 'Contrassegna la posizione esatta della proprietà sulla mappa. Questo aiuterà a fornire una valutazione più accurata.',
     registeredAddress: 'Indirizzo Registrato:',
     coordinates: 'Coordinate:',
     editLocationInstructions: 'Modifica manualmente i dati di posizione della proprietà.',
@@ -1914,12 +1913,12 @@ const translations = {
     badLocation: 'Ruim',
     
     // Ubicación
+    locationSketch: 'Esboço de Localização',
+    mapInstructions: 'Esboço de Localização: Marque a localização exata da propriedade no mapa. Isso ajudará a fornecer uma avaliação mais precisa.',
     clickOnMap: 'Clique no mapa para selecionar a localização exata da propriedade',
     currentAddress: 'Endereço atual',
-    locationSketch: 'Esboço de Localização',
     viewMap: 'Ver Mapa',
     editData: 'Editar Dados',
-    mapInstructions: 'Marque a localização exata da propriedade no mapa. Isso ajudará a fornecer uma avaliação mais precisa.',
     registeredAddress: 'Endereço Registrado:',
     coordinates: 'Coordenadas:',
     editLocationInstructions: 'Edite manualmente os dados de localização da propriedade.',
