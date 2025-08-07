@@ -21,15 +21,44 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // For now, approve all comments (skip OpenAI moderation due to rate limits)
+    // Lista de palabras prohibidas
+    const badWords = [
+      'mierda', 'puta', 'putas', 'pendejo', 'cerote', 'hijo de puta',
+      'cabrón', 'cabron', 'joder', 'coño', 'cojones', 'maricón', 'maricon',
+      'idiota', 'imbécil', 'estúpido', 'stupido', 'fuck', 'shit', 'bitch',
+      'asshole', 'damn', 'hell'
+    ];
+
+    // Verificar si el contenido contiene palabras prohibidas
+    const containsBadWords = badWords.some(word => 
+      content.toLowerCase().includes(word.toLowerCase())
+    );
+
+    const isApproved = !containsBadWords;
+    const moderationStatus = containsBadWords ? 'rejected' : 'approved';
+    const moderationFlags = containsBadWords ? ['inappropriate_language'] : null;
+
+    if (containsBadWords) {
+      console.log('Comment rejected due to inappropriate content:', content);
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Comentario rechazado por contenido inapropiado',
+        moderated: true,
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Solo guardar comentarios aprobados
     const { data, error } = await supabase
       .from('comments')
       .insert({
         content,
         user_id,
-        is_approved: true,
-        moderation_status: 'approved',
-        moderation_flags: null,
+        is_approved: isApproved,
+        moderation_status: moderationStatus,
+        moderation_flags: moderationFlags,
       })
       .select()
       .single();
