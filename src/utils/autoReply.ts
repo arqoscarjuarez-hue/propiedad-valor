@@ -58,7 +58,9 @@ export const createAutoReply = async (originalCommentId: string, originalContent
     
     // Obtener la respuesta automática en el idioma del usuario
     const autoReplyText = commentTranslations[userLanguage].autoReply;
-    console.log('Texto de respuesta automática:', autoReplyText);
+    console.log('🔍 DEBUGGING - Idioma del usuario:', userLanguage);
+    console.log('🔍 DEBUGGING - Texto de respuesta automática:', autoReplyText);
+    console.log('🔍 DEBUGGING - Todas las traducciones disponibles:', commentTranslations);
     
     // Crear la respuesta automática
     console.log('Insertando respuesta automática en la base de datos...');
