@@ -6088,9 +6088,7 @@ const PropertyValuation = () => {
               
               <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t">
                 <Button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                  onClick={() => {
                     if (!isCalculating) {
                       calculateValuation();
                     }
