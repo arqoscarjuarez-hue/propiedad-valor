@@ -10,12 +10,8 @@ import {
   Mail, 
   Copy,
   Check,
-  Youtube,
-  Instagram,
-  Music,
   FileText,
-  Download,
-  Smartphone
+  Download
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -40,14 +36,10 @@ export function ShareButtons({
   onGenerateWord
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const { toast } = useToast();
   
   const currentUrl = window.location.href;
-  const shareMessage = `${title}\n\n${description}\n\n📄 Documentos del avalúo profesional incluidos\n\n🔗 ${currentUrl}`;
-
-  // Verificar si Web Share API está disponible
-  const canUseNativeShare = navigator.share && navigator.canShare;
 
   const copyToClipboard = async () => {
     try {
@@ -67,198 +59,72 @@ export function ShareButtons({
     }
   };
 
-  // Función para compartir con Web Share API nativa (simplificada)
-  const shareWithNativeAPI = async () => {
-    if (!canUseNativeShare) {
+  // Función principal para compartir con documentos
+  const shareWithDocuments = async (platform: string, shareUrl: string) => {
+    if (!onGeneratePDF || !onGenerateWord) {
       toast({
-        title: "No disponible",
-        description: "Tu dispositivo no soporta compartir archivos directamente",
+        title: "Error",
+        description: "Las funciones de generación no están disponibles",
         variant: "destructive"
       });
       return;
     }
 
-    setIsGenerating(true);
+    setIsSharing(true);
 
     try {
+      // Mostrar mensaje de preparación
       toast({
-        title: "Generando documentos...",
-        description: "Preparando archivos para compartir",
+        title: `Preparando para ${platform}`,
+        description: "Generando documentos del avalúo...",
       });
 
-      // Generar documentos normalmente (se descargan)
-      if (onGeneratePDF) onGeneratePDF();
-      if (onGenerateWord) onGenerateWord();
-
-      // Esperar a que se generen
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Usar Web Share API solo para texto
-      if (navigator.share) {
-        await navigator.share({
-          title: title,
-          text: shareMessage,
-          url: currentUrl
-        });
-
-        toast({
-          title: "¡Compartido exitosamente!",
-          description: "Los documentos se han descargado. Adjúntalos manualmente en la app que se abrió.",
-        });
-      } else {
-        // Fallback
-        if (onGeneratePDF) onGeneratePDF();
-        if (onGenerateWord) onGenerateWord();
-        
-        toast({
-          title: "Documentos generados",
-          description: "Los archivos se han descargado. Compártelos manualmente.",
-        });
-      }
-
-    } catch (error: any) {
-      if (error.name !== 'AbortError') { // Usuario canceló
-        console.error('Error sharing:', error);
-        toast({
-          title: "Error al compartir",
-          description: "No se pudieron compartir los documentos directamente",
-          variant: "destructive"
-        });
-      }
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // Función para compartir via WhatsApp con archivos
-  const shareViaWhatsApp = async () => {
-    setIsGenerating(true);
-
-    try {
-      toast({
-        title: "Preparando para WhatsApp...",
-        description: "Generando documentos",
-      });
-
-      // Generar documentos
-      if (onGeneratePDF) onGeneratePDF();
-      if (onGenerateWord) onGenerateWord();
-
-      // Esperar a que se generen
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const whatsappMessage = encodeURIComponent(
-        `${title}\n\n${description}\n\n📄 Te envío los documentos del avalúo profesional.\n\n🔗 Visita: ${currentUrl}`
-      );
-
-      // Abrir WhatsApp
-      const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-
-      toast({
-        title: "WhatsApp abierto",
-        description: "Los documentos se han descargado. Adjúntalos en WhatsApp.",
-      });
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "No se pudo preparar el contenido para WhatsApp",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  // Función para compartir via Email con archivos
-  const shareViaEmail = async () => {
-    setIsGenerating(true);
-
-    try {
-      toast({
-        title: "Preparando email...",
-        description: "Generando documentos",
-      });
-
-      // Generar documentos
-      if (onGeneratePDF) onGeneratePDF();
-      if (onGenerateWord) onGenerateWord();
-
-      // Esperar a que se generen
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const emailSubject = encodeURIComponent(title);
-      const emailBody = encodeURIComponent(
-        `${description}\n\nHe adjuntado los documentos del avalúo profesional (PDF y Word).\n\nPuedes obtener tu propio avalúo en: ${currentUrl}\n\nSaludos cordiales`
-      );
-
-      // Abrir cliente de email
-      const emailUrl = `mailto:?subject=${emailSubject}&body=${emailBody}`;
-      window.location.href = emailUrl;
-
-      toast({
-        title: "Cliente de email abierto",
-        description: "Los documentos se han descargado. Adjúntalos en tu email.",
-      });
-
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "No se pudo preparar el email",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const handleDirectDownload = (type: 'pdf' | 'word') => {
-    if (type === 'pdf' && onGeneratePDF) {
+      // Generar PDF
+      console.log('Iniciando generación de PDF...');
       onGeneratePDF();
-      toast({
-        title: "Generando PDF",
-        description: "El avalúo en PDF se descargará automáticamente",
-      });
-    } else if (type === 'word' && onGenerateWord) {
+
+      // Esperar un momento
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Generar Word
+      console.log('Iniciando generación de Word...');
       onGenerateWord();
+
+      // Esperar otro momento
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Abrir la plataforma
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+
+      // Mostrar instrucciones
       toast({
-        title: "Generando Word",
-        description: "El avalúo en Word se descargará automáticamente",
+        title: `${platform} abierto`,
+        description: "Los documentos se han descargado. Adjúntalos en la aplicación.",
+        duration: 5000,
       });
+
+    } catch (error) {
+      console.error('Error en shareWithDocuments:', error);
+      toast({
+        title: "Error",
+        description: `No se pudo preparar el contenido para ${platform}`,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSharing(false);
     }
   };
 
-  const shareLinks = [
-    {
-      name: 'Facebook',
-      icon: Facebook,
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
-      color: 'text-blue-600 hover:text-blue-700'
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
-      color: 'text-gray-800 hover:text-gray-900'
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
-      color: 'text-blue-700 hover:text-blue-800'
-    },
-    {
-      name: 'Telegram',
-      icon: Send,
-      url: `https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
-      color: 'text-blue-500 hover:text-blue-600'
-    }
-  ];
-
-  const handleSocialShare = (social: any) => {
-    window.open(social.url, '_blank', 'noopener,noreferrer');
+  // Función para compartir solo enlace
+  const shareLink = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
+
+  // Preparar mensajes para compartir
+  const shareMessage = `${title}\n\n${description}\n\n📄 Documentos del avalúo profesional incluidos\n\n🔗 ${currentUrl}`;
+  const encodedMessage = encodeURIComponent(shareMessage);
+  const encodedTitle = encodeURIComponent(title);
+  const encodedUrl = encodeURIComponent(currentUrl);
 
   return (
     <DropdownMenu>
@@ -266,110 +132,126 @@ export function ShareButtons({
         <Button 
           variant="outline" 
           size="lg"
-          disabled={isGenerating}
+          disabled={isSharing}
           className="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 border-primary/30 hover:border-primary/50 shadow-md hover:shadow-lg transition-all duration-200"
         >
           <Share2 className="h-5 w-5" />
-          {isGenerating ? "Preparando..." : "Compartir"}
+          {isSharing ? "Preparando..." : "Compartir"}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72 bg-background/95 backdrop-blur-sm border shadow-lg">
+      <DropdownMenuContent align="end" className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
         
-        {/* Compartir nativo (móviles principalmente) */}
-        {canUseNativeShare && (
-          <>
-            <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-              📱 COMPARTIR DIRECTO
-            </div>
-            <DropdownMenuItem
-              onClick={shareWithNativeAPI}
-              disabled={isGenerating}
-              className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
-            >
-              <Smartphone className="h-4 w-4 text-green-600" />
-              <div className="flex flex-col">
-                <span className="font-medium">Compartir con archivos</span>
-                <span className="text-xs text-muted-foreground">Envía documentos directamente</span>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-          </>
-        )}
-
-        {/* Compartir con aplicaciones específicas */}
-        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-          💬 COMPARTIR CON DOCUMENTOS
+        {/* Sección: Compartir con documentos */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-muted/30">
+          📄 COMPARTIR CON DOCUMENTOS
         </div>
         
         <DropdownMenuItem
-          onClick={shareViaWhatsApp}
-          disabled={isGenerating}
+          onClick={() => shareWithDocuments('WhatsApp', `https://wa.me/?text=${encodedMessage}`)}
+          disabled={isSharing}
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
         >
           <MessageCircle className="h-4 w-4 text-green-600" />
           <div className="flex flex-col">
             <span className="font-medium">WhatsApp</span>
-            <span className="text-xs text-muted-foreground">Genera archivos + abre WhatsApp</span>
+            <span className="text-xs text-muted-foreground">Genera PDF + Word</span>
           </div>
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={shareViaEmail}
-          disabled={isGenerating}
+          onClick={() => shareWithDocuments('Telegram', `https://t.me/share/url?url=${encodedUrl}&text=${encodedMessage}`)}
+          disabled={isSharing}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <Send className="h-4 w-4 text-blue-500" />
+          <div className="flex flex-col">
+            <span className="font-medium">Telegram</span>
+            <span className="text-xs text-muted-foreground">Genera PDF + Word</span>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => shareWithDocuments('Email', `mailto:?subject=${encodedTitle}&body=${encodedMessage}`)}
+          disabled={isSharing}
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
         >
           <Mail className="h-4 w-4 text-blue-600" />
           <div className="flex flex-col">
             <span className="font-medium">Email</span>
-            <span className="text-xs text-muted-foreground">Genera archivos + abre email</span>
+            <span className="text-xs text-muted-foreground">Genera PDF + Word</span>
           </div>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        {/* Descargas directas */}
-        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-          📄 DESCARGAR DOCUMENTOS
+        {/* Sección: Descargas individuales */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-muted/30">
+          💾 DESCARGAR INDIVIDUAL
         </div>
         
         {onGeneratePDF && (
           <DropdownMenuItem
-            onClick={() => handleDirectDownload('pdf')}
+            onClick={() => {
+              onGeneratePDF();
+              toast({
+                title: "Generando PDF",
+                description: "El avalúo en PDF se descargará automáticamente",
+              });
+            }}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
           >
             <FileText className="h-4 w-4 text-red-600" />
-            <span className="font-medium">Descargar PDF</span>
+            <span className="font-medium">Solo PDF</span>
           </DropdownMenuItem>
         )}
         
         {onGenerateWord && (
           <DropdownMenuItem
-            onClick={() => handleDirectDownload('word')}
+            onClick={() => {
+              onGenerateWord();
+              toast({
+                title: "Generando Word",
+                description: "El avalúo en Word se descargará automáticamente",
+              });
+            }}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
           >
             <Download className="h-4 w-4 text-blue-600" />
-            <span className="font-medium">Descargar Word</span>
+            <span className="font-medium">Solo Word</span>
           </DropdownMenuItem>
         )}
 
         <DropdownMenuSeparator />
 
-        {/* Redes sociales (solo enlace) */}
-        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+        {/* Sección: Redes sociales (solo enlace) */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-muted/30">
           🌐 COMPARTIR ENLACE
         </div>
         
-        {shareLinks.map((social) => (
-          <DropdownMenuItem
-            key={social.name}
-            onClick={() => handleSocialShare(social)}
-            className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
-          >
-            <social.icon className={`h-4 w-4 ${social.color}`} />
-            <span className="font-medium">{social.name}</span>
-          </DropdownMenuItem>
-        ))}
-        
+        <DropdownMenuItem
+          onClick={() => shareLink(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`)}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <Facebook className="h-4 w-4 text-blue-600" />
+          <span className="font-medium">Facebook</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => shareLink(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`)}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <Twitter className="h-4 w-4 text-gray-800" />
+          <span className="font-medium">Twitter</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => shareLink(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`)}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <Linkedin className="h-4 w-4 text-blue-700" />
+          <span className="font-medium">LinkedIn</span>
+        </DropdownMenuItem>
+
         <DropdownMenuSeparator />
         
         <DropdownMenuItem
