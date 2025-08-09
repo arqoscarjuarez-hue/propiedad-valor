@@ -6163,27 +6163,6 @@ const PropertyValuation = () => {
                     translations[selectedLanguage].calculate
                   )}
                 </Button>
-                
-                {/* Información del ajuste - Explicación de características */}
-                <div className="mt-4 p-3 bg-muted rounded-lg">
-                  <div className="text-xs text-muted-foreground space-y-2">
-                    <p><strong>Cuándo ajustar hacia arriba (+):</strong></p>
-                    <ul className="list-disc list-inside space-y-1 ml-2">
-                      <li>Características premium únicas</li>
-                      <li>Ubicación excepcional en la zona</li>
-                      <li>Acabados de lujo o renovaciones recientes</li>
-                      <li>Mercado inmobiliario en alza</li>
-                    </ul>
-                    
-                    <p><strong>Cuándo ajustar hacia abajo (-):</strong></p>
-                    <ul className="list-disc list-inside space-y-1 ml-2">
-                      <li>Defectos estructurales o problemas ocultos</li>
-                      <li>Necesidad urgente de venta</li>
-                      <li>Mercado inmobiliario en baja</li>
-                      <li>Factores externos negativos (ruido, contaminación)</li>
-                    </ul>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
