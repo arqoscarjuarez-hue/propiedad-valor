@@ -3254,8 +3254,13 @@ const PropertyValuation = () => {
       // Limpiar múltiples valuaciones ya que ahora solo hacemos una
       setMultipleValuations([]);
       
-      // Cambiar automáticamente a la pestaña de resultados después del cálculo exitoso
-      setActiveTab('ajustes');
+      // Hacer scroll al panel de resultados después del cálculo exitoso
+      setTimeout(() => {
+        const resultsPanel = document.querySelector('[data-results-panel]');
+        if (resultsPanel) {
+          resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500); // Delay para asegurar que el DOM se actualice
       
       // El valorAjustado ya se estableció en el try o catch
       const valorFinalParaToast = valuation || valorFinalEnMonedaSeleccionada;
@@ -6179,7 +6184,7 @@ const PropertyValuation = () => {
         </div>
 
         {/* Panel de Resultados */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1" data-results-panel>
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
               <CardTitle className="text-lg sm:text-xl">{translations[selectedLanguage].valuationResultsTitle}</CardTitle>
