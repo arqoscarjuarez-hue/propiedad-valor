@@ -219,6 +219,12 @@ const translations = {
     ageDescription: 'Años desde construcción',
     locationQuality: 'Calidad de Ubicación',
     locationDescription: 'Evalúa la zona y accesos',
+    environmentalFactors: 'Factores Ambientales y Riesgos',
+    environmentalDescription: 'Evalúa riesgos naturales y condiciones ambientales',
+    environmentalExcellent: 'Excelente - Sin riesgos naturales, topografía favorable, clima estable',
+    environmentalGood: 'Buena - Riesgos mínimos, condiciones ambientales aceptables',
+    environmentalRegular: 'Regular - Algunos riesgos gestionables',
+    environmentalPoor: 'Deficiente - Alto riesgo de inundación, deslizamiento u otros peligros',
     generalCondition: 'Estado General',
     conditionDescription: 'Condición física del inmueble',
     
@@ -594,6 +600,12 @@ const translations = {
     ageDescription: 'Years since construction',
     locationQuality: 'Location Quality',
     locationDescription: 'Evaluate area and access',
+    environmentalFactors: 'Environmental Factors and Risks',
+    environmentalDescription: 'Evaluate natural risks and environmental conditions',
+    environmentalExcellent: 'Excellent - No natural risks, favorable topography, stable climate',
+    environmentalGood: 'Good - Minimal risks, acceptable environmental conditions',
+    environmentalRegular: 'Regular - Some manageable risks',
+    environmentalPoor: 'Poor - High risk of flooding, landslides or other hazards',
     generalCondition: 'General Condition',
     conditionDescription: 'Physical condition of property',
     
@@ -969,6 +981,12 @@ const translations = {
     ageDescription: 'Années depuis la construction',
     locationQuality: 'Qualité de l\'Emplacement',
     locationDescription: 'Évaluer la zone et les accès',
+    environmentalFactors: 'Facteurs Environnementaux et Risques',
+    environmentalDescription: 'Évaluer les risques naturels et conditions environnementales',
+    environmentalExcellent: 'Excellent - Aucun risque naturel, topographie favorable, climat stable',
+    environmentalGood: 'Bon - Risques minimaux, conditions environnementales acceptables',
+    environmentalRegular: 'Régulier - Quelques risques gérables',
+    environmentalPoor: 'Déficient - Risque élevé d\'inondation, glissement ou autres dangers',
     generalCondition: 'État Général',
     conditionDescription: 'Condition physique de la propriété',
     
@@ -1346,6 +1364,12 @@ const translations = {
     ageDescription: 'Jahre seit Bau',
     locationQuality: 'Lagequalität',
     locationDescription: 'Gebiet und Zugang bewerten',
+    environmentalFactors: 'Umweltfaktoren und Risiken',
+    environmentalDescription: 'Natürliche Risiken und Umweltbedingungen bewerten',
+    environmentalExcellent: 'Ausgezeichnet - Keine Naturrisiken, günstige Topografie, stabiles Klima',
+    environmentalGood: 'Gut - Minimale Risiken, akzeptable Umweltbedingungen',
+    environmentalRegular: 'Regulär - Einige beherrschbare Risiken',
+    environmentalPoor: 'Mangelhaft - Hohe Überschwemmungs-, Erdrutsch- oder andere Gefahren',
     generalCondition: 'Allgemeinzustand',
     conditionDescription: 'Physischer Zustand der Immobilie',
     
@@ -1722,6 +1746,12 @@ const translations = {
     ageDescription: 'Anni dalla costruzione',
     locationQuality: 'Qualità della Posizione',
     locationDescription: 'Valuta zona e accessi',
+    environmentalFactors: 'Fattori Ambientali e Rischi',
+    environmentalDescription: 'Valuta rischi naturali e condizioni ambientali',
+    environmentalExcellent: 'Eccellente - Nessun rischio naturale, topografia favorevole, clima stabile',
+    environmentalGood: 'Buona - Rischi minimi, condizioni ambientali accettabili',
+    environmentalRegular: 'Regolare - Alcuni rischi gestibili',
+    environmentalPoor: 'Carente - Alto rischio di inondazioni, frane o altri pericoli',
     generalCondition: 'Condizione Generale',
     conditionDescription: 'Condizione fisica della proprietà',
     
@@ -2095,6 +2125,12 @@ const translations = {
     ageDescription: 'Anos desde a construção',
     locationQuality: 'Qualidade da Localização',
     locationDescription: 'Avaliar área e acessos',
+    environmentalFactors: 'Fatores Ambientais e Riscos',
+    environmentalDescription: 'Avaliar riscos naturais e condições ambientais',
+    environmentalExcellent: 'Excelente - Sem riscos naturais, topografia favorável, clima estável',
+    environmentalGood: 'Boa - Riscos mínimos, condições ambientais aceitáveis',
+    environmentalRegular: 'Regular - Alguns riscos gerenciáveis',
+    environmentalPoor: 'Deficiente - Alto risco de inundação, deslizamento ou outros perigos',
     generalCondition: 'Estado Geral',
     conditionDescription: 'Condição física da propriedade',
     
@@ -5529,30 +5565,41 @@ const PropertyValuation = () => {
                   <div className="mb-6">
                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].qualityAndCondition}</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                           {translations[selectedLanguage].locationQuality}
-                        </Label>
-                         <Select 
-                           value={propertyData.ubicacion} 
-                           onValueChange={(value) => {
-                             
-                             handleInputChange('ubicacion', value);
-                           }}
-                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder={translations[selectedLanguage].locationQualityPlaceholder} />
-                          </SelectTrigger>
-            <SelectContent>
-               <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
-               <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
-               <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
-               <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
-            </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].evaluateServices}</p>
-                      </div>
+                       <div>
+                         <Label className="flex items-center gap-2">
+                           <MapPin className="h-4 w-4" />
+                            {propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalFactors : translations[selectedLanguage].locationQuality}
+                         </Label>
+                          <Select 
+                            value={propertyData.ubicacion} 
+                            onValueChange={(value) => {
+                              
+                              handleInputChange('ubicacion', value);
+                            }}
+                          >
+                           <SelectTrigger>
+                             <SelectValue placeholder={propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].locationQualityPlaceholder} />
+                           </SelectTrigger>
+             <SelectContent>
+                {propertyData.tipoPropiedad === 'terreno' ? (
+                  <>
+                    <SelectItem value="excelente">{translations[selectedLanguage].environmentalExcellent}</SelectItem>
+                    <SelectItem value="buena">{translations[selectedLanguage].environmentalGood}</SelectItem>
+                    <SelectItem value="regular">{translations[selectedLanguage].environmentalRegular}</SelectItem>
+                    <SelectItem value="mala">{translations[selectedLanguage].environmentalPoor}</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+                    <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                    <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
+                    <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
+                  </>
+                )}
+             </SelectContent>
+                         </Select>
+                         <p className="text-xs text-muted-foreground mt-1">{propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].evaluateServices}</p>
+                       </div>
                       
                        {propertyData.tipoPropiedad !== 'terreno' && (
                          <div>
