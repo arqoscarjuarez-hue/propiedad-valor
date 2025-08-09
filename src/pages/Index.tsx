@@ -262,7 +262,8 @@ const Index = () => {
       {/* Valuation Section */}
       {showValuation && (
         <main id="valuation-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
-          <div className="mb-8 flex items-center justify-between">
+          {/* Desktop layout */}
+          <div className="mb-8 hidden lg:flex items-center justify-between">
             <Button variant="outline" onClick={handleBackToHome}>
               {t.backToHome}
             </Button>
@@ -285,6 +286,42 @@ const Index = () => {
               <p className="text-muted-foreground">
                 {t.performDescription}
               </p>
+            </div>
+          </div>
+
+          {/* Mobile layout */}
+          <div className="mb-8 lg:hidden">
+            {/* Top row with share and comments buttons */}
+            <div className="flex justify-center gap-3 mb-4">
+              <ShareButtons 
+                title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
+                description="Sistema de valuación más avanzado de América. ¡Obtén tu avalúo profesional ahora!"
+              />
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={handleShowComments}
+                className="flex items-center gap-2 text-sm font-bold px-4 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                {t.viewComments}
+              </Button>
+            </div>
+            
+            {/* Title section */}
+            <div className="text-center mb-4">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                {t.performValuation}
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                {t.performDescription}
+              </p>
+            </div>
+            
+            {/* Back button */}
+            <div className="flex justify-center">
+              <Button variant="outline" onClick={handleBackToHome}>
+                {t.backToHome}
+              </Button>
             </div>
           </div>
           <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
