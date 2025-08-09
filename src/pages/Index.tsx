@@ -117,7 +117,9 @@ const Index = () => {
                 </Button>
               )}
               
-              <ShareButtons />
+               <div className="hidden lg:block">
+                 <ShareButtons />
+               </div>
               {/* Live stats */}
               <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
                 <div className="text-center">
@@ -134,21 +136,38 @@ const Index = () => {
                 </div>
               </div>
               
-              {/* Mobile stats */}
-              <div className="flex lg:hidden items-center space-x-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-primary">12K+</div>
-                  <div className="text-xs text-muted-foreground">{t.valued}</div>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-green-500 font-medium">{t.online}</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-      </header>
+       </header>
+
+       {/* Mobile Stats and Share Section - Solo visible en móviles */}
+       <div className="lg:hidden bg-background border-b border-border">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+           <div className="flex flex-col gap-4">
+             {/* Share Button */}
+             <div className="flex justify-center">
+               <ShareButtons />
+             </div>
+             
+             {/* Statistics */}
+             <div className="flex justify-center items-center space-x-6">
+               <div className="text-center">
+                 <div className="text-lg font-bold text-primary">12,450+</div>
+                 <div className="text-xs text-muted-foreground">{t.properties}</div>
+               </div>
+               <div className="text-center">
+                 <div className="text-lg font-bold text-secondary">98.5%</div>
+                 <div className="text-xs text-muted-foreground">{t.precision}</div>
+               </div>
+               <div className="flex items-center space-x-1">
+                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                 <span className="text-sm text-green-500 font-medium">{t.online}</span>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
 
       {/* Comments Section */}
       {showComments && (
