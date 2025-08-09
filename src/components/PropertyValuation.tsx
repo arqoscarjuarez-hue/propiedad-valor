@@ -5656,10 +5656,32 @@ const PropertyValuation = () => {
                           {translations[selectedLanguage].adjustmentLabel}: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
                         </Badge>
                       </div>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2 text-sm">
+                     )}
+                   </div>
+                   
+                   {/* Mostrar imágenes si existen */}
+                   {propertyImages.length > 0 && (
+                     <div className="space-y-2">
+                       <h4 className="text-sm font-medium">{translations[selectedLanguage].photos}</h4>
+                       <div className="grid grid-cols-2 gap-2">
+                         {propertyImages.slice(0, 4).map((image, index) => (
+                           <img
+                             key={index}
+                             src={image.preview}
+                             alt={`Foto ${index + 1}`}
+                             className="w-full h-16 object-cover rounded border"
+                           />
+                         ))}
+                       </div>
+                       {propertyImages.length > 4 && (
+                         <p className="text-xs text-muted-foreground">
+                           +{propertyImages.length - 4} fotos más
+                         </p>
+                       )}
+                     </div>
+                   )}
+                   
+                   <div className="space-y-2 text-sm">
                      <div className="flex justify-between">
                        <span>{translations[selectedLanguage].totalBuiltAreaLabel}:</span>
                        <span className="font-medium">
