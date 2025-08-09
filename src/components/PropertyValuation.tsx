@@ -6234,17 +6234,20 @@ const PropertyValuation = () => {
                      </div>
                    )}
                    
-                   <div className="space-y-2 text-sm">
+                    <div className="space-y-2 text-sm">
+                      {/* Mostrar área construida solo si NO es terreno */}
+                      {propertyData.tipoPropiedad !== 'terreno' && (
+                        <div className="flex justify-between">
+                          <span>{translations[selectedLanguage].totalBuiltAreaLabel}:</span>
+                          <span className="font-medium">
+                            {(propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel).toLocaleString()} m²
+                          </span>
+                        </div>
+                      )}
                      <div className="flex justify-between">
-                       <span>{translations[selectedLanguage].totalBuiltAreaLabel}:</span>
-                       <span className="font-medium">
-                         {(propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel).toLocaleString()} m²
-                       </span>
+                       <span>{translations[selectedLanguage].landAreaLabel}:</span>
+                       <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
                      </div>
-                    <div className="flex justify-between">
-                      <span>{translations[selectedLanguage].landAreaLabel}:</span>
-                      <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
-                    </div>
                     {propertyData.direccionCompleta && (
                       <div className="flex justify-between">
                         <span>{translations[selectedLanguage].locationLabel}:</span>
