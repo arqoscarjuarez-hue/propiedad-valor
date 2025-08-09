@@ -5113,10 +5113,10 @@ const PropertyValuation = () => {
                              value={propertyData.topografia} 
                              onValueChange={(value) => handleInputChange('topografia', value)}
                            >
-                             <SelectTrigger>
-                               <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
-                             </SelectTrigger>
-                             <SelectContent>
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
                                <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
                                <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
@@ -5134,10 +5134,10 @@ const PropertyValuation = () => {
                              value={propertyData.tipoValoracion} 
                              onValueChange={(value) => handleInputChange('tipoValoracion', value)}
                            >
-                             <SelectTrigger>
-                               <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
-                             </SelectTrigger>
-                             <SelectContent>
+                              <SelectTrigger className="bg-background">
+                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
                                <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
                                <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
