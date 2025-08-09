@@ -177,6 +177,21 @@ const translations = {
     agriculturalUse: 'Agrícola',
     recreationalUse: 'Recreativo',
     
+    // Explicaciones de estándares internacionales para terrenos
+    internationalStandards: 'Estándares Internacionales IVS/RICS',
+    topographyFactors: 'Factores de Topografía aplicados:',
+    landUseFactors: 'Factores por Tipo de Uso aplicados:',
+    flatLandExp: 'Terreno Plano (0-5% pendiente): +12% - Facilita construcción',
+    gentleSlopeExp: 'Pendiente Suave (5-15%): +3% - Drenaje natural adecuado',
+    moderateSlopeExp: 'Pendiente Moderada (15-25%): -7% - Costos adicionales',
+    steepSlopeExp: 'Pendiente Pronunciada (25-40%): -20% - Requiere ingeniería especializada',
+    irregularExp: 'Terreno Irregular (>40%): -25% - Desarrollo muy costoso',
+    commercialUseExp: 'Uso Comercial: +28% - Mayor potencial de ingresos',
+    industrialUseExp: 'Uso Industrial: +12% - Infraestructura especializada',
+    residentialUseExp: 'Uso Residencial: 0% - Valor base estándar',
+    recreationalUseExp: 'Uso Recreativo: -8% - Mercado especializado',
+    agriculturalUseExp: 'Uso Agrícola: -32% - Valor extensivo menor',
+    
     // Summary sections
     spacesSummary: 'Resumen de Espacios:',
     characteristicsSummary: 'Resumen de Características:',
@@ -283,7 +298,7 @@ const translations = {
     commercialValuation: 'VALUACIÓN COMERCIAL',
     residentialSubtitle: 'Avalúo Profesional de Casa Habitación',
     apartmentSubtitle: 'Avalúo Profesional de Unidad Habitacional',
-    landSubtitle: 'Avalúo Profesional de Superficie',
+    landSubtitle: 'Avalúo Profesional de Superficie - Estándares IVS/RICS',
     commercialSubtitle: 'Avalúo Profesional de Bien Comercial',
     marketAnalysis: 'Análisis Profesional de Valor de Mercado',
     propertyLocationPDF: 'UBICACIÓN DEL INMUEBLE',
@@ -537,6 +552,21 @@ const translations = {
     agriculturalUse: 'Agricultural',
     recreationalUse: 'Recreational',
     
+    // International standards explanations for land
+    internationalStandards: 'International IVS/RICS Standards',
+    topographyFactors: 'Topography Factors applied:',
+    landUseFactors: 'Land Use Factors applied:',
+    flatLandExp: 'Flat Land (0-5% slope): +12% - Facilitates construction',
+    gentleSlopeExp: 'Gentle Slope (5-15%): +3% - Adequate natural drainage',
+    moderateSlopeExp: 'Moderate Slope (15-25%): -7% - Additional costs',
+    steepSlopeExp: 'Steep Slope (25-40%): -20% - Requires specialized engineering',
+    irregularExp: 'Irregular Terrain (>40%): -25% - Very costly development',
+    commercialUseExp: 'Commercial Use: +28% - Higher income potential',
+    industrialUseExp: 'Industrial Use: +12% - Specialized infrastructure',
+    residentialUseExp: 'Residential Use: 0% - Standard base value',
+    recreationalUseExp: 'Recreational Use: -8% - Specialized market',
+    agriculturalUseExp: 'Agricultural Use: -32% - Lower extensive value',
+    
     // Summary sections
     spacesSummary: 'Spaces Summary:',
     characteristicsSummary: 'Characteristics Summary:',
@@ -644,7 +674,7 @@ const translations = {
     commercialValuation: 'COMMERCIAL VALUATION',
     residentialSubtitle: 'Professional Residential Property Appraisal',
     apartmentSubtitle: 'Professional Housing Unit Appraisal',
-    landSubtitle: 'Professional Land Surface Appraisal',
+    landSubtitle: 'Professional Land Appraisal - IVS/RICS Standards',
     commercialSubtitle: 'Professional Commercial Property Appraisal',
     marketAnalysis: 'Professional Market Value Analysis',
     propertyLocationPDF: 'PROPERTY LOCATION',
@@ -897,6 +927,21 @@ const translations = {
     agriculturalUse: 'Agricole',
     recreationalUse: 'Récréatif',
     
+    // Explicaciones de estándares internacionales para terrenos - French
+    internationalStandards: 'Standards Internationaux IVS/RICS',
+    topographyFactors: 'Facteurs de Topographie appliqués:',
+    landUseFactors: 'Facteurs par Type d\'Usage appliqués:',
+    flatLandExp: 'Terrain Plat (0-5% pente): +12% - Facilite la construction',
+    gentleSlopeExp: 'Pente Douce (5-15%): +3% - Drainage naturel adéquat',
+    moderateSlopeExp: 'Pente Modérée (15-25%): -7% - Coûts supplémentaires',
+    steepSlopeExp: 'Pente Prononcée (25-40%): -20% - Nécessite ingénierie spécialisée',
+    irregularExp: 'Terrain Irrégulier (>40%): -25% - Développement très coûteux',
+    commercialUseExp: 'Usage Commercial: +28% - Plus grand potentiel de revenus',
+    industrialUseExp: 'Usage Industriel: +12% - Infrastructure spécialisée',
+    residentialUseExp: 'Usage Résidentiel: 0% - Valeur de base standard',
+    recreationalUseExp: 'Usage Récréatif: -8% - Marché spécialisé',
+    agriculturalUseExp: 'Usage Agricole: -32% - Valeur extensive moindre',
+    
     // Summary sections
     spacesSummary: 'Résumé des Espaces:',
     characteristicsSummary: 'Résumé des Caractéristiques:',
@@ -1004,7 +1049,7 @@ const translations = {
     commercialValuation: 'ÉVALUATION COMMERCIALE',
     residentialSubtitle: 'Expertise Professionnelle de Maison d\'Habitation',
     apartmentSubtitle: 'Expertise Professionnelle d\'Unité d\'Habitation',
-    landSubtitle: 'Expertise Professionnelle de Surface',
+    landSubtitle: 'Expertise Professionnelle de Terrain - Standards IVS/RICS',
     commercialSubtitle: 'Expertise Professionnelle de Bien Commercial',
     marketAnalysis: 'Analyse Professionnelle de la Valeur de Marché',
     propertyLocationPDF: 'LOCALISATION DE LA PROPRIÉTÉ',
@@ -1256,6 +1301,21 @@ const translations = {
     agriculturalUse: 'Landwirtschaftlich',
     recreationalUse: 'Erholung',
     
+    // Explicaciones de estándares internacionales para terrenos - German
+    internationalStandards: 'Internationale IVS/RICS Standards',
+    topographyFactors: 'Angewandte Topographie-Faktoren:',
+    landUseFactors: 'Angewandte Landnutzungsfaktoren:',
+    flatLandExp: 'Flaches Land (0-5% Neigung): +12% - Erleichtert Bau',
+    gentleSlopeExp: 'Sanfte Neigung (5-15%): +3% - Angemessene natürliche Entwässerung',
+    moderateSlopeExp: 'Mittlere Neigung (15-25%): -7% - Zusätzliche Kosten',
+    steepSlopeExp: 'Steile Neigung (25-40%): -20% - Erfordert spezialisierte Technik',
+    irregularExp: 'Unregelmäßiges Gelände (>40%): -25% - Sehr kostspielige Entwicklung',
+    commercialUseExp: 'Gewerbliche Nutzung: +28% - Höheres Einkommenspotential',
+    industrialUseExp: 'Industrielle Nutzung: +12% - Spezialisierte Infrastruktur',
+    residentialUseExp: 'Wohnnutzung: 0% - Standard Grundwert',
+    recreationalUseExp: 'Erholungsnutzung: -8% - Spezialisierter Markt',
+    agriculturalUseExp: 'Landwirtschaftliche Nutzung: -32% - Geringerer extensiver Wert',
+    
     // Summary sections
     spacesSummary: 'Raumzusammenfassung:',
     characteristicsSummary: 'Merkmalszusammenfassung:',
@@ -1366,7 +1426,7 @@ const translations = {
     commercialValuation: 'GEWERBEBEWERTUNG',
     residentialSubtitle: 'Professionelle Wohnhausbewertung',
     apartmentSubtitle: 'Professionelle Wohneinheitsbewertung',
-    landSubtitle: 'Professionelle Flächenbewertung',
+    landSubtitle: 'Professionelle Grundstücksbewertung - IVS/RICS Standards',
     commercialSubtitle: 'Professionelle Gewerbeimmobilienbewertung',
     marketAnalysis: 'Professionelle Marktwertanalyse',
     propertyLocationPDF: 'IMMOBILIENLAGE',
@@ -1618,6 +1678,21 @@ const translations = {
     agriculturalUse: 'Agricolo',
     recreationalUse: 'Ricreativo',
     
+    // Explicaciones de estándares internacionales para terrenos - Italian
+    internationalStandards: 'Standard Internazionali IVS/RICS',
+    topographyFactors: 'Fattori di Topografia applicati:',
+    landUseFactors: 'Fattori per Tipo di Uso applicati:',
+    flatLandExp: 'Terreno Pianeggiante (0-5% pendenza): +12% - Facilita costruzione',
+    gentleSlopeExp: 'Pendenza Dolce (5-15%): +3% - Drenaggio naturale adeguato',
+    moderateSlopeExp: 'Pendenza Moderata (15-25%): -7% - Costi aggiuntivi',
+    steepSlopeExp: 'Pendenza Ripida (25-40%): -20% - Richiede ingegneria specializzata',
+    irregularExp: 'Terreno Irregolare (>40%): -25% - Sviluppo molto costoso',
+    commercialUseExp: 'Uso Commerciale: +28% - Maggiore potenziale di reddito',
+    industrialUseExp: 'Uso Industriale: +12% - Infrastruttura specializzata',
+    residentialUseExp: 'Uso Residenziale: 0% - Valore base standard',
+    recreationalUseExp: 'Uso Ricreativo: -8% - Mercato specializzato',
+    agriculturalUseExp: 'Uso Agricolo: -32% - Valore estensivo minore',
+    
     // Summary sections
     spacesSummary: 'Riassunto Spazi:',
     characteristicsSummary: 'Riassunto Caratteristiche:',
@@ -1724,7 +1799,7 @@ const translations = {
     commercialValuation: 'VALUTAZIONE COMMERCIALE',
     residentialSubtitle: 'Perizia Professionale di Casa di Abitazione',
     apartmentSubtitle: 'Perizia Professionale di Unità Abitativa',
-    landSubtitle: 'Perizia Professionale di Superficie',
+    landSubtitle: 'Perizia Professionale di Terreno - Standard IVS/RICS',
     commercialSubtitle: 'Perizia Professionale di Bene Commerciale',
     marketAnalysis: 'Analisi Professionale del Valore di Mercato',
     propertyLocationPDF: 'POSIZIONE DELLA PROPRIETÀ',
@@ -1976,6 +2051,21 @@ const translations = {
     agriculturalUse: 'Agrícola',
     recreationalUse: 'Recreativo',
     
+    // Explicaciones de estándares internacionales para terrenos - Portuguese
+    internationalStandards: 'Padrões Internacionais IVS/RICS',
+    topographyFactors: 'Fatores de Topografia aplicados:',
+    landUseFactors: 'Fatores por Tipo de Uso aplicados:',
+    flatLandExp: 'Terreno Plano (0-5% inclinação): +12% - Facilita construção',
+    gentleSlopeExp: 'Inclinação Suave (5-15%): +3% - Drenagem natural adequada',
+    moderateSlopeExp: 'Inclinação Moderada (15-25%): -7% - Custos adicionais',
+    steepSlopeExp: 'Inclinação Acentuada (25-40%): -20% - Requer engenharia especializada',
+    irregularExp: 'Terreno Irregular (>40%): -25% - Desenvolvimento muito custoso',
+    commercialUseExp: 'Uso Comercial: +28% - Maior potencial de renda',
+    industrialUseExp: 'Uso Industrial: +12% - Infraestrutura especializada',
+    residentialUseExp: 'Uso Residencial: 0% - Valor base padrão',
+    recreationalUseExp: 'Uso Recreativo: -8% - Mercado especializado',
+    agriculturalUseExp: 'Uso Agrícola: -32% - Valor extensivo menor',
+    
     // Summary sections
     spacesSummary: 'Resumo de Espaços:',
     characteristicsSummary: 'Resumo de Características:',
@@ -2085,7 +2175,7 @@ const translations = {
     commercialValuation: 'AVALIAÇÃO COMERCIAL',
     residentialSubtitle: 'Laudo Profissional de Casa de Habitação',
     apartmentSubtitle: 'Laudo Profissional de Unidade Habitacional',
-    landSubtitle: 'Laudo Profissional de Superfície',
+    landSubtitle: 'Laudo Profissional de Terreno - Padrões IVS/RICS',
     commercialSubtitle: 'Laudo Profissional de Bem Comercial',
     marketAnalysis: 'Análise Profissional de Valor de Mercado',
     propertyLocationPDF: 'LOCALIZAÇÃO DA PROPRIEDADE',
@@ -5129,54 +5219,87 @@ const PropertyValuation = () => {
                   
                    {/* Información específica según tipo de propiedad */}
                    {propertyData.tipoPropiedad === 'terreno' ? (
-                     <div className="mb-6">
-                       <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].landCharacteristics}</h4>
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <div>
-                           <Label className="flex items-center gap-2">
-                             <MapPin className="h-4 w-4" />
-                             {translations[selectedLanguage].topography}
-                           </Label>
-                            <Select 
-                              value={propertyData.topografia} 
-                              onValueChange={(value) => {
-                                handleInputChange('topografia', value);
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
-                                <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
-                                <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
-                                <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
-                                <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
-                              </SelectContent>
-                            </Select>
+                     <div className="space-y-6">
+                       {/* Información sobre estándares internacionales */}
+                       <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                         <h4 className="text-md font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2">
+                           <span className="text-lg">🌍</span>
+                           {translations[selectedLanguage].internationalStandards}
+                         </h4>
+                         <div className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+                           <div>
+                             <p className="font-medium mb-2">{translations[selectedLanguage].topographyFactors}</p>
+                             <ul className="space-y-1 ml-4 text-xs">
+                               <li>• {translations[selectedLanguage].flatLandExp}</li>
+                               <li>• {translations[selectedLanguage].gentleSlopeExp}</li>
+                               <li>• {translations[selectedLanguage].moderateSlopeExp}</li>
+                               <li>• {translations[selectedLanguage].steepSlopeExp}</li>
+                               <li>• {translations[selectedLanguage].irregularExp}</li>
+                             </ul>
+                           </div>
+                           <div>
+                             <p className="font-medium mb-2">{translations[selectedLanguage].landUseFactors}</p>
+                             <ul className="space-y-1 ml-4 text-xs">
+                               <li>• {translations[selectedLanguage].commercialUseExp}</li>
+                               <li>• {translations[selectedLanguage].industrialUseExp}</li>
+                               <li>• {translations[selectedLanguage].residentialUseExp}</li>
+                               <li>• {translations[selectedLanguage].recreationalUseExp}</li>
+                               <li>• {translations[selectedLanguage].agriculturalUseExp}</li>
+                             </ul>
+                           </div>
                          </div>
-                         <div>
-                           <Label className="flex items-center gap-2">
-                             <Star className="h-4 w-4" />
-                             {translations[selectedLanguage].valuationType}
-                           </Label>
-                            <Select 
-                              value={propertyData.tipoValoracion} 
-                              onValueChange={(value) => {
-                                handleInputChange('tipoValoracion', value);
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
-                                <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
-                                <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
-                                <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
-                                <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
-                              </SelectContent>
-                            </Select>
+                       </div>
+                      
+                       {/* Características del terreno */}
+                       <div className="mb-6">
+                         <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].landCharacteristics}</h4>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div>
+                             <Label className="flex items-center gap-2">
+                               <MapPin className="h-4 w-4" />
+                               {translations[selectedLanguage].topography}
+                             </Label>
+                             <Select 
+                               value={propertyData.topografia} 
+                               onValueChange={(value) => {
+                                 handleInputChange('topografia', value);
+                               }}
+                             >
+                               <SelectTrigger>
+                                 <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
+                               </SelectTrigger>
+                               <SelectContent>
+                                 <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
+                                 <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
+                                 <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
+                                 <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
+                                 <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
+                               </SelectContent>
+                             </Select>
+                           </div>
+                           <div>
+                             <Label className="flex items-center gap-2">
+                               <Star className="h-4 w-4" />
+                               {translations[selectedLanguage].valuationType}
+                             </Label>
+                             <Select 
+                               value={propertyData.tipoValoracion} 
+                               onValueChange={(value) => {
+                                 handleInputChange('tipoValoracion', value);
+                               }}
+                             >
+                               <SelectTrigger>
+                                 <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
+                               </SelectTrigger>
+                               <SelectContent>
+                                 <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
+                                 <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
+                                 <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
+                                 <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
+                                 <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
+                               </SelectContent>
+                             </Select>
+                           </div>
                          </div>
                        </div>
                      </div>
