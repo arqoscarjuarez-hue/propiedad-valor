@@ -5658,122 +5658,124 @@ const PropertyValuation = () => {
                      </div>
                    </div>
 
-                   {/* Servicios Adicionales */}
-                   <div className="mb-6">
-                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalServices}</h4>
-                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="internet"
-                           checked={propertyData.servicios.internet}
-                           onCheckedChange={(checked) => handleServiceChange('internet', checked as boolean)}
-                         />
-                         <label htmlFor="internet" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].internet}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="cable"
-                           checked={propertyData.servicios.cable}
-                           onCheckedChange={(checked) => handleServiceChange('cable', checked as boolean)}
-                         />
-                         <label htmlFor="cable" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].cable}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="telefono"
-                           checked={propertyData.servicios.telefono}
-                           onCheckedChange={(checked) => handleServiceChange('telefono', checked as boolean)}
-                         />
-                         <label htmlFor="telefono" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].phone}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="seguridad"
-                           checked={propertyData.servicios.seguridad}
-                           onCheckedChange={(checked) => handleServiceChange('seguridad', checked as boolean)}
-                         />
-                         <label htmlFor="seguridad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].security}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="alberca"
-                           checked={propertyData.servicios.alberca}
-                           onCheckedChange={(checked) => handleServiceChange('alberca', checked as boolean)}
-                         />
-                         <label htmlFor="alberca" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].swimmingPool}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="jardin"
-                           checked={propertyData.servicios.jardin}
-                           onCheckedChange={(checked) => handleServiceChange('jardin', checked as boolean)}
-                         />
-                         <label htmlFor="jardin" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].garden}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="elevador"
-                           checked={propertyData.servicios.elevador}
-                           onCheckedChange={(checked) => handleServiceChange('elevador', checked as boolean)}
-                         />
-                         <label htmlFor="elevador" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].elevator}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="aireAcondicionado"
-                           checked={propertyData.servicios.aireAcondicionado}
-                           onCheckedChange={(checked) => handleServiceChange('aireAcondicionado', checked as boolean)}
-                         />
-                         <label htmlFor="aireAcondicionado" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].airConditioning}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="calefaccion"
-                           checked={propertyData.servicios.calefaccion}
-                           onCheckedChange={(checked) => handleServiceChange('calefaccion', checked as boolean)}
-                         />
-                         <label htmlFor="calefaccion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].heating}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="panelesSolares"
-                           checked={propertyData.servicios.panelesSolares}
-                           onCheckedChange={(checked) => handleServiceChange('panelesSolares', checked as boolean)}
-                         />
-                         <label htmlFor="panelesSolares" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].solarPanels}
-                         </label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="tinaco"
-                           checked={propertyData.servicios.tinaco}
-                           onCheckedChange={(checked) => handleServiceChange('tinaco', checked as boolean)}
-                         />
-                         <label htmlFor="tinaco" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                           {translations[selectedLanguage].waterTank}
-                         </label>
-                       </div>
-                     </div>
-                   </div>
+                    {/* Servicios Adicionales - Solo mostrar si NO es terreno */}
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <div className="mb-6">
+                        <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalServices}</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="internet"
+                              checked={propertyData.servicios.internet}
+                              onCheckedChange={(checked) => handleServiceChange('internet', checked as boolean)}
+                            />
+                            <label htmlFor="internet" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].internet}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="cable"
+                              checked={propertyData.servicios.cable}
+                              onCheckedChange={(checked) => handleServiceChange('cable', checked as boolean)}
+                            />
+                            <label htmlFor="cable" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].cable}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="telefono"
+                              checked={propertyData.servicios.telefono}
+                              onCheckedChange={(checked) => handleServiceChange('telefono', checked as boolean)}
+                            />
+                            <label htmlFor="telefono" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].phone}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="seguridad"
+                              checked={propertyData.servicios.seguridad}
+                              onCheckedChange={(checked) => handleServiceChange('seguridad', checked as boolean)}
+                            />
+                            <label htmlFor="seguridad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].security}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="alberca"
+                              checked={propertyData.servicios.alberca}
+                              onCheckedChange={(checked) => handleServiceChange('alberca', checked as boolean)}
+                            />
+                            <label htmlFor="alberca" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].swimmingPool}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="jardin"
+                              checked={propertyData.servicios.jardin}
+                              onCheckedChange={(checked) => handleServiceChange('jardin', checked as boolean)}
+                            />
+                            <label htmlFor="jardin" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].garden}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="elevador"
+                              checked={propertyData.servicios.elevador}
+                              onCheckedChange={(checked) => handleServiceChange('elevador', checked as boolean)}
+                            />
+                            <label htmlFor="elevador" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].elevator}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="aireAcondicionado"
+                              checked={propertyData.servicios.aireAcondicionado}
+                              onCheckedChange={(checked) => handleServiceChange('aireAcondicionado', checked as boolean)}
+                            />
+                            <label htmlFor="aireAcondicionado" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].airConditioning}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="calefaccion"
+                              checked={propertyData.servicios.calefaccion}
+                              onCheckedChange={(checked) => handleServiceChange('calefaccion', checked as boolean)}
+                            />
+                            <label htmlFor="calefaccion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].heating}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="panelesSolares"
+                              checked={propertyData.servicios.panelesSolares}
+                              onCheckedChange={(checked) => handleServiceChange('panelesSolares', checked as boolean)}
+                            />
+                            <label htmlFor="panelesSolares" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].solarPanels}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="tinaco"
+                              checked={propertyData.servicios.tinaco}
+                              onCheckedChange={(checked) => handleServiceChange('tinaco', checked as boolean)}
+                            />
+                            <label htmlFor="tinaco" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].waterTank}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                    {/* Resumen de servicios */}
                    <div className="bg-muted p-4 rounded-lg">
