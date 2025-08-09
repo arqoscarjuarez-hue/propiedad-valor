@@ -3302,10 +3302,10 @@ const PropertyValuation = () => {
       
       // El valorAjustado ya se estableció en el try o catch
       const valorFinalParaToast = valuation || valorFinalEnMonedaSeleccionada;
-      toast({
-        title: translations[selectedLanguage].valuationCompleted,
-        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorFinalParaToast, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
-      });
+      // toast({
+      //   title: translations[selectedLanguage].valuationCompleted,
+      //   description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorFinalParaToast, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
+      // });
     } catch (error) {
       console.error('Error in calculateValuation:', error);
       toast({
