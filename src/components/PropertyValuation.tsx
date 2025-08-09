@@ -160,6 +160,23 @@ const translations = {
     rightOfWay: 'Servidumbre de paso',
     affectsAccessibility: 'Afecta la accesibilidad de la propiedad',
     
+    // Características específicas de terreno
+    landCharacteristics: 'Características del Terreno',
+    topography: 'Topografía',
+    selectTopography: 'Selecciona el tipo de topografía',
+    flat: 'Plano',
+    gentleSlope: 'Pendiente Suave',
+    moderateSlope: 'Pendiente Moderada',
+    steepSlope: 'Pendiente Pronunciada',
+    irregular: 'Irregular',
+    valuationType: 'Tipo de Valoración',
+    selectValuationType: 'Selecciona el tipo de valoración',
+    residentialUse: 'Residencial',
+    commercialUse: 'Comercial',
+    industrialUse: 'Industrial',
+    agriculturalUse: 'Agrícola',
+    recreationalUse: 'Recreativo',
+    
     // Summary sections
     spacesSummary: 'Resumen de Espacios:',
     characteristicsSummary: 'Resumen de Características:',
@@ -500,6 +517,23 @@ const translations = {
     pedestrianPassage: 'Pedestrian passage',
     rightOfWay: 'Right of way',
     affectsAccessibility: 'Affects property accessibility',
+    
+    // Land-specific characteristics
+    landCharacteristics: 'Land Characteristics',
+    topography: 'Topography',
+    selectTopography: 'Select topography type',
+    flat: 'Flat',
+    gentleSlope: 'Gentle Slope',
+    moderateSlope: 'Moderate Slope',
+    steepSlope: 'Steep Slope',
+    irregular: 'Irregular',
+    valuationType: 'Valuation Type',
+    selectValuationType: 'Select valuation type',
+    residentialUse: 'Residential',
+    commercialUse: 'Commercial',
+    industrialUse: 'Industrial',
+    agriculturalUse: 'Agricultural',
+    recreationalUse: 'Recreational',
     
     // Summary sections
     spacesSummary: 'Spaces Summary:',
@@ -842,6 +876,23 @@ const translations = {
     rightOfWay: 'Servitude de passage',
     affectsAccessibility: 'Affecte l\'accessibilité de la propriété',
     
+    // Caractéristiques spécifiques du terrain
+    landCharacteristics: 'Caractéristiques du Terrain',
+    topography: 'Topographie',
+    selectTopography: 'Sélectionnez le type de topographie',
+    flat: 'Plat',
+    gentleSlope: 'Pente Douce',
+    moderateSlope: 'Pente Modérée',
+    steepSlope: 'Pente Raide',
+    irregular: 'Irrégulier',
+    valuationType: 'Type de Valorisation',
+    selectValuationType: 'Sélectionnez le type de valorisation',
+    residentialUse: 'Résidentiel',
+    commercialUse: 'Commercial',
+    industrialUse: 'Industriel',
+    agriculturalUse: 'Agricole',
+    recreationalUse: 'Récréatif',
+    
     // Summary sections
     spacesSummary: 'Résumé des Espaces:',
     characteristicsSummary: 'Résumé des Caractéristiques:',
@@ -1181,6 +1232,23 @@ const translations = {
     pedestrianPassage: 'Fußgängerdurchgang',
     rightOfWay: 'Wegerecht',
     affectsAccessibility: 'Beeinflusst die Zugänglichkeit der Immobilie',
+    
+    // Grundstücksspezifische Eigenschaften
+    landCharacteristics: 'Grundstücksmerkmale',
+    topography: 'Topographie',
+    selectTopography: 'Topographietyp auswählen',
+    flat: 'Flach',
+    gentleSlope: 'Sanfte Neigung',
+    moderateSlope: 'Mittlere Neigung',
+    steepSlope: 'Steile Neigung',
+    irregular: 'Unregelmäßig',
+    valuationType: 'Bewertungstyp',
+    selectValuationType: 'Bewertungstyp auswählen',
+    residentialUse: 'Wohnen',
+    commercialUse: 'Gewerblich',
+    industrialUse: 'Industriell',
+    agriculturalUse: 'Landwirtschaftlich',
+    recreationalUse: 'Erholung',
     
     // Summary sections
     spacesSummary: 'Raumzusammenfassung:',
@@ -1525,6 +1593,23 @@ const translations = {
     rightOfWay: 'Servitù di passaggio',
     affectsAccessibility: 'Influisce sull\'accessibilità della proprietà',
     
+    // Caratteristiche specifiche del terreno
+    landCharacteristics: 'Caratteristiche del Terreno',
+    topography: 'Topografia',
+    selectTopography: 'Seleziona tipo di topografia',
+    flat: 'Pianeggiante',
+    gentleSlope: 'Pendenza Dolce',
+    moderateSlope: 'Pendenza Moderata',
+    steepSlope: 'Pendenza Ripida',
+    irregular: 'Irregolare',
+    valuationType: 'Tipo di Valutazione',
+    selectValuationType: 'Seleziona tipo di valutazione',
+    residentialUse: 'Residenziale',
+    commercialUse: 'Commerciale',
+    industrialUse: 'Industriale',
+    agriculturalUse: 'Agricolo',
+    recreationalUse: 'Ricreativo',
+    
     // Summary sections
     spacesSummary: 'Riassunto Spazi:',
     characteristicsSummary: 'Riassunto Caratteristiche:',
@@ -1864,6 +1949,23 @@ const translations = {
     rightOfWay: 'Servidão de passagem',
     affectsAccessibility: 'Afeta a acessibilidade da propriedade',
     
+    // Características específicas do terreno
+    landCharacteristics: 'Características do Terreno',
+    topography: 'Topografia',
+    selectTopography: 'Selecione o tipo de topografia',
+    flat: 'Plano',
+    gentleSlope: 'Inclinação Suave',
+    moderateSlope: 'Inclinação Moderada',
+    steepSlope: 'Inclinação Acentuada',
+    irregular: 'Irregular',
+    valuationType: 'Tipo de Avaliação',
+    selectValuationType: 'Selecione o tipo de avaliação',
+    residentialUse: 'Residencial',
+    commercialUse: 'Comercial',
+    industrialUse: 'Industrial',
+    agriculturalUse: 'Agrícola',
+    recreationalUse: 'Recreativo',
+    
     // Summary sections
     spacesSummary: 'Resumo de Espaços:',
     characteristicsSummary: 'Resumo de Características:',
@@ -2120,6 +2222,10 @@ interface PropertyData {
   ubicacion: string;
   estadoGeneral: string;
   tipoAcceso?: string;
+  
+  // Características específicas de terreno
+  topografia?: string;
+  tipoValoracion?: string;
   
   // Ubicación geográfica
   latitud?: number;
@@ -4689,13 +4795,14 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="espacios" 
-                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                      style={{ display: propertyData.tipoPropiedad === 'terreno' ? 'none' : 'flex' }}
-                    >
-                      {translations[selectedLanguage].spaces}
-                    </TabsTrigger>
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <TabsTrigger 
+                        value="espacios" 
+                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      >
+                        {translations[selectedLanguage].spaces}
+                      </TabsTrigger>
+                    )}
                    <TabsTrigger 
                      value="caracteristicas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -4980,29 +5087,79 @@ const PropertyValuation = () => {
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].characteristics}</h3>
                   
-                  {/* Información Temporal */}
-                  <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].temporalInfo}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="antiguedad" className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {translations[selectedLanguage].constructionAge} ({translations[selectedLanguage].years})
-                        </Label>
-                        <Input
-                          id="antiguedad"
-                          type="number"
-                          value={propertyData.antiguedad || ''}
-                           onChange={(e) => {
-                             const value = e.target.value;
-                             handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
-                           }}
-                          placeholder="0"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].yearsSinceConstruction}</p>
-                      </div>
-                    </div>
-                  </div>
+                   {/* Información específica según tipo de propiedad */}
+                   {propertyData.tipoPropiedad === 'terreno' ? (
+                     <div className="mb-6">
+                       <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].landCharacteristics}</h4>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div>
+                           <Label className="flex items-center gap-2">
+                             <MapPin className="h-4 w-4" />
+                             {translations[selectedLanguage].topography}
+                           </Label>
+                           <Select 
+                             value={propertyData.topografia} 
+                             onValueChange={(value) => handleInputChange('topografia', value)}
+                           >
+                             <SelectTrigger>
+                               <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
+                             </SelectTrigger>
+                             <SelectContent>
+                               <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
+                               <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
+                               <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
+                               <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
+                               <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
+                             </SelectContent>
+                           </Select>
+                         </div>
+                         <div>
+                           <Label className="flex items-center gap-2">
+                             <Star className="h-4 w-4" />
+                             {translations[selectedLanguage].valuationType}
+                           </Label>
+                           <Select 
+                             value={propertyData.tipoValoracion} 
+                             onValueChange={(value) => handleInputChange('tipoValoracion', value)}
+                           >
+                             <SelectTrigger>
+                               <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
+                             </SelectTrigger>
+                             <SelectContent>
+                               <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
+                               <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
+                               <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
+                               <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
+                               <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
+                             </SelectContent>
+                           </Select>
+                         </div>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="mb-6">
+                       <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].temporalInfo}</h4>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div>
+                           <Label htmlFor="antiguedad" className="flex items-center gap-2">
+                             <Calendar className="h-4 w-4" />
+                             {translations[selectedLanguage].constructionAge} ({translations[selectedLanguage].years})
+                           </Label>
+                           <Input
+                             id="antiguedad"
+                             type="number"
+                             value={propertyData.antiguedad || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                             placeholder="0"
+                           />
+                           <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].yearsSinceConstruction}</p>
+                         </div>
+                       </div>
+                     </div>
+                   )}
 
                   {/* Calidad y Estado */}
                   <div className="mb-6">
@@ -5033,21 +5190,22 @@ const PropertyValuation = () => {
                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].evaluateServices}</p>
                       </div>
                       
-                      <div>
-                        <Label className="flex items-center gap-2">
-                          <Star className="h-4 w-4" />
-                           {translations[selectedLanguage].generalConditionLabel}
-                        </Label>
-                         <Select 
-                           value={propertyData.estadoGeneral} 
-                           onValueChange={(value) => {
-                             
-                             handleInputChange('estadoGeneral', value);
-                           }}
-                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
-                          </SelectTrigger>
+                       {propertyData.tipoPropiedad !== 'terreno' && (
+                         <div>
+                           <Label className="flex items-center gap-2">
+                             <Star className="h-4 w-4" />
+                              {translations[selectedLanguage].generalConditionLabel}
+                           </Label>
+                            <Select 
+                              value={propertyData.estadoGeneral} 
+                              onValueChange={(value) => {
+                                
+                                handleInputChange('estadoGeneral', value);
+                              }}
+                            >
+                             <SelectTrigger>
+                               <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
+                             </SelectTrigger>
             <SelectContent>
                <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
                <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
@@ -5059,10 +5217,11 @@ const PropertyValuation = () => {
                <SelectItem value="en-desecho">{translations[selectedLanguage].wasteCondition}</SelectItem>
             </SelectContent>
                         </Select>
-                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
-                       </div>
-                       
-                       <div>
+                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
+                        </div>
+                       )}
+                        
+                        <div>
                          <Label className="flex items-center gap-2">
                            <MapPin className="h-4 w-4" />
                             {translations[selectedLanguage].accessType}
