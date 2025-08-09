@@ -3116,12 +3116,12 @@ const PropertyValuation = () => {
       const serviciosAdicionalesPresentes = serviciosAdicionales.filter(servicio => propertyData.servicios[servicio]).length;
       const factorServiciosAdicionales = 1 + (serviciosAdicionalesPresentes * 0.01); // +1.0% por cada servicio adicional
       
-      // Factor de ajuste por tipo de acceso
+      // Factor de ajuste por tipo de acceso (según estándares internacionales IVS/RICS/USPAP)
       const factorTipoAcceso = {
-        'mainStreet': 1.10,        // +10%
-        'vehicularPassage': 1.00,  // 0% (sin afectación)
-        'pedestrianPassage': 0.92, // -8%
-        'rightOfWay': 0.88         // -12%
+        'mainStreet': 1.15,        // +15% (acceso directo a vía pública principal)
+        'vehicularPassage': 1.02,  // +2% (acceso vehicular indirecto - ligeramente positivo)
+        'pedestrianPassage': 0.92, // -8% (acceso peatonal únicamente)
+        'rightOfWay': 0.85         // -15% (servidumbre de paso/acceso limitado)
       };
       
       // Factor de ajuste por topografía (según estándares internacionales IVS/RICS)
