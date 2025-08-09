@@ -5109,13 +5109,21 @@ const PropertyValuation = () => {
                              <MapPin className="h-4 w-4" />
                              {translations[selectedLanguage].topography}
                            </Label>
-                           <Select 
-                             value={propertyData.topografia} 
-                             onValueChange={(value) => handleInputChange('topografia', value)}
-                           >
-                              <SelectTrigger className="bg-background">
-                                <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
-                              </SelectTrigger>
+                            <Select 
+                              value={propertyData.topografia || ""} 
+                              onValueChange={(value) => handleInputChange('topografia', value)}
+                            >
+                               <SelectTrigger className="bg-background">
+                                 <SelectValue placeholder={translations[selectedLanguage].selectTopography}>
+                                   {propertyData.topografia && translations[selectedLanguage][
+                                     propertyData.topografia === 'plano' ? 'flat' :
+                                     propertyData.topografia === 'pendiente-suave' ? 'gentleSlope' :
+                                     propertyData.topografia === 'pendiente-moderada' ? 'moderateSlope' :
+                                     propertyData.topografia === 'pendiente-pronunciada' ? 'steepSlope' :
+                                     propertyData.topografia === 'irregular' ? 'irregular' : 'selectTopography'
+                                   ]}
+                                 </SelectValue>
+                               </SelectTrigger>
                               <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
                                <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
@@ -5130,12 +5138,20 @@ const PropertyValuation = () => {
                              <Star className="h-4 w-4" />
                              {translations[selectedLanguage].valuationType}
                            </Label>
-                           <Select 
-                             value={propertyData.tipoValoracion} 
-                             onValueChange={(value) => handleInputChange('tipoValoracion', value)}
-                           >
+                            <Select 
+                              value={propertyData.tipoValoracion || ""} 
+                              onValueChange={(value) => handleInputChange('tipoValoracion', value)}
+                            >
                               <SelectTrigger className="bg-background">
-                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
+                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType}>
+                                  {propertyData.tipoValoracion && translations[selectedLanguage][
+                                    propertyData.tipoValoracion === 'residencial' ? 'residentialUse' :
+                                    propertyData.tipoValoracion === 'comercial' ? 'commercialUse' :
+                                    propertyData.tipoValoracion === 'industrial' ? 'industrialUse' :
+                                    propertyData.tipoValoracion === 'agricola' ? 'agriculturalUse' :
+                                    propertyData.tipoValoracion === 'recreativo' ? 'recreationalUse' : 'selectValuationType'
+                                  ]}
+                                </SelectValue>
                               </SelectTrigger>
                               <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
