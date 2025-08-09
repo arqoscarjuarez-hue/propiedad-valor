@@ -2956,13 +2956,41 @@ const PropertyValuation = () => {
         'rightOfWay': 0.88         // -12%
       };
       
+      // Factor de ajuste por topografía (solo para terrenos)
+      const factorTopografia = {
+        'plano': 1.15,                    // +15% (terreno plano es más valorado)
+        'pendiente-suave': 1.05,          // +5% (ligera pendiente)
+        'pendiente-moderada': 0.95,       // -5% (pendiente moderada)
+        'pendiente-pronunciada': 0.80,    // -20% (pendiente pronunciada)
+        'irregular': 0.85                 // -15% (topografía irregular)
+      };
+      
+      // Factor de ajuste por tipo de valoración (solo para terrenos)
+      const factorTipoValoracion = {
+        'residencial': 1.00,              // 0% (base)
+        'comercial': 1.25,                // +25% (mayor valor comercial)
+        'industrial': 1.10,               // +10% (valor industrial)
+        'agricola': 0.70,                 // -30% (menor valor agrícola)
+        'recreativo': 0.85                // -15% (uso recreativo)
+      };
+      // Aplicar factores específicos para terrenos
+      let factorTopografiaFinal = 1;
+      let factorTipoValoracionFinal = 1;
+      
+      if (propertyData.tipoPropiedad === 'terreno') {
+        factorTopografiaFinal = factorTopografia[propertyData.topografia as keyof typeof factorTopografia] || 1;
+        factorTipoValoracionFinal = factorTipoValoracion[propertyData.tipoValoracion as keyof typeof factorTipoValoracion] || 1;
+      }
+      
       const valorFinal = (valorBase * 
                          (factorUbicacion[propertyData.ubicacion as keyof typeof factorUbicacion] || 1) *
                          (factorEstado[propertyData.estadoGeneral as keyof typeof factorEstado] || 1) *
                          factorAntiguedad *
                          factorServiciosBasicos *
                          factorServiciosAdicionales *
-                         (factorTipoAcceso[propertyData.tipoAcceso as keyof typeof factorTipoAcceso] || 1)) + bonificacionEspacios;
+                         (factorTipoAcceso[propertyData.tipoAcceso as keyof typeof factorTipoAcceso] || 1) *
+                         factorTopografiaFinal *
+                         factorTipoValoracionFinal) + bonificacionEspacios;
       
       // Convertir a la moneda seleccionada
       const valorFinalEnMonedaSeleccionada = convertCurrency(valorFinal, selectedCurrency);
