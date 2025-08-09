@@ -2375,6 +2375,9 @@ interface ComparativeProperty {
   lng?: number;
   isReal?: boolean;
   rating?: number;
+  // Campos específicos para terrenos
+  topografia?: string;
+  tipoValoracion?: string;
 }
 
 const PropertyValuation = () => {
@@ -2779,50 +2782,101 @@ const PropertyValuation = () => {
       try {
         const variation = (Math.random() - 0.5) * 0.2; // ±10% price variation
         
-        // Variación del área de construcción: ±40% como máximo (estándar de valuación)
-        const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
-        const areaComparable = Math.round(areaTotal * areaVariationFactor);
-        
-        // Asegurar que esté dentro del rango ±40%
-        const areaMinima = areaTotal * 0.6; // -40%
-        const areaMaxima = areaTotal * 1.4; // +40%
-        const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
-        
-        return {
-          id: `comp-${index + 1}`,
-          address: addressInfo.address,
-          areaConstruida: areaFinal,
-          areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
-          tipoPropiedad: propertyData.tipoPropiedad,
-          recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
-          banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
-          antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
-          ubicacion: propertyData.ubicacion,
-          estadoGeneral: propertyData.estadoGeneral,
-          precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
-          distancia: addressInfo.distance,
-          descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
-          url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
-          latitud: addressInfo.lat,
-          longitud: addressInfo.lng
-        };
+        // Lógica específica para terrenos vs propiedades construidas
+        if (propertyData.tipoPropiedad === 'terreno') {
+          // Para terrenos, solo usamos área del terreno, no área construida
+          const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
+          const areaTerrenoComparable = Math.round(propertyData.areaTerreno * areaVariationFactor);
+          
+          // Asegurar que esté dentro del rango ±40%
+          const areaMinima = propertyData.areaTerreno * 0.6; // -40%
+          const areaMaxima = propertyData.areaTerreno * 1.4; // +40%
+          const areaTerrenoFinal = Math.max(areaMinima, Math.min(areaMaxima, areaTerrenoComparable));
+          
+          // Generar características específicas de terreno
+          const topografias = ['plano', 'pendiente-suave', 'pendiente-moderada', 'pendiente-pronunciada', 'irregular'];
+          const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
+          const topografiaComparable = topografias[Math.floor(Math.random() * topografias.length)];
+          const tipoValoracionComparable = tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)];
+          
+          return {
+            id: `comp-${index + 1}`,
+            address: addressInfo.address,
+            areaConstruida: 0, // Terrenos no tienen área construida
+            areaTerreno: areaTerrenoFinal,
+            tipoPropiedad: 'terreno',
+            recamaras: 0, // Terrenos no tienen recámaras
+            banos: 0, // Terrenos no tienen baños
+            antiguedad: 0, // Terrenos no tienen antigüedad de construcción
+            ubicacion: propertyData.ubicacion,
+            estadoGeneral: 'nuevo', // Terrenos se consideran en buen estado
+            // Campos específicos para terrenos
+            topografia: topografiaComparable,
+            tipoValoracion: tipoValoracionComparable,
+            precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
+            distancia: addressInfo.distance,
+            descripcion: `Terreno de ${areaTerrenoFinal}m² con topografía ${topografiaComparable} para uso ${tipoValoracionComparable}. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+            url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/terreno/${Math.random().toString(36).substr(2, 9)}`,
+            latitud: addressInfo.lat,
+            longitud: addressInfo.lng
+          };
+        } else {
+          // Lógica existente para propiedades construidas (casas, departamentos, etc.)
+          const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+          
+          // Variación del área de construcción: ±40% como máximo (estándar de valuación)
+          const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
+          const areaComparable = Math.round(areaTotal * areaVariationFactor);
+          
+          // Asegurar que esté dentro del rango ±40%
+          const areaMinima = areaTotal * 0.6; // -40%
+          const areaMaxima = areaTotal * 1.4; // +40%
+          const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
+          
+          return {
+            id: `comp-${index + 1}`,
+            address: addressInfo.address,
+            areaConstruida: areaFinal,
+            areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
+            tipoPropiedad: propertyData.tipoPropiedad,
+            recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
+            banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
+            antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
+            ubicacion: propertyData.ubicacion,
+            estadoGeneral: propertyData.estadoGeneral,
+            precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
+            distancia: addressInfo.distance,
+            descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+            url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
+            latitud: addressInfo.lat,
+            longitud: addressInfo.lng
+          };
+        }
       } catch (error) {
         console.error('Error procesando comparable:', error);
         // Comparable fallback más simple
+        const isTerreno = propertyData.tipoPropiedad === 'terreno';
+        const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+        
         return {
           id: `fallback-comp-${index + 1}`,
-          address: `Propiedad ${index + 1}`,
-          areaConstruida: areaTotal,
+          address: `${isTerreno ? 'Terreno' : 'Propiedad'} ${index + 1}`,
+          areaConstruida: isTerreno ? 0 : areaTotal,
           areaTerreno: propertyData.areaTerreno,
           tipoPropiedad: propertyData.tipoPropiedad,
-          recamaras: propertyData.recamaras,
-          banos: propertyData.banos,
-          antiguedad: propertyData.antiguedad,
+          recamaras: isTerreno ? 0 : propertyData.recamaras,
+          banos: isTerreno ? 0 : propertyData.banos,
+          antiguedad: isTerreno ? 0 : propertyData.antiguedad,
           ubicacion: propertyData.ubicacion,
-          estadoGeneral: propertyData.estadoGeneral,
+          estadoGeneral: isTerreno ? 'nuevo' : propertyData.estadoGeneral,
+          // Campos específicos para terrenos
+          ...(isTerreno && {
+            topografia: propertyData.topografia || 'plano',
+            tipoValoracion: propertyData.tipoValoracion || 'residencial'
+          }),
           precio: convertCurrency(baseValue * 0.85, selectedCurrency), // Aplicar descuento del 15%
           distancia: 500 + (index * 100),
-          descripcion: `Propiedad comparable básica ${index + 1}`,
+          descripcion: `${isTerreno ? 'Terreno' : 'Propiedad'} comparable básica ${index + 1}`,
           url: '#',
           latitud: addressInfo.lat,
           longitud: addressInfo.lng
@@ -3109,26 +3163,59 @@ const PropertyValuation = () => {
         // Generar comparativas básicas de respaldo
         const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
         const fallbackComparatives = Array.from({ length: 3 }, (_, i) => {
-          const areaConstruida = Math.max(50, areaTotal + (Math.random() * 50 - 25));
           const precio = valorFinal * (0.9 + Math.random() * 0.2) * 0.85; // Aplicar descuento del 15%
-          return {
-            id: `fallback-${i + 1}`,
-            address: `Propiedad comparable ${i + 1}`,
-            areaConstruida: areaConstruida,
-            areaTerreno: Math.max(100, propertyData.areaTerreno + (Math.random() * 100 - 50)),
-            tipoPropiedad: propertyData.tipoPropiedad,
-            recamaras: Math.max(1, propertyData.recamaras + Math.floor(Math.random() * 3 - 1)),
-            banos: Math.max(1, propertyData.banos + Math.floor(Math.random() * 2)),
-            antiguedad: Math.max(0, propertyData.antiguedad + Math.floor(Math.random() * 10 - 5)),
-            ubicacion: propertyData.ubicacion,
-            estadoGeneral: propertyData.estadoGeneral,
-            precio: precio,
-            distancia: Math.floor(Math.random() * 2000 + 500), // distancia en metros
-            descripcion: `Propiedad comparable generada automáticamente`,
-            lat: (propertyData.latitud || 19.4326) + (Math.random() * 0.01 - 0.005),
-            lng: (propertyData.longitud || -99.1332) + (Math.random() * 0.01 - 0.005),
-            isReal: false
-          };
+          const isTerreno = propertyData.tipoPropiedad === 'terreno';
+          
+          if (isTerreno) {
+            // Lógica específica para terrenos fallback
+            const topografias = ['plano', 'pendiente-suave', 'pendiente-moderada', 'pendiente-pronunciada', 'irregular'];
+            const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
+            
+            return {
+              id: `fallback-${i + 1}`,
+              address: `Terreno comparable ${i + 1}`,
+              areaConstruida: 0, // Terrenos no tienen área construida
+              areaTerreno: Math.max(100, propertyData.areaTerreno + (Math.random() * 200 - 100)), // ±100m²
+              tipoPropiedad: 'terreno',
+              recamaras: 0, // Terrenos no tienen recámaras
+              banos: 0, // Terrenos no tienen baños
+              antiguedad: 0, // Terrenos no tienen antigüedad
+              ubicacion: propertyData.ubicacion,
+              estadoGeneral: 'nuevo', // Terrenos se consideran en buen estado
+              // Campos específicos para terrenos
+              topografia: topografias[Math.floor(Math.random() * topografias.length)],
+              tipoValoracion: tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)],
+              precio: precio,
+              distancia: Math.floor(Math.random() * 2000 + 500), // distancia en metros
+              descripcion: `Terreno comparable generado automáticamente`,
+              lat: (propertyData.latitud || 19.4326) + (Math.random() * 0.01 - 0.005),
+              lng: (propertyData.longitud || -99.1332) + (Math.random() * 0.01 - 0.005),
+              isReal: false
+            };
+          } else {
+            // Lógica para propiedades construidas (original)
+            const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+            const areaConstruida = Math.max(50, areaTotal + (Math.random() * 50 - 25));
+            
+            return {
+              id: `fallback-${i + 1}`,
+              address: `Propiedad comparable ${i + 1}`,
+              areaConstruida: areaConstruida,
+              areaTerreno: Math.max(100, propertyData.areaTerreno + (Math.random() * 100 - 50)),
+              tipoPropiedad: propertyData.tipoPropiedad,
+              recamaras: Math.max(1, propertyData.recamaras + Math.floor(Math.random() * 3 - 1)),
+              banos: Math.max(1, propertyData.banos + Math.floor(Math.random() * 2)),
+              antiguedad: Math.max(0, propertyData.antiguedad + Math.floor(Math.random() * 10 - 5)),
+              ubicacion: propertyData.ubicacion,
+              estadoGeneral: propertyData.estadoGeneral,
+              precio: precio,
+              distancia: Math.floor(Math.random() * 2000 + 500), // distancia en metros
+              descripcion: `Propiedad comparable generada automáticamente`,
+              lat: (propertyData.latitud || 19.4326) + (Math.random() * 0.01 - 0.005),
+              lng: (propertyData.longitud || -99.1332) + (Math.random() * 0.01 - 0.005),
+              isReal: false
+            };
+          }
         });
         
         setAllComparativeProperties(fallbackComparatives);
