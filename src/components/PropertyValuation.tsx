@@ -5012,7 +5012,7 @@ const PropertyValuation = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Selectores de Idioma y Moneda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-           <div className="hidden lg:block">
+           <div className="block lg:hidden">
              <LanguageSelector />
            </div>
           <CurrencySelector
@@ -5027,8 +5027,8 @@ const PropertyValuation = () => {
             exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
           />
           
-           {/* Selector de Idioma - Solo visible en desktop */}
-           <div className="hidden lg:block">
+           {/* Selector de Idioma - Solo visible en móviles */}
+           <div className="block lg:hidden">
             <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
               <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
