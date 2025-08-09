@@ -5642,7 +5642,7 @@ const PropertyValuation = () => {
                   <div className="text-center">
                     <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">{translations[selectedLanguage].estimatedValue}</h3>
                      <p className="text-2xl sm:text-3xl font-bold text-primary leading-tight break-words">
-                       {formatCurrency(0, selectedCurrency)}
+                       {formatCurrency(valuation, selectedCurrency)}
                      </p>
                     <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
                     <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].basedOnComparablesText}</p>
