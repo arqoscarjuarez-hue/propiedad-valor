@@ -3594,11 +3594,72 @@ const PropertyValuation = () => {
       doc.text(ubicacionTexto, marginLeft + 50, yPosition);
       yPosition += 6;
 
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].generalCondition}:`, marginLeft, yPosition);
-      doc.setFont("helvetica", "normal");
-      doc.text(estadoTexto, marginLeft + 40, yPosition);
-      yPosition += 15;
+      // Solo para terrenos: incluir información adicional específica
+      if (propertyData.tipoPropiedad === 'terreno') {
+        // Factores ambientales (mostrar la calidad seleccionada)
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].environmentalFactors}:`, marginLeft, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(ubicacionTexto, marginLeft + 70, yPosition);
+        yPosition += 6;
+        
+        // Tipo de acceso
+        if (propertyData.tipoAcceso) {
+          const accessTypeText = propertyData.tipoAcceso === 'pavimentado' ? 'Pavimentado' :
+                                 propertyData.tipoAcceso === 'terraceria' ? 'Terracería' :
+                                 propertyData.tipoAcceso === 'grava' ? 'Grava' :
+                                 'Mixto';
+          doc.setFont("helvetica", "bold");
+          doc.text(`Tipo de Acceso:`, marginLeft, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(accessTypeText, marginLeft + 30, yPosition);
+          yPosition += 6;
+        }
+        
+        // Servicios seleccionados
+        if (propertyData.servicios) {
+          const serviciosActivos = Object.entries(propertyData.servicios)
+            .filter(([_, value]) => value)
+            .map(([key, _]) => {
+              switch(key) {
+                case 'agua': return translations[selectedLanguage].water;
+                case 'electricidad': return translations[selectedLanguage].electricity;
+                case 'gas': return translations[selectedLanguage].gas;
+                case 'drenaje': return translations[selectedLanguage].drainage;
+                case 'internet': return translations[selectedLanguage].internet;
+                case 'cable': return translations[selectedLanguage].cable;
+                case 'telefono': return translations[selectedLanguage].phone;
+                case 'seguridad': return translations[selectedLanguage].security;
+                case 'alberca': return translations[selectedLanguage].swimmingPool;
+                case 'jardin': return translations[selectedLanguage].garden;
+                case 'elevador': return translations[selectedLanguage].elevator;
+                case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
+                case 'calefaccion': return translations[selectedLanguage].heating;
+                case 'panelesSolares': return translations[selectedLanguage].solarPanels;
+                case 'tinaco': return translations[selectedLanguage].waterTank;
+                default: return key;
+              }
+            });
+            
+          if (serviciosActivos.length > 0) {
+            doc.setFont("helvetica", "bold");
+            doc.text(`${translations[selectedLanguage].availableServices}:`, marginLeft, yPosition);
+            doc.setFont("helvetica", "normal");
+            const servicesText = doc.splitTextToSize(serviciosActivos.join(', '), contentWidth - 50);
+            doc.text(servicesText, marginLeft + 50, yPosition);
+            yPosition += (servicesText.length * 5) + 1;
+          }
+        }
+      } else {
+        // Solo mostrar estado general para propiedades que no sean terrenos
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].generalCondition}:`, marginLeft, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(estadoTexto, marginLeft + 40, yPosition);
+        yPosition += 6;
+      }
+      
+      yPosition += 9;
 
       // SECCIÓN 2: UBICACIÓN Y DIRECCIÓN
       if (propertyData.direccionCompleta) {
@@ -4243,23 +4304,86 @@ const PropertyValuation = () => {
                 })
               ]
             }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].generalCondition}: `, bold: true }),
-                new TextRun({ 
-                  text: propertyData.estadoGeneral === 'nuevo' ? translations[selectedLanguage].new :
-                        propertyData.estadoGeneral === 'bueno' ? translations[selectedLanguage].good :
-                        propertyData.estadoGeneral === 'medio' ? translations[selectedLanguage].medium :
-                        propertyData.estadoGeneral === 'regular' ? translations[selectedLanguage].regular :
-                        propertyData.estadoGeneral === 'reparaciones-sencillas' ? translations[selectedLanguage].simpleRepairs :
-                        propertyData.estadoGeneral === 'reparaciones-medias' ? translations[selectedLanguage].mediumRepairs :
-                        propertyData.estadoGeneral === 'reparaciones-importantes' ? translations[selectedLanguage].importantRepairs :
-                        propertyData.estadoGeneral === 'danos-graves' ? translations[selectedLanguage].seriousDamage :
-                        propertyData.estadoGeneral === 'en-desecho' ? translations[selectedLanguage].waste :
-                        propertyData.estadoGeneral === 'inservibles' ? translations[selectedLanguage].useless : 'No Especificado'
+            // Solo mostrar estado general si NO es terreno
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].generalCondition}: `, bold: true }),
+                  new TextRun({ 
+                    text: propertyData.estadoGeneral === 'nuevo' ? translations[selectedLanguage].new :
+                          propertyData.estadoGeneral === 'bueno' ? translations[selectedLanguage].good :
+                          propertyData.estadoGeneral === 'medio' ? translations[selectedLanguage].medium :
+                          propertyData.estadoGeneral === 'regular' ? translations[selectedLanguage].regular :
+                          propertyData.estadoGeneral === 'reparaciones-sencillas' ? translations[selectedLanguage].simpleRepairs :
+                          propertyData.estadoGeneral === 'reparaciones-medias' ? translations[selectedLanguage].mediumRepairs :
+                          propertyData.estadoGeneral === 'reparaciones-importantes' ? translations[selectedLanguage].importantRepairs :
+                          propertyData.estadoGeneral === 'danos-graves' ? translations[selectedLanguage].seriousDamage :
+                          propertyData.estadoGeneral === 'en-desecho' ? translations[selectedLanguage].waste :
+                          propertyData.estadoGeneral === 'inservibles' ? translations[selectedLanguage].useless : 'No Especificado'
+                  })
+                ]
+               })
+            ] : []),
+            
+            // Para terrenos: incluir información específica
+            ...(propertyData.tipoPropiedad === 'terreno' ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].environmentalFactors}: `, bold: true }),
+                  new TextRun({ 
+                    text: propertyData.ubicacion === 'excelente' ? translations[selectedLanguage].excellent :
+                          propertyData.ubicacion === 'buena' ? translations[selectedLanguage].goodLocation :
+                          propertyData.ubicacion === 'regular' ? translations[selectedLanguage].regularLocation : translations[selectedLanguage].badLocation
+                  })
+                ]
+              }),
+              // Tipo de acceso
+              ...(propertyData.tipoAcceso ? [
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: `Tipo de Acceso: `, bold: true }),
+                    new TextRun({ 
+                      text: propertyData.tipoAcceso === 'pavimentado' ? 'Pavimentado' :
+                            propertyData.tipoAcceso === 'terraceria' ? 'Terracería' :
+                            propertyData.tipoAcceso === 'grava' ? 'Grava' :
+                            'Mixto'
+                    })
+                  ]
                 })
-              ]
-             }),
+              ] : []),
+              // Servicios seleccionados
+              ...(propertyData.servicios && Object.values(propertyData.servicios).some(Boolean) ? [
+                new Paragraph({
+                  children: [
+                    new TextRun({ text: `${translations[selectedLanguage].availableServices}: `, bold: true }),
+                    new TextRun({ 
+                      text: Object.entries(propertyData.servicios)
+                        .filter(([_, value]) => value)
+                        .map(([key, _]) => {
+                          switch(key) {
+                            case 'agua': return translations[selectedLanguage].water;
+                            case 'electricidad': return translations[selectedLanguage].electricity;
+                            case 'gas': return translations[selectedLanguage].gas;
+                            case 'drenaje': return translations[selectedLanguage].drainage;
+                            case 'internet': return translations[selectedLanguage].internet;
+                            case 'cable': return translations[selectedLanguage].cable;
+                            case 'telefono': return translations[selectedLanguage].phone;
+                            case 'seguridad': return translations[selectedLanguage].security;
+                            case 'alberca': return translations[selectedLanguage].swimmingPool;
+                            case 'jardin': return translations[selectedLanguage].garden;
+                            case 'elevador': return translations[selectedLanguage].elevator;
+                            case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
+                            case 'calefaccion': return translations[selectedLanguage].heating;
+                            case 'panelesSolares': return translations[selectedLanguage].solarPanels;
+                            case 'tinaco': return translations[selectedLanguage].waterTank;
+                            default: return key;
+                          }
+                        }).join(', ')
+                    })
+                  ]
+                })
+              ] : [])
+            ] : []),
              
              // Información específica para terrenos
              ...(propertyData.tipoPropiedad === 'terreno' ? [
