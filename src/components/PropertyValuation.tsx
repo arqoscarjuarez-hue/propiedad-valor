@@ -5113,17 +5113,27 @@ const PropertyValuation = () => {
                               value={propertyData.topografia || ""} 
                               onValueChange={(value) => handleInputChange('topografia', value)}
                             >
-                               <SelectTrigger className="bg-background">
+                               <SelectTrigger className="bg-background w-full">
                                  <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
                                </SelectTrigger>
-                              <SelectContent className="bg-background border border-border shadow-lg z-50">
-                               <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
-                               <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
-                               <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
-                               <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
-                               <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
-                             </SelectContent>
-                           </Select>
+                               <SelectContent className="bg-background border border-border shadow-lg z-[9999] max-h-60 overflow-auto">
+                                <SelectItem value="plano" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].flat}
+                                </SelectItem>
+                                <SelectItem value="pendiente-suave" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].gentleSlope}
+                                </SelectItem>
+                                <SelectItem value="pendiente-moderada" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].moderateSlope}
+                                </SelectItem>
+                                <SelectItem value="pendiente-pronunciada" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].steepSlope}
+                                </SelectItem>
+                                <SelectItem value="irregular" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].irregular}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                          </div>
                          <div>
                            <Label className="flex items-center gap-2">
@@ -5134,17 +5144,27 @@ const PropertyValuation = () => {
                               value={propertyData.tipoValoracion || ""} 
                               onValueChange={(value) => handleInputChange('tipoValoracion', value)}
                             >
-                              <SelectTrigger className="bg-background">
+                              <SelectTrigger className="bg-background w-full">
                                 <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
                               </SelectTrigger>
-                              <SelectContent className="bg-background border border-border shadow-lg z-50">
-                               <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
-                               <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
-                               <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
-                               <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
-                               <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
-                             </SelectContent>
-                           </Select>
+                              <SelectContent className="bg-background border border-border shadow-lg z-[9999] max-h-60 overflow-auto">
+                                <SelectItem value="residencial" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].residentialUse}
+                                </SelectItem>
+                                <SelectItem value="comercial" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].commercialUse}
+                                </SelectItem>
+                                <SelectItem value="industrial" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].industrialUse}
+                                </SelectItem>
+                                <SelectItem value="agricola" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].agriculturalUse}
+                                </SelectItem>
+                                <SelectItem value="recreativo" className="cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                                  {translations[selectedLanguage].recreationalUse}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                          </div>
                        </div>
                      </div>
