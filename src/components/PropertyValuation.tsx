@@ -2513,7 +2513,7 @@ const PropertyValuation = () => {
     rate: 1
   });
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
-  const [activeTab, setActiveTab] = useState('areas');
+  const [activeTab, setActiveTab] = useState('tipo');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
@@ -5580,22 +5580,22 @@ const PropertyValuation = () => {
                   setActiveTab(newValue);
                 } catch (error) {
                   console.error('Error changing tab:', error);
-                  // Fallback al tab de áreas si hay error
-                  setActiveTab('areas');
+                  // Fallback al tab de tipo si hay error
+                  setActiveTab('tipo');
                 }
               }} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
-                   <TabsTrigger 
-                     value="areas" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].areas}
-                   </TabsTrigger>
                    <TabsTrigger 
                      value="tipo" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
                      {translations[selectedLanguage].propertyType}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="areas" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].areas}
                    </TabsTrigger>
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
