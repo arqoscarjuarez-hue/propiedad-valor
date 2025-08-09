@@ -24,13 +24,13 @@ export function LanguageSelector() {
   const currentLanguage = languages.find(lang => lang.code === selectedLanguage);
 
   return (
-    <div className="block lg:hidden">
+    <div className="fixed top-4 right-4 z-[9999]">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
             size="sm"
-            className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border"
+            className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border shadow-lg backdrop-blur-sm"
           >
             <Globe className="h-4 w-4" />
             <span className="hidden sm:inline">{currentLanguage?.flag}</span>
