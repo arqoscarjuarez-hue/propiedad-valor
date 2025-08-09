@@ -105,17 +105,19 @@ const Index = () => {
                  </span>
                 <LanguageSelector />
               </div>
-              
-              {!showComments && !showValuation && (
-                <Button 
-                  variant="default" 
-                  size="lg"
-                  onClick={handleShowComments}
-                  className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                >
-                  {t.viewComments}
-                </Button>
-              )}
+               
+               {!showComments && !showValuation && (
+                 <div className="hidden lg:block">
+                   <Button 
+                     variant="default" 
+                     size="lg"
+                     onClick={handleShowComments}
+                     className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                   >
+                     {t.viewComments}
+                   </Button>
+                 </div>
+               )}
               
                <div className="hidden lg:block">
                  <ShareButtons />
@@ -145,9 +147,19 @@ const Index = () => {
        <div className="lg:hidden bg-background border-b border-border">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
            <div className="flex flex-col gap-4">
-             {/* Share Button */}
-             <div className="flex justify-center">
+             {/* Share Button y Ver Comentarios en móviles */}
+             <div className="flex justify-center gap-3">
                <ShareButtons />
+               {!showComments && !showValuation && (
+                 <Button 
+                   variant="default" 
+                   size="sm"
+                   onClick={handleShowComments}
+                   className="flex items-center gap-2 text-sm font-bold px-4 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                 >
+                   {t.viewComments}
+                 </Button>
+               )}
              </div>
              
              {/* Statistics */}
