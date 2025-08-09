@@ -58,7 +58,7 @@ export function ShareButtons({
       icon: Instagram,
       url: `https://www.instagram.com/`,
       color: 'text-pink-600 hover:text-pink-700',
-      action: 'copy' // Instagram no tiene API directa, copiamos enlace
+      action: 'copy'
     },
     {
       name: 'TikTok',
@@ -132,14 +132,46 @@ export function ShareButtons({
 
   const handleShare = (social: any) => {
     if (social.action === 'copy') {
-      // Para redes que no tienen API directa, copiamos el enlace y abrimos la red social
       copyToClipboard();
       setTimeout(() => {
         window.open(social.url, '_blank', 'noopener,noreferrer');
       }, 500);
     } else {
-      // Para redes con API de compartir directo
       window.open(social.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleGeneratePDF = () => {
+    console.log('PDF clicked - onGeneratePDF available:', !!onGeneratePDF);
+    if (onGeneratePDF) {
+      onGeneratePDF();
+      toast({
+        title: "Generando PDF",
+        description: "El avalúo en PDF se descargará automáticamente",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "No se puede generar el PDF en este momento",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleGenerateWord = () => {
+    console.log('Word clicked - onGenerateWord available:', !!onGenerateWord);
+    if (onGenerateWord) {
+      onGenerateWord();
+      toast({
+        title: "Generando Word",
+        description: "El avalúo en Word se descargará automáticamente",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "No se puede generar el documento Word en este momento",
+        variant: "destructive"
+      });
     }
   };
 
@@ -155,19 +187,13 @@ export function ShareButtons({
           Compartir
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-sm border shadow-lg">
+      <DropdownMenuContent align="end" className="w-52 bg-background/95 backdrop-blur-sm border shadow-lg">
         {/* Opciones de descarga de documentos */}
         {(onGeneratePDF || onGenerateWord) && (
           <>
             {onGeneratePDF && (
               <DropdownMenuItem
-                onClick={() => {
-                  onGeneratePDF();
-                  toast({
-                    title: "Generando PDF",
-                    description: "El avalúo en PDF se descargará automáticamente",
-                  });
-                }}
+                onClick={handleGeneratePDF}
                 className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
               >
                 <FileText className="h-4 w-4 text-red-600" />
@@ -176,13 +202,7 @@ export function ShareButtons({
             )}
             {onGenerateWord && (
               <DropdownMenuItem
-                onClick={() => {
-                  onGenerateWord();
-                  toast({
-                    title: "Generando Word",
-                    description: "El avalúo en Word se descargará automáticamente",
-                  });
-                }}
+                onClick={handleGenerateWord}
                 className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
               >
                 <Download className="h-4 w-4 text-blue-600" />
