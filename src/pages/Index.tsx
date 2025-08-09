@@ -99,12 +99,12 @@ const Index = () => {
             {/* Navigation */}
             <div className="flex items-center space-x-4">
               {/* Language Selector - Prominente */}
-               <div className="flex items-center gap-3 bg-card/80 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-sm">
-                 <span className="text-sm font-medium text-muted-foreground hidden sm:block">
-                   Idioma:
-                 </span>
-                <LanguageSelector />
-              </div>
+                <div className="flex items-center gap-3 bg-card/80 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-sm">
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Idioma:
+                  </span>
+                 <LanguageSelector />
+               </div>
                
                {!showComments && !showValuation && (
                  <div className="hidden lg:block">
