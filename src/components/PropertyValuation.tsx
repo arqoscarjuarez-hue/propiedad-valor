@@ -2956,22 +2956,22 @@ const PropertyValuation = () => {
         'rightOfWay': 0.88         // -12%
       };
       
-      // Factor de ajuste por topografía (solo para terrenos)
+      // Factor de ajuste por topografía (según estándares internacionales IVS/RICS)
       const factorTopografia = {
-        'plano': 1.15,                    // +15% (terreno plano es más valorado)
-        'pendiente-suave': 1.05,          // +5% (ligera pendiente)
-        'pendiente-moderada': 0.95,       // -5% (pendiente moderada)
-        'pendiente-pronunciada': 0.80,    // -20% (pendiente pronunciada)
-        'irregular': 0.85                 // -15% (topografía irregular)
+        'plano': 1.12,                    // +12% (terreno plano, 0-5% pendiente)
+        'pendiente-suave': 1.03,          // +3% (pendiente suave, 5-15%)
+        'pendiente-moderada': 0.93,       // -7% (pendiente moderada, 15-25%)
+        'pendiente-pronunciada': 0.80,    // -20% (pendiente pronunciada, 25-40%)
+        'irregular': 0.75                 // -25% (terreno irregular/escarpado, >40%)
       };
       
-      // Factor de ajuste por tipo de valoración (solo para terrenos)
+      // Factor de ajuste por tipo de valoración (según zonificación internacional)
       const factorTipoValoracion = {
-        'residencial': 1.00,              // 0% (base)
-        'comercial': 1.25,                // +25% (mayor valor comercial)
-        'industrial': 1.10,               // +10% (valor industrial)
-        'agricola': 0.70,                 // -30% (menor valor agrícola)
-        'recreativo': 0.85                // -15% (uso recreativo)
+        'residencial': 1.00,              // 0% (base estándar)
+        'comercial': 1.28,                // +28% (mayor potencial comercial)
+        'industrial': 1.12,               // +12% (uso industrial ligero)
+        'agricola': 0.68,                 // -32% (uso agrícola extensivo)
+        'recreativo': 0.92                // -8% (uso recreativo/turístico)
       };
       // Aplicar factores específicos para terrenos
       let factorTopografiaFinal = 1;
