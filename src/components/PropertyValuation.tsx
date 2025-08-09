@@ -2425,17 +2425,31 @@ const PropertyValuation = () => {
       const savedData = localStorage.getItem('lastPropertyValuation');
       if (savedData) {
         const parsed = JSON.parse(savedData);
-        return parsed.propertyData || null;
+        return {
+          propertyData: parsed.propertyData || null,
+          priceAdjustment: parsed.priceAdjustment || 0,
+          selectedCurrency: parsed.selectedCurrency || null,
+          valuation: parsed.valuation || null,
+          baseValuation: parsed.baseValuation || null,
+          comparativeProperties: parsed.comparativeProperties || []
+        };
       }
     } catch (error) {
       console.error('Error loading saved data:', error);
     }
-    return null;
+    return {
+      propertyData: null,
+      priceAdjustment: 0,
+      selectedCurrency: null,
+      valuation: null,
+      baseValuation: null,
+      comparativeProperties: []
+    };
   };
 
-  const savedPropertyData = loadSavedData();
+  const savedData = loadSavedData();
   
-  const [propertyData, setPropertyData] = useState<PropertyData>(savedPropertyData || {
+  const [propertyData, setPropertyData] = useState<PropertyData>(savedData.propertyData || {
     areaSotano: 0,
     areaPrimerNivel: 0,
     areaSegundoNivel: 0,
@@ -2478,21 +2492,21 @@ const PropertyValuation = () => {
     }
   });
   
-  const [valuation, setValuation] = useState<number | null>(null);
-  const [baseValuation, setBaseValuation] = useState<number | null>(null);
-  const [priceAdjustment, setPriceAdjustment] = useState<number>(0);
+  const [valuation, setValuation] = useState<number | null>(savedData.valuation);
+  const [baseValuation, setBaseValuation] = useState<number | null>(savedData.baseValuation);
+  const [priceAdjustment, setPriceAdjustment] = useState<number>(savedData.priceAdjustment);
   const [multipleValuations, setMultipleValuations] = useState<Array<{
     id: number;
     valor: number;
     comparatives: ComparativeProperty[];
   }>>([]);
-  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
+  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>(savedData.comparativeProperties);
   
   // Estados para manejo de comparables
   const [allComparativeProperties, setAllComparativeProperties] = useState<ComparativeProperty[]>([]);
   const [selectedComparatives, setSelectedComparatives] = useState<number[]>([0, 1, 2]); // Por defecto los primeros 3
   
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>({
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(savedData.selectedCurrency || {
     code: 'USD',
     name: 'Dólar Estadounidense',
     symbol: '$',
