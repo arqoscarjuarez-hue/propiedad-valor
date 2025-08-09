@@ -5777,36 +5777,78 @@ const PropertyValuation = () => {
                       </div>
                     )}
 
-                   {/* Resumen de servicios */}
-                   <div className="bg-muted p-4 rounded-lg">
-                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].servicesSummary}</h4>
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                       <div className="flex justify-between">
-                         <span>{translations[selectedLanguage].basicServicesSummary}</span>
-                         <span className="font-medium">
-                           {[propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje].filter(Boolean).length}/4
-                         </span>
-                       </div>
-                       <div className="flex justify-between">
-                         <span>Comunicación:</span>
-                         <span className="font-medium">
-                           {[propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono].filter(Boolean).length}/3
-                         </span>
-                       </div>
-                       <div className="flex justify-between">
-                         <span>Comodidades:</span>
-                         <span className="font-medium">
-                           {[propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion].filter(Boolean).length}/5
-                         </span>
-                       </div>
-                       <div className="flex justify-between">
-                         <span>Especiales:</span>
-                         <span className="font-medium">
-                           {[propertyData.servicios.seguridad, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].filter(Boolean).length}/3
-                         </span>
-                       </div>
-                     </div>
-                   </div>
+                    {/* Resumen de servicios */}
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].servicesSummary}</h4>
+                      
+                      {/* Servicios Básicos disponibles */}
+                      {[propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje].some(Boolean) && (
+                        <div className="mb-3">
+                          <span className="text-xs font-medium text-muted-foreground">{translations[selectedLanguage].basicServicesSummary}</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {propertyData.servicios.agua && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].water}</span>
+                            )}
+                            {propertyData.servicios.electricidad && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].electricity}</span>
+                            )}
+                            {propertyData.servicios.gas && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].gas}</span>
+                            )}
+                            {propertyData.servicios.drenaje && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].drainage}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Servicios Adicionales disponibles - Solo si NO es terreno */}
+                      {propertyData.tipoPropiedad !== 'terreno' && [propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono, propertyData.servicios.seguridad, propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].some(Boolean) && (
+                        <div>
+                          <span className="text-xs font-medium text-muted-foreground">{translations[selectedLanguage].additionalServicesSummary}</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {propertyData.servicios.internet && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].internet}</span>
+                            )}
+                            {propertyData.servicios.cable && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].cable}</span>
+                            )}
+                            {propertyData.servicios.telefono && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].phone}</span>
+                            )}
+                            {propertyData.servicios.seguridad && (
+                              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">{translations[selectedLanguage].security}</span>
+                            )}
+                            {propertyData.servicios.alberca && (
+                              <span className="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded">{translations[selectedLanguage].swimmingPool}</span>
+                            )}
+                            {propertyData.servicios.jardin && (
+                              <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">{translations[selectedLanguage].garden}</span>
+                            )}
+                            {propertyData.servicios.elevador && (
+                              <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">{translations[selectedLanguage].elevator}</span>
+                            )}
+                            {propertyData.servicios.aireAcondicionado && (
+                              <span className="text-xs bg-sky-100 text-sky-800 px-2 py-1 rounded">{translations[selectedLanguage].airConditioning}</span>
+                            )}
+                            {propertyData.servicios.calefaccion && (
+                              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">{translations[selectedLanguage].heating}</span>
+                            )}
+                            {propertyData.servicios.panelesSolares && (
+                              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{translations[selectedLanguage].solarPanels}</span>
+                            )}
+                            {propertyData.servicios.tinaco && (
+                              <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">{translations[selectedLanguage].waterTank}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Mensaje si no hay servicios disponibles */}
+                      {![propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje, propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono, propertyData.servicios.seguridad, propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].some(Boolean) && (
+                        <p className="text-xs text-muted-foreground italic">No hay servicios seleccionados</p>
+                      )}
+                    </div>
                  </TabsContent>
 
                     <TabsContent value="ubicacion" className="space-y-4 mt-6">
