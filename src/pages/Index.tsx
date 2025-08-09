@@ -68,15 +68,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Floating Language Selector - Always visible */}
-      <div className="fixed top-4 right-4 z-50">
-        <div className="flex items-center gap-2 bg-card/95 backdrop-blur-sm border border-border/50 rounded-lg px-3 py-2 shadow-lg">
-          <span className="text-xs font-medium text-muted-foreground hidden sm:block">
-            🌐 Idioma:
-          </span>
-          <LanguageSelector />
-        </div>
-      </div>
       
       {/* Enhanced Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
