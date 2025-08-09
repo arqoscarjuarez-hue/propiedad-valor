@@ -186,6 +186,8 @@ const translations = {
     propertyAge: 'Antigüedad:',
     propertyLocation: 'Ubicación:',
     propertyCondition: 'Estado:',
+    propertyTopography: 'Topografía:',
+    propertyValuationType: 'Tipo de Valoración:',
     notSpecified: 'No especificada',
     noSpecified: 'No especificado',
     
@@ -544,6 +546,8 @@ const translations = {
     propertyAge: 'Age:',
     propertyLocation: 'Location:',
     propertyCondition: 'Condition:',
+    propertyTopography: 'Topography:',
+    propertyValuationType: 'Valuation Type:',
     notSpecified: 'Not specified',
     noSpecified: 'Not specified',
     
@@ -902,6 +906,8 @@ const translations = {
     propertyAge: 'Âge:',
     propertyLocation: 'Emplacement:',
     propertyCondition: 'État:',
+    propertyTopography: 'Topographie:',
+    propertyValuationType: 'Type de Valorisation:',
     notSpecified: 'Non spécifié',
     noSpecified: 'Non spécifié',
     
@@ -1259,6 +1265,8 @@ const translations = {
     propertyAge: 'Alter:',
     propertyLocation: 'Lage:',
     propertyCondition: 'Zustand:',
+    propertyTopography: 'Topographie:',
+    propertyValuationType: 'Bewertungstyp:',
     notSpecified: 'Nicht angegeben',
     noSpecified: 'Nicht angegeben',
     
@@ -1619,6 +1627,8 @@ const translations = {
     propertyAge: 'Età:',
     propertyLocation: 'Posizione:',
     propertyCondition: 'Condizione:',
+    propertyTopography: 'Topografia:',
+    propertyValuationType: 'Tipo di Valutazione:',
     notSpecified: 'Non specificato',
     noSpecified: 'Non specificato',
     
@@ -1975,6 +1985,8 @@ const translations = {
     propertyAge: 'Idade:',
     propertyLocation: 'Localização:',
     propertyCondition: 'Condição:',
+    propertyTopography: 'Topografia:',
+    propertyValuationType: 'Tipo de Avaliação:',
     notSpecified: 'Não especificado',
     noSpecified: 'Não especificado',
     
@@ -5250,15 +5262,28 @@ const PropertyValuation = () => {
                    {/* Resumen de características */}
                   <div className="bg-muted p-4 rounded-lg">
                     <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].characteristicsSummary}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <span className="font-medium">{translations[selectedLanguage].propertyAge}</span> {propertyData.antiguedad} {translations[selectedLanguage].years}
-                      </div>
-                      <div>
-                        <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
-                      </div>
-                       <div className="md:col-span-2">
-                         <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                       {propertyData.tipoPropiedad === 'terreno' ? (
+                         <>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyTopography}</span> {propertyData.topografia || translations[selectedLanguage].notSpecified}
+                           </div>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyValuationType}</span> {propertyData.tipoValoracion || translations[selectedLanguage].notSpecified}
+                           </div>
+                         </>
+                       ) : (
+                         <>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyAge}</span> {propertyData.antiguedad} {translations[selectedLanguage].years}
+                           </div>
+                           <div className="md:col-span-2">
+                             <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
+                           </div>
+                         </>
+                       )}
+                       <div>
+                         <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
                        </div>
                        <div className="md:col-span-2">
                          <span className="font-medium">{translations[selectedLanguage].accessType}:</span> {
@@ -5267,7 +5292,7 @@ const PropertyValuation = () => {
                            : translations[selectedLanguage].notSpecified
                          }
                        </div>
-                    </div>
+                     </div>
                   </div>
                  </TabsContent>
 
