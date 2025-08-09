@@ -3009,13 +3009,27 @@ const PropertyValuation = () => {
                        (propertyData.areaTercerNivel || 0) + 
                        (propertyData.areaCuartoNivel || 0);
       
-      if (areaTotal <= 0) {
-        toast({
-          title: translations[selectedLanguage].errorTitle,
-          description: translations[selectedLanguage].errorMinimumArea,
-          variant: "destructive"
-        });
-        return;
+      // Validación diferente para terrenos vs propiedades construidas
+      if (propertyData.tipoPropiedad === 'terreno') {
+        // Para terrenos, solo validar que el área del terreno sea mayor a 0
+        if ((propertyData.areaTerreno || 0) <= 0) {
+          toast({
+            title: translations[selectedLanguage].errorTitle,
+            description: "Debe ingresar un área de terreno mayor a 0",
+            variant: "destructive"
+          });
+          return;
+        }
+      } else {
+        // Para propiedades construidas, validar área de construcción
+        if (areaTotal <= 0) {
+          toast({
+            title: translations[selectedLanguage].errorTitle,
+            description: translations[selectedLanguage].errorMinimumArea,
+            variant: "destructive"
+          });
+          return;
+        }
       }
       
       // Precio base por m² según tipo de propiedad (convertido a USD)
