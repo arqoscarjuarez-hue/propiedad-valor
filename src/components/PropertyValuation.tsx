@@ -5012,9 +5012,7 @@ const PropertyValuation = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Selectores de Idioma y Moneda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-           <div className="block lg:hidden">
-             <LanguageSelector />
-           </div>
+           <LanguageSelector />
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
