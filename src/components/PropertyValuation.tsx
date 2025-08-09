@@ -5380,35 +5380,6 @@ const PropertyValuation = () => {
                    {/* Información específica según tipo de propiedad */}
                    {propertyData.tipoPropiedad === 'terreno' ? (
                      <div className="space-y-6">
-                       {/* Información sobre estándares internacionales */}
-                       <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                         <h4 className="text-md font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2">
-                           <span className="text-lg">🌍</span>
-                           {translations[selectedLanguage].internationalStandards}
-                         </h4>
-                         <div className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
-                           <div>
-                             <p className="font-medium mb-2">{translations[selectedLanguage].topographyFactors}</p>
-                             <ul className="space-y-1 ml-4 text-xs">
-                               <li>• {translations[selectedLanguage].flatLandExp}</li>
-                               <li>• {translations[selectedLanguage].gentleSlopeExp}</li>
-                               <li>• {translations[selectedLanguage].moderateSlopeExp}</li>
-                               <li>• {translations[selectedLanguage].steepSlopeExp}</li>
-                               <li>• {translations[selectedLanguage].irregularExp}</li>
-                             </ul>
-                           </div>
-                           <div>
-                             <p className="font-medium mb-2">{translations[selectedLanguage].landUseFactors}</p>
-                             <ul className="space-y-1 ml-4 text-xs">
-                               <li>• {translations[selectedLanguage].commercialUseExp}</li>
-                               <li>• {translations[selectedLanguage].industrialUseExp}</li>
-                               <li>• {translations[selectedLanguage].residentialUseExp}</li>
-                               <li>• {translations[selectedLanguage].recreationalUseExp}</li>
-                               <li>• {translations[selectedLanguage].agriculturalUseExp}</li>
-                             </ul>
-                           </div>
-                         </div>
-                       </div>
                       
                        {/* Características del terreno */}
                        <div className="mb-6">
@@ -6163,6 +6134,38 @@ const PropertyValuation = () => {
                     translations[selectedLanguage].calculate
                   )}
                 </Button>
+                
+                {/* Estándares Internacionales IVS/RICS - Solo para terrenos */}
+                {propertyData.tipoPropiedad === 'terreno' && (
+                  <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <h4 className="text-md font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2">
+                      <span className="text-lg">🌍</span>
+                      {translations[selectedLanguage].internationalStandards}
+                    </h4>
+                    <div className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+                      <div>
+                        <p className="font-medium mb-2">{translations[selectedLanguage].topographyFactors}</p>
+                        <ul className="space-y-1 ml-4 text-xs">
+                          <li>• {translations[selectedLanguage].flatLandExp}</li>
+                          <li>• {translations[selectedLanguage].gentleSlopeExp}</li>
+                          <li>• {translations[selectedLanguage].moderateSlopeExp}</li>
+                          <li>• {translations[selectedLanguage].steepSlopeExp}</li>
+                          <li>• {translations[selectedLanguage].irregularExp}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-medium mb-2">{translations[selectedLanguage].landUseFactors}</p>
+                        <ul className="space-y-1 ml-4 text-xs">
+                          <li>• {translations[selectedLanguage].commercialUseExp}</li>
+                          <li>• {translations[selectedLanguage].industrialUseExp}</li>
+                          <li>• {translations[selectedLanguage].residentialUseExp}</li>
+                          <li>• {translations[selectedLanguage].recreationalUseExp}</li>
+                          <li>• {translations[selectedLanguage].agriculturalUseExp}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
