@@ -14,7 +14,8 @@ import {
   Instagram,
   Music,
   FileText,
-  Download
+  Download,
+  Smartphone
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -43,13 +44,10 @@ export function ShareButtons({
   const { toast } = useToast();
   
   const currentUrl = window.location.href;
-  const encodedUrl = encodeURIComponent(currentUrl);
-  const encodedTitle = encodeURIComponent(title);
-  const encodedDescription = encodeURIComponent(description);
+  const shareMessage = `${title}\n\n${description}\n\n📄 Documentos del avalúo profesional incluidos\n\n🔗 ${currentUrl}`;
 
-  // Mensaje para compartir con documentos
-  const shareMessage = `${title}\n\n${description}\n\n📄 He adjuntado los documentos del avalúo profesional (PDF y Word)\n\n🔗 Obtén tu propio avalúo en: ${currentUrl}`;
-  const encodedShareMessage = encodeURIComponent(shareMessage);
+  // Verificar si Web Share API está disponible
+  const canUseNativeShare = navigator.share && navigator.canShare;
 
   const copyToClipboard = async () => {
     try {
@@ -69,49 +67,103 @@ export function ShareButtons({
     }
   };
 
-  // Función para generar ambos documentos y luego compartir
-  const generateDocumentsAndShare = async (shareAction: () => void) => {
-    if (!onGeneratePDF || !onGenerateWord) {
+  // Función para compartir con Web Share API nativa (simplificada)
+  const shareWithNativeAPI = async () => {
+    if (!canUseNativeShare) {
       toast({
-        title: "Error",
-        description: "No se pueden generar los documentos en este momento",
+        title: "No disponible",
+        description: "Tu dispositivo no soporta compartir archivos directamente",
         variant: "destructive"
       });
       return;
     }
 
     setIsGenerating(true);
-    
+
     try {
-      // Generar PDF
       toast({
         title: "Generando documentos...",
-        description: "Preparando PDF y Word para compartir",
+        description: "Preparando archivos para compartir",
       });
-      
-      onGeneratePDF();
-      
-      // Esperar un poco para que se genere el PDF
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Generar Word
-      onGenerateWord();
-      
-      // Esperar un poco para que se genere el Word
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      // Generar documentos normalmente (se descargan)
+      if (onGeneratePDF) onGeneratePDF();
+      if (onGenerateWord) onGenerateWord();
+
+      // Esperar a que se generen
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Usar Web Share API solo para texto
+      if (navigator.share) {
+        await navigator.share({
+          title: title,
+          text: shareMessage,
+          url: currentUrl
+        });
+
+        toast({
+          title: "¡Compartido exitosamente!",
+          description: "Los documentos se han descargado. Adjúntalos manualmente en la app que se abrió.",
+        });
+      } else {
+        // Fallback
+        if (onGeneratePDF) onGeneratePDF();
+        if (onGenerateWord) onGenerateWord();
+        
+        toast({
+          title: "Documentos generados",
+          description: "Los archivos se han descargado. Compártelos manualmente.",
+        });
+      }
+
+    } catch (error: any) {
+      if (error.name !== 'AbortError') { // Usuario canceló
+        console.error('Error sharing:', error);
+        toast({
+          title: "Error al compartir",
+          description: "No se pudieron compartir los documentos directamente",
+          variant: "destructive"
+        });
+      }
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Función para compartir via WhatsApp con archivos
+  const shareViaWhatsApp = async () => {
+    setIsGenerating(true);
+
+    try {
       toast({
-        title: "¡Documentos generados!",
-        description: "Ahora puedes adjuntarlos en la aplicación que se abrirá",
+        title: "Preparando para WhatsApp...",
+        description: "Generando documentos",
       });
-      
-      // Ejecutar la acción de compartir
-      shareAction();
-      
+
+      // Generar documentos
+      if (onGeneratePDF) onGeneratePDF();
+      if (onGenerateWord) onGenerateWord();
+
+      // Esperar a que se generen
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const whatsappMessage = encodeURIComponent(
+        `${title}\n\n${description}\n\n📄 Te envío los documentos del avalúo profesional.\n\n🔗 Visita: ${currentUrl}`
+      );
+
+      // Abrir WhatsApp
+      const whatsappUrl = `https://wa.me/?text=${whatsappMessage}`;
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+      toast({
+        title: "WhatsApp abierto",
+        description: "Los documentos se han descargado. Adjúntalos en WhatsApp.",
+      });
+
     } catch (error) {
       toast({
         title: "Error",
-        description: "No se pudieron generar los documentos",
+        description: "No se pudo preparar el contenido para WhatsApp",
         variant: "destructive"
       });
     } finally {
@@ -119,113 +171,45 @@ export function ShareButtons({
     }
   };
 
-  const shareLinks = [
-    {
-      name: 'WhatsApp',
-      icon: MessageCircle,
-      url: `https://wa.me/?text=${encodedShareMessage}`,
-      color: 'text-green-600 hover:text-green-700',
-      withDocuments: true
-    },
-    {
-      name: 'Telegram',
-      icon: Send,
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedShareMessage}`,
-      color: 'text-blue-500 hover:text-blue-600',
-      withDocuments: true
-    },
-    {
-      name: 'Email',
-      icon: Mail,
-      url: `mailto:?subject=${encodedTitle}&body=${encodedShareMessage}`,
-      color: 'text-gray-600 hover:text-gray-700',
-      withDocuments: true
-    },
-    {
-      name: 'Gmail',
-      icon: Mail,
-      url: `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodedTitle}&body=${encodedShareMessage}`,
-      color: 'text-red-500 hover:text-red-600',
-      withDocuments: true
-    },
-    {
-      name: 'Instagram',
-      icon: Instagram,
-      url: `https://www.instagram.com/`,
-      color: 'text-pink-600 hover:text-pink-700',
-      action: 'copy',
-      withDocuments: false
-    },
-    {
-      name: 'TikTok',
-      icon: Music,
-      url: `https://www.tiktok.com/`,
-      color: 'text-black hover:text-gray-800',
-      action: 'copy',
-      withDocuments: false
-    },
-    {
-      name: 'Facebook',
-      icon: Facebook,
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      color: 'text-blue-600 hover:text-blue-700',
-      withDocuments: false
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-      color: 'text-gray-800 hover:text-gray-900',
-      withDocuments: false
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-      color: 'text-blue-700 hover:text-blue-800',
-      withDocuments: false
-    },
-    {
-      name: 'YouTube',
-      icon: Youtube,
-      url: `https://www.youtube.com/`,
-      color: 'text-red-600 hover:text-red-700',
-      action: 'copy',
-      withDocuments: false
-    }
-  ];
+  // Función para compartir via Email con archivos
+  const shareViaEmail = async () => {
+    setIsGenerating(true);
 
-  const handleShare = (social: any) => {
-    if (social.withDocuments) {
-      // Para redes que soportan documentos, generar primero los archivos
-      generateDocumentsAndShare(() => {
-        if (social.action === 'copy') {
-          copyToClipboard();
-          setTimeout(() => {
-            window.open(social.url, '_blank', 'noopener,noreferrer');
-          }, 500);
-        } else {
-          window.open(social.url, '_blank', 'noopener,noreferrer');
-        }
-        
-        // Mostrar instrucciones específicas
-        setTimeout(() => {
-          toast({
-            title: `Compartir en ${social.name}`,
-            description: "Los documentos se han descargado. Adjúntalos en la aplicación que se abrió.",
-          });
-        }, 1500);
+    try {
+      toast({
+        title: "Preparando email...",
+        description: "Generando documentos",
       });
-    } else {
-      // Para redes que no soportan documentos, compartir solo el enlace
-      if (social.action === 'copy') {
-        copyToClipboard();
-        setTimeout(() => {
-          window.open(social.url, '_blank', 'noopener,noreferrer');
-        }, 500);
-      } else {
-        window.open(social.url, '_blank', 'noopener,noreferrer');
-      }
+
+      // Generar documentos
+      if (onGeneratePDF) onGeneratePDF();
+      if (onGenerateWord) onGenerateWord();
+
+      // Esperar a que se generen
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const emailSubject = encodeURIComponent(title);
+      const emailBody = encodeURIComponent(
+        `${description}\n\nHe adjuntado los documentos del avalúo profesional (PDF y Word).\n\nPuedes obtener tu propio avalúo en: ${currentUrl}\n\nSaludos cordiales`
+      );
+
+      // Abrir cliente de email
+      const emailUrl = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+      window.location.href = emailUrl;
+
+      toast({
+        title: "Cliente de email abierto",
+        description: "Los documentos se han descargado. Adjúntalos en tu email.",
+      });
+
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo preparar el email",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -245,6 +229,37 @@ export function ShareButtons({
     }
   };
 
+  const shareLinks = [
+    {
+      name: 'Facebook',
+      icon: Facebook,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
+      color: 'text-blue-600 hover:text-blue-700'
+    },
+    {
+      name: 'Twitter',
+      icon: Twitter,
+      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
+      color: 'text-gray-800 hover:text-gray-900'
+    },
+    {
+      name: 'LinkedIn',
+      icon: Linkedin,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
+      color: 'text-blue-700 hover:text-blue-800'
+    },
+    {
+      name: 'Telegram',
+      icon: Send,
+      url: `https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title)}`,
+      color: 'text-blue-500 hover:text-blue-600'
+    }
+  ];
+
+  const handleSocialShare = (social: any) => {
+    window.open(social.url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -255,67 +270,99 @@ export function ShareButtons({
           className="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 border-primary/30 hover:border-primary/50 shadow-md hover:shadow-lg transition-all duration-200"
         >
           <Share2 className="h-5 w-5" />
-          {isGenerating ? "Generando..." : "Compartir"}
+          {isGenerating ? "Preparando..." : "Compartir"}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
-        {/* Opciones de descarga directa */}
-        {(onGeneratePDF || onGenerateWord) && (
+      <DropdownMenuContent align="end" className="w-72 bg-background/95 backdrop-blur-sm border shadow-lg">
+        
+        {/* Compartir nativo (móviles principalmente) */}
+        {canUseNativeShare && (
           <>
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-              DESCARGAR DOCUMENTOS
+              📱 COMPARTIR DIRECTO
             </div>
-            {onGeneratePDF && (
-              <DropdownMenuItem
-                onClick={() => handleDirectDownload('pdf')}
-                className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
-              >
-                <FileText className="h-4 w-4 text-red-600" />
-                <span className="font-medium">Descargar PDF</span>
-              </DropdownMenuItem>
-            )}
-            {onGenerateWord && (
-              <DropdownMenuItem
-                onClick={() => handleDirectDownload('word')}
-                className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
-              >
-                <Download className="h-4 w-4 text-blue-600" />
-                <span className="font-medium">Descargar Word</span>
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem
+              onClick={shareWithNativeAPI}
+              disabled={isGenerating}
+              className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+            >
+              <Smartphone className="h-4 w-4 text-green-600" />
+              <div className="flex flex-col">
+                <span className="font-medium">Compartir con archivos</span>
+                <span className="text-xs text-muted-foreground">Envía documentos directamente</span>
+              </div>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
         )}
 
-        {/* Redes que soportan documentos */}
+        {/* Compartir con aplicaciones específicas */}
         <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-          COMPARTIR CON DOCUMENTOS
+          💬 COMPARTIR CON DOCUMENTOS
         </div>
-        {shareLinks.filter(social => social.withDocuments).map((social) => (
+        
+        <DropdownMenuItem
+          onClick={shareViaWhatsApp}
+          disabled={isGenerating}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <MessageCircle className="h-4 w-4 text-green-600" />
+          <div className="flex flex-col">
+            <span className="font-medium">WhatsApp</span>
+            <span className="text-xs text-muted-foreground">Genera archivos + abre WhatsApp</span>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={shareViaEmail}
+          disabled={isGenerating}
+          className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+        >
+          <Mail className="h-4 w-4 text-blue-600" />
+          <div className="flex flex-col">
+            <span className="font-medium">Email</span>
+            <span className="text-xs text-muted-foreground">Genera archivos + abre email</span>
+          </div>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        {/* Descargas directas */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+          📄 DESCARGAR DOCUMENTOS
+        </div>
+        
+        {onGeneratePDF && (
           <DropdownMenuItem
-            key={social.name}
-            onClick={() => handleShare(social)}
-            disabled={isGenerating}
+            onClick={() => handleDirectDownload('pdf')}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
           >
-            <social.icon className={`h-4 w-4 ${social.color}`} />
-            <div className="flex flex-col">
-              <span className="font-medium">{social.name}</span>
-              <span className="text-xs text-muted-foreground">Con archivos adjuntos</span>
-            </div>
+            <FileText className="h-4 w-4 text-red-600" />
+            <span className="font-medium">Descargar PDF</span>
           </DropdownMenuItem>
-        ))}
+        )}
         
+        {onGenerateWord && (
+          <DropdownMenuItem
+            onClick={() => handleDirectDownload('word')}
+            className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <Download className="h-4 w-4 text-blue-600" />
+            <span className="font-medium">Descargar Word</span>
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuSeparator />
-        
-        {/* Redes que solo soportan enlaces */}
+
+        {/* Redes sociales (solo enlace) */}
         <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
-          COMPARTIR ENLACE
+          🌐 COMPARTIR ENLACE
         </div>
-        {shareLinks.filter(social => !social.withDocuments).map((social) => (
+        
+        {shareLinks.map((social) => (
           <DropdownMenuItem
             key={social.name}
-            onClick={() => handleShare(social)}
+            onClick={() => handleSocialShare(social)}
             className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
           >
             <social.icon className={`h-4 w-4 ${social.color}`} />
@@ -324,6 +371,7 @@ export function ShareButtons({
         ))}
         
         <DropdownMenuSeparator />
+        
         <DropdownMenuItem
           onClick={copyToClipboard}
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
