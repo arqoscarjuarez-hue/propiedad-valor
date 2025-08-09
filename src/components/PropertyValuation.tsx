@@ -2821,32 +2821,97 @@ const PropertyValuation = () => {
             longitud: addressInfo.lng
           };
         } else {
-          // Lógica existente para propiedades construidas (casas, departamentos, etc.)
+          // Lógica para propiedades construidas específicas por tipo
           const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
           
-          // Variación del área de construcción: ±40% como máximo (estándar de valuación)
-          const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
-          const areaComparable = Math.round(areaTotal * areaVariationFactor);
+          // Generar comparables del mismo tipo de propiedad
+          const tipoComparable = propertyData.tipoPropiedad; // Mantener el mismo tipo exacto
           
-          // Asegurar que esté dentro del rango ±40%
-          const areaMinima = areaTotal * 0.6; // -40%
-          const areaMaxima = areaTotal * 1.4; // +40%
-          const areaFinal = Math.max(areaMinima, Math.min(areaMaxima, areaComparable));
+          // Variaciones específicas por tipo de propiedad
+          const getPropertyVariations = (tipo: string) => {
+            switch (tipo) {
+              case 'casa':
+                return {
+                  areaVariation: 0.6 + (Math.random() * 0.8), // ±40% para casas
+                  recamarasVariation: Math.floor((Math.random() - 0.5) * 2), // ±1 recámara
+                  banosVariation: Math.floor((Math.random() - 0.5) * 2), // ±1 baño
+                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 10), // ±5 años
+                  terrenoVariation: 0.7 + (Math.random() * 0.6) // ±30% terreno
+                };
+              case 'departamento':
+                return {
+                  areaVariation: 0.7 + (Math.random() * 0.6), // ±30% para departamentos
+                  recamarasVariation: Math.floor((Math.random() - 0.5) * 2), // ±1 recámara
+                  banosVariation: Math.floor((Math.random() - 0.5) * 1.5), // ±0-1 baño
+                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 8), // ±4 años
+                  terrenoVariation: 0.9 + (Math.random() * 0.2) // ±10% terreno (departamentos tienen menos variación)
+                };
+              case 'comercial':
+                return {
+                  areaVariation: 0.5 + (Math.random() * 1.0), // ±50% para comerciales
+                  recamarasVariation: 0, // Comerciales no tienen recámaras
+                  banosVariation: Math.floor((Math.random() - 0.5) * 2), // ±1 baño
+                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 12), // ±6 años
+                  terrenoVariation: 0.6 + (Math.random() * 0.8) // ±40% terreno
+                };
+              case 'bodega':
+                return {
+                  areaVariation: 0.4 + (Math.random() * 1.2), // ±60% para bodegas
+                  recamarasVariation: 0, // Bodegas no tienen recámaras
+                  banosVariation: Math.floor(Math.random() * 2), // 0-1 baño
+                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 15), // ±7-8 años
+                  terrenoVariation: 0.5 + (Math.random() * 1.0) // ±50% terreno
+                };
+              default:
+                return {
+                  areaVariation: 0.6 + (Math.random() * 0.8),
+                  recamarasVariation: Math.floor((Math.random() - 0.5) * 2),
+                  banosVariation: Math.floor((Math.random() - 0.5) * 2),
+                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 8),
+                  terrenoVariation: 0.8 + (Math.random() * 0.4)
+                };
+            }
+          };
+          
+          const variations = getPropertyVariations(tipoComparable);
+          
+          // Aplicar variaciones
+          const areaComparable = Math.round(areaTotal * variations.areaVariation);
+          const recamarasComparable = Math.max(0, propertyData.recamaras + variations.recamarasVariation);
+          const banosComparable = Math.max(1, propertyData.banos + variations.banosVariation);
+          const antiguedadComparable = Math.max(0, propertyData.antiguedad + variations.antiguedadVariation);
+          const terrenoComparable = Math.round(propertyData.areaTerreno * variations.terrenoVariation);
+          
+          // Generar descripción específica por tipo
+          const getPropertyDescription = (tipo: string, area: number, recamaras: number, banos: number) => {
+            switch (tipo) {
+              case 'casa':
+                return `Casa de ${area}m² con ${recamaras} recámaras y ${banos} baños`;
+              case 'departamento':
+                return `Departamento de ${area}m² con ${recamaras} recámaras y ${banos} baños`;
+              case 'comercial':
+                return `Local comercial de ${area}m² con ${banos} baños`;
+              case 'bodega':
+                return `Bodega de ${area}m² ${banos > 0 ? `con ${banos} baños` : ''}`;
+              default:
+                return `${tipo} de ${area}m²`;
+            }
+          };
           
           return {
             id: `comp-${index + 1}`,
             address: addressInfo.address,
-            areaConstruida: areaFinal,
-            areaTerreno: Math.round(propertyData.areaTerreno * (0.8 + Math.random() * 0.4)), // ±20% para terreno
-            tipoPropiedad: propertyData.tipoPropiedad,
-            recamaras: Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2)),
-            banos: Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2)),
-            antiguedad: Math.max(0, propertyData.antiguedad + Math.floor((Math.random() - 0.5) * 8)),
+            areaConstruida: areaComparable,
+            areaTerreno: terrenoComparable,
+            tipoPropiedad: tipoComparable, // Mantener exactamente el mismo tipo
+            recamaras: recamarasComparable,
+            banos: banosComparable,
+            antiguedad: antiguedadComparable,
             ubicacion: propertyData.ubicacion,
             estadoGeneral: propertyData.estadoGeneral,
             precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
             distancia: addressInfo.distance,
-            descripcion: `${propertyData.tipoPropiedad} de ${areaFinal}m² con ${Math.max(1, propertyData.recamaras + Math.floor((Math.random() - 0.5) * 2))} recámaras y ${Math.max(1, propertyData.banos + Math.floor((Math.random() - 0.5) * 2))} baños. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
+            descripcion: `${getPropertyDescription(tipoComparable, areaComparable, recamarasComparable, banosComparable)}. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
             url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/inmueble/${Math.random().toString(36).substr(2, 9)}`,
             latitud: addressInfo.lat,
             longitud: addressInfo.lng
@@ -2897,7 +2962,12 @@ const PropertyValuation = () => {
         'departamento': 'apartamentos en venta',
         'terreno': 'terrenos en venta',
         'comercial': 'locales comerciales en venta',
-        'bodega': 'bodegas en venta'
+        'bodega': 'bodegas en venta',
+        'oficina': 'oficinas en venta',
+        'local': 'locales en venta',
+        'consultorio': 'consultorios en venta',
+        'restaurant': 'restaurantes en venta',
+        'hotel': 'hoteles en venta'
       };
       
       const query = propertyTypeQueries[propertyType as keyof typeof propertyTypeQueries] || 'propiedades en venta';
