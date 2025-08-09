@@ -3521,11 +3521,14 @@ const PropertyValuation = () => {
       doc.text(letterheadConfigs[propertyData.tipoPropiedad as keyof typeof letterheadConfigs]?.name?.toUpperCase() || propertyData.tipoPropiedad.toUpperCase(), marginLeft + 45, yPosition);
       yPosition += 6;
 
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].totalBuiltArea}:`, marginLeft, yPosition);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
-      yPosition += 6;
+      // Mostrar área construida solo si NO es terreno
+      if (propertyData.tipoPropiedad !== 'terreno') {
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].totalBuiltArea}:`, marginLeft, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
+        yPosition += 6;
+      }
 
       doc.setFont("helvetica", "bold");
       doc.text(`${translations[selectedLanguage].landArea}:`, marginLeft, yPosition);
@@ -3533,11 +3536,14 @@ const PropertyValuation = () => {
       doc.text(`${propertyData.areaTerreno.toLocaleString()} ${translations[selectedLanguage].sqm}`, marginLeft + 40, yPosition);
       yPosition += 6;
 
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].age}:`, marginLeft, yPosition);
-      doc.setFont("helvetica", "normal");
-      doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 50, yPosition);
-       yPosition += 6;
+      // Mostrar antigüedad solo si NO es terreno
+      if (propertyData.tipoPropiedad !== 'terreno') {
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].age}:`, marginLeft, yPosition);
+        doc.setFont("helvetica", "normal");
+        doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 50, yPosition);
+        yPosition += 6;
+      }
 
        // Información específica para terrenos
        if (propertyData.tipoPropiedad === 'terreno') {
@@ -3631,152 +3637,160 @@ const PropertyValuation = () => {
         }
       }
 
-      // SECCIÓN 3: DISTRIBUCIÓN DE ÁREAS
-      checkNewPage(80);
-      doc.setFillColor(245, 245, 245);
-      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
-      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.setFontSize(16);
-      doc.setFont("helvetica", "bold");
-      doc.text(`3. ${translations[selectedLanguage].propertyAreas}`, marginLeft, yPosition + 6);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 18;
-
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      
-      // Áreas por nivel
-      const areas = [
-        { nivel: translations[selectedLanguage].basement, area: propertyData.areaSotano },
-        { nivel: translations[selectedLanguage].firstFloor, area: propertyData.areaPrimerNivel },
-        { nivel: translations[selectedLanguage].secondFloor, area: propertyData.areaSegundoNivel },
-        { nivel: translations[selectedLanguage].thirdFloor, area: propertyData.areaTercerNivel },
-        { nivel: translations[selectedLanguage].fourthFloor, area: propertyData.areaCuartoNivel }
-      ];
-
-      areas.forEach(({ nivel, area }) => {
-        doc.text(`${nivel}:`, marginLeft + 5, yPosition);
-        doc.setFont("helvetica", "normal");
-        doc.text(`${area} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
+      // SECCIÓN 3: DISTRIBUCIÓN DE ÁREAS (solo para propiedades construidas)
+      if (propertyData.tipoPropiedad !== 'terreno') {
+        checkNewPage(80);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        yPosition += 5;
-      });
+        doc.text(`3. ${translations[selectedLanguage].propertyAreas}`, marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
 
-      yPosition += 5;
-      doc.setFillColor(240, 248, 255);
-      doc.rect(marginLeft, yPosition - 3, contentWidth, 8, 'F');
-      doc.setFontSize(12);
-      doc.text(`${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: ${areaTotal} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition + 3);
-      yPosition += 15;
-
-      // Área libre (sin construir) - se calcula restando solo el primer nivel del terreno
-      const areaLibre = propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0);
-      doc.setFontSize(11);
-      doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre.toFixed(2) : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
-      yPosition += 6;
-      
-      const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
-      doc.text(`Coeficiente de Ocupación: ${coeficienteOcupacion}%`, marginLeft + 5, yPosition);
-      yPosition += 15;
-
-      // SECCIÓN 4: ESPACIOS Y CARACTERÍSTICAS
-      checkNewPage(100);
-      doc.setFillColor(245, 245, 245);
-      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
-      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.setFontSize(16);
-      doc.setFont("helvetica", "bold");
-      doc.text(`4. ${translations[selectedLanguage].propertySpaces}`, marginLeft, yPosition + 6);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 18;
-
-      // Espacios habitacionales
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].livingSpaces}:`, marginLeft, yPosition);
-      yPosition += 8;
-
-      const espacios = [
-        { nombre: translations[selectedLanguage].bedrooms, cantidad: propertyData.recamaras },
-        { nombre: translations[selectedLanguage].livingRooms, cantidad: propertyData.salas },
-        { nombre: translations[selectedLanguage].diningRoom, cantidad: propertyData.comedor },
-        { nombre: translations[selectedLanguage].kitchen, cantidad: propertyData.cocina },
-        { nombre: translations[selectedLanguage].bathrooms, cantidad: propertyData.banos },
-        { nombre: translations[selectedLanguage].serviceArea, cantidad: propertyData.areaServicio },
-        { nombre: translations[selectedLanguage].storage, cantidad: propertyData.bodega },
-        { nombre: translations[selectedLanguage].garage, cantidad: propertyData.cochera },
-        { nombre: translations[selectedLanguage].others, cantidad: propertyData.otros }
-      ];
-
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      espacios.forEach(({ nombre, cantidad }) => {
-        doc.text(`• ${nombre}:`, marginLeft + 5, yPosition);
-        doc.setFont("helvetica", "normal");
-        doc.text(`${cantidad}`, marginLeft + 70, yPosition);
+        doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
+        
+        // Áreas por nivel
+        const areas = [
+          { nivel: translations[selectedLanguage].basement, area: propertyData.areaSotano },
+          { nivel: translations[selectedLanguage].firstFloor, area: propertyData.areaPrimerNivel },
+          { nivel: translations[selectedLanguage].secondFloor, area: propertyData.areaSegundoNivel },
+          { nivel: translations[selectedLanguage].thirdFloor, area: propertyData.areaTercerNivel },
+          { nivel: translations[selectedLanguage].fourthFloor, area: propertyData.areaCuartoNivel }
+        ];
+
+        areas.forEach(({ nivel, area }) => {
+          doc.text(`${nivel}:`, marginLeft + 5, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${area} ${translations[selectedLanguage].sqm}`, marginLeft + 50, yPosition);
+          doc.setFont("helvetica", "bold");
+          yPosition += 5;
+        });
+
         yPosition += 5;
-      });
+        doc.setFillColor(240, 248, 255);
+        doc.rect(marginLeft, yPosition - 3, contentWidth, 8, 'F');
+        doc.setFontSize(12);
+        doc.text(`${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: ${areaTotal} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition + 3);
+        yPosition += 15;
 
-      yPosition += 10;
+        // Área libre (sin construir) - se calcula restando solo el primer nivel del terreno
+        const areaLibre = propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0);
+        doc.setFontSize(11);
+        doc.text(`Área Libre (sin construir): ${areaLibre > 0 ? areaLibre.toFixed(2) : 0} ${translations[selectedLanguage].sqm}`, marginLeft + 5, yPosition);
+        yPosition += 6;
+        
+        const coeficienteOcupacion = ((areaTotal / propertyData.areaTerreno) * 100).toFixed(1);
+        doc.text(`Coeficiente de Ocupación: ${coeficienteOcupacion}%`, marginLeft + 5, yPosition);
+        yPosition += 15;
+      }
 
-      // SECCIÓN 5: SERVICIOS DISPONIBLES
-      checkNewPage(80);
-      doc.setFillColor(245, 245, 245);
-      doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
-      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
-      doc.setFontSize(16);
-      doc.setFont("helvetica", "bold");
-      doc.text(`5. ${translations[selectedLanguage].availableServices}`, marginLeft, yPosition + 6);
-      doc.setTextColor(0, 0, 0);
-      yPosition += 18;
+      // SECCIÓN 4: ESPACIOS Y CARACTERÍSTICAS (solo para propiedades construidas)
+      if (propertyData.tipoPropiedad !== 'terreno') {
+        checkNewPage(100);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        const seccionNumero = propertyData.tipoPropiedad === 'terreno' ? '3' : '4';
+        doc.text(`${seccionNumero}. ${translations[selectedLanguage].propertySpaces}`, marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
 
-      // Servicios básicos
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].basicServices}:`, marginLeft, yPosition);
-      yPosition += 8;
+        // Espacios habitacionales
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].livingSpaces}:`, marginLeft, yPosition);
+        yPosition += 8;
 
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "normal");
-      const serviciosBasicos = [
-        { nombre: translations[selectedLanguage].water, disponible: propertyData.servicios.agua },
-        { nombre: translations[selectedLanguage].electricity, disponible: propertyData.servicios.electricidad },
-        { nombre: translations[selectedLanguage].gas, disponible: propertyData.servicios.gas },
-        { nombre: translations[selectedLanguage].drainage, disponible: propertyData.servicios.drenaje }
-      ];
+        const espacios = [
+          { nombre: translations[selectedLanguage].bedrooms, cantidad: propertyData.recamaras },
+          { nombre: translations[selectedLanguage].livingRooms, cantidad: propertyData.salas },
+          { nombre: translations[selectedLanguage].diningRoom, cantidad: propertyData.comedor },
+          { nombre: translations[selectedLanguage].kitchen, cantidad: propertyData.cocina },
+          { nombre: translations[selectedLanguage].bathrooms, cantidad: propertyData.banos },
+          { nombre: translations[selectedLanguage].serviceArea, cantidad: propertyData.areaServicio },
+          { nombre: translations[selectedLanguage].storage, cantidad: propertyData.bodega },
+          { nombre: translations[selectedLanguage].garage, cantidad: propertyData.cochera },
+          { nombre: translations[selectedLanguage].others, cantidad: propertyData.otros }
+        ];
 
-      serviciosBasicos.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
-        doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        espacios.forEach(({ nombre, cantidad }) => {
+          doc.text(`• ${nombre}:`, marginLeft + 5, yPosition);
+          doc.setFont("helvetica", "normal");
+          doc.text(`${cantidad}`, marginLeft + 70, yPosition);
+          doc.setFont("helvetica", "bold");
+          yPosition += 5;
+        });
+
+        yPosition += 10;
+      }
+
+      // SECCIÓN 5: SERVICIOS DISPONIBLES (solo para propiedades construidas)
+      if (propertyData.tipoPropiedad !== 'terreno') {
+        checkNewPage(80);
+        doc.setFillColor(245, 245, 245);
+        doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
+        doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        const seccionNumero = propertyData.tipoPropiedad === 'terreno' ? '3' : '5';
+        doc.text(`${seccionNumero}. ${translations[selectedLanguage].availableServices}`, marginLeft, yPosition + 6);
+        doc.setTextColor(0, 0, 0);
+        yPosition += 18;
+
+        // Servicios básicos
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].basicServices}:`, marginLeft, yPosition);
+        yPosition += 8;
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+        const serviciosBasicos = [
+          { nombre: translations[selectedLanguage].water, disponible: propertyData.servicios.agua },
+          { nombre: translations[selectedLanguage].electricity, disponible: propertyData.servicios.electricidad },
+          { nombre: translations[selectedLanguage].gas, disponible: propertyData.servicios.gas },
+          { nombre: translations[selectedLanguage].drainage, disponible: propertyData.servicios.drenaje }
+        ];
+
+        serviciosBasicos.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
+          doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+        });
+
         yPosition += 5;
-      });
+        doc.setFont("helvetica", "bold");
+        doc.text(`${translations[selectedLanguage].additionalServices}:`, marginLeft, yPosition);
+        yPosition += 8;
 
-      yPosition += 5;
-      doc.setFont("helvetica", "bold");
-      doc.text(`${translations[selectedLanguage].additionalServices}:`, marginLeft, yPosition);
-      yPosition += 8;
+        doc.setFont("helvetica", "normal");
+        const serviciosAdicionales = [
+          { nombre: translations[selectedLanguage].internet, disponible: propertyData.servicios.internet },
+          { nombre: translations[selectedLanguage].cable, disponible: propertyData.servicios.cable },
+          { nombre: translations[selectedLanguage].phone, disponible: propertyData.servicios.telefono },
+          { nombre: translations[selectedLanguage].security, disponible: propertyData.servicios.seguridad },
+          { nombre: translations[selectedLanguage].swimmingPool, disponible: propertyData.servicios.alberca },
+          { nombre: translations[selectedLanguage].garden, disponible: propertyData.servicios.jardin },
+          { nombre: translations[selectedLanguage].elevator, disponible: propertyData.servicios.elevador },
+          { nombre: translations[selectedLanguage].airConditioning, disponible: propertyData.servicios.aireAcondicionado },
+          { nombre: translations[selectedLanguage].heating, disponible: propertyData.servicios.calefaccion },
+          { nombre: translations[selectedLanguage].solarPanels, disponible: propertyData.servicios.panelesSolares },
+          { nombre: translations[selectedLanguage].waterTank, disponible: propertyData.servicios.tinaco }
+        ];
 
-      doc.setFont("helvetica", "normal");
-      const serviciosAdicionales = [
-        { nombre: translations[selectedLanguage].internet, disponible: propertyData.servicios.internet },
-        { nombre: translations[selectedLanguage].cable, disponible: propertyData.servicios.cable },
-        { nombre: translations[selectedLanguage].phone, disponible: propertyData.servicios.telefono },
-        { nombre: translations[selectedLanguage].security, disponible: propertyData.servicios.seguridad },
-        { nombre: translations[selectedLanguage].swimmingPool, disponible: propertyData.servicios.alberca },
-        { nombre: translations[selectedLanguage].garden, disponible: propertyData.servicios.jardin },
-        { nombre: translations[selectedLanguage].elevator, disponible: propertyData.servicios.elevador },
-        { nombre: translations[selectedLanguage].airConditioning, disponible: propertyData.servicios.aireAcondicionado },
-        { nombre: translations[selectedLanguage].heating, disponible: propertyData.servicios.calefaccion },
-        { nombre: translations[selectedLanguage].solarPanels, disponible: propertyData.servicios.panelesSolares },
-        { nombre: translations[selectedLanguage].waterTank, disponible: propertyData.servicios.tinaco }
-      ];
+        serviciosAdicionales.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
+          doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
+          yPosition += 5;
+        });
 
-      serviciosAdicionales.filter(({ disponible }) => disponible).forEach(({ nombre }) => {
-        doc.text(`✓ ${nombre}`, marginLeft + 5, yPosition);
-        yPosition += 5;
-      });
-
-      yPosition += 15;
+        yPosition += 15;
+      }
 
       // SECCIÓN 6: ANÁLISIS DE MERCADO Y COMPARABLES
       if (comparativeProperties.length > 0) {
@@ -3786,7 +3800,8 @@ const PropertyValuation = () => {
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
         doc.setFont("helvetica", "bold");
-        doc.text(`6. ${translations[selectedLanguage].marketAnalysisTitle}`, marginLeft, yPosition + 6);
+        const seccionAnalisis = propertyData.tipoPropiedad === 'terreno' ? '3' : '6';
+        doc.text(`${seccionAnalisis}. ${translations[selectedLanguage].marketAnalysisTitle}`, marginLeft, yPosition + 6);
         doc.setTextColor(0, 0, 0);
         yPosition += 18;
 
@@ -4194,24 +4209,30 @@ const PropertyValuation = () => {
                 new TextRun({ text: letterheadConfigs[propertyData.tipoPropiedad as keyof typeof letterheadConfigs]?.name?.toUpperCase() || propertyData.tipoPropiedad.toUpperCase() })
               ]
             }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea}: `, bold: true }),
-                new TextRun({ text: `${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
+            // Mostrar área construida solo si NO es terreno
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea}: `, bold: true }),
+                  new TextRun({ text: `${areaTotal.toLocaleString()} ${translations[selectedLanguage].sqm}` })
+                ]
+              })
+            ] : []),
             new Paragraph({
               children: [
                 new TextRun({ text: `${translations[selectedLanguage].landArea}: `, bold: true }),
                 new TextRun({ text: `${propertyData.areaTerreno.toLocaleString()} ${translations[selectedLanguage].sqm}` })
               ]
             }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].age}: `, bold: true }),
-                new TextRun({ text: `${propertyData.antiguedad} ${translations[selectedLanguage].years}` })
-              ]
-            }),
+            // Mostrar antigüedad solo si NO es terreno
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].age}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.antiguedad} ${translations[selectedLanguage].years}` })
+                ]
+              })
+            ] : []),
             new Paragraph({
               children: [
                 new TextRun({ text: `${translations[selectedLanguage].locationQuality}: `, bold: true }),
@@ -4304,160 +4325,166 @@ const PropertyValuation = () => {
               new Paragraph({ text: "" }) // Espacio
             ] : []),
 
-            // 3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS
-            new Paragraph({
-              text: `3. ${translations[selectedLanguage].propertyAreas}`,
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].basement}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaSotano} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].firstFloor}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaPrimerNivel} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].secondFloor}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaSegundoNivel} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].thirdFloor}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaTercerNivel} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].fourthFloor}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaCuartoNivel} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: `, bold: true }),
-                new TextRun({ text: `${areaTotal} ${translations[selectedLanguage].sqm}`, bold: true })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Área Libre (sin construir): ", bold: true }),
-                new TextRun({ text: `${propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) > 0 ? (propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0)).toFixed(2) : 0} m²` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Coeficiente de Ocupación: ", bold: true }),
-                new TextRun({ text: `${((areaTotal / propertyData.areaTerreno) * 100).toFixed(1)}%` })
-              ]
-            }),
-            new Paragraph({ text: "" }), // Espacio
+            // 3. DISTRIBUCIÓN DE ÁREAS CONSTRUIDAS (solo para propiedades construidas)
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                text: `3. ${translations[selectedLanguage].propertyAreas}`,
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].basement}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaSotano} ${translations[selectedLanguage].sqm}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].firstFloor}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaPrimerNivel} ${translations[selectedLanguage].sqm}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].secondFloor}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaSegundoNivel} ${translations[selectedLanguage].sqm}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].thirdFloor}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaTercerNivel} ${translations[selectedLanguage].sqm}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].fourthFloor}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaCuartoNivel} ${translations[selectedLanguage].sqm}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].totalBuiltArea.toUpperCase()}: `, bold: true }),
+                  new TextRun({ text: `${areaTotal} ${translations[selectedLanguage].sqm}`, bold: true })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Área Libre (sin construir): ", bold: true }),
+                  new TextRun({ text: `${propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0) > 0 ? (propertyData.areaTerreno - (propertyData.areaPrimerNivel || 0)).toFixed(2) : 0} m²` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: "Coeficiente de Ocupación: ", bold: true }),
+                  new TextRun({ text: `${((areaTotal / propertyData.areaTerreno) * 100).toFixed(1)}%` })
+                ]
+              }),
+              new Paragraph({ text: "" }) // Espacio
+            ] : []),
 
-            // 4. ESPACIOS Y CARACTERÍSTICAS
-            new Paragraph({
-              text: `4. ${translations[selectedLanguage].propertySpaces}`,
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].livingSpaces}:`, bold: true })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].bedrooms}: `, bold: true }),
-                new TextRun({ text: `${propertyData.recamaras}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].livingRooms}: `, bold: true }),
-                new TextRun({ text: `${propertyData.salas}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].diningRoom}: `, bold: true }),
-                new TextRun({ text: `${propertyData.comedor}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].kitchen}: `, bold: true }),
-                new TextRun({ text: `${propertyData.cocina}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].bathrooms}: `, bold: true }),
-                new TextRun({ text: `${propertyData.banos}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].serviceArea}: `, bold: true }),
-                new TextRun({ text: `${propertyData.areaServicio}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].storage}: `, bold: true }),
-                new TextRun({ text: `${propertyData.bodega}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].garage}: `, bold: true }),
-                new TextRun({ text: `${propertyData.cochera}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `• ${translations[selectedLanguage].others}: `, bold: true }),
-                new TextRun({ text: `${propertyData.otros}` })
-              ]
-            }),
-            new Paragraph({ text: "" }), // Espacio
+            // 4. ESPACIOS Y CARACTERÍSTICAS (solo para propiedades construidas)
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                text: `${propertyData.tipoPropiedad === 'terreno' ? '3' : '4'}. ${translations[selectedLanguage].propertySpaces}`,
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].livingSpaces}:`, bold: true })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].bedrooms}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.recamaras}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].livingRooms}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.salas}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].diningRoom}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.comedor}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].kitchen}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.cocina}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].bathrooms}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.banos}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].serviceArea}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.areaServicio}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].storage}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.bodega}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].garage}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.cochera}` })
+                ]
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `• ${translations[selectedLanguage].others}: `, bold: true }),
+                  new TextRun({ text: `${propertyData.otros}` })
+                ]
+              }),
+              new Paragraph({ text: "" }) // Espacio
+            ] : []),
 
-            // 5. SERVICIOS DISPONIBLES
-            new Paragraph({
-              text: `5. ${translations[selectedLanguage].availableServices}`,
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].basicServices}:`, bold: true })
-              ]
-            }),
-            ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].water}` })] })] : []),
-            ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].electricity}` })] })] : []),
-            ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].gas}` })] })] : []),
-            ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].drainage}` })] })] : []),
-            
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].additionalServices}:`, bold: true })
-              ]
-            }),
-            ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].internet}` })] })] : []),
-            ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].cable}` })] })] : []),
-            ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].phone}` })] })] : []),
-            ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].security}` })] })] : []),
-            ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].swimmingPool}` })] })] : []),
-            ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].garden}` })] })] : []),
-            ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].elevator}` })] })] : []),
-            ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].airConditioning}` })] })] : []),
-            ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].heating}` })] })] : []),
-            ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].solarPanels}` })] })] : []),
-            ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].waterTank}` })] })] : []),
+            // 5. SERVICIOS DISPONIBLES (solo para propiedades construidas)
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+              new Paragraph({
+                text: `${propertyData.tipoPropiedad === 'terreno' ? '3' : '5'}. ${translations[selectedLanguage].availableServices}`,
+                heading: HeadingLevel.HEADING_1
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].basicServices}:`, bold: true })
+                ]
+              }),
+              ...(propertyData.servicios.agua ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].water}` })] })] : []),
+              ...(propertyData.servicios.electricidad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].electricity}` })] })] : []),
+              ...(propertyData.servicios.gas ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].gas}` })] })] : []),
+              ...(propertyData.servicios.drenaje ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].drainage}` })] })] : []),
+              
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].additionalServices}:`, bold: true })
+                ]
+              }),
+              ...(propertyData.servicios.internet ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].internet}` })] })] : []),
+              ...(propertyData.servicios.cable ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].cable}` })] })] : []),
+              ...(propertyData.servicios.telefono ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].phone}` })] })] : []),
+              ...(propertyData.servicios.seguridad ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].security}` })] })] : []),
+              ...(propertyData.servicios.alberca ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].swimmingPool}` })] })] : []),
+              ...(propertyData.servicios.jardin ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].garden}` })] })] : []),
+              ...(propertyData.servicios.elevador ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].elevator}` })] })] : []),
+              ...(propertyData.servicios.aireAcondicionado ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].airConditioning}` })] })] : []),
+              ...(propertyData.servicios.calefaccion ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].heating}` })] })] : []),
+              ...(propertyData.servicios.panelesSolares ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].solarPanels}` })] })] : []),
+              ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].waterTank}` })] })] : []),
 
-            new Paragraph({ text: "" }), // Espacio
+              new Paragraph({ text: "" }) // Espacio
+            ] : []),
 
             // 6. ANÁLISIS DE MERCADO (si hay comparables)
             ...(comparativeProperties.length > 0 ? (() => {
