@@ -3575,7 +3575,34 @@ const PropertyValuation = () => {
       doc.text(`${translations[selectedLanguage].age}:`, marginLeft, yPosition);
       doc.setFont("helvetica", "normal");
       doc.text(`${propertyData.antiguedad} ${translations[selectedLanguage].years}`, marginLeft + 50, yPosition);
-      yPosition += 6;
+       yPosition += 6;
+
+       // Información específica para terrenos
+       if (propertyData.tipoPropiedad === 'terreno') {
+         doc.setFont("helvetica", "bold");
+         doc.text(`${translations[selectedLanguage].topography}:`, marginLeft, yPosition);
+         doc.setFont("helvetica", "normal");
+         const topografiaTexto = propertyData.topografia === 'plano' ? 'Plano' :
+                                propertyData.topografia === 'pendiente-suave' ? 'Pendiente Suave' :
+                                propertyData.topografia === 'pendiente-moderada' ? 'Pendiente Moderada' :
+                                propertyData.topografia === 'pendiente-pronunciada' ? 'Pendiente Pronunciada' :
+                                propertyData.topografia === 'irregular' ? 'Irregular' : 
+                                translations[selectedLanguage].notSpecified;
+         doc.text(topografiaTexto, marginLeft + 40, yPosition);
+         yPosition += 6;
+
+         doc.setFont("helvetica", "bold");
+         doc.text(`${translations[selectedLanguage].propertyValuationType}:`, marginLeft, yPosition);
+         doc.setFont("helvetica", "normal");
+         const tipoValoracionTexto = propertyData.tipoValoracion === 'residencial' ? 'Residencial' :
+                                    propertyData.tipoValoracion === 'comercial' ? 'Comercial' :
+                                    propertyData.tipoValoracion === 'industrial' ? 'Industrial' :
+                                    propertyData.tipoValoracion === 'agricola' ? 'Agrícola' :
+                                    propertyData.tipoValoracion === 'recreativo' ? 'Recreativo' :
+                                    translations[selectedLanguage].notSpecified;
+         doc.text(tipoValoracionTexto, marginLeft + 50, yPosition);
+         yPosition += 6;
+       }
 
       // Ubicación y estado
       const ubicacionTexto = propertyData.ubicacion === 'excelente' ? translations[selectedLanguage].excellent :
@@ -4249,8 +4276,39 @@ const PropertyValuation = () => {
                         propertyData.estadoGeneral === 'inservibles' ? translations[selectedLanguage].useless : 'No Especificado'
                 })
               ]
-            }),
-            new Paragraph({ text: "" }), // Espacio
+             }),
+             
+             // Información específica para terrenos
+             ...(propertyData.tipoPropiedad === 'terreno' ? [
+               new Paragraph({
+                 children: [
+                   new TextRun({ text: `${translations[selectedLanguage].topography}: `, bold: true }),
+                   new TextRun({ 
+                     text: propertyData.topografia === 'plano' ? 'Plano' :
+                           propertyData.topografia === 'pendiente-suave' ? 'Pendiente Suave' :
+                           propertyData.topografia === 'pendiente-moderada' ? 'Pendiente Moderada' :
+                           propertyData.topografia === 'pendiente-pronunciada' ? 'Pendiente Pronunciada' :
+                           propertyData.topografia === 'irregular' ? 'Irregular' : 
+                           translations[selectedLanguage].notSpecified
+                   })
+                 ]
+               }),
+               new Paragraph({
+                 children: [
+                   new TextRun({ text: `${translations[selectedLanguage].propertyValuationType}: `, bold: true }),
+                   new TextRun({ 
+                     text: propertyData.tipoValoracion === 'residencial' ? 'Residencial' :
+                           propertyData.tipoValoracion === 'comercial' ? 'Comercial' :
+                           propertyData.tipoValoracion === 'industrial' ? 'Industrial' :
+                           propertyData.tipoValoracion === 'agricola' ? 'Agrícola' :
+                           propertyData.tipoValoracion === 'recreativo' ? 'Recreativo' :
+                           translations[selectedLanguage].notSpecified
+                   })
+                 ]
+               })
+             ] : []),
+             
+             new Paragraph({ text: "" }), // Espacio
 
             // 2. UBICACIÓN DEL INMUEBLE
             ...(propertyData.direccionCompleta ? [
