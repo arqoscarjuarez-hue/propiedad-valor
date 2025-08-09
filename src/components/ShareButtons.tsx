@@ -12,7 +12,9 @@ import {
   Check,
   Youtube,
   Instagram,
-  Music
+  Music,
+  FileText,
+  Download
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -20,16 +22,21 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
 interface ShareButtonsProps {
   title?: string;
   description?: string;
+  onGeneratePDF?: () => void;
+  onGenerateWord?: () => void;
 }
 
 export function ShareButtons({ 
   title = "Sistema profesional de avalúos - Evaluación de propiedades",
-  description = "Sistema de valuación inmobiliaria más avanzado y confiable de América. Obtén avalúos profesionales instantáneos."
+  description = "Sistema de valuación inmobiliaria más avanzado y confiable de América. Obtén avalúos profesionales instantáneos.",
+  onGeneratePDF,
+  onGenerateWord
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -149,6 +156,43 @@ export function ShareButtons({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-sm border shadow-lg">
+        {/* Opciones de descarga de documentos */}
+        {(onGeneratePDF || onGenerateWord) && (
+          <>
+            {onGeneratePDF && (
+              <DropdownMenuItem
+                onClick={() => {
+                  onGeneratePDF();
+                  toast({
+                    title: "Generando PDF",
+                    description: "El avalúo en PDF se descargará automáticamente",
+                  });
+                }}
+                className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              >
+                <FileText className="h-4 w-4 text-red-600" />
+                <span className="font-medium">Descargar PDF</span>
+              </DropdownMenuItem>
+            )}
+            {onGenerateWord && (
+              <DropdownMenuItem
+                onClick={() => {
+                  onGenerateWord();
+                  toast({
+                    title: "Generando Word",
+                    description: "El avalúo en Word se descargará automáticamente",
+                  });
+                }}
+                className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              >
+                <Download className="h-4 w-4 text-blue-600" />
+                <span className="font-medium">Descargar Word</span>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+          </>
+        )}
+        
         {shareLinks.map((social) => (
           <DropdownMenuItem
             key={social.name}
@@ -159,6 +203,7 @@ export function ShareButtons({
             <span className="font-medium">{social.name}</span>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={copyToClipboard}
           className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"

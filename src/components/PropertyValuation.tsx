@@ -5199,6 +5199,8 @@ const PropertyValuation = () => {
                 <ShareButtons 
                   title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
                   description="He obtenido una valuación profesional de mi propiedad. ¡Descubre el valor de la tuya también!"
+                  onGeneratePDF={generatePDF}
+                  onGenerateWord={generateWord}
                 />
               </Card>
             )}
