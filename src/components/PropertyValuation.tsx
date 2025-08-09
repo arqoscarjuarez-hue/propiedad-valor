@@ -380,7 +380,7 @@ const translations = {
       disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'El área de terreno, para apartamentos en niveles superiores al primero, deberá ser igual al área de construcción total',
+      landAreaTooltip: 'Indique el área del terreno únicamente en metros cuadrados (m²). Para departamentos en niveles superiores al primero, el área de terreno deberá ser igual al área de construcción total.',
       observationsPlaceholder: 'Información adicional sobre el inmueble (máximo 500 caracteres)',
       selectServiceError: 'Debe seleccionar un servicio para continuar',
       maxCharactersNote: 'caracteres máximo',
@@ -755,7 +755,7 @@ const translations = {
       disclaimerText: 'This valuation is an estimate based on the provided data. It is recommended to consult with a certified appraiser for official valuations.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'The land area, for apartments on floors above the first, should equal the total construction area',
+      landAreaTooltip: 'Indicate the land area only in square meters (m²). For apartments on floors above the first, the land area should equal the total construction area.',
       observationsPlaceholder: 'Additional information about the property (maximum 500 characters)',
       selectServiceError: 'You must select a service to continue',
       maxCharactersNote: 'maximum characters',
@@ -1130,7 +1130,7 @@ const translations = {
       disclaimerText: 'Cette évaluation est une estimation basée sur les données fournies. Il est recommandé de consulter un évaluateur certifié pour les évaluations officielles.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'La superficie du terrain, pour les appartements aux étages supérieurs au premier, doit être égale à la superficie totale de construction',
+      landAreaTooltip: 'Indiquez la superficie du terrain uniquement en mètres carrés (m²). Pour les appartements aux étages supérieurs au premier, la surface du terrain doit être égale à la surface totale de construction.',
       observationsPlaceholder: 'Informations supplémentaires sur la propriété (maximum 500 caractères)',
       selectServiceError: 'Vous devez sélectionner un service pour continuer',
       maxCharactersNote: 'caractères maximum',
@@ -1507,7 +1507,7 @@ const translations = {
       disclaimerText: 'Diese Bewertung ist eine Schätzung basierend auf den bereitgestellten Daten. Es wird empfohlen, einen zertifizierten Gutachter für offizielle Bewertungen zu konsultieren.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'Die Grundstücksfläche sollte bei Wohnungen in Stockwerken über dem ersten der gesamten Baufläche entsprechen',
+      landAreaTooltip: 'Geben Sie die Grundstücksfläche nur in Quadratmetern (m²) an. Bei Wohnungen in Stockwerken über dem ersten sollte die Grundstücksfläche der gesamten Baufläche entsprechen.',
       observationsPlaceholder: 'Zusätzliche Informationen zur Immobilie (maximal 500 Zeichen)',
       selectServiceError: 'Sie müssen einen Service auswählen, um fortzufahren',
       maxCharactersNote: 'maximale Zeichen',
@@ -1880,7 +1880,7 @@ const translations = {
       disclaimerText: 'Questa valutazione è una stima basata sui dati forniti. Si raccomanda di consultare un perito certificato per valutazioni ufficiali.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'L\'area del terreno, per appartamenti ai piani superiori al primo, deve essere uguale all\'area totale di costruzione',
+      landAreaTooltip: 'Indicare l\'area del terreno solo in metri quadrati (m²). Per appartamenti ai piani superiori al primo, l\'area del terreno deve essere uguale all\'area totale di costruzione.',
       observationsPlaceholder: 'Informazioni aggiuntive sulla proprietà (massimo 500 caratteri)',
       selectServiceError: 'Devi selezionare un servizio per continuare',
       maxCharactersNote: 'caratteri massimi',
@@ -2256,7 +2256,7 @@ const translations = {
       disclaimerText: 'Esta avaliação é uma estimativa baseada nos dados fornecidos. Recomenda-se consultar um avaliador certificado para avaliações oficiais.',
       
       // Tooltips y explicaciones
-      landAreaTooltip: 'A área do terreno, para apartamentos em andares acima do primeiro, deve ser igual à área total de construção',
+      landAreaTooltip: 'Indique a área do terreno apenas em metros quadrados (m²). Para apartamentos em andares acima do primeiro, a área do terreno deve ser igual à área total de construção.',
       observationsPlaceholder: 'Informações adicionais sobre a propriedade (máximo 500 caracteres)',
       selectServiceError: 'Você deve selecionar um serviço para continuar',
       maxCharactersNote: 'caracteres máximo',
