@@ -27,13 +27,17 @@ interface ShareButtonsProps {
   description?: string;
   onGeneratePDF?: () => void;
   onGenerateWord?: () => void;
+  onGeneratePDFBlob?: () => Promise<Blob | null>;
+  onGenerateWordBlob?: () => Promise<Blob | null>;
 }
 
 export function ShareButtons({ 
   title = "Sistema profesional de avalúos - Evaluación de propiedades",
   description = "Sistema de valuación inmobiliaria más avanzado y confiable de América. Obtén avalúos profesionales instantáneos.",
   onGeneratePDF,
-  onGenerateWord
+  onGenerateWord,
+  onGeneratePDFBlob,
+  onGenerateWordBlob
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
@@ -59,7 +63,124 @@ export function ShareButtons({
     }
   };
 
-  // Función principal para compartir con documentos
+  // Función para compartir directamente con Web Share API
+  const shareDirectWithFiles = async (platform: string) => {
+    if (!onGeneratePDFBlob || !onGenerateWordBlob) {
+      // Fallback a la función anterior
+      shareWithDocuments(platform, getShareUrl(platform));
+      return;
+    }
+
+    setIsSharing(true);
+
+    try {
+      toast({
+        title: `Preparando archivos para ${platform}`,
+        description: "Generando documentos como archivos...",
+      });
+
+      // Generar los documentos como Blobs
+      console.log('Generando PDF como Blob...');
+      const pdfBlob = await onGeneratePDFBlob();
+      
+      console.log('Generando Word como Blob...');
+      const wordBlob = await onGenerateWordBlob();
+
+      const files: File[] = [];
+      
+      if (pdfBlob) {
+        files.push(new File([pdfBlob], `avaluo-${Date.now()}.pdf`, { type: 'application/pdf' }));
+      }
+      
+      if (wordBlob) {
+        files.push(new File([wordBlob], `avaluo-${Date.now()}.docx`, { 
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        }));
+      }
+
+      // Verificar si Web Share API está disponible y soporta archivos
+      if (navigator.share && files.length > 0) {
+        // Verificar si se pueden compartir archivos
+        const canShareFiles = navigator.canShare && navigator.canShare({ files });
+        
+        if (canShareFiles) {
+          // Compartir directamente con archivos
+          await navigator.share({
+            title: title,
+            text: `${description}\n\n📄 Documentos del avalúo profesional adjuntos`,
+            files: files
+          });
+
+          toast({
+            title: "¡Archivos compartidos!",
+            description: "Los documentos se han enviado directamente",
+          });
+          return;
+        }
+      }
+
+      // Fallback: Crear URLs de descarga y compartir enlaces
+      const pdfUrl = pdfBlob ? URL.createObjectURL(pdfBlob) : null;
+      const wordUrl = wordBlob ? URL.createObjectURL(wordBlob) : null;
+
+      if (pdfUrl) {
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `avaluo-${Date.now()}.pdf`;
+        link.click();
+        URL.revokeObjectURL(pdfUrl);
+      }
+
+      if (wordUrl) {
+        const link = document.createElement('a');
+        link.href = wordUrl;
+        link.download = `avaluo-${Date.now()}.docx`;
+        link.click();
+        URL.revokeObjectURL(wordUrl);
+      }
+
+      // Abrir la plataforma con el mensaje
+      window.open(getShareUrl(platform), '_blank', 'noopener,noreferrer');
+
+      toast({
+        title: `${platform} abierto`,
+        description: "Los documentos se han descargado. Adjúntalos en la aplicación.",
+        duration: 5000,
+      });
+
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        console.error('Error en shareDirectWithFiles:', error);
+        toast({
+          title: "Error",
+          description: `No se pudieron compartir los archivos directamente. Usa la descarga manual.`,
+          variant: "destructive"
+        });
+      }
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  // Función auxiliar para obtener URLs de compartir
+  const getShareUrl = (platform: string): string => {
+    const encodedMessage = encodeURIComponent(shareMessage);
+    const encodedTitle = encodeURIComponent(title);
+    const encodedUrl = encodeURIComponent(currentUrl);
+
+    switch (platform) {
+      case 'WhatsApp':
+        return `https://wa.me/?text=${encodedMessage}`;
+      case 'Telegram':
+        return `https://t.me/share/url?url=${encodedUrl}&text=${encodedMessage}`;
+      case 'Email':
+        return `mailto:?subject=${encodedTitle}&body=${encodedMessage}`;
+      default:
+        return currentUrl;
+    }
+  };
+
+  // Función principal para compartir con documentos (fallback)
   const shareWithDocuments = async (platform: string, shareUrl: string) => {
     if (!onGeneratePDF || !onGenerateWord) {
       toast({
@@ -73,30 +194,21 @@ export function ShareButtons({
     setIsSharing(true);
 
     try {
-      // Mostrar mensaje de preparación
       toast({
         title: `Preparando para ${platform}`,
         description: "Generando documentos del avalúo...",
       });
 
-      // Generar PDF
       console.log('Iniciando generación de PDF...');
       onGeneratePDF();
-
-      // Esperar un momento
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Generar Word
       console.log('Iniciando generación de Word...');
       onGenerateWord();
-
-      // Esperar otro momento
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Abrir la plataforma
       window.open(shareUrl, '_blank', 'noopener,noreferrer');
 
-      // Mostrar instrucciones
       toast({
         title: `${platform} abierto`,
         description: "Los documentos se han descargado. Adjúntalos en la aplicación.",
@@ -141,6 +253,29 @@ export function ShareButtons({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
         
+        {/* Sección: Compartir DIRECTO con archivos (Web Share API) */}
+        {navigator.share && onGeneratePDFBlob && onGenerateWordBlob && (
+          <>
+            <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-green-100 dark:bg-green-900">
+              🚀 ENVÍO DIRECTO
+            </div>
+            
+            <DropdownMenuItem
+              onClick={() => shareDirectWithFiles('Compartir')}
+              disabled={isSharing}
+              className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors bg-green-50 dark:bg-green-900/20"
+            >
+              <Share2 className="h-4 w-4 text-green-600" />
+              <div className="flex flex-col">
+                <span className="font-medium">Enviar archivos directamente</span>
+                <span className="text-xs text-muted-foreground">PDF + Word a cualquier app</span>
+              </div>
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+          </>
+        )}
+
         {/* Sección: Compartir con documentos */}
         <div className="px-3 py-2 text-xs font-semibold text-muted-foreground bg-muted/30">
           📄 COMPARTIR CON DOCUMENTOS
