@@ -5208,12 +5208,15 @@ const PropertyValuation = () => {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-4 w-4 p-0">
-                                  <Info className="h-3 w-3" />
+                                <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
+                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                                 </Button>
                               </TooltipTrigger>
-                               <TooltipContent>
-                                 <p className="max-w-xs text-sm">
+                               <TooltipContent 
+                                 side="top" 
+                                 className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
+                               >
+                                 <p className="text-sm leading-relaxed text-foreground">
                                    {translations[selectedLanguage].landAreaTooltip}
                                  </p>
                                </TooltipContent>
