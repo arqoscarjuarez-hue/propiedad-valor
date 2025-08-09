@@ -39,6 +39,7 @@ export function ShareButtons({
   onGenerateWord
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
   
   const currentUrl = window.location.href;
@@ -46,71 +47,9 @@ export function ShareButtons({
   const encodedTitle = encodeURIComponent(title);
   const encodedDescription = encodeURIComponent(description);
 
-  const shareLinks = [
-    {
-      name: 'WhatsApp',
-      icon: MessageCircle,
-      url: `https://wa.me/?text=${encodedTitle}%20-%20${encodedDescription}%20${encodedUrl}`,
-      color: 'text-green-600 hover:text-green-700'
-    },
-    {
-      name: 'Instagram',
-      icon: Instagram,
-      url: `https://www.instagram.com/`,
-      color: 'text-pink-600 hover:text-pink-700',
-      action: 'copy'
-    },
-    {
-      name: 'TikTok',
-      icon: Music,
-      url: `https://www.tiktok.com/`,
-      color: 'text-black hover:text-gray-800',
-      action: 'copy'
-    },
-    {
-      name: 'Facebook',
-      icon: Facebook,
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      color: 'text-blue-600 hover:text-blue-700'
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-      color: 'text-gray-800 hover:text-gray-900'
-    },
-    {
-      name: 'Telegram',
-      icon: Send,
-      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
-      color: 'text-blue-500 hover:text-blue-600'
-    },
-    {
-      name: 'YouTube',
-      icon: Youtube,
-      url: `https://www.youtube.com/`,
-      color: 'text-red-600 hover:text-red-700',
-      action: 'copy'
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-      color: 'text-blue-700 hover:text-blue-800'
-    },
-    {
-      name: 'Gmail',
-      icon: Mail,
-      url: `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodedTitle}&body=${encodedDescription}%20${encodedUrl}`,
-      color: 'text-red-500 hover:text-red-600'
-    },
-    {
-      name: 'Email',
-      icon: Mail,
-      url: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%20${encodedUrl}`,
-      color: 'text-gray-600 hover:text-gray-700'
-    }
-  ];
+  // Mensaje para compartir con documentos
+  const shareMessage = `${title}\n\n${description}\n\n📄 He adjuntado los documentos del avalúo profesional (PDF y Word)\n\n🔗 Obtén tu propio avalúo en: ${currentUrl}`;
+  const encodedShareMessage = encodeURIComponent(shareMessage);
 
   const copyToClipboard = async () => {
     try {
@@ -130,47 +69,178 @@ export function ShareButtons({
     }
   };
 
-  const handleShare = (social: any) => {
-    if (social.action === 'copy') {
-      copyToClipboard();
-      setTimeout(() => {
-        window.open(social.url, '_blank', 'noopener,noreferrer');
-      }, 500);
-    } else {
-      window.open(social.url, '_blank', 'noopener,noreferrer');
+  // Función para generar ambos documentos y luego compartir
+  const generateDocumentsAndShare = async (shareAction: () => void) => {
+    if (!onGeneratePDF || !onGenerateWord) {
+      toast({
+        title: "Error",
+        description: "No se pueden generar los documentos en este momento",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    
+    try {
+      // Generar PDF
+      toast({
+        title: "Generando documentos...",
+        description: "Preparando PDF y Word para compartir",
+      });
+      
+      onGeneratePDF();
+      
+      // Esperar un poco para que se genere el PDF
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Generar Word
+      onGenerateWord();
+      
+      // Esperar un poco para que se genere el Word
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "¡Documentos generados!",
+        description: "Ahora puedes adjuntarlos en la aplicación que se abrirá",
+      });
+      
+      // Ejecutar la acción de compartir
+      shareAction();
+      
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudieron generar los documentos",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const handleGeneratePDF = () => {
-    console.log('PDF clicked - onGeneratePDF available:', !!onGeneratePDF);
-    if (onGeneratePDF) {
+  const shareLinks = [
+    {
+      name: 'WhatsApp',
+      icon: MessageCircle,
+      url: `https://wa.me/?text=${encodedShareMessage}`,
+      color: 'text-green-600 hover:text-green-700',
+      withDocuments: true
+    },
+    {
+      name: 'Telegram',
+      icon: Send,
+      url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedShareMessage}`,
+      color: 'text-blue-500 hover:text-blue-600',
+      withDocuments: true
+    },
+    {
+      name: 'Email',
+      icon: Mail,
+      url: `mailto:?subject=${encodedTitle}&body=${encodedShareMessage}`,
+      color: 'text-gray-600 hover:text-gray-700',
+      withDocuments: true
+    },
+    {
+      name: 'Gmail',
+      icon: Mail,
+      url: `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodedTitle}&body=${encodedShareMessage}`,
+      color: 'text-red-500 hover:text-red-600',
+      withDocuments: true
+    },
+    {
+      name: 'Instagram',
+      icon: Instagram,
+      url: `https://www.instagram.com/`,
+      color: 'text-pink-600 hover:text-pink-700',
+      action: 'copy',
+      withDocuments: false
+    },
+    {
+      name: 'TikTok',
+      icon: Music,
+      url: `https://www.tiktok.com/`,
+      color: 'text-black hover:text-gray-800',
+      action: 'copy',
+      withDocuments: false
+    },
+    {
+      name: 'Facebook',
+      icon: Facebook,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      color: 'text-blue-600 hover:text-blue-700',
+      withDocuments: false
+    },
+    {
+      name: 'Twitter',
+      icon: Twitter,
+      url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+      color: 'text-gray-800 hover:text-gray-900',
+      withDocuments: false
+    },
+    {
+      name: 'LinkedIn',
+      icon: Linkedin,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      color: 'text-blue-700 hover:text-blue-800',
+      withDocuments: false
+    },
+    {
+      name: 'YouTube',
+      icon: Youtube,
+      url: `https://www.youtube.com/`,
+      color: 'text-red-600 hover:text-red-700',
+      action: 'copy',
+      withDocuments: false
+    }
+  ];
+
+  const handleShare = (social: any) => {
+    if (social.withDocuments) {
+      // Para redes que soportan documentos, generar primero los archivos
+      generateDocumentsAndShare(() => {
+        if (social.action === 'copy') {
+          copyToClipboard();
+          setTimeout(() => {
+            window.open(social.url, '_blank', 'noopener,noreferrer');
+          }, 500);
+        } else {
+          window.open(social.url, '_blank', 'noopener,noreferrer');
+        }
+        
+        // Mostrar instrucciones específicas
+        setTimeout(() => {
+          toast({
+            title: `Compartir en ${social.name}`,
+            description: "Los documentos se han descargado. Adjúntalos en la aplicación que se abrió.",
+          });
+        }, 1500);
+      });
+    } else {
+      // Para redes que no soportan documentos, compartir solo el enlace
+      if (social.action === 'copy') {
+        copyToClipboard();
+        setTimeout(() => {
+          window.open(social.url, '_blank', 'noopener,noreferrer');
+        }, 500);
+      } else {
+        window.open(social.url, '_blank', 'noopener,noreferrer');
+      }
+    }
+  };
+
+  const handleDirectDownload = (type: 'pdf' | 'word') => {
+    if (type === 'pdf' && onGeneratePDF) {
       onGeneratePDF();
       toast({
         title: "Generando PDF",
         description: "El avalúo en PDF se descargará automáticamente",
       });
-    } else {
-      toast({
-        title: "Error",
-        description: "No se puede generar el PDF en este momento",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleGenerateWord = () => {
-    console.log('Word clicked - onGenerateWord available:', !!onGenerateWord);
-    if (onGenerateWord) {
+    } else if (type === 'word' && onGenerateWord) {
       onGenerateWord();
       toast({
         title: "Generando Word",
         description: "El avalúo en Word se descargará automáticamente",
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "No se puede generar el documento Word en este momento",
-        variant: "destructive"
       });
     }
   };
@@ -181,19 +251,23 @@ export function ShareButtons({
         <Button 
           variant="outline" 
           size="lg"
+          disabled={isGenerating}
           className="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 border-primary/30 hover:border-primary/50 shadow-md hover:shadow-lg transition-all duration-200"
         >
           <Share2 className="h-5 w-5" />
-          Compartir
+          {isGenerating ? "Generando..." : "Compartir"}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52 bg-background/95 backdrop-blur-sm border shadow-lg">
-        {/* Opciones de descarga de documentos */}
+      <DropdownMenuContent align="end" className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
+        {/* Opciones de descarga directa */}
         {(onGeneratePDF || onGenerateWord) && (
           <>
+            <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+              DESCARGAR DOCUMENTOS
+            </div>
             {onGeneratePDF && (
               <DropdownMenuItem
-                onClick={handleGeneratePDF}
+                onClick={() => handleDirectDownload('pdf')}
                 className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
               >
                 <FileText className="h-4 w-4 text-red-600" />
@@ -202,7 +276,7 @@ export function ShareButtons({
             )}
             {onGenerateWord && (
               <DropdownMenuItem
-                onClick={handleGenerateWord}
+                onClick={() => handleDirectDownload('word')}
                 className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
               >
                 <Download className="h-4 w-4 text-blue-600" />
@@ -212,8 +286,33 @@ export function ShareButtons({
             <DropdownMenuSeparator />
           </>
         )}
+
+        {/* Redes que soportan documentos */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+          COMPARTIR CON DOCUMENTOS
+        </div>
+        {shareLinks.filter(social => social.withDocuments).map((social) => (
+          <DropdownMenuItem
+            key={social.name}
+            onClick={() => handleShare(social)}
+            disabled={isGenerating}
+            className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+          >
+            <social.icon className={`h-4 w-4 ${social.color}`} />
+            <div className="flex flex-col">
+              <span className="font-medium">{social.name}</span>
+              <span className="text-xs text-muted-foreground">Con archivos adjuntos</span>
+            </div>
+          </DropdownMenuItem>
+        ))}
         
-        {shareLinks.map((social) => (
+        <DropdownMenuSeparator />
+        
+        {/* Redes que solo soportan enlaces */}
+        <div className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+          COMPARTIR ENLACE
+        </div>
+        {shareLinks.filter(social => !social.withDocuments).map((social) => (
           <DropdownMenuItem
             key={social.name}
             onClick={() => handleShare(social)}
@@ -223,6 +322,7 @@ export function ShareButtons({
             <span className="font-medium">{social.name}</span>
           </DropdownMenuItem>
         ))}
+        
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={copyToClipboard}
