@@ -3619,7 +3619,7 @@ const PropertyValuation = () => {
         // Servicios seleccionados
         if (propertyData.servicios) {
           const serviciosActivos = Object.entries(propertyData.servicios)
-            .filter(([_, value]) => value)
+            .filter(([_, value]) => value === true)
             .map(([key, _]) => {
               switch(key) {
                 case 'agua': return translations[selectedLanguage].water;
@@ -4358,7 +4358,7 @@ const PropertyValuation = () => {
                     new TextRun({ text: `${translations[selectedLanguage].availableServices}: `, bold: true }),
                     new TextRun({ 
                       text: Object.entries(propertyData.servicios)
-                        .filter(([_, value]) => value)
+                        .filter(([_, value]) => value === true)
                         .map(([key, _]) => {
                           switch(key) {
                             case 'agua': return translations[selectedLanguage].water;
