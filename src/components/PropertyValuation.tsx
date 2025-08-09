@@ -5114,15 +5114,7 @@ const PropertyValuation = () => {
                               onValueChange={(value) => handleInputChange('topografia', value)}
                             >
                                <SelectTrigger className="bg-background">
-                                 <SelectValue placeholder={translations[selectedLanguage].selectTopography}>
-                                   {propertyData.topografia && translations[selectedLanguage][
-                                     propertyData.topografia === 'plano' ? 'flat' :
-                                     propertyData.topografia === 'pendiente-suave' ? 'gentleSlope' :
-                                     propertyData.topografia === 'pendiente-moderada' ? 'moderateSlope' :
-                                     propertyData.topografia === 'pendiente-pronunciada' ? 'steepSlope' :
-                                     propertyData.topografia === 'irregular' ? 'irregular' : 'selectTopography'
-                                   ]}
-                                 </SelectValue>
+                                 <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
                                </SelectTrigger>
                               <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
@@ -5143,15 +5135,7 @@ const PropertyValuation = () => {
                               onValueChange={(value) => handleInputChange('tipoValoracion', value)}
                             >
                               <SelectTrigger className="bg-background">
-                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType}>
-                                  {propertyData.tipoValoracion && translations[selectedLanguage][
-                                    propertyData.tipoValoracion === 'residencial' ? 'residentialUse' :
-                                    propertyData.tipoValoracion === 'comercial' ? 'commercialUse' :
-                                    propertyData.tipoValoracion === 'industrial' ? 'industrialUse' :
-                                    propertyData.tipoValoracion === 'agricola' ? 'agriculturalUse' :
-                                    propertyData.tipoValoracion === 'recreativo' ? 'recreationalUse' : 'selectValuationType'
-                                  ]}
-                                </SelectValue>
+                                <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
                               </SelectTrigger>
                               <SelectContent className="bg-background border border-border shadow-lg z-50">
                                <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
