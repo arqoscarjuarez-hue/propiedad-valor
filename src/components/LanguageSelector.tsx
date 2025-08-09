@@ -24,34 +24,32 @@ export function LanguageSelector() {
   const currentLanguage = languages.find(lang => lang.code === selectedLanguage);
 
   return (
-    <div className="fixed top-4 right-4 z-[9999]">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border shadow-lg backdrop-blur-sm"
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border"
+        >
+          <Globe className="h-4 w-4" />
+          <span className="hidden sm:inline">{currentLanguage?.flag}</span>
+          <span className="hidden md:inline">{currentLanguage?.name}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[9999]">
+        {languages.map((language) => (
+          <DropdownMenuItem
+            key={language.code}
+            onClick={() => setSelectedLanguage(language.code)}
+            className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors ${
+              selectedLanguage === language.code ? 'bg-muted' : ''
+            }`}
           >
-            <Globe className="h-4 w-4" />
-            <span className="hidden sm:inline">{currentLanguage?.flag}</span>
-            <span className="hidden md:inline">{currentLanguage?.name}</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[9999]">
-          {languages.map((language) => (
-            <DropdownMenuItem
-              key={language.code}
-              onClick={() => setSelectedLanguage(language.code)}
-              className={`flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/50 transition-colors ${
-                selectedLanguage === language.code ? 'bg-muted' : ''
-              }`}
-            >
-              <span className="text-lg">{language.flag}</span>
-              <span className="font-medium">{language.name}</span>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+            <span className="text-lg">{language.flag}</span>
+            <span className="font-medium">{language.name}</span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
