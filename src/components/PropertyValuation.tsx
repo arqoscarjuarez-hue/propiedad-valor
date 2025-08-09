@@ -4689,12 +4689,13 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
-                   <TabsTrigger 
-                     value="espacios" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].spaces}
-                   </TabsTrigger>
+                    <TabsTrigger 
+                      value="espacios" 
+                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      style={{ display: propertyData.tipoPropiedad === 'terreno' ? 'none' : 'flex' }}
+                    >
+                      {translations[selectedLanguage].spaces}
+                    </TabsTrigger>
                    <TabsTrigger 
                      value="caracteristicas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
