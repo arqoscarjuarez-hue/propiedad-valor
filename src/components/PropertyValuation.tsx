@@ -3254,6 +3254,9 @@ const PropertyValuation = () => {
       // Limpiar múltiples valuaciones ya que ahora solo hacemos una
       setMultipleValuations([]);
       
+      // Cambiar automáticamente a la pestaña de resultados después del cálculo exitoso
+      setActiveTab('ajustes');
+      
       // El valorAjustado ya se estableció en el try o catch
       const valorFinalParaToast = valuation || valorFinalEnMonedaSeleccionada;
       // toast({
