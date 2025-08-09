@@ -2546,7 +2546,7 @@ const PropertyValuation = () => {
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     try {
       // Campos que deben mantenerse como string
-      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso'];
+      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion'];
       
       let sanitizedValue = value;
       
