@@ -5204,7 +5204,12 @@ const PropertyValuation = () => {
                       )}
                       <div className={propertyData.tipoPropiedad === 'terreno' ? 'max-w-md' : ''}>
                         <div className="flex items-center gap-2 mb-2">
-                          <Label htmlFor="areaTerreno">{translations[selectedLanguage].landArea}</Label>
+                          <Label htmlFor="areaTerreno">
+                            {translations[selectedLanguage].landArea}
+                            {propertyData.tipoPropiedad === 'terreno' && (
+                              <span className="text-xs text-muted-foreground ml-1">(m²)</span>
+                            )}
+                          </Label>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -5217,7 +5222,10 @@ const PropertyValuation = () => {
                                  className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
                                >
                                  <p className="text-sm leading-relaxed text-foreground">
-                                   {translations[selectedLanguage].landAreaTooltip}
+                                   {propertyData.tipoPropiedad === 'terreno' ? 
+                                     'Indique el área del terreno únicamente en metros cuadrados (m²). Este es el estándar internacional para valuación de terrenos.' :
+                                     translations[selectedLanguage].landAreaTooltip
+                                   }
                                  </p>
                                </TooltipContent>
                             </Tooltip>
