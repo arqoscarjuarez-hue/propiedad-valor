@@ -5653,12 +5653,6 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].location}
                    </TabsTrigger>
-                   <TabsTrigger 
-                     value="tipo" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].propertyType}
-                   </TabsTrigger>
                     <TabsTrigger 
                       value="areas" 
                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5845,21 +5839,6 @@ const PropertyValuation = () => {
                      </div>
                    </TabsContent>
 
-                 <TabsContent value="tipo" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyTypeTitle}</h3>
-                   <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                     <SelectTrigger>
-                       <SelectValue placeholder={translations[selectedLanguage].selectPropertyType} />
-                     </SelectTrigger>
-                     <SelectContent>
-                       <SelectItem value="casa">{translations[selectedLanguage].house}</SelectItem>
-                       <SelectItem value="departamento">{translations[selectedLanguage].apartment}</SelectItem>
-                       <SelectItem value="terreno">{translations[selectedLanguage].land}</SelectItem>
-                       <SelectItem value="comercial">{translations[selectedLanguage].commercial}</SelectItem>
-                       <SelectItem value="bodega">{translations[selectedLanguage].warehouse}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TabsContent>
 
                  <TabsContent value="espacios" className="space-y-4 mt-6 px-1">
                     <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].spacesDistribution}</h3>
