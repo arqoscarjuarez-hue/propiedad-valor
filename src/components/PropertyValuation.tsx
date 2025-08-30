@@ -355,16 +355,31 @@ const PropertyValuation = () => {
   // Función para calcular el área efectiva para avalúo
   const getEffectiveArea = () => {
     if (propertyData.tipoPropiedad === 'apartamento') {
-      // Para apartamentos, el área se duplica para el avalúo
+      // Para apartamentos, solo se necesita el área del apartamento (se duplica para el avalúo)
       return (propertyData.areaApartamento || 0) * 2;
+    } else if (propertyData.tipoPropiedad === 'terreno') {
+      // Para terrenos, solo se necesita el área del terreno
+      return propertyData.areaTerreno || 0;
     }
     
-    // Para otras propiedades, usar la suma de áreas normales
+    // Para casas y comerciales, usar la suma de áreas de construcción
     return (propertyData.areaSotano || 0) + 
            (propertyData.areaPrimerNivel || 0) + 
            (propertyData.areaSegundoNivel || 0) + 
            (propertyData.areaTercerNivel || 0) + 
            (propertyData.areaCuartoNivel || 0);
+  };
+
+  // Función para validar si hay área suficiente según el tipo de propiedad
+  const hasValidArea = () => {
+    if (propertyData.tipoPropiedad === 'apartamento') {
+      return propertyData.areaApartamento > 0;
+    } else if (propertyData.tipoPropiedad === 'terreno') {
+      return propertyData.areaTerreno > 0;
+    } else {
+      // Para casas y comerciales, verificar áreas de construcción
+      return getEffectiveArea() > 0;
+    }
   };
 
   // Función actualizada para usar la función de BD con búsqueda progresiva
@@ -442,10 +457,16 @@ const PropertyValuation = () => {
       
       const effectiveArea = getEffectiveArea();
       
-      if (effectiveArea === 0) {
+      if (!hasValidArea()) {
+        const areaMessage = propertyData.tipoPropiedad === 'apartamento' 
+          ? "Debe ingresar el área del apartamento para realizar la valuación"
+          : propertyData.tipoPropiedad === 'terreno'
+          ? "Debe ingresar el área del terreno para realizar la valuación"  
+          : "Debe ingresar el área de construcción para realizar la valuación";
+          
         toast({
           title: "Error en la valuación",
-          description: "Debe ingresar el área de la propiedad para realizar la valuación",
+          description: areaMessage,
           variant: "destructive"
         });
         setIsCalculating(false);
@@ -580,7 +601,10 @@ const PropertyValuation = () => {
                                   Ingrese el área total del apartamento en metros cuadrados
                                 </p>
                                 <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">
-                                  ℹ️ Para el avalúo se duplica automáticamente: {propertyData.areaApartamento ? `${propertyData.areaApartamento} × 2 = ${getEffectiveArea()} m²` : '0 × 2 = 0 m²'}
+                                  ℹ️ Para apartamentos solo se requiere esta área. Se duplica automáticamente para avalúo: {propertyData.areaApartamento ? `${propertyData.areaApartamento} × 2 = ${getEffectiveArea()} m²` : '0 × 2 = 0 m²'}
+                                </p>
+                                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                  ✓ No se requiere área de terreno para apartamentos
                                 </p>
                               </div>
                             </div>
