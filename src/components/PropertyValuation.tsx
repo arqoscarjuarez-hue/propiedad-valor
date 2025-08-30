@@ -5816,8 +5816,8 @@ const PropertyValuation = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Área de construcción - para todas las propiedades excepto terrenos */}
-                          {propertyData.tipoPropiedad !== 'terreno' && (
+                          {/* Área de construcción - solo para casas y comerciales (no apartamentos ni terrenos) */}
+                          {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'apartamento' && (
                             <div>
                               <Label htmlFor="areaConstruccion">
                                 Área de Construcción Casa (m²)
@@ -5840,43 +5840,45 @@ const PropertyValuation = () => {
                             </div>
                           )}
                           
-                          {/* Área de terreno */}
-                          <div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
-                                      <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent 
-                                    side="top" 
-                                    className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
-                                  >
-                                    <p className="text-sm leading-relaxed text-foreground">
-                                      {propertyData.tipoPropiedad === 'terreno' ? 
-                                        'Indique el área del terreno únicamente en metros cuadrados (m²).' :
-                                        'Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).'
-                                      }
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                          {/* Área de terreno - solo para casas y comerciales (no apartamentos) */}
+                          {propertyData.tipoPropiedad !== 'apartamento' && (
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
+                                        <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent 
+                                      side="top" 
+                                      className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
+                                    >
+                                      <p className="text-sm leading-relaxed text-foreground">
+                                        {propertyData.tipoPropiedad === 'terreno' ? 
+                                          'Indique el área del terreno únicamente en metros cuadrados (m²).' :
+                                          'Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).'
+                                        }
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                              <Input
+                                id="areaTerreno"
+                                type="number"
+                                value={propertyData.areaTerreno || ''}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                                }}
+                                placeholder="Ej: 200"
+                                className="mt-1"
+                              />
                             </div>
-                            <Input
-                              id="areaTerreno"
-                              type="number"
-                              value={propertyData.areaTerreno || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
-                              }}
-                              placeholder="Ej: 200"
-                              className="mt-1"
-                            />
-                          </div>
+                          )}
 
                           {/* Área de Apartamento */}
                           <div>
