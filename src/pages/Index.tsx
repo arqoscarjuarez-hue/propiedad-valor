@@ -200,7 +200,7 @@ const Index = () => {
       {/* Hero Section */}
       {!showValuation && !showComments && (
         <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-          <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />
+          <HeroSection />
         </Suspense>
       )}
       

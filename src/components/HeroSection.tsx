@@ -6,7 +6,7 @@ import { Calculator, TrendingUp, Shield, Zap, Star, MapPin } from 'lucide-react'
 import { useLanguage } from '@/hooks/useLanguage';
 import { indexTranslations } from '@/translations/indexTranslations';
 
-const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () => void; onShowDemo: () => void }) => {
+const HeroSection = () => {
   const { selectedLanguage } = useLanguage();
   const t = indexTranslations[selectedLanguage];
   return (
@@ -50,10 +50,10 @@ const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () =>
                 variant="outline" 
                 size="lg"
                 className="text-lg px-8 py-6"
-                onClick={onShowDemo}
+                onClick={() => {}}
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
-                {t.heroButtonDemo}
+                Ver Demo
               </Button>
             </div>
             
