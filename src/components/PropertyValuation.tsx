@@ -951,7 +951,7 @@ const PropertyValuation = () => {
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {comparables.map((c) => (
+                                {comparables.slice(0, 3).map((c) => (
                                   <TableRow key={c.id}>
                                     <TableCell className="max-w-[180px] truncate">{c.address}</TableCell>
                                     <TableCell className="text-right text-muted-foreground">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
@@ -964,7 +964,7 @@ const PropertyValuation = () => {
                               </TableBody>
                             </Table>
                            <p className="text-xs text-green-600 dark:text-green-400 mt-2">
-                             ✓ Se encontraron {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
+                             ✓ Mostrando los 3 más cercanos de {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
                            </p>
                          </div>
                          ) : comparables.length === 0 ? (
