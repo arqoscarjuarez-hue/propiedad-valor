@@ -2591,8 +2591,6 @@ const PropertyValuation = () => {
   };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
-    console.log('handleInputChange called:', { field, value, currentData: propertyData });
-    
     try {
       // Campos que deben mantenerse como string
       const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion'];
@@ -2609,21 +2607,12 @@ const PropertyValuation = () => {
         }
       }
       
-      console.log('sanitizedValue:', sanitizedValue);
+      // Actualizar solo el campo específico sin tocar otros campos
+      setPropertyData(prev => ({
+        ...prev,
+        [field]: sanitizedValue
+      }));
       
-      setPropertyData(prev => {
-        console.log('Before update:', prev);
-        const newData = {
-          ...prev,
-          [field]: sanitizedValue
-        };
-        
-        console.log('After update:', newData);
-        
-        // Lógica automática removida - los campos son independientes
-        
-        return newData;
-      });
     } catch (error) {
       console.error('Error updating property data:', error);
       toast({
