@@ -6514,11 +6514,41 @@ const PropertyValuation = () => {
                      
                  </div>
               ) : (
-                <div className="text-center py-8">
-                  <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">
-                    {translations[selectedLanguage].completeDataMessage}
-                  </p>
+                <div className="text-center py-8 space-y-6">
+                  <div>
+                    <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-6">
+                      {translations[selectedLanguage].completeDataMessage}
+                    </p>
+                  </div>
+                  
+                  {/* Botón Principal para Realizar Valuación */}
+                  <div className="space-y-4">
+                    <Button 
+                      onClick={calculateValuation}
+                      disabled={isCalculating}
+                      size="lg"
+                      className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      {isCalculating ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                          <span>Calculando Valuación...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Calculator className="h-5 w-5" />
+                          <span>REALIZAR VALUACIÓN</span>
+                        </div>
+                      )}
+                    </Button>
+                    
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p>✓ Avalúo profesional con estándares IVS/RICS</p>
+                      <p>✓ Análisis de comparables del mercado</p>
+                      <p>✓ Certificación internacional</p>
+                    </div>
+                  </div>
                 </div>
               )}
             </CardContent>
