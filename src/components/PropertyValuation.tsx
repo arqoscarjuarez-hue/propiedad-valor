@@ -377,8 +377,8 @@ const PropertyValuation = () => {
                           
                           <TabsContent value="apartamento" className="space-y-4 mt-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {/* Área de construcción - para todas las propiedades excepto terrenos */}
-                              {propertyData.tipoPropiedad !== 'terreno' && (
+                              {/* Área de construcción - mostrar siempre para apartamentos */}
+                              {(
                                 <div>
                                   <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
                                   <Input
