@@ -6605,7 +6605,6 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 </div>
-              )}
             </CardContent>
           </Card>
         </div>
