@@ -5732,7 +5732,12 @@ const PropertyValuation = () => {
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                      {propertyData.tipoPropiedad === 'departamento' ? (
                        <>
-                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].apartmentAreaTab}</h3>
+                         <div className="flex items-center gap-2 mb-4">
+                           <h3 className="text-base sm:text-lg font-semibold text-foreground">{translations[selectedLanguage].apartmentAreaTab}</h3>
+                           <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                             🏢 Apartamento
+                           </Badge>
+                         </div>
                          
                          {/* Sub-tabs para apartamentos */}
                          <Tabs defaultValue="general" className="w-full">
