@@ -478,13 +478,8 @@ const PropertyValuation = () => {
       
       setValuationResult(totalValue);
       
-      // Buscar comparables y validar mínimo requerido
-      const hasMinComparables = await fetchComparables();
-      if (!hasMinComparables) {
-        setValuationResult(null);
-        setIsCalculating(false);
-        return;
-      }
+      // Buscar comparables (no bloquear si no hay suficientes)
+      await fetchComparables();
       
       toast({
         title: "Valuación Completada",
@@ -807,41 +802,15 @@ const PropertyValuation = () => {
                 <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
               </CardHeader>
                <CardContent className="p-3 sm:p-6">
-                 {!valuationResult ? (
-                   <div className="text-center py-8 space-y-6">
-                     <div>
-                       <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                     </div>
-                     
-                     <div className="space-y-4">
-                       <Button 
-                         size="lg"
-                         onClick={performValuation}
-                         disabled={isCalculating}
-                         className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
-                       >
-                         <div className="flex items-center gap-2">
-                           <Calculator className="h-5 w-5" />
-                           <span>{isCalculating ? "CALCULANDO..." : "REALIZAR VALUACIÓN"}</span>
-                         </div>
-                       </Button>
-                     
-                     <div className="text-xs text-muted-foreground space-y-1">
-                       <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
-                       <p>✓ Avalúo profesional con estándares latinoamericanos</p>
-                       <p>✓ Certificación internacional y reglamentos regionales</p>
-                     </div>
-                     </div>
-                   </div>
-                 ) : (
-                   <div className="space-y-6">
-                     {/* Resultado de la valuación */}
+                 {/* Resultado de la valuación - siempre visible después del cálculo */}
+                 {valuationResult && (
+                   <div className="mb-6">
                      <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                        <div className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
                          Valor Estimado
                        </div>
                        <div className="text-4xl font-bold text-green-900 dark:text-green-100">
-                         ${valuationResult.toLocaleString('en-US')} USD
+                         ${valuationResult.toLocaleString("en-US")} USD
                        </div>
                        <div className="text-sm text-green-700 dark:text-green-300 mt-2">
                          Área efectiva: {getEffectiveArea()} m²
@@ -852,17 +821,39 @@ const PropertyValuation = () => {
                          </div>
                        )}
                      </div>
-                     
-                     {/* Botón para nueva valuación */}
-                     <Button 
-                       variant="outline"
-                       onClick={() => setValuationResult(null)}
-                       className="w-full"
-                     >
-                       Nueva Valuación
-                     </Button>
+                   </div>
+                 )}
 
-                     {/* Comparables cercanos - Estándares Latinoamericanos */}
+                 {/* Sección del botón de cálculo */}
+                 <div className="space-y-6">
+                   {!valuationResult && (
+                     <div className="text-center py-8">
+                       <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                     </div>
+                   )}
+                   
+                   <div className="space-y-4">
+                     <Button 
+                       size="lg"
+                       onClick={performValuation}
+                       disabled={isCalculating}
+                       className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                     >
+                       <div className="flex items-center gap-2">
+                         <Calculator className="h-5 w-5" />
+                         <span>{isCalculating ? "CALCULANDO..." : valuationResult ? "NUEVA VALUACIÓN" : "REALIZAR VALUACIÓN"}</span>
+                       </div>
+                     </Button>
+                   
+                   <div className="text-xs text-muted-foreground space-y-1">
+                     <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
+                     <p>✓ Avalúo profesional con estándares latinoamericanos</p>
+                     <p>✓ Certificación internacional y reglamentos regionales</p>
+                   </div>
+                   </div>
+
+                   {/* Comparables - solo mostrar si hay resultado */}
+                   {valuationResult && (
                      <div className="space-y-3">
                        <h4 className="text-base font-semibold">Comparables del mismo estrato social</h4>
                        <p className="text-xs text-muted-foreground">
@@ -887,9 +878,9 @@ const PropertyValuation = () => {
                                {comparables.map((c) => (
                                  <TableRow key={c.id}>
                                    <TableCell className="max-w-[220px] truncate">{c.address}</TableCell>
-                                   <TableCell className="text-right">${(c.price_usd || 0).toLocaleString('en-US')}</TableCell>
-                                   <TableCell className="text-right">${(c.price_per_sqm_usd || 0).toLocaleString('en-US')}</TableCell>
-                                   <TableCell className="text-right">{c.total_area ?? '-'}</TableCell>
+                                   <TableCell className="text-right">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
+                                   <TableCell className="text-right">${(c.price_per_sqm_usd || 0).toLocaleString("en-US")}</TableCell>
+                                   <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
                                    <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
                                  </TableRow>
                                ))}
@@ -906,14 +897,8 @@ const PropertyValuation = () => {
                          </div>
                        )}
                      </div>
-                     
-                     <div className="text-xs text-muted-foreground space-y-1">
-                       <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
-                       <p>✓ Avalúo profesional con estándares latinoamericanos</p>
-                       <p>✓ Búsqueda progresiva: 1km → 3km → 5km → 10km → 20km → 50km</p>
-                     </div>
-                   </div>
-                 )}
+                   )}
+                 </div>
               </CardContent>
             </Card>
           </div>
