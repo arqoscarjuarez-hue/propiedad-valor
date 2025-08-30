@@ -454,26 +454,61 @@ const PropertyValuation = () => {
 
   // Función para calcular la valuación
   const performValuation = async () => {
-    console.log('Iniciando valuación...');
-    console.log('Datos de propiedad:', propertyData);
+    console.log('=== INICIANDO VALUACIÓN ===');
+    console.log('Tipo de propiedad:', propertyData.tipoPropiedad);
+    console.log('Área apartamento:', propertyData.areaApartamento);
     
     setIsCalculating(true);
     
     try {
-      // Simular cálculo con delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Para apartamentos, validación directa y simple
+      if (propertyData.tipoPropiedad === 'apartamento') {
+        if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
+          console.log('ERROR: Área de apartamento inválida');
+          toast({
+            title: "Error en la valuación",
+            description: "Debe ingresar el área del apartamento para realizar la valuación",
+            variant: "destructive"
+          });
+          setIsCalculating(false);
+          return;
+        }
+        
+        // Simular cálculo con delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Cálculo para apartamento: área * 2 * precio por m²
+        const areaEfectiva = propertyData.areaApartamento * 2;
+        const precioM2 = 1800; // USD por m² para apartamentos
+        const valorTotal = areaEfectiva * precioM2;
+        
+        console.log('Área efectiva apartamento:', areaEfectiva);
+        console.log('Valor total calculado:', valorTotal);
+        
+        setValuationResult(valorTotal);
+        
+        // Buscar comparables
+        await fetchComparables();
+        
+        toast({
+          title: "Valuación Completada",
+          description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD (Apartamento)`,
+        });
+        
+        console.log('=== VALUACIÓN COMPLETADA ===');
+        return;
+      }
       
+      // Para otros tipos de propiedad
       const effectiveArea = getEffectiveArea();
-      console.log('Área efectiva calculada:', effectiveArea);
+      console.log('Área efectiva otros:', effectiveArea);
       
-      if (!hasValidArea()) {
-        const areaMessage = propertyData.tipoPropiedad === 'apartamento' 
-          ? "Debe ingresar el área del apartamento para realizar la valuación"
-          : propertyData.tipoPropiedad === 'terreno'
+      if (effectiveArea <= 0) {
+        const areaMessage = propertyData.tipoPropiedad === 'terreno'
           ? "Debe ingresar el área del terreno para realizar la valuación"  
           : "Debe ingresar el área de construcción para realizar la valuación";
           
-        console.log('Error: área no válida');
+        console.log('ERROR: Área no válida para otros tipos');
         toast({
           title: "Error en la valuación",
           description: areaMessage,
