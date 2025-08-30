@@ -5611,30 +5611,36 @@ const PropertyValuation = () => {
                         {translations[selectedLanguage].spaces}
                       </TabsTrigger>
                     )}
-                   <TabsTrigger 
-                     value="caracteristicas" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].characteristics}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="servicios" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].services}
-                   </TabsTrigger>
+                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                     <TabsTrigger 
+                       value="caracteristicas" 
+                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                     >
+                       {translations[selectedLanguage].characteristics}
+                     </TabsTrigger>
+                   )}
+                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                     <TabsTrigger 
+                       value="servicios" 
+                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                     >
+                       {translations[selectedLanguage].services}
+                     </TabsTrigger>
+                   )}
                    <TabsTrigger 
                      value="fotos" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
                      {translations[selectedLanguage].photos}
                    </TabsTrigger>
-                   <TabsTrigger 
-                     value="ajustes" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].valuation}
-                   </TabsTrigger>
+                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                     <TabsTrigger 
+                       value="ajustes" 
+                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                     >
+                       {translations[selectedLanguage].valuation}
+                     </TabsTrigger>
+                   )}
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
