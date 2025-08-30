@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -341,13 +342,14 @@ const Index = () => {
               {t.ctaDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-6"
-                onClick={handleStartValuation}
-              >
-                {t.startValuation}
-              </Button>
+              <Link to="/avaluos">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-6 w-full"
+                >
+                  {t.startValuation}
+                </Button>
+              </Link>
               <Button 
                 variant="outline"
                 size="lg" 
