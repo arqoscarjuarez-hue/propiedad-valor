@@ -5592,6 +5592,12 @@ const PropertyValuation = () => {
                      {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
                    <TabsTrigger 
+                     value="ubicacion" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].location}
+                   </TabsTrigger>
+                   <TabsTrigger 
                      value="areas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
@@ -5616,12 +5622,6 @@ const PropertyValuation = () => {
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
                      {translations[selectedLanguage].services}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="ubicacion" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].location}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="fotos" 
