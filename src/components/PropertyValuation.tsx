@@ -378,12 +378,9 @@ const PropertyValuation = () => {
       const estrato = propertyData.estratoSocial;
 
       if (!lat || !lng) {
-        toast({
-          title: "Ubicación requerida",
-          description: "Por favor seleccione una ubicación en el mapa para encontrar comparables",
-          variant: "destructive"
-        });
-        return false;
+        // Si no hay coordenadas, solo log pero no bloquear
+        console.log('Sin coordenadas para buscar comparables');
+        return;
       }
 
       // Usar la función de BD con búsqueda progresiva
@@ -394,7 +391,10 @@ const PropertyValuation = () => {
         target_property_type: propertyData.tipoPropiedad
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching comparables:', error);
+        return; // No bloquear, solo continuar sin comparables
+      }
 
       const comparablesData: Comparable[] = (data || []).map((d: any) => ({
         id: d.id,
@@ -411,31 +411,22 @@ const PropertyValuation = () => {
 
       setComparables(comparablesData);
 
-      // Validar mínimo de 3 comparables según estándares latinoamericanos
+      // Mostrar toast informativo pero no bloquear
       if (comparablesData.length < 3) {
         toast({
-          title: "Comparables insuficientes",
-          description: `Se encontraron solo ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}. Se requieren mínimo 3 para una valuación confiable según normas UPAV/IVSC.`,
-          variant: "destructive"
+          title: "Información de comparables",
+          description: `Se encontraron ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}. La valuación se basa en el método de costo.`,
         });
-        return false;
+      } else {
+        toast({
+          title: "Comparables encontrados",
+          description: `Se encontraron ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}`,
+        });
       }
-
-      toast({
-        title: "Comparables encontrados",
-        description: `Se encontraron ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}`,
-      });
-
-      return true;
 
     } catch (err) {
       console.error('Error fetching comparables:', err);
-      toast({
-        title: 'Error obteniendo comparables',
-        description: 'Intenta nuevamente más tarde.',
-        variant: 'destructive'
-      });
-      return false;
+      // No mostrar error al usuario, solo continuar
     } finally {
       setIsLoadingComparables(false);
     }
@@ -483,7 +474,7 @@ const PropertyValuation = () => {
       
       toast({
         title: "Valuación Completada",
-        description: `Valor estimado: $${totalValue.toLocaleString('en-US')} USD (Normas UPAV/IVSC)`,
+        description: `Valor estimado: $${totalValue.toLocaleString("en-US")} USD (Normas UPAV/IVSC)`,
       });
       
     } catch (error) {
@@ -890,11 +881,16 @@ const PropertyValuation = () => {
                              ✓ Se encontraron {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
                            </p>
                          </div>
-                       ) : (
-                         <div className="text-sm text-muted-foreground">
-                           No se encontraron suficientes comparables del mismo estrato social. 
-                           Requerido: mínimo 3 según normas UPAV/IVSC.
-                         </div>
+                         ) : comparables.length === 0 ? (
+                           <div className="text-sm text-muted-foreground">
+                             No se encontraron comparables del mismo estrato social en la zona. 
+                             La valuación se realizó usando el método de costo de reposición.
+                           </div>
+                         ) : (
+                           <div className="text-sm text-amber-600 dark:text-amber-400">
+                             Se encontraron solo {comparables.length} comparables. 
+                             Se recomienda tener mínimo 3 según normas UPAV/IVSC.
+                           </div>
                        )}
                      </div>
                    )}
