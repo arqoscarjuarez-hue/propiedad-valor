@@ -5689,14 +5689,6 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].photos}
                    </TabsTrigger>
-                   {propertyData.tipoPropiedad !== 'departamento' && (
-                     <TabsTrigger 
-                       value="ajustes" 
-                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                     >
-                       {translations[selectedLanguage].valuation}
-                     </TabsTrigger>
-                   )}
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
@@ -6372,120 +6364,9 @@ const PropertyValuation = () => {
                        </div>
                      )}
                    </div>
-                  </TabsContent>
-
-                   <TabsContent value="ajustes" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                     <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4 flex items-center gap-2">
-                       <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
-                        {translations[selectedLanguage].priceAdjustment}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Ajusta el valor del avalúo hasta en un ±30% según consideraciones especiales del mercado o características únicas de la propiedad.
-                    </p>
-                    
-                    <div className="space-y-6">
-                      {/* Mostrar valores solo si hay valuación */}
-                      {baseValuation && (
-                        <div className="bg-muted p-4 rounded-lg space-y-3">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <Label className="text-sm font-medium text-muted-foreground">Valor Base (Original)</Label>
-                              <p className="text-lg font-bold text-foreground">
-                                {formatCurrency(baseValuation, selectedCurrency)}
-                              </p>
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-muted-foreground">Valor Ajustado</Label>
-                              <p className="text-xl font-bold text-primary">
-                                {formatCurrency(valuation || 0, selectedCurrency)}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="text-center">
-                            <Badge variant={priceAdjustment > 0 ? "default" : priceAdjustment < 0 ? "destructive" : "secondary"}>
-                              {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}% de ajuste
-                            </Badge>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Control de ajuste */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="price-adjustment" className="text-sm font-medium">
-                            Porcentaje de Ajuste: {priceAdjustment > 0 ? '+' : ''}{priceAdjustment}%
-                          </Label>
-                          <div className="mt-2">
-                            <input
-                              type="range"
-                              id="price-adjustment"
-                              min="-30"
-                              max="30"
-                              step="1"
-                              value={priceAdjustment}
-                               onChange={(e) => {
-                                 const value = parseFloat(e.target.value);
-                                 if (!isNaN(value)) {
-                                   handlePriceAdjustment(Math.max(-30, Math.min(30, value)));
-                                 }
-                               }}
-                              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
-                            />
-                          </div>
-                          <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                            <span>-30%</span>
-                            <span>0%</span>
-                            <span>+30%</span>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-1 sm:gap-2">
-                          {/* Botones de ajuste de precio eliminados */}
-                        </div>
-                      </div>
-
-                    </div>
-                  </TabsContent>
-
-                </Tabs>
-              
-              <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t">
-                {/* Botón calcular valuación eliminado */}
-                
-                {/* Estándares Internacionales IVS/RICS - Solo para terrenos */}
-                {propertyData.tipoPropiedad === 'terreno' && (
-                  <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <h4 className="text-md font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2">
-                      <span className="text-lg">🌍</span>
-                      {translations[selectedLanguage].internationalStandards}
-                    </h4>
-                    <div className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
-                      <div>
-                        <p className="font-medium mb-2">{translations[selectedLanguage].topographyFactors}</p>
-                        <ul className="space-y-1 ml-4 text-xs">
-                          <li>• {translations[selectedLanguage].flatLandExp}</li>
-                          <li>• {translations[selectedLanguage].gentleSlopeExp}</li>
-                          <li>• {translations[selectedLanguage].moderateSlopeExp}</li>
-                          <li>• {translations[selectedLanguage].steepSlopeExp}</li>
-                          <li>• {translations[selectedLanguage].irregularExp}</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="font-medium mb-2">{translations[selectedLanguage].landUseFactors}</p>
-                        <ul className="space-y-1 ml-4 text-xs">
-                          <li>• {translations[selectedLanguage].commercialUseExp}</li>
-                          <li>• {translations[selectedLanguage].industrialUseExp}</li>
-                          <li>• {translations[selectedLanguage].residentialUseExp}</li>
-                          <li>• {translations[selectedLanguage].recreationalUseExp}</li>
-                          <li>• {translations[selectedLanguage].agriculturalUseExp}</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
+                   </TabsContent>
+               </Tabs>
+             </CardContent>
           </Card>
         </div>
 
