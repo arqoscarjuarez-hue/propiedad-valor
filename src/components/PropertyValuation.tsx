@@ -36,7 +36,6 @@ import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 
-
 import PropertyComparison from './PropertyComparison';
 
 interface Translation {
@@ -219,6 +218,7 @@ interface PropertyData {
   areaTerreno: number;
   areaApartamento: number;
   tipoPropiedad: string;
+  estratoSocial: EstratoSocial;
   recamaras: number;
   salas: number;
   comedor: number;
@@ -235,7 +235,6 @@ interface PropertyData {
   latitud: number;
   longitud: number;
   direccionCompleta: string;
-  estratoSocial: EstratoSocial;
   servicios: {
     agua: boolean;
     electricidad: boolean;
@@ -288,6 +287,7 @@ const PropertyValuation = () => {
     areaTerreno: 0,
     areaApartamento: 0,
     tipoPropiedad: 'casa',
+    estratoSocial: 'medio_medio' as EstratoSocial,
     recamaras: 0,
     salas: 0,
     comedor: 0,
@@ -304,7 +304,6 @@ const PropertyValuation = () => {
     latitud: 0,
     longitud: 0,
     direccionCompleta: '',
-    estratoSocial: 'medio_medio' as EstratoSocial,
     servicios: {
       agua: false,
       electricidad: false,
@@ -384,7 +383,7 @@ const PropertyValuation = () => {
           description: "Por favor seleccione una ubicación en el mapa para encontrar comparables",
           variant: "destructive"
         });
-        return;
+        return false;
       }
 
       // Usar la función de BD con búsqueda progresiva
@@ -489,14 +488,17 @@ const PropertyValuation = () => {
       
       toast({
         title: "Valuación Completada",
-        description: `Valor estimado: $${totalValue.toLocaleString('en-US')} USD`,
+        description: `Valor estimado: $${totalValue.toLocaleString('en-US')} USD (Normas UPAV/IVSC)`,
       });
       
     } catch (error) {
       console.error('Error performing valuation:', error);
+      setValuationResult(null);
+      setComparables([]);
+      
       toast({
         title: "Error en la valuación",
-        description: "Ocurrió un error al realizar la valuación. Intente nuevamente.",
+        description: "Ocurrió un error al realizar la valuación. Verifique los datos e intente nuevamente.",
         variant: "destructive"
       });
     } finally {
@@ -513,44 +515,58 @@ const PropertyValuation = () => {
             <Card className="shadow-lg">
               <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-3 sm:p-6">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg sm:text-xl">Valuador de Propiedades</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">Valuador Latinoamericano</CardTitle>
                   <LanguageSelector />
                 </div>
+                <p className="text-sm text-primary-foreground/90 mt-2">
+                  Siguiendo normas UPAV, IVSC y reglamentos de valuación latinoamericanos
+                </p>
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
+                {/* Selector de Estrato Social */}
+                <div className="mb-6">
+                  <Label htmlFor="estratoSocial" className="text-base font-semibold">Estrato Social</Label>
+                  <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecciona el estrato social" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
+                  </p>
+                </div>
+
+                {/* Selector de Tipo de Propiedad */}
+                <div className="mb-6">
+                  <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Tipo de Propiedad</Label>
+                  <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecciona el tipo de propiedad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="casa">Casa</SelectItem>
+                      <SelectItem value="apartamento">Apartamento</SelectItem>
+                      <SelectItem value="terreno">Terreno</SelectItem>
+                      <SelectItem value="comercial">Comercial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <Tabs defaultValue="areas" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 h-auto">
                     <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
                   </TabsList>
 
-                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                     {/* Selector de Estrato Social */}
-                     <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                       <Label htmlFor="estratoSocial" className="text-blue-800 dark:text-blue-200 font-medium">
-                         Estrato Social (Reglamento Latinoamericano UPAV/IVSC)
-                       </Label>
-                       <Select
-                         value={propertyData.estratoSocial}
-                         onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}
-                       >
-                         <SelectTrigger className="mt-2 border-blue-300 dark:border-blue-700">
-                           <SelectValue placeholder="Seleccionar estrato social" />
-                         </SelectTrigger>
-                         <SelectContent>
-                           {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => (
-                             <SelectItem key={key} value={key}>
-                               {label}
-                             </SelectItem>
-                           ))}
-                         </SelectContent>
-                       </Select>
-                       <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                         Solo se compararán propiedades del mismo estrato social según normas de valuación latinoamericanas
-                       </p>
-                     </div>
-
-                     {propertyData.tipoPropiedad === 'apartamento' ? (
+                  <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                    {propertyData.tipoPropiedad === 'apartamento' ? (
                       <>
                         <Tabs defaultValue="general" className="w-full">
                           <TabsList className="grid w-full grid-cols-3">
@@ -598,26 +614,24 @@ const PropertyValuation = () => {
                           <TabsContent value="apartamento" className="space-y-4 mt-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {/* Área de construcción - mostrar siempre para apartamentos */}
-                              {(
-                                <div>
-                                  <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
-                                  <Input
-                                    id="areaConstruccion"
-                                    type="number"
-                                    value={propertyData.areaPrimerNivel || ''}
-                                    onChange={(e) => {
-                                      const value = e.target.value;
-                                      const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                                      handleInputChange('areaPrimerNivel', numValue);
-                                    }}
-                                    placeholder="0"
-                                    className="mt-1"
-                                  />
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    Ingrese el área total construida de la propiedad
-                                  </p>
-                                </div>
-                              )}
+                              <div>
+                                <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
+                                <Input
+                                  id="areaConstruccion"
+                                  type="number"
+                                  value={propertyData.areaPrimerNivel || ''}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                    handleInputChange('areaPrimerNivel', numValue);
+                                  }}
+                                  placeholder="0"
+                                  className="mt-1"
+                                />
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Ingrese el área total construida de la propiedad
+                                </p>
+                              </div>
                               
                               {/* Área de terreno */}
                               <div>
@@ -671,85 +685,83 @@ const PropertyValuation = () => {
                         </Tabs>
                       </>
                     ) : (
-                       <>
-                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Áreas</h3>
-                         
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                           {/* Área de construcción - para todas las propiedades excepto terrenos */}
-                           {propertyData.tipoPropiedad !== 'terreno' && (
-                             <div>
-                               <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
-                               <Input
-                                 id="areaConstruccion"
-                                 type="number"
-                                 value={propertyData.areaPrimerNivel || ''}
-                                 onChange={(e) => {
-                                   const value = e.target.value;
-                                   const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                                   handleInputChange('areaPrimerNivel', numValue);
-                                 }}
-                                 placeholder="0"
-                                 className="mt-1"
-                               />
-                               <p className="text-xs text-muted-foreground mt-1">
-                                 Ingrese el área total construida de la propiedad
-                               </p>
-                             </div>
-                           )}
-                           
-                           {/* Área de terreno */}
-                           <div>
-                             <div className="flex items-center gap-2 mb-2">
-                               <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
-                               <TooltipProvider>
-                                 <Tooltip>
-                                   <TooltipTrigger asChild>
-                                     <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
-                                       <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                                     </Button>
-                                   </TooltipTrigger>
-                                   <TooltipContent side="top" className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg">
-                                     <p className="text-sm leading-relaxed text-foreground">
-                                       Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).
-                                     </p>
-                                   </TooltipContent>
-                                 </Tooltip>
-                               </TooltipProvider>
-                             </div>
-                             <Input
-                               id="areaTerreno"
-                               type="number"
-                               value={propertyData.areaTerreno || ''}
-                               onChange={(e) => {
-                                 const value = e.target.value;
-                                 handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
-                               }}
-                               placeholder="0"
-                               className="mt-1"
-                             />
-                           </div>
+                      <>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Áreas</h3>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {/* Área de construcción - para todas las propiedades excepto terrenos */}
+                          {propertyData.tipoPropiedad !== 'terreno' && (
+                            <div>
+                              <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
+                              <Input
+                                id="areaConstruccion"
+                                type="number"
+                                value={propertyData.areaPrimerNivel || ''}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                  handleInputChange('areaPrimerNivel', numValue);
+                                }}
+                                placeholder="0"
+                                className="mt-1"
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Ingrese el área total construida de la propiedad
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* Área de terreno */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
+                                      <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg">
+                                    <p className="text-sm leading-relaxed text-foreground">
+                                      Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <Input
+                              id="areaTerreno"
+                              type="number"
+                              value={propertyData.areaTerreno || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                              placeholder="0"
+                              className="mt-1"
+                            />
+                          </div>
 
-                           {/* Área de Apartamento */}
-                           <div>
-                             <Label htmlFor="areaApartamento">Área de Apartamento (m²)</Label>
-                             <Input
-                               id="areaApartamento"
-                               type="number"
-                               value={propertyData.areaApartamento || ''}
-                               onChange={(e) => {
-                                 const value = e.target.value;
-                                 handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
-                               }}
-                               placeholder="0"
-                               className="mt-1"
-                             />
-                           </div>
-                         </div>
-                       </>
-                     )}
-                   </TabsContent>
-
-
+                          {/* Área de Apartamento */}
+                          <div>
+                            <Label htmlFor="areaApartamento">Área de Apartamento (m²)</Label>
+                            <Input
+                              id="areaApartamento"
+                              type="number"
+                              value={propertyData.areaApartamento || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                              placeholder="0"
+                              className="mt-1"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </TabsContent>
 
                   <TabsContent value="ubicacion" className="space-y-4 mt-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Ubicación</h3>
@@ -852,14 +864,13 @@ const PropertyValuation = () => {
 
                      {/* Comparables cercanos - Estándares Latinoamericanos */}
                      <div className="space-y-3">
-                       <div className="flex items-center gap-2">
-                         <h4 className="text-base font-semibold">Comparables más cercanos</h4>
-                         <Badge variant="outline" className="text-xs">
-                           Estrato: {estratoSocialLabels[propertyData.estratoSocial]}
-                         </Badge>
-                       </div>
+                       <h4 className="text-base font-semibold">Comparables del mismo estrato social</h4>
+                       <p className="text-xs text-muted-foreground">
+                         Estrato: {estratoSocialLabels[propertyData.estratoSocial]} | 
+                         Normas: UPAV, IVSC, Reglamentos Latinoamericanos
+                       </p>
                        {isLoadingComparables ? (
-                         <div className="text-sm text-muted-foreground">Buscando comparables cercanos del mismo estrato social...</div>
+                         <div className="text-sm text-muted-foreground">Búsqueda progresiva en curso (1km → 50km)...</div>
                        ) : comparables.length > 0 ? (
                          <div className="overflow-x-auto">
                            <Table>
@@ -870,46 +881,36 @@ const PropertyValuation = () => {
                                  <TableHead className="text-right">Precio/m²</TableHead>
                                  <TableHead className="text-right">Área (m²)</TableHead>
                                  <TableHead className="text-right">Distancia</TableHead>
-                                 <TableHead className="text-center">Estrato</TableHead>
                                </TableRow>
                              </TableHeader>
                              <TableBody>
                                {comparables.map((c) => (
                                  <TableRow key={c.id}>
-                                   <TableCell className="max-w-[200px] truncate">{c.address}</TableCell>
+                                   <TableCell className="max-w-[220px] truncate">{c.address}</TableCell>
                                    <TableCell className="text-right">${(c.price_usd || 0).toLocaleString('en-US')}</TableCell>
                                    <TableCell className="text-right">${(c.price_per_sqm_usd || 0).toLocaleString('en-US')}</TableCell>
                                    <TableCell className="text-right">{c.total_area ?? '-'}</TableCell>
                                    <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
-                                   <TableCell className="text-center">
-                                     <Badge variant="secondary" className="text-xs">
-                                       {estratoSocialLabels[c.estrato_social]}
-                                     </Badge>
-                                   </TableCell>
                                  </TableRow>
                                ))}
                              </TableBody>
                            </Table>
-                           <div className="mt-2 text-xs text-muted-foreground space-y-1">
-                             <p>✓ {comparables.length} comparables encontrados (mínimo 3 requerido por normas UPAV/IVSC)</p>
-                             <p>✓ Búsqueda progresiva: 1km → 3km → 5km → 10km → 20km → 50km</p>
-                             <p>✓ Filtrado por estrato social latinoamericano</p>
-                           </div>
+                           <p className="text-xs text-green-600 dark:text-green-400 mt-2">
+                             ✓ Se encontraron {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
+                           </p>
                          </div>
                        ) : (
-                         <div className="text-sm text-muted-foreground space-y-2">
-                           <p>No se encontraron comparables del estrato {estratoSocialLabels[propertyData.estratoSocial]} cercanos.</p>
-                           <p>• Ajusta la ubicación en el mapa</p>
-                           <p>• Considera cambiar el estrato social si es apropiado</p>
-                           <p>• Verifica que hay propiedades comparables en la base de datos</p>
+                         <div className="text-sm text-muted-foreground">
+                           No se encontraron suficientes comparables del mismo estrato social. 
+                           Requerido: mínimo 3 según normas UPAV/IVSC.
                          </div>
                        )}
                      </div>
                      
                      <div className="text-xs text-muted-foreground space-y-1">
-                       <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
-                       <p>✓ Avalúo profesional con estándares IVS/RICS</p>
-                       <p>✓ Certificación internacional</p>
+                       <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
+                       <p>✓ Avalúo profesional con estándares latinoamericanos</p>
+                       <p>✓ Búsqueda progresiva: 1km → 3km → 5km → 10km → 20km → 50km</p>
                      </div>
                    </div>
                  )}
