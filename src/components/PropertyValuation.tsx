@@ -6576,6 +6576,85 @@ const PropertyValuation = () => {
                         </div>
                       )}
                     </div>
+                    
+                    {/* Información de Espacios y Características */}
+                    <div className="border-t pt-2 mt-3">
+                      <h4 className="text-sm font-medium mb-2">Espacios y Características</h4>
+                      
+                      {/* Espacios Habitacionales */}
+                      {propertyData.tipoPropiedad !== 'terreno' && (
+                        <>
+                          {propertyData.recamaras > 0 && (
+                            <div className="flex justify-between">
+                              <span>Recámaras:</span>
+                              <span className="font-medium">{propertyData.recamaras}</span>
+                            </div>
+                          )}
+                          
+                          {propertyData.banos > 0 && (
+                            <div className="flex justify-between">
+                              <span>Baños:</span>
+                              <span className="font-medium">{propertyData.banos}</span>
+                            </div>
+                          )}
+                          
+                          {propertyData.salas > 0 && (
+                            <div className="flex justify-between">
+                              <span>Salas:</span>
+                              <span className="font-medium">{propertyData.salas}</span>
+                            </div>
+                          )}
+                          
+                          {propertyData.cochera > 0 && (
+                            <div className="flex justify-between">
+                              <span>Cocheras:</span>
+                              <span className="font-medium">{propertyData.cochera}</span>
+                            </div>
+                          )}
+                          
+                          {propertyData.cocina > 0 && (
+                            <div className="flex justify-between">
+                              <span>Cocinas:</span>
+                              <span className="font-medium">{propertyData.cocina}</span>
+                            </div>
+                          )}
+                        </>
+                      )}
+                      
+                      {/* Antigüedad */}
+                      {propertyData.antiguedad > 0 && (
+                        <div className="flex justify-between">
+                          <span>Antigüedad:</span>
+                          <span className="font-medium">{propertyData.antiguedad} años</span>
+                        </div>
+                      )}
+                      
+                      {/* Estado y Ubicación */}
+                      {propertyData.estadoGeneral && (
+                        <div className="flex justify-between">
+                          <span>Estado:</span>
+                          <span className="font-medium text-xs">
+                            {propertyData.estadoGeneral === 'nuevo' ? 'Excelente' :
+                             propertyData.estadoGeneral === 'good' ? 'Bueno' :
+                             propertyData.estadoGeneral === 'regular' ? 'Regular' :
+                             propertyData.estadoGeneral}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {propertyData.ubicacion && (
+                        <div className="flex justify-between">
+                          <span>Calidad Ubicación:</span>
+                          <span className="font-medium text-xs">
+                            {propertyData.ubicacion === 'excelente' ? 'Excelente' :
+                             propertyData.ubicacion === 'buena' ? 'Buena' :
+                             propertyData.ubicacion === 'regular' ? 'Regular' :
+                             propertyData.ubicacion === 'mala' ? 'Mala' :
+                             propertyData.ubicacion}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                      </div>
                    
                       
