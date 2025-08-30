@@ -339,10 +339,9 @@ const PropertyValuation = () => {
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
                 <Tabs defaultValue="areas" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 h-auto">
+                  <TabsList className="grid w-full grid-cols-3 h-auto">
                     <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
-                    <TabsTrigger value="espacios" className="h-8 sm:h-10 text-xs sm:text-sm">Espacios</TabsTrigger>
                     <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">Características</TabsTrigger>
                   </TabsList>
 
@@ -547,31 +546,6 @@ const PropertyValuation = () => {
                   </TabsContent>
 
 
-                  <TabsContent value="espacios" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Espacios</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="recamaras">Recámaras</Label>
-                        <Input
-                          id="recamaras"
-                          type="number"
-                          value={propertyData.recamaras || ''}
-                          onChange={(e) => handleInputChange('recamaras', parseInt(e.target.value) || 0)}
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="banos">Baños</Label>
-                        <Input
-                          id="banos"
-                          type="number"
-                          value={propertyData.banos || ''}
-                          onChange={(e) => handleInputChange('banos', parseInt(e.target.value) || 0)}
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
 
                   <TabsContent value="caracteristicas" className="space-y-4 mt-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Características</h3>
