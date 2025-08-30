@@ -235,6 +235,19 @@ const classToEstratos: Record<SocialClass, EstratoSocial[]> = {
   alta: ['alto_bajo', 'alto_medio', 'alto_alto'],
 };
 
+// Multiplicadores específicos por estrato socioeconómico
+const estratoMultipliers: Record<EstratoSocial, number> = {
+  bajo_bajo: 0.85,    // -15%
+  bajo_medio: 0.90,   // -10%
+  bajo_alto: 0.95,    // -5%
+  medio_bajo: 0.97,   // -3%
+  medio_medio: 1.00,  // 0% (base)
+  medio_alto: 1.03,   // +3%
+  alto_bajo: 1.10,    // +10%
+  alto_medio: 1.20,   // +20%
+  alto_alto: 1.35,    // +35%
+};
+
 const classMultipliers: Record<SocialClass, number> = {
   baja: 0.9,
   media: 1.0,
@@ -640,11 +653,16 @@ const PropertyValuation = () => {
                       <SelectValue placeholder="Selecciona el estrato social" />
                     </SelectTrigger>
                     <SelectContent>
-                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => (
-                        <SelectItem key={key} value={key}>
-                          {label}
-                        </SelectItem>
-                      ))}
+                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
+                        const multiplier = estratoMultipliers[key];
+                        const percentage = ((multiplier - 1) * 100).toFixed(0);
+                        const sign = multiplier >= 1 ? '+' : '';
+                        return (
+                          <SelectItem key={key} value={key}>
+                            {label} ({sign}{percentage}%)
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -891,9 +909,9 @@ const PropertyValuation = () => {
                                return;
                              }
                              
-                              const claseSocial = getSocialClass(propertyData.estratoSocial);
-                              const factorEstrato = classMultipliers[claseSocial];
-                             valorTotal = valorTotal * factorEstrato;
+                              // Aplicar factor específico por estrato socioeconómico
+                              const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
+                              valorTotal = valorTotal * factorEstrato;
                              console.log('Tipo:', propertyData.tipoPropiedad);
                              console.log('Área efectiva:', areaEfectiva);
                              console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
