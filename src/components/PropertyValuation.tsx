@@ -5663,16 +5663,32 @@ const PropertyValuation = () => {
                      value="areas" 
                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                     >
-                      {propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentAreaTab : translations[selectedLanguage].areas}
+                      {translations[selectedLanguage].areas}
                     </TabsTrigger>
+                    {propertyData.tipoPropiedad === 'departamento' && (
+                      <TabsTrigger 
+                        value="metros-cuadrados" 
+                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      >
+                        {translations[selectedLanguage].apartmentAreaTab}
+                      </TabsTrigger>
+                    )}
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
                         value="espacios" 
                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                       >
-                        {translations[selectedLanguage].spaces}
+                        {translations[selectedLanguage].apartmentAreaTab}
                       </TabsTrigger>
                     )}
+                     {propertyData.tipoPropiedad !== 'terreno' && (
+                       <TabsTrigger 
+                         value="espacios" 
+                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                       >
+                         {translations[selectedLanguage].spaces}
+                       </TabsTrigger>
+                     )}
                    {propertyData.tipoPropiedad !== 'departamento' && (
                      <TabsTrigger 
                        value="caracteristicas" 
@@ -5802,8 +5818,39 @@ const PropertyValuation = () => {
                           </div>
                         </div>
                       </>
-                    )}
-                  </TabsContent>
+                     )}
+                   </TabsContent>
+
+                   {/* Nueva pestaña dedicada para Metros Cuadrados de Apartamentos */}
+                   {propertyData.tipoPropiedad === 'departamento' && (
+                     <TabsContent value="metros-cuadrados" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                       <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].apartmentAreaTab}</h3>
+                       
+                       <div className="grid grid-cols-1 gap-4">
+                         {/* Área del apartamento */}
+                         <div>
+                           <Label htmlFor="areaApartamento">
+                             {translations[selectedLanguage].apartmentArea}
+                           </Label>
+                           <Input
+                             id="areaApartamento"
+                             type="number"
+                             value={propertyData.areaPrimerNivel || ''}
+                             onChange={(e) => {
+                               const value = e.target.value;
+                               const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                               handleInputChange('areaPrimerNivel', numValue);
+                             }}
+                             placeholder="Ej: 120"
+                             className="mt-1"
+                           />
+                           <p className="text-xs text-muted-foreground mt-1">
+                             Ingrese el área total del apartamento en metros cuadrados
+                           </p>
+                         </div>
+                       </div>
+                     </TabsContent>
+                   )}
 
                  <TabsContent value="tipo" className="space-y-4 mt-6">
                    <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyTypeTitle}</h3>
