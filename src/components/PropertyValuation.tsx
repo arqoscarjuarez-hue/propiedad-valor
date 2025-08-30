@@ -2469,6 +2469,7 @@ const PropertyValuation = () => {
     areaTercerNivel: 0,
     areaCuartoNivel: 0,
     areaTerreno: 0,
+    areaApartamento: 0,
     tipoPropiedad: 'casa',
     recamaras: 0,
     salas: 0,
@@ -2612,15 +2613,15 @@ const PropertyValuation = () => {
           [field]: sanitizedValue
         };
         
-        // Para departamentos: automáticamente igualar área de terreno al área del apartamento
-        if (newData.tipoPropiedad === 'departamento') {
-          // Si se cambia el área del apartamento (primer nivel), igualar área de terreno
-          if (field === 'areaPrimerNivel') {
+        // Para apartamentos: automáticamente igualar área de terreno al área del apartamento
+        if (newData.tipoPropiedad === 'apartamento') {
+          // Si se cambia el área del apartamento, igualar área de terreno
+          if (field === 'areaApartamento') {
             newData.areaTerreno = sanitizedValue as number;
           }
-          // Si se cambia el tipo a departamento, igualar área de terreno al área del apartamento
-          else if (field === 'tipoPropiedad' && sanitizedValue === 'departamento') {
-            newData.areaTerreno = prev.areaPrimerNivel || 0;
+          // Si se cambia el tipo a apartamento, igualar área de terreno al área del apartamento
+          else if (field === 'tipoPropiedad' && sanitizedValue === 'apartamento') {
+            newData.areaTerreno = prev.areaApartamento || 0;
           }
         }
         
