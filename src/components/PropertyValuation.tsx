@@ -2504,7 +2504,7 @@ const PropertyValuation = () => {
   
   // Estados para manejo de comparables
   const [allComparativeProperties, setAllComparativeProperties] = useState<ComparativeProperty[]>([]);
-  const [selectedComparatives, setSelectedComparatives] = useState<number[]>([0, 1, 2]); // Por defecto los primeros 3
+  const [selectedComparatives, setSelectedComparatives] = useState<number[]>([0, 1, 2, 3, 4]); // Por defecto los primeros 5
   
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(savedData.selectedCurrency || {
     code: 'USD',
@@ -3189,9 +3189,48 @@ const PropertyValuation = () => {
       try {
         // Generar comparativas con 10 comparables
         const allComparatives = await generateComparativeProperties(valorFinal, 10);
-        setAllComparativeProperties(allComparatives);
-        // Actualizar las propiedades seleccionadas (los primeros 3)
-        const selectedProps = selectedComparatives.map(index => allComparatives[index]).filter(Boolean);
+
+        // Filtrar outliers por precio unitario (cerca del promedio) y seleccionar 5
+        const toUnitPrice = (comp: ComparativeProperty) => {
+          const area = propertyData.tipoPropiedad === 'terreno' 
+            ? (comp.areaTerreno || 0) 
+            : (comp.areaConstruida || 0);
+          return area > 0 ? comp.precio / area : comp.precio;
+        };
+
+        const unitPrices = allComparatives.map(toUnitPrice).sort((a, b) => a - b);
+        const mid = Math.floor(unitPrices.length / 2);
+        const median = unitPrices.length % 2 === 0
+          ? (unitPrices[mid - 1] + unitPrices[mid]) / 2
+          : unitPrices[mid];
+
+        const filterByThreshold = (threshold: number) =>
+          allComparatives.filter(c => {
+            const up = toUnitPrice(c);
+            return median > 0 ? Math.abs(up - median) / median <= threshold : true;
+          });
+
+        let threshold = 0.25; // ±25%
+        let filtered = filterByThreshold(threshold);
+        while (filtered.length < 5 && threshold < 0.5) {
+          threshold += 0.05; // ampliar gradualmente
+          filtered = filterByThreshold(threshold);
+        }
+
+        const sortByCloseness = (arr: ComparativeProperty[]) =>
+          arr.slice().sort((a, b) => Math.abs(toUnitPrice(a) - median) - Math.abs(toUnitPrice(b) - median));
+
+        const sortedFiltered = sortByCloseness(filtered);
+        let selectedProps = sortedFiltered.slice(0, 5);
+        if (selectedProps.length < 5) {
+          const fallback = sortByCloseness(allComparatives)
+            .filter(c => !selectedProps.includes(c))
+            .slice(0, 5 - selectedProps.length);
+          selectedProps = [...selectedProps, ...fallback];
+        }
+
+        setAllComparativeProperties(sortedFiltered.length > 0 ? sortedFiltered : allComparatives);
+        setSelectedComparatives(selectedProps.map((_, i) => i));
         setComparativeProperties(selectedProps);
         
         // Calcular valor final ajustado por comparables y aplicar ajuste de precio
@@ -3258,11 +3297,28 @@ const PropertyValuation = () => {
           }
         });
         
+        // Aplicar filtrado y selección de 5 comparables más cercanos al promedio
+        const toUnitPrice = (comp: ComparativeProperty) => {
+          const area = propertyData.tipoPropiedad === 'terreno' 
+            ? (comp.areaTerreno || 0) 
+            : (comp.areaConstruida || 0);
+          return area > 0 ? comp.precio / area : comp.precio;
+        };
+        const unitPrices = fallbackComparatives.map(toUnitPrice).sort((a, b) => a - b);
+        const mid = Math.floor(unitPrices.length / 2);
+        const median = unitPrices.length % 2 === 0
+          ? (unitPrices[mid - 1] + unitPrices[mid]) / 2
+          : unitPrices[mid];
+        const sortByCloseness = (arr: ComparativeProperty[]) =>
+          arr.slice().sort((a, b) => Math.abs(toUnitPrice(a) - median) - Math.abs(toUnitPrice(b) - median));
+        const selectedProps = sortByCloseness(fallbackComparatives).slice(0, 5);
+
         setAllComparativeProperties(fallbackComparatives);
-        setComparativeProperties(fallbackComparatives);
+        setSelectedComparatives(selectedProps.map((_, i) => i));
+        setComparativeProperties(selectedProps);
         
         // Calcular valor final ajustado con comparables de respaldo
-        const valorFinalAjustado = calcularValorConComparables(valorFinalEnMonedaSeleccionada, fallbackComparatives);
+        const valorFinalAjustado = calcularValorConComparables(valorFinalEnMonedaSeleccionada, selectedProps);
         const valorAjustado = valorFinalAjustado * (1 + priceAdjustment / 100);
         setValuation(valorAjustado);
       }
@@ -3331,8 +3387,26 @@ const PropertyValuation = () => {
 
       // Convertir valuación actual de vuelta a USD base para generar comparativas
       const valuationInUSD = selectedCurrency.code === 'USD' ? valuation : valuation / (selectedCurrency.rate || 1);
-      const newComparatives = await generateComparativeProperties(valuationInUSD);
-      setComparativeProperties(newComparatives);
+      const allNew = await generateComparativeProperties(valuationInUSD, 10);
+
+      // Filtrar por precio unitario cercano al promedio y seleccionar 5
+      const toUnitPrice = (comp: ComparativeProperty) => {
+        const area = propertyData.tipoPropiedad === 'terreno' 
+          ? (comp.areaTerreno || 0) 
+          : (comp.areaConstruida || 0);
+        return area > 0 ? comp.precio / area : comp.precio;
+      };
+      const prices = allNew.map(toUnitPrice).sort((a,b) => a-b);
+      const mid = Math.floor(prices.length/2);
+      const median = prices.length % 2 === 0 ? (prices[mid-1]+prices[mid])/2 : prices[mid];
+      const sortedByCloseness = allNew
+        .slice()
+        .sort((a,b) => Math.abs(toUnitPrice(a)-median) - Math.abs(toUnitPrice(b)-median));
+      const selected = sortedByCloseness.slice(0,5);
+
+      setAllComparativeProperties(sortedByCloseness);
+      setSelectedComparatives(selected.map((_, i) => i));
+      setComparativeProperties(selected);
       toast({
         title: translations[selectedLanguage].comparativesUpdated,
         description: translations[selectedLanguage].newComparativesGenerated,
