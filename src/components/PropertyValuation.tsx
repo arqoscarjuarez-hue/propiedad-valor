@@ -5895,7 +5895,7 @@ const PropertyValuation = () => {
                               placeholder="Ej: 85"
                               className="mt-1"
                             />
-                          </div>
+                           </div>
                          </div>
                        </>
                       )}
