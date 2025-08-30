@@ -5665,11 +5665,7 @@ const PropertyValuation = () => {
                     >
                       {translations[selectedLanguage].areas}
                     </TabsTrigger>
-                     {(() => {
-                       console.log('Current propertyData.tipoPropiedad:', propertyData.tipoPropiedad);
-                       console.log('Is it departamento?', propertyData.tipoPropiedad === 'departamento');
-                       return propertyData.tipoPropiedad === 'departamento';
-                     })() && (
+                     {propertyData.tipoPropiedad === 'departamento' && (
                        <TabsTrigger 
                          value="area-apartamento" 
                          className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5824,9 +5820,9 @@ const PropertyValuation = () => {
                         return null;
                       })()}
                       <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">AREA del Apartamento</h3>
-                     
-                     <div className="grid grid-cols-1 gap-4">
-                       <div>
+                      
+                      <div className="grid grid-cols-1 gap-4">
+                        <div>
                          <Label htmlFor="areaApartamento">
                            Área del Apartamento (m²)
                          </Label>
