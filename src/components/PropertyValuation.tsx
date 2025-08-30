@@ -843,7 +843,10 @@ const PropertyValuation = () => {
                    <div className="space-y-4">
                      <Button 
                        size="lg"
-                       onClick={performValuation}
+                       onClick={() => {
+                         console.log('BOTÓN CLICKEADO!!!');
+                         performValuation();
+                       }}
                        disabled={isCalculating}
                        className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
                      >
