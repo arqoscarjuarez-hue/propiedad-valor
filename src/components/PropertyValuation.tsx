@@ -372,8 +372,13 @@ const PropertyValuation = () => {
 
   // Función para validar si hay área suficiente según el tipo de propiedad
   const hasValidArea = () => {
+    console.log('Validando área para:', propertyData.tipoPropiedad);
+    console.log('Área apartamento:', propertyData.areaApartamento);
+    
     if (propertyData.tipoPropiedad === 'apartamento') {
-      return propertyData.areaApartamento > 0;
+      const valid = propertyData.areaApartamento > 0;
+      console.log('Apartamento válido:', valid);
+      return valid;
     } else if (propertyData.tipoPropiedad === 'terreno') {
       return propertyData.areaTerreno > 0;
     } else {
@@ -449,6 +454,9 @@ const PropertyValuation = () => {
 
   // Función para calcular la valuación
   const performValuation = async () => {
+    console.log('Iniciando valuación...');
+    console.log('Datos de propiedad:', propertyData);
+    
     setIsCalculating(true);
     
     try {
@@ -456,6 +464,7 @@ const PropertyValuation = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       const effectiveArea = getEffectiveArea();
+      console.log('Área efectiva calculada:', effectiveArea);
       
       if (!hasValidArea()) {
         const areaMessage = propertyData.tipoPropiedad === 'apartamento' 
@@ -464,6 +473,7 @@ const PropertyValuation = () => {
           ? "Debe ingresar el área del terreno para realizar la valuación"  
           : "Debe ingresar el área de construcción para realizar la valuación";
           
+        console.log('Error: área no válida');
         toast({
           title: "Error en la valuación",
           description: areaMessage,
