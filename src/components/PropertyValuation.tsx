@@ -2593,10 +2593,38 @@ const PropertyValuation = () => {
         }
       }
       
-      setPropertyData(prev => ({
-        ...prev,
-        [field]: sanitizedValue
-      }));
+      setPropertyData(prev => {
+        const newData = {
+          ...prev,
+          [field]: sanitizedValue
+        };
+        
+        // Para apartamentos: automáticamente igualar área de terreno al área construida total
+        if (newData.tipoPropiedad === 'apartamento') {
+          // Si se cambia cualquier área de construcción, recalcular área de terreno
+          if (['areaSotano', 'areaPrimerNivel', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel'].includes(field)) {
+            const totalAreaConstruida = 
+              (newData.areaSotano || 0) + 
+              (newData.areaPrimerNivel || 0) + 
+              (newData.areaSegundoNivel || 0) + 
+              (newData.areaTercerNivel || 0) + 
+              (newData.areaCuartoNivel || 0);
+            newData.areaTerreno = totalAreaConstruida;
+          }
+          // Si se cambia el tipo a apartamento, igualar área de terreno
+          else if (field === 'tipoPropiedad' && sanitizedValue === 'apartamento') {
+            const totalAreaConstruida = 
+              (prev.areaSotano || 0) + 
+              (prev.areaPrimerNivel || 0) + 
+              (prev.areaSegundoNivel || 0) + 
+              (prev.areaTercerNivel || 0) + 
+              (prev.areaCuartoNivel || 0);
+            newData.areaTerreno = totalAreaConstruida;
+          }
+        }
+        
+        return newData;
+      });
     } catch (error) {
       console.error('Error updating property data:', error);
       toast({
@@ -5756,11 +5784,15 @@ const PropertyValuation = () => {
                          id="areaTerreno"
                          type="number"
                          value={propertyData.areaTerreno || ''}
+                         disabled={propertyData.tipoPropiedad === 'apartamento'}
+                         readOnly={propertyData.tipoPropiedad === 'apartamento'}
                           onChange={(e) => {
-                            const value = e.target.value;
-                            handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                            if (propertyData.tipoPropiedad !== 'apartamento') {
+                              const value = e.target.value;
+                              handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                            }
                           }}
-                         placeholder="0"
+                         placeholder={propertyData.tipoPropiedad === 'apartamento' ? "Se calcula automáticamente" : "0"}
                        />
                      </div>
                    </div>
