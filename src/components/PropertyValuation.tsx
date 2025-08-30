@@ -354,7 +354,7 @@ const PropertyValuation = () => {
                                     const value = e.target.value;
                                     handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
                                   }}
-                                  placeholder="Ej: 85"
+                                  placeholder="0"
                                   className="mt-1"
                                 />
                                 <p className="text-xs text-muted-foreground mt-1">
@@ -390,7 +390,7 @@ const PropertyValuation = () => {
                                       const numValue = value === '' ? 0 : parseFloat(value) || 0;
                                       handleInputChange('areaPrimerNivel', numValue);
                                     }}
-                                    placeholder="Ej: 120"
+                                    placeholder="0"
                                     className="mt-1"
                                   />
                                   <p className="text-xs text-muted-foreground mt-1">
@@ -426,7 +426,7 @@ const PropertyValuation = () => {
                                     const value = e.target.value;
                                     handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
                                   }}
-                                  placeholder="Ej: 200"
+                                  placeholder="0"
                                   className="mt-1"
                                 />
                               </div>
@@ -442,7 +442,7 @@ const PropertyValuation = () => {
                                     const value = e.target.value;
                                     handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
                                   }}
-                                  placeholder="Ej: 85"
+                                  placeholder="0"
                                   className="mt-1"
                                 />
                               </div>
@@ -468,7 +468,7 @@ const PropertyValuation = () => {
                                   const numValue = value === '' ? 0 : parseFloat(value) || 0;
                                   handleInputChange('areaPrimerNivel', numValue);
                                 }}
-                                placeholder="Ej: 120"
+                                placeholder="0"
                                 className="mt-1"
                               />
                               <p className="text-xs text-muted-foreground mt-1">
@@ -504,7 +504,7 @@ const PropertyValuation = () => {
                                 const value = e.target.value;
                                 handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
                               }}
-                              placeholder="Ej: 200"
+                              placeholder="0"
                               className="mt-1"
                             />
                           </div>
@@ -520,7 +520,7 @@ const PropertyValuation = () => {
                                 const value = e.target.value;
                                 handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
                               }}
-                              placeholder="Ej: 85"
+                              placeholder="0"
                               className="mt-1"
                             />
                           </div>
