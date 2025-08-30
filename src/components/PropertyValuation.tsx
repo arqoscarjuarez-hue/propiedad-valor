@@ -841,43 +841,65 @@ const PropertyValuation = () => {
                    )}
                    
                    <div className="space-y-4">
-                      <button 
-                        onClick={() => {
-                          console.log('=== INICIO CÁLCULO ===');
-                          console.log('Tipo:', propertyData.tipoPropiedad);
-                          console.log('Área apartamento:', propertyData.areaApartamento);
-                          
-                          try {
-                            // Validación para apartamento
-                            if (propertyData.tipoPropiedad === 'apartamento') {
-                              if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-                                console.log('ERROR: Área de apartamento no válida');
-                                alert('Debe ingresar el área del apartamento');
-                                return;
-                              }
-                              
-                              // Cálculo directo
-                              const areaEfectiva = propertyData.areaApartamento * 2;
-                              const valorTotal = areaEfectiva * 1800; // $1800 por m²
-                              
-                              console.log('Área efectiva:', areaEfectiva);
-                              console.log('Valor total:', valorTotal);
-                              
-                              // Establecer resultado
-                              setValuationResult(valorTotal);
-                              console.log('Resultado establecido');
-                              
-                              alert(`Valuación completada: $${valorTotal.toLocaleString("en-US")} USD`);
-                            } else {
-                              alert('Seleccione tipo Apartamento para probar');
-                            }
-                          } catch (error) {
-                            console.error('ERROR en cálculo:', error);
-                            alert('Error en el cálculo: ' + error.message);
-                          }
-                        }}
-                        className="w-full h-12 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-lg transition-all duration-300"
-                      >
+                       <button 
+                         onClick={() => {
+                           console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
+                           console.log('Datos de propiedad:', propertyData);
+                           
+                           try {
+                             let valorTotal = 0;
+                             let areaEfectiva = 0;
+                             
+                             // Método comparativo según tipo de propiedad
+                             if (propertyData.tipoPropiedad === 'apartamento') {
+                               if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
+                                 alert('Debe ingresar el área del apartamento');
+                                 return;
+                               }
+                               areaEfectiva = propertyData.areaApartamento * 2;
+                               valorTotal = areaEfectiva * 1800; // $1800 por m²
+                               
+                             } else if (propertyData.tipoPropiedad === 'casa') {
+                               if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                                 alert('Debe ingresar el área construida de la casa');
+                                 return;
+                               }
+                               areaEfectiva = propertyData.areaPrimerNivel;
+                               valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
+                               
+                             } else if (propertyData.tipoPropiedad === 'local_comercial') {
+                               if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                                 alert('Debe ingresar el área del local comercial');
+                                 return;
+                               }
+                               areaEfectiva = propertyData.areaPrimerNivel;
+                               valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
+                               
+                             } else {
+                               alert('Debe seleccionar un tipo de propiedad válido');
+                               return;
+                             }
+                             
+                             console.log('Tipo:', propertyData.tipoPropiedad);
+                             console.log('Área efectiva:', areaEfectiva);
+                             console.log('Valor total:', valorTotal);
+                             
+                             // Establecer resultado
+                             setValuationResult(valorTotal);
+                             
+                             toast({
+                               title: "Valuación Completada",
+                               description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
+                             });
+                             
+                           } catch (error) {
+                             console.error('ERROR en cálculo:', error);
+                             alert('Error en el cálculo: ' + error.message);
+                           }
+                         }}
+                         disabled={isCalculating}
+                         className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md text-white"
+                       >
                         <div className="flex items-center justify-center gap-2">
                           ⚡ REALIZAR VALUACIÓN
                         </div>
