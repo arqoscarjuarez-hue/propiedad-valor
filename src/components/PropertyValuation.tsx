@@ -339,10 +339,9 @@ const PropertyValuation = () => {
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
                 <Tabs defaultValue="areas" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 h-auto">
+                  <TabsList className="grid w-full grid-cols-2 h-auto">
                     <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
-                    <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">Características</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
@@ -546,20 +545,6 @@ const PropertyValuation = () => {
                   </TabsContent>
 
 
-
-                  <TabsContent value="caracteristicas" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Características</h3>
-                    <div>
-                      <Label htmlFor="antiguedad">Antigüedad (años)</Label>
-                      <Input
-                        id="antiguedad"
-                        type="number"
-                        value={propertyData.antiguedad || ''}
-                        onChange={(e) => handleInputChange('antiguedad', parseInt(e.target.value) || 0)}
-                        className="mt-1"
-                      />
-                    </div>
-                  </TabsContent>
 
                   <TabsContent value="ubicacion" className="space-y-4 mt-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Ubicación</h3>
