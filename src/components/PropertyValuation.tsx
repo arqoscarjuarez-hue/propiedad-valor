@@ -5563,36 +5563,7 @@ const PropertyValuation = () => {
           />
           
           
-           {/* Botones de Descarga de Documentos */}
-           {valuation && (
-             <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-               <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
-                 <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {translations[selectedLanguage].downloadDocuments}
-               </Label>
-               <div className="space-y-2 sm:space-y-3">
-                 <Button 
-                   onClick={generatePDF} 
-                   variant="outline" 
-                   className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50 h-10 sm:h-auto text-xs sm:text-sm"
-                   size="sm"
-                 >
-                   <FileText className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                   {translations[selectedLanguage].downloadPDF}
-                 </Button>
-                
-                <Button 
-                  onClick={generateWord} 
-                  variant="outline" 
-                  className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300"
-                  size="sm"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  {translations[selectedLanguage].downloadWord}
-                </Button>
-                </div>
-              </Card>
-            )}
+          {/* Botones de descarga eliminados */}
 
             {/* Botón de Compartir */}
             {valuation && (
@@ -5641,23 +5612,7 @@ const PropertyValuation = () => {
           )}
           
           {/* Botón de Demo */}
-          {valuation && (
-            <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-3">
-                  {translations[selectedLanguage].needHelpSystem}
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={handleShowDemo}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-                >
-                  <Play className="w-4 h-4 mr-2" />
-                   {translations[selectedLanguage].viewDemo}
-                </Button>
-              </div>
-            </Card>
-          )}
+          {/* Botón de demo eliminado */}
         </div>
 
         {/* Formulario Principal */}
@@ -6587,14 +6542,7 @@ const PropertyValuation = () => {
                                  alt={`Foto ${index + 1}`}
                                  className="w-full h-24 object-cover rounded-lg border"
                                />
-                               <Button
-                                 variant="destructive"
-                                 size="sm"
-                                 className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                                 onClick={() => removeImage(index)}
-                               >
-                                 <Trash2 className="h-3 w-3" />
-                               </Button>
+                                {/* Botón eliminar foto removido */}
                              </div>
                            ))}
                          </div>
@@ -6670,30 +6618,7 @@ const PropertyValuation = () => {
                         </div>
 
                         <div className="grid grid-cols-3 gap-1 sm:gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handlePriceAdjustment(-10)}
-                            className="text-xs h-8 sm:h-auto"
-                          >
-                            -10%
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handlePriceAdjustment(0)}
-                            className="text-xs h-8 sm:h-auto"
-                          >
-                            Reset 0%
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handlePriceAdjustment(10)}
-                            className="text-xs h-8 sm:h-auto"
-                          >
-                            +10%
-                          </Button>
+                          {/* Botones de ajuste de precio eliminados */}
                         </div>
                       </div>
 
@@ -6703,29 +6628,7 @@ const PropertyValuation = () => {
                 </Tabs>
               
               <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t">
-                <Button 
-                  onClick={() => {
-                    if (!isCalculating) {
-                      calculateValuation();
-                    }
-                  }} 
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-12 sm:h-auto text-sm sm:text-base touch-manipulation"
-                  size="lg"
-                  disabled={isCalculating}
-                >
-                  <Calculator className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  {isCalculating ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Calculando...
-                    </>
-                  ) : (
-                    translations[selectedLanguage].calculate
-                  )}
-                </Button>
+                {/* Botón calcular valuación eliminado */}
                 
                 {/* Estándares Internacionales IVS/RICS - Solo para terrenos */}
                 {propertyData.tipoPropiedad === 'terreno' && (
@@ -6929,15 +6832,7 @@ const PropertyValuation = () => {
                             <p className="text-xs text-gray-500 mt-2">
                               Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
                             </p>
-                            <Button 
-                              onClick={regenerateComparatives} 
-                              variant="outline" 
-                              className="w-full mt-3"
-                              size="sm"
-                            >
-                              <Shuffle className="mr-2 h-4 w-4" />
-                              Buscar Nuevos Comparables Cercanos
-                            </Button>
+                            {/* Botón regenerar comparativas eliminado */}
                           </>
                         ) : (
                           <p className="text-xs text-gray-500 mt-2">
