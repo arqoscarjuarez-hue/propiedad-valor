@@ -5906,6 +5906,7 @@ const PropertyValuation = () => {
                        <Home className="h-5 w-5" />
                        {translations[selectedLanguage].availableServices}
                      </h3>
+                     <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <span className="text-lg">🌐</span>
                       EVALUACIÓN DE SERVICIOS - Estándares IVS/RICS
