@@ -599,57 +599,6 @@ const PropertyValuation = () => {
                           />
                         </div>
                       </div>
-                      
-                      <div>
-                        <Label htmlFor="ubicacion">Ubicación</Label>
-                        <Select
-                          value={propertyData.ubicacion}
-                          onValueChange={(value) => handleInputChange('ubicacion', value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona la ubicación" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="urbana">Urbana</SelectItem>
-                            <SelectItem value="suburbana">Suburbana</SelectItem>
-                            <SelectItem value="rural">Rural</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="tipoAcceso">Tipo de Acceso</Label>
-                        <Select
-                          value={propertyData.tipoAcceso}
-                          onValueChange={(value) => handleInputChange('tipoAcceso', value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona el tipo de acceso" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pavimentado">Pavimentado</SelectItem>
-                            <SelectItem value="empedrado">Empedrado</SelectItem>
-                            <SelectItem value="terraceria">Terracería</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="topografia">Topografía</Label>
-                        <Select
-                          value={propertyData.topografia}
-                          onValueChange={(value) => handleInputChange('topografia', value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona la topografía" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="plana">Plana</SelectItem>
-                            <SelectItem value="pendiente-ligera">Pendiente Ligera</SelectItem>
-                            <SelectItem value="pendiente-pronunciada">Pendiente Pronunciada</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
