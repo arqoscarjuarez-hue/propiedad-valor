@@ -6538,6 +6538,43 @@ const PropertyValuation = () => {
                         </span>
                       </div>
                     )}
+                    
+                    {/* Información de Áreas */}
+                    <div className="border-t pt-2 mt-3">
+                      <h4 className="text-sm font-medium mb-2">Áreas de la Propiedad</h4>
+                      
+                      {/* Área del Apartamento (solo para apartamentos) */}
+                      {propertyData.tipoPropiedad === 'apartamento' && propertyData.areaApartamento > 0 && (
+                        <div className="flex justify-between">
+                          <span>Área del Apartamento:</span>
+                          <span className="font-medium">{propertyData.areaApartamento} m²</span>
+                        </div>
+                      )}
+                      
+                      {/* Área de Construcción (para casas y comerciales) */}
+                      {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'apartamento' && (
+                        <div className="flex justify-between">
+                          <span>Área Construida:</span>
+                          <span className="font-medium">
+                            {(
+                              (propertyData.areaSotano || 0) +
+                              (propertyData.areaPrimerNivel || 0) +
+                              (propertyData.areaSegundoNivel || 0) +
+                              (propertyData.areaTercerNivel || 0) +
+                              (propertyData.areaCuartoNivel || 0)
+                            )} m²
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Área del Terreno */}
+                      {propertyData.areaTerreno > 0 && (
+                        <div className="flex justify-between">
+                          <span>Área del Terreno:</span>
+                          <span className="font-medium">{propertyData.areaTerreno} m²</span>
+                        </div>
+                      )}
+                    </div>
                      </div>
                    
                       
