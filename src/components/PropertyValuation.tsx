@@ -3438,6 +3438,52 @@ const PropertyValuation = () => {
     }
   };
 
+  // Función para clasificar comparables por proximidad y precio (matriz 3x3)
+  const classifyComparable = (comparable: ComparativeProperty) => {
+    // Calcular distancia
+    const distance = comparable.distancia || 0;
+    
+    // Clasificar por proximidad (ubicación)
+    let proximityClass = '';
+    if (distance <= 1000) {
+      proximityClass = 'bajo'; // bajo = cerca
+    } else if (distance <= 3000) {
+      proximityClass = 'medio';
+    } else {
+      proximityClass = 'alto'; // alto = lejos
+    }
+    
+    // Calcular precio por m² del comparable
+    const pricePerSqm = comparable.precio / comparable.areaConstruida;
+    
+    // Obtener todos los precios para calcular terciles
+    const allPrices = (allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties)
+      .map(p => p.precio / p.areaConstruida);
+    allPrices.sort((a, b) => a - b);
+    
+    const firstTertile = allPrices[Math.floor(allPrices.length / 3)];
+    const secondTertile = allPrices[Math.floor((allPrices.length * 2) / 3)];
+    
+    // Clasificar por precio
+    let priceClass = '';
+    if (pricePerSqm <= firstTertile) {
+      priceClass = 'bajo';
+    } else if (pricePerSqm <= secondTertile) {
+      priceClass = 'medio';
+    } else {
+      priceClass = 'alto';
+    }
+    
+    // Crear la clasificación 3x3: ubicación-precio
+    const classification = `${proximityClass}-${priceClass}`;
+    
+    return {
+      proximity: proximityClass,
+      price: priceClass,
+      classification: classification
+    };
+  };
+
   const getMarketAnalysis = () => {
     if (comparativeProperties.length === 0) return null;
     
@@ -6448,61 +6494,71 @@ const PropertyValuation = () => {
                           {allComparativeProperties.length > 0 ? 'Seleccionar Comparables (3 de 10)' : 'Propiedades Comparables Utilizadas'}
                         </Label>
                         <div className="space-y-3 max-h-80 overflow-y-auto">
-                          {(allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties).map((comp, index) => (
-                            <div 
-                              key={index}
-                              className={`p-3 border rounded-lg ${
-                                allComparativeProperties.length > 0 ? 
-                                  `cursor-pointer transition-all ${
-                                    selectedComparatives.includes(index) 
-                                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                                      : 'border-gray-200 hover:border-gray-300'
-                                  }` :
-                                  'border-gray-200 bg-green-50 dark:bg-green-900/20'
-                              }`}
-                              onClick={allComparativeProperties.length > 0 ? () => {
-                                if (selectedComparatives.includes(index)) {
-                                  if (selectedComparatives.length > 1) {
-                                    setSelectedComparatives(selectedComparatives.filter(i => i !== index));
-                                  }
-                                } else if (selectedComparatives.length < 3) {
-                                  setSelectedComparatives([...selectedComparatives, index]);
-                                } else {
-                                  // Reemplazar el último seleccionado
-                                  const newSelection = [...selectedComparatives.slice(0, 2), index];
-                                  setSelectedComparatives(newSelection);
-                                }
-                              } : undefined}
-                           >
-                             <div className="flex justify-between items-start">
-                               <div className="flex-1">
-                                 <p className="text-sm font-medium truncate">{comp.address}</p>
-                                 <div className="flex gap-4 mt-1 text-xs text-gray-600">
-                                   <span>{comp.areaConstruida}m²</span>
-                                   <span>{comp.recamaras} rec</span>
-                                   <span>{comp.banos} baños</span>
-                                   <span>{comp.distancia}m</span>
-                                 </div>
-                                 <p className="text-sm font-bold text-green-600 mt-1">
-                                   {formatCurrency(comp.precio, selectedCurrency)}
-                                 </p>
-                               </div>
-                                <div className="ml-2">
-                                  {allComparativeProperties.length > 0 ? (
-                                    selectedComparatives.includes(index) && (
-                                      <Badge variant="default" className="text-xs">
-                                        #{selectedComparatives.indexOf(index) + 1}
-                                      </Badge>
-                                    )
-                                  ) : (
-                                    <Badge variant="secondary" className="text-xs">
-                                      #{index + 1}
+                           {(allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties).map((comp, index) => {
+                             const classification = classifyComparable(comp);
+                             return (
+                             <div 
+                               key={index}
+                               className={`p-3 border rounded-lg ${
+                                 allComparativeProperties.length > 0 ? 
+                                   `cursor-pointer transition-all ${
+                                     selectedComparatives.includes(index) 
+                                       ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                                       : 'border-gray-200 hover:border-gray-300'
+                                   }` :
+                                   'border-gray-200 bg-green-50 dark:bg-green-900/20'
+                               }`}
+                               onClick={allComparativeProperties.length > 0 ? () => {
+                                 if (selectedComparatives.includes(index)) {
+                                   if (selectedComparatives.length > 1) {
+                                     setSelectedComparatives(selectedComparatives.filter(i => i !== index));
+                                   }
+                                 } else if (selectedComparatives.length < 3) {
+                                   setSelectedComparatives([...selectedComparatives, index]);
+                                 } else {
+                                   // Reemplazar el último seleccionado
+                                   const newSelection = [...selectedComparatives.slice(0, 2), index];
+                                   setSelectedComparatives(newSelection);
+                                 }
+                               } : undefined}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <p className="text-sm font-medium truncate">{comp.address}</p>
+                                    <Badge 
+                                      variant={classification.proximity === 'bajo' ? 'default' : classification.proximity === 'medio' ? 'secondary' : 'destructive'} 
+                                      className="text-xs"
+                                    >
+                                      {classification.classification}
                                     </Badge>
-                                  )}
+                                  </div>
+                                  <div className="flex gap-4 mt-1 text-xs text-gray-600">
+                                    <span>{comp.areaConstruida}m²</span>
+                                    <span>{comp.recamaras} rec</span>
+                                    <span>{comp.banos} baños</span>
+                                    <span>{comp.distancia}m</span>
+                                  </div>
+                                  <p className="text-sm font-bold text-green-600 mt-1">
+                                    {formatCurrency(comp.precio, selectedCurrency)}
+                                  </p>
                                 </div>
-                             </div>
-                           </div>
-                         ))}
+                                 <div className="ml-2">
+                                   {allComparativeProperties.length > 0 ? (
+                                     selectedComparatives.includes(index) && (
+                                       <Badge variant="default" className="text-xs">
+                                         #{selectedComparatives.indexOf(index) + 1}
+                                       </Badge>
+                                     )
+                                   ) : (
+                                     <Badge variant="secondary" className="text-xs">
+                                       #{index + 1}
+                                     </Badge>
+                                   )}
+                                 </div>
+                              </div>
+                            </div>
+                          )})}
                         </div>
                         {allComparativeProperties.length > 0 ? (
                           <>
