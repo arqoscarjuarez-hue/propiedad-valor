@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/hooks/useLanguage";
-import Index from "./pages/Index";
 import Valuation from "./pages/Valuation";
 import NotFound from "./pages/NotFound";
 
@@ -17,13 +16,13 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/avaluos" element={<Valuation />} />
-            <Route path="/valuation" element={<Valuation />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Valuation />} />
+              <Route path="/avaluos" element={<Valuation />} />
+              <Route path="/valuation" element={<Valuation />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>
