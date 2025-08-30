@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -57,6 +57,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      property_comparables: {
+        Row: {
+          address: string
+          age_years: number | null
+          apartment_area: number | null
+          bathrooms: number | null
+          bedrooms: number | null
+          city: string | null
+          construction_area: number | null
+          country: string | null
+          created_at: string
+          id: string
+          land_area: number | null
+          latitude: number | null
+          location_type: string | null
+          longitude: number | null
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          sale_date: string | null
+          state: string | null
+          total_area: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          age_years?: number | null
+          apartment_area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city?: string | null
+          construction_area?: number | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          land_area?: number | null
+          latitude?: number | null
+          location_type?: string | null
+          longitude?: number | null
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          sale_date?: string | null
+          state?: string | null
+          total_area: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          age_years?: number | null
+          apartment_area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city?: string | null
+          construction_area?: number | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          land_area?: number | null
+          latitude?: number | null
+          location_type?: string | null
+          longitude?: number | null
+          price_per_sqm_usd?: number
+          price_usd?: number
+          property_type?: string
+          sale_date?: string | null
+          state?: string | null
+          total_area?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
