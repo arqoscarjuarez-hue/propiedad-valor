@@ -2613,17 +2613,7 @@ const PropertyValuation = () => {
           [field]: sanitizedValue
         };
         
-        // Para apartamentos: automáticamente igualar área de terreno al área del apartamento
-        if (newData.tipoPropiedad === 'apartamento') {
-          // Si se cambia el área del apartamento, igualar área de terreno
-          if (field === 'areaApartamento') {
-            newData.areaTerreno = sanitizedValue as number;
-          }
-          // Si se cambia el tipo a apartamento, igualar área de terreno al área del apartamento
-          else if (field === 'tipoPropiedad' && sanitizedValue === 'apartamento') {
-            newData.areaTerreno = prev.areaApartamento || 0;
-          }
-        }
+        // Lógica automática removida - los campos son independientes
         
         return newData;
       });
