@@ -5681,6 +5681,21 @@ const PropertyValuation = () => {
                 <Home className="h-4 w-4 sm:h-5 sm:w-5" />
                 {translations[selectedLanguage].propertyData}
               </CardTitle>
+              {propertyData.tipoPropiedad === 'departamento' && (
+                <div className="mt-3 bg-white/20 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/30 rounded-full p-1">
+                      <Home className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-white font-semibold text-sm">
+                      CONFIGURACIÓN DE APARTAMENTO
+                    </span>
+                  </div>
+                  <p className="text-white/80 text-xs mt-1">
+                    Los campos están optimizados para propiedades tipo apartamento
+                  </p>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               <Tabs value={activeTab} onValueChange={(newValue) => {
