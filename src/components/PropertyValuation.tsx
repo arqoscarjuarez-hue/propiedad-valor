@@ -5906,13 +5906,8 @@ const PropertyValuation = () => {
                        <Home className="h-5 w-5" />
                        {translations[selectedLanguage].availableServices}
                      </h3>
-                     <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <span className="text-lg">🌐</span>
-                      EVALUACIÓN DE SERVICIOS - Estándares IVS/RICS
-                    </h3>
-                    
-                    <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
+                     
+                     <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
                       <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">📋 Parámetros de Valoración Internacional</h4>
                       <p className="text-xs text-blue-700 dark:text-blue-300">
                         Cada servicio impacta el valor de la propiedad según estándares mundiales de avalúo (IVS/RICS):
