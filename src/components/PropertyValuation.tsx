@@ -289,10 +289,24 @@ const PropertyValuation = () => {
       finalValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
     }
     
-    setPropertyData(current => ({
-      ...current,
-      [field]: finalValue
-    }));
+    setPropertyData(current => {
+      const newData = {
+        ...current,
+        [field]: finalValue
+      };
+      
+      // Cuando se modifica el área de apartamento, poner a cero las áreas de construcción y terreno
+      if (field === 'areaApartamento') {
+        newData.areaSotano = 0;
+        newData.areaPrimerNivel = 0;
+        newData.areaSegundoNivel = 0;
+        newData.areaTercerNivel = 0;
+        newData.areaCuartoNivel = 0;
+        newData.areaTerreno = 0;
+      }
+      
+      return newData;
+    });
   };
 
   return (
