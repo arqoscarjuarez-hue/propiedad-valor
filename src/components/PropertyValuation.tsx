@@ -5903,11 +5903,35 @@ const PropertyValuation = () => {
                                 const value = e.target.value;
                                 handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
                               }}
-                              placeholder="Ej: 200"
-                              className="mt-1"
-                            />
-                          </div>
-                        </div>
+                               placeholder="Ej: 200"
+                               className="mt-1"
+                             />
+                           </div>
+                           
+                           {/* Área de apartamento - solo para apartamentos */}
+                           {propertyData.tipoPropiedad === 'departamento' && (
+                             <div>
+                               <Label htmlFor="areaApartamento">
+                                 Área de Apartamento (m²)
+                               </Label>
+                               <Input
+                                 id="areaApartamento"
+                                 type="number"
+                                 value={propertyData.areaPrimerNivel || ''}
+                                 onChange={(e) => {
+                                   const value = e.target.value;
+                                   const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                   handleInputChange('areaPrimerNivel', numValue);
+                                 }}
+                                 placeholder="Ej: 85"
+                                 className="mt-1"
+                               />
+                               <p className="text-xs text-muted-foreground mt-1">
+                                 Área específica del apartamento en metros cuadrados
+                               </p>
+                             </div>
+                           )}
+                         </div>
                       </>
                      )}
                    </TabsContent>
