@@ -2591,36 +2591,22 @@ const PropertyValuation = () => {
   };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
-    try {
-      // Campos que deben mantenerse como string
-      const stringFields = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion'];
-      
-      let sanitizedValue = value;
-      
-      // Solo convertir a número si no es un campo de string
-      if (!stringFields.includes(field)) {
-        if (typeof value === 'string') {
-          const numValue = parseFloat(value);
-          sanitizedValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
-        } else if (typeof value === 'number') {
-          sanitizedValue = isNaN(value) ? 0 : Math.max(0, value);
-        }
-      }
-      
-      // Actualizar solo el campo específico sin tocar otros campos
-      setPropertyData(prev => ({
-        ...prev,
-        [field]: sanitizedValue
-      }));
-      
-    } catch (error) {
-      console.error('Error updating property data:', error);
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorUpdatingData,
-        variant: "destructive"
-      });
+    // Función muy simple sin lógica compleja
+    const isStringField = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion'].includes(field);
+    
+    let finalValue = value;
+    if (!isStringField && typeof value === 'string') {
+      const numValue = parseFloat(value);
+      finalValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
     }
+    
+    // Actualización directa del estado sin lógica adicional
+    setPropertyData(current => {
+      return {
+        ...current,
+        [field]: finalValue
+      };
+    });
   };
 
   const handleServiceChange = (serviceName: keyof PropertyData['servicios'], checked: boolean) => {
