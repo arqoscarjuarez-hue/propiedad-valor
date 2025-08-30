@@ -5852,7 +5852,7 @@ const PropertyValuation = () => {
                           {propertyData.tipoPropiedad !== 'terreno' && (
                             <div>
                               <Label htmlFor="areaConstruccion">
-                                {translations[selectedLanguage].constructionAreas}
+                                Área de Construcción Casa (m²)
                               </Label>
                               <Input
                                 id="areaConstruccion"
@@ -5875,7 +5875,7 @@ const PropertyValuation = () => {
                           {/* Área de terreno */}
                           <div>
                             <div className="flex items-center gap-2 mb-2">
-                              <Label htmlFor="areaTerreno">Área de Terreno (m²)</Label>
+                              <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
