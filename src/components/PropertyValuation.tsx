@@ -297,12 +297,12 @@ const PropertyValuation = () => {
       
       // Cuando se modifica el área de apartamento, poner a cero las áreas de construcción y terreno
       if (field === 'areaApartamento') {
+        newData.areaPrimerNivel = 0;  // Este es el campo que se muestra como "Área de Construcción Casa"
+        newData.areaTerreno = 0;      // Este es el campo que se muestra como "Área de Terreno Casa"
         newData.areaSotano = 0;
-        newData.areaPrimerNivel = 0;
         newData.areaSegundoNivel = 0;
         newData.areaTercerNivel = 0;
         newData.areaCuartoNivel = 0;
-        newData.areaTerreno = 0;
       }
       
       return newData;
