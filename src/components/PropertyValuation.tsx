@@ -5921,36 +5921,57 @@ const PropertyValuation = () => {
                    </TabsContent>
 
                    {/* Pestaña AREA para apartamentos */}
-                    <TabsContent value="area-apartamento" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                      {(() => {
-                        console.log('Rendering AREA tab content for apartment');
-                        return null;
-                      })()}
-                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">AREA del Apartamento</h3>
-                      
-                      <div className="grid grid-cols-1 gap-4">
-                        <div>
-                         <Label htmlFor="areaApartamento">
-                           Área del Apartamento (m²)
-                         </Label>
-                         <Input
-                           id="areaApartamento"
-                           type="number"
-                           value={propertyData.areaPrimerNivel || ''}
-                           onChange={(e) => {
-                             const value = e.target.value;
-                             const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                             handleInputChange('areaPrimerNivel', numValue);
-                           }}
-                           placeholder="Ej: 85"
-                           className="mt-1"
-                         />
-                         <p className="text-xs text-muted-foreground mt-1">
-                           Ingrese el área total del apartamento en metros cuadrados
-                         </p>
+                     <TabsContent value="area-apartamento" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-6">
+                         <div className="flex items-center gap-3">
+                           <div className="bg-blue-500 text-white rounded-full p-2">
+                             <Home className="h-5 w-5" />
+                           </div>
+                           <div>
+                             <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200">CONFIGURACIÓN PARA APARTAMENTO</h3>
+                             <p className="text-sm text-blue-600 dark:text-blue-300">Configuración específica de áreas para apartamento</p>
+                           </div>
+                         </div>
                        </div>
-                     </div>
-                   </TabsContent>
+                       
+                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                         <div>
+                           <Label htmlFor="areaApartamento">
+                             Área del Apartamento (m²)
+                           </Label>
+                           <Input
+                             id="areaApartamento"
+                             type="number"
+                             value={propertyData.areaPrimerNivel || ''}
+                             onChange={(e) => {
+                               const value = e.target.value;
+                               const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                               handleInputChange('areaPrimerNivel', numValue);
+                             }}
+                             placeholder="Ej: 85"
+                             className="mt-1"
+                           />
+                           <p className="text-xs text-muted-foreground mt-1">
+                             Ingrese el área total del apartamento en metros cuadrados
+                           </p>
+                         </div>
+                         
+                         <div>
+                           <Label htmlFor="nivelApartamento">
+                             Nivel del Apartamento
+                           </Label>
+                           <Input
+                             id="nivelApartamento"
+                             type="number"
+                             placeholder="Ej: 5"
+                             className="mt-1"
+                           />
+                           <p className="text-xs text-muted-foreground mt-1">
+                             En qué piso se encuentra el apartamento
+                           </p>
+                         </div>
+                       </div>
+                     </TabsContent>
 
 
 
