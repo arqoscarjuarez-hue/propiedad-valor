@@ -324,9 +324,8 @@ const PropertyValuation = () => {
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
                 <Tabs defaultValue="areas" className="w-full">
-                  <TabsList className="grid w-full grid-cols-5 h-auto">
+                  <TabsList className="grid w-full grid-cols-4 h-auto">
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
-                    <TabsTrigger value="tipo" className="h-8 sm:h-10 text-xs sm:text-sm">Tipo</TabsTrigger>
                     <TabsTrigger value="espacios" className="h-8 sm:h-10 text-xs sm:text-sm">Espacios</TabsTrigger>
                     <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">Características</TabsTrigger>
                     <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
@@ -529,40 +528,6 @@ const PropertyValuation = () => {
                     )}
                   </TabsContent>
 
-                  {/* Otros TabsContent simplificados */}
-                  <TabsContent value="tipo" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Tipo de Propiedad</h3>
-                    <Select
-                      value={propertyData.tipoPropiedad}
-                      onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecciona el tipo de propiedad" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="casa">Casa</SelectItem>
-                        <SelectItem value="apartamento">Apartamento</SelectItem>
-                        <SelectItem value="terreno">Terreno</SelectItem>
-                        <SelectItem value="comercial">Comercial</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    {/* Indicación para apartamentos */}
-                    {propertyData.tipoPropiedad === 'apartamento' && (
-                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <div className="flex items-start gap-2">
-                          <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                          <div>
-                            <h4 className="font-medium text-blue-900 mb-1">Área requerida para el avalúo</h4>
-                            <p className="text-sm text-blue-800">
-                              Para realizar el avalúo de un apartamento, debe indicar únicamente el <strong>Área del Apartamento (m²)</strong> en la sección de Áreas. 
-                              Esta debe incluir todas las áreas internas del apartamento (habitaciones, baños, cocina, sala, etc.) pero no incluye balcones, terrazas o áreas comunes del edificio.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </TabsContent>
 
                   <TabsContent value="espacios" className="space-y-4 mt-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Espacios</h3>
