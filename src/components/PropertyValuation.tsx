@@ -5664,7 +5664,15 @@ const PropertyValuation = () => {
                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                     >
                       {translations[selectedLanguage].areas}
-                    </TabsTrigger>
+                     </TabsTrigger>
+                     {propertyData.tipoPropiedad === 'departamento' && (
+                       <TabsTrigger 
+                         value="area-apartamento" 
+                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                       >
+                         AREA
+                       </TabsTrigger>
+                     )}
                      {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
                       <TabsTrigger 
                         value="espacios" 
