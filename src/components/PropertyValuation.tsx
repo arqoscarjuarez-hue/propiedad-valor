@@ -744,23 +744,6 @@ const PropertyValuation = () => {
                             </div>
                           )}
 
-                          {/* Área de Apartamento - solo mostrar si no es apartamento (para casos especiales) */}
-                          {propertyData.tipoPropiedad !== 'apartamento' && (
-                            <div>
-                              <Label htmlFor="areaApartamento">Área de Apartamento (m²)</Label>
-                              <Input
-                                id="areaApartamento"
-                                type="number"
-                                value={propertyData.areaApartamento || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                            </div>
-                          )}
                         </div>
                       </>
                     )}
@@ -867,7 +850,7 @@ const PropertyValuation = () => {
                                areaEfectiva = propertyData.areaPrimerNivel;
                                valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
                                
-                             } else if (propertyData.tipoPropiedad === 'local_comercial') {
+                             } else if (propertyData.tipoPropiedad === 'comercial') {
                                if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
                                  alert('Debe ingresar el área del local comercial');
                                  return;
