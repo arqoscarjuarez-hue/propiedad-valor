@@ -943,8 +943,8 @@ const PropertyValuation = () => {
                              <TableHeader>
                                <TableRow>
                                  <TableHead>Dirección</TableHead>
-                                 <TableHead className="text-right">Precio (USD)</TableHead>
-                                 <TableHead className="text-right">Precio/m²</TableHead>
+                                  <TableHead className="text-right">Precio ajustado (-15%)</TableHead>
+                                  <TableHead className="text-right">Precio/m² ajustado (-15%)</TableHead>
                                  <TableHead className="text-right">Área (m²)</TableHead>
                                  <TableHead className="text-right">Distancia</TableHead>
                                </TableRow>
@@ -953,8 +953,8 @@ const PropertyValuation = () => {
                                {comparables.map((c) => (
                                  <TableRow key={c.id}>
                                    <TableCell className="max-w-[220px] truncate">{c.address}</TableCell>
-                                   <TableCell className="text-right">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
-                                   <TableCell className="text-right">${(c.price_per_sqm_usd || 0).toLocaleString("en-US")}</TableCell>
+                                    <TableCell className="text-right">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
+                                    <TableCell className="text-right">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
                                    <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
                                    <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
                                  </TableRow>
