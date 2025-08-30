@@ -61,7 +61,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Áreas de Construcción (m²)',
     apartmentArea: 'Área del Apartamento (m²)',
-    apartmentAreaTab: 'Metros Cuadrados',
+    apartmentAreaTab: 'AREA',
     basement: 'Sótano',
     firstFloor: 'Primer Nivel',
     secondFloor: 'Segundo Nivel',
@@ -444,7 +444,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Construction Areas (sqm)',
     apartmentArea: 'Apartment Area (sqm)',
-    apartmentAreaTab: 'Square Meters',
+    apartmentAreaTab: 'AREA',
     basement: 'Basement',
     firstFloor: 'First Floor',
     secondFloor: 'Second Floor',
@@ -827,7 +827,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Superficies de Construction (m²)',
     apartmentArea: 'Surface de l\'Appartement (m²)',
-    apartmentAreaTab: 'Mètres Carrés',
+    apartmentAreaTab: 'SUPERFICIE',
     basement: 'Sous-sol',
     firstFloor: 'Rez-de-chaussée',
     secondFloor: 'Premier Étage',
@@ -1210,7 +1210,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Bauflächen (m²)',
     apartmentArea: 'Wohnungsfläche (m²)',
-    apartmentAreaTab: 'Quadratmeter',
+    apartmentAreaTab: 'FLÄCHE',
     basement: 'Keller',
     firstFloor: 'Erdgeschoss',
     secondFloor: 'Erster Stock',
@@ -1595,7 +1595,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Aree di Costruzione (m²)',
     apartmentArea: 'Area dell\'Appartamento (m²)',
-    apartmentAreaTab: 'Metri Quadrati',
+    apartmentAreaTab: 'AREA',
     basement: 'Seminterrato',
     firstFloor: 'Piano Terra',
     secondFloor: 'Primo Piano',
@@ -1976,7 +1976,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Áreas de Construção (m²)',
     apartmentArea: 'Área do Apartamento (m²)',
-    apartmentAreaTab: 'Metros Quadrados',
+    apartmentAreaTab: 'ÁREA',
     basement: 'Subsolo',
     firstFloor: 'Térreo',
     secondFloor: 'Primeiro Andar',
