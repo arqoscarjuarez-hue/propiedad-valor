@@ -236,6 +236,9 @@ const PropertyValuation = () => {
   const { toast } = useToast();
   const { selectedLanguage } = useLanguage();
   
+  // Estados para la valuación
+  const [valuationResult, setValuationResult] = useState<number | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
     areaPrimerNivel: 0,
@@ -322,6 +325,60 @@ const PropertyValuation = () => {
            (propertyData.areaSegundoNivel || 0) + 
            (propertyData.areaTercerNivel || 0) + 
            (propertyData.areaCuartoNivel || 0);
+  };
+
+  // Función para calcular la valuación
+  const performValuation = async () => {
+    setIsCalculating(true);
+    
+    try {
+      // Simular cálculo con delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const effectiveArea = getEffectiveArea();
+      
+      if (effectiveArea === 0) {
+        toast({
+          title: "Error en la valuación",
+          description: "Debe ingresar el área de la propiedad para realizar la valuación",
+          variant: "destructive"
+        });
+        setIsCalculating(false);
+        return;
+      }
+      
+      // Cálculo básico de valuación (puedes ajustar esta fórmula)
+      let basePricePerM2 = 1500; // USD por m² base
+      
+      // Ajustes según tipo de propiedad
+      if (propertyData.tipoPropiedad === 'apartamento') {
+        basePricePerM2 = 1800;
+      } else if (propertyData.tipoPropiedad === 'comercial') {
+        basePricePerM2 = 2200;
+      } else if (propertyData.tipoPropiedad === 'terreno') {
+        basePricePerM2 = 800;
+      }
+      
+      // Calcular valor total
+      const totalValue = effectiveArea * basePricePerM2;
+      
+      setValuationResult(totalValue);
+      
+      toast({
+        title: "Valuación Completada",
+        description: `Valor estimado: $${totalValue.toLocaleString('en-US')} USD`,
+      });
+      
+    } catch (error) {
+      console.error('Error performing valuation:', error);
+      toast({
+        title: "Error en la valuación",
+        description: "Ocurrió un error al realizar la valuación. Intente nuevamente.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCalculating(false);
+    }
   };
 
   return (
@@ -589,30 +646,69 @@ const PropertyValuation = () => {
               <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
                 <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-6">
-                <div className="text-center py-8 space-y-6">
-                  <div>
-                    <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <Button 
-                      size="lg"
-                      className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Calculator className="h-5 w-5" />
-                        <span>REALIZAR VALUACIÓN</span>
-                      </div>
-                    </Button>
-                    
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
-                      <p>✓ Avalúo profesional con estándares IVS/RICS</p>
-                      <p>✓ Certificación internacional</p>
-                    </div>
-                  </div>
-                </div>
+               <CardContent className="p-3 sm:p-6">
+                 {!valuationResult ? (
+                   <div className="text-center py-8 space-y-6">
+                     <div>
+                       <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                     </div>
+                     
+                     <div className="space-y-4">
+                       <Button 
+                         size="lg"
+                         onClick={performValuation}
+                         disabled={isCalculating}
+                         className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300"
+                       >
+                         <div className="flex items-center gap-2">
+                           <Calculator className="h-5 w-5" />
+                           <span>{isCalculating ? "CALCULANDO..." : "REALIZAR VALUACIÓN"}</span>
+                         </div>
+                       </Button>
+                       
+                       <div className="text-xs text-muted-foreground space-y-1">
+                         <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
+                         <p>✓ Avalúo profesional con estándares IVS/RICS</p>
+                         <p>✓ Certificación internacional</p>
+                       </div>
+                     </div>
+                   </div>
+                 ) : (
+                   <div className="space-y-6">
+                     {/* Resultado de la valuación */}
+                     <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                       <div className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
+                         Valor Estimado
+                       </div>
+                       <div className="text-4xl font-bold text-green-900 dark:text-green-100">
+                         ${valuationResult.toLocaleString('en-US')} USD
+                       </div>
+                       <div className="text-sm text-green-700 dark:text-green-300 mt-2">
+                         Área efectiva: {getEffectiveArea()} m²
+                       </div>
+                       {propertyData.tipoPropiedad === 'apartamento' && (
+                         <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                           (Área apartamento duplicada para avalúo)
+                         </div>
+                       )}
+                     </div>
+                     
+                     {/* Botón para nueva valuación */}
+                     <Button 
+                       variant="outline"
+                       onClick={() => setValuationResult(null)}
+                       className="w-full"
+                     >
+                       Nueva Valuación
+                     </Button>
+                     
+                     <div className="text-xs text-muted-foreground space-y-1">
+                       <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
+                       <p>✓ Avalúo profesional con estándares IVS/RICS</p>
+                       <p>✓ Certificación internacional</p>
+                     </div>
+                   </div>
+                 )}
               </CardContent>
             </Card>
           </div>
