@@ -5665,19 +5665,23 @@ const PropertyValuation = () => {
                     >
                       {translations[selectedLanguage].areas}
                     </TabsTrigger>
-                    {propertyData.tipoPropiedad === 'departamento' && (
-                      <TabsTrigger 
-                        value="metros-cuadrados" 
-                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                      >
-                        {translations[selectedLanguage].apartmentAreaTab}
-                      </TabsTrigger>
-                    )}
-                    {propertyData.tipoPropiedad !== 'terreno' && (
-                      <TabsTrigger 
-                        value="espacios" 
-                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                      >
+                     {(() => {
+                       console.log('Checking apartment tab - propertyData.tipoPropiedad:', propertyData.tipoPropiedad);
+                       console.log('Is departamento?', propertyData.tipoPropiedad === 'departamento');
+                       return propertyData.tipoPropiedad === 'departamento';
+                     })() && (
+                       <TabsTrigger 
+                         value="metros-cuadrados" 
+                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                       >
+                         {translations[selectedLanguage].apartmentAreaTab}
+                       </TabsTrigger>
+                     )}
+                     {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
+                       <TabsTrigger 
+                         value="espacios" 
+                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                       >
                         {translations[selectedLanguage].apartmentAreaTab}
                       </TabsTrigger>
                     )}
