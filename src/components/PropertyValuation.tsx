@@ -3212,7 +3212,7 @@ const PropertyValuation = () => {
 
         let threshold = 0.25; // ±25%
         let filtered = filterByThreshold(threshold);
-        while (filtered.length < 5 && threshold < 0.5) {
+        while (filtered.length < 3 && threshold < 0.5) {
           threshold += 0.05; // ampliar gradualmente
           filtered = filterByThreshold(threshold);
         }
@@ -3221,12 +3221,15 @@ const PropertyValuation = () => {
           arr.slice().sort((a, b) => Math.abs(toUnitPrice(a) - median) - Math.abs(toUnitPrice(b) - median));
 
         const sortedFiltered = sortByCloseness(filtered);
-        let selectedProps = sortedFiltered.slice(0, 5);
-        if (selectedProps.length < 5) {
-          const fallback = sortByCloseness(allComparatives)
+        const desiredCount = Math.min(5, Math.max(3, sortedFiltered.length));
+        let selectedProps = sortedFiltered.slice(0, desiredCount);
+
+        // Si hay menos de 3 filtrados, completar hasta 3 con los más cercanos del conjunto total
+        if (selectedProps.length < 3) {
+          const fallbackTo3 = sortByCloseness(allComparatives)
             .filter(c => !selectedProps.includes(c))
-            .slice(0, 5 - selectedProps.length);
-          selectedProps = [...selectedProps, ...fallback];
+            .slice(0, 3 - selectedProps.length);
+          selectedProps = [...selectedProps, ...fallbackTo3];
         }
 
         setAllComparativeProperties(sortedFiltered.length > 0 ? sortedFiltered : allComparatives);
@@ -3311,7 +3314,8 @@ const PropertyValuation = () => {
           : unitPrices[mid];
         const sortByCloseness = (arr: ComparativeProperty[]) =>
           arr.slice().sort((a, b) => Math.abs(toUnitPrice(a) - median) - Math.abs(toUnitPrice(b) - median));
-        const selectedProps = sortByCloseness(fallbackComparatives).slice(0, 5);
+        const desiredCount = Math.min(5, Math.max(3, fallbackComparatives.length));
+        const selectedProps = sortByCloseness(fallbackComparatives).slice(0, desiredCount);
 
         setAllComparativeProperties(fallbackComparatives);
         setSelectedComparatives(selectedProps.map((_, i) => i));
@@ -3399,10 +3403,11 @@ const PropertyValuation = () => {
       const prices = allNew.map(toUnitPrice).sort((a,b) => a-b);
       const mid = Math.floor(prices.length/2);
       const median = prices.length % 2 === 0 ? (prices[mid-1]+prices[mid])/2 : prices[mid];
-      const sortedByCloseness = allNew
-        .slice()
-        .sort((a,b) => Math.abs(toUnitPrice(a)-median) - Math.abs(toUnitPrice(b)-median));
-      const selected = sortedByCloseness.slice(0,5);
+        const sortedByCloseness = allNew
+          .slice()
+          .sort((a,b) => Math.abs(toUnitPrice(a)-median) - Math.abs(toUnitPrice(b)-median));
+        const desiredCount = Math.min(5, Math.max(3, sortedByCloseness.length));
+        const selected = sortedByCloseness.slice(0, desiredCount);
 
       setAllComparativeProperties(sortedByCloseness);
       setSelectedComparatives(selected.map((_, i) => i));
