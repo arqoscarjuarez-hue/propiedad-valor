@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info, Share2 } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/lib/supabase';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
@@ -35,7 +35,7 @@ import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
-import { ShareButtons } from './ShareButtons';
+
 
 import PropertyComparison from './PropertyComparison';
 
