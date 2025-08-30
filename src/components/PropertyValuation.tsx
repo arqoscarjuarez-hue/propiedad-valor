@@ -6484,6 +6484,63 @@ const PropertyValuation = () => {
               <CardTitle className="text-lg sm:text-xl">{translations[selectedLanguage].valuationResultsTitle}</CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
+              {/* Información de Áreas - Siempre visible */}
+              <div className="space-y-2 text-sm mb-4">
+                <h4 className="text-sm font-medium mb-2">Áreas de la Propiedad</h4>
+                
+                {/* Área de Construcción (para todas las propiedades excepto terrenos) */}
+                {propertyData.tipoPropiedad !== 'terreno' && (
+                  <div className="flex justify-between">
+                    <span>Área de Construcción:</span>
+                    <span className="font-medium">
+                      {propertyData.tipoPropiedad === 'apartamento' 
+                        ? (propertyData.areaApartamento || 0)
+                        : (
+                            (propertyData.areaSotano || 0) +
+                            (propertyData.areaPrimerNivel || 0) +
+                            (propertyData.areaSegundoNivel || 0) +
+                            (propertyData.areaTercerNivel || 0) +
+                            (propertyData.areaCuartoNivel || 0)
+                          )
+                      } m²
+                    </span>
+                  </div>
+                )}
+                
+                {/* Área de Terreno */}
+                <div className="flex justify-between">
+                  <span>Área de Terreno:</span>
+                  <span className="font-medium">{propertyData.areaTerreno || 0} m²</span>
+                </div>
+                
+                {/* Información adicional */}
+                {propertyData.tipoPropiedad !== 'terreno' && (
+                  <>
+                    {propertyData.recamaras > 0 && (
+                      <div className="flex justify-between">
+                        <span>Recámaras:</span>
+                        <span className="font-medium">{propertyData.recamaras}</span>
+                      </div>
+                    )}
+                    
+                    {propertyData.banos > 0 && (
+                      <div className="flex justify-between">
+                        <span>Baños:</span>
+                        <span className="font-medium">{propertyData.banos}</span>
+                      </div>
+                    )}
+                    
+                    {propertyData.antiguedad > 0 && (
+                      <div className="flex justify-between">
+                        <span>Antigüedad:</span>
+                        <span className="font-medium">{propertyData.antiguedad} años</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+              
+              {valuation ? (
               <div className="space-y-3 sm:space-y-4">
                 <div className="text-center">
                   <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">{translations[selectedLanguage].estimatedValue}</h3>
@@ -6686,6 +6743,7 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 </div>
+                )}
             </CardContent>
           </Card>
         </div>
