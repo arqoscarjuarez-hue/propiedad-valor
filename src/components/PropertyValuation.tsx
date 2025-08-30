@@ -5814,8 +5814,12 @@ const PropertyValuation = () => {
                    </TabsContent>
 
                    {/* Pestaña AREA para apartamentos */}
-                   <TabsContent value="area-apartamento" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                     <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">AREA del Apartamento</h3>
+                    <TabsContent value="area-apartamento" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                      {(() => {
+                        console.log('Rendering AREA tab content for apartment');
+                        return null;
+                      })()}
+                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">AREA del Apartamento</h3>
                      
                      <div className="grid grid-cols-1 gap-4">
                        <div>
