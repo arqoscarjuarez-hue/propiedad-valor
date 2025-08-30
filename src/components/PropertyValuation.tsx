@@ -5646,7 +5646,7 @@ const PropertyValuation = () => {
                   setActiveTab('tipo');
                 }
               }} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 grid-rows-5 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
                    <TabsTrigger 
                      value="ubicacion" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5666,12 +5666,15 @@ const PropertyValuation = () => {
                       {translations[selectedLanguage].areas}
                     </TabsTrigger>
                      {propertyData.tipoPropiedad === 'departamento' && (
-                       <TabsTrigger 
-                         value="area-apartamento" 
-                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                       >
-                         AREA
-                       </TabsTrigger>
+                       <>
+                         {console.log('SHOWING AREA TAB FOR APARTMENT!')}
+                         <TabsTrigger 
+                           value="area-apartamento" 
+                           className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                         >
+                           AREA
+                         </TabsTrigger>
+                       </>
                      )}
                      {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
                        <TabsTrigger 
