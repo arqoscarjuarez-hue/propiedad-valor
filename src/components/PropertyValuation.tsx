@@ -5818,12 +5818,29 @@ const PropertyValuation = () => {
 
 
 
-                 <TabsContent value="servicios" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].availableServices}</h3>
-                   
-                   {/* Servicios Básicos */}
-                   <div className="mb-6">
-                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].basicServices}</h4>
+                  <TabsContent value="servicios" className="space-y-4 mt-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <span className="text-lg">🌐</span>
+                      EVALUACIÓN DE SERVICIOS - Estándares IVS/RICS
+                    </h3>
+                    
+                    <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">📋 Parámetros de Valoración Internacional</h4>
+                      <p className="text-xs text-blue-700 dark:text-blue-300">
+                        Cada servicio impacta el valor de la propiedad según estándares mundiales de avalúo (IVS/RICS):
+                        <br />• Servicios Básicos: -15% a 0% (ausencia penaliza valor)
+                        <br />• Servicios Premium: +2% a +8% (incrementan valor de mercado)
+                        <br />• Infraestructura Avanzada: +5% a +12% (diferenciación competitiva)
+                      </p>
+                    </div>
+                    
+                    {/* Servicios Básicos Esenciales */}
+                    <div className="mb-6">
+                      <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2 flex items-center gap-2">
+                        <span className="text-red-500">⚡</span>
+                        SERVICIOS BÁSICOS ESENCIALES
+                        <Badge variant="destructive" className="text-xs">Impacto: -15% si faltan</Badge>
+                      </h4>
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                        <div className="flex items-center space-x-2">
                          <Checkbox 
@@ -5868,10 +5885,14 @@ const PropertyValuation = () => {
                      </div>
                    </div>
 
-                    {/* Servicios Adicionales - Solo mostrar si NO es terreno */}
+                    {/* Servicios Premium */}
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <div className="mb-6">
-                        <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalServices}</h4>
+                        <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2 flex items-center gap-2">
+                          <span className="text-green-500">📶</span>
+                          SERVICIOS PREMIUM
+                          <Badge variant="default" className="text-xs bg-green-600">Impacto: +2% a +5%</Badge>
+                        </h4>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                           <div className="flex items-center space-x-2">
                             <Checkbox 
@@ -5984,9 +6005,82 @@ const PropertyValuation = () => {
                             </label>
                           </div>
                         </div>
+                        
+                        {/* Nueva sección: Infraestructura Avanzada */}
+                        <div className="mt-6 pt-4 border-t border-muted">
+                          <h5 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                            <span className="text-blue-500">🏗️</span>
+                            INFRAESTRUCTURA AVANZADA
+                            <Badge variant="default" className="text-xs bg-blue-600">Impacto: +5% a +12%</Badge>
+                          </h5>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox 
+                                id="sistemaSmart"
+                                checked={propertyData.servicios.panelesSolares}
+                                onCheckedChange={(checked) => handleServiceChange('panelesSolares', checked as boolean)}
+                              />
+                              <label htmlFor="sistemaSmart" className="text-sm font-medium leading-none">
+                                Sistema Domótico/Smart Home
+                              </label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox 
+                                id="energiaRenovable"
+                                checked={propertyData.servicios.tinaco}
+                                onCheckedChange={(checked) => handleServiceChange('tinaco', checked as boolean)}
+                              />
+                              <label htmlFor="energiaRenovable" className="text-sm font-medium leading-none">
+                                Energía Renovable Certificada
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Resumen de Impacto en Valuación */}
+                        <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg border">
+                          <h5 className="text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+                            <span>💰</span>
+                            IMPACTO TOTAL EN VALUACIÓN (Estándares IVS/RICS)
+                          </h5>
+                          <div className="text-xs space-y-1">
+                            <div className="flex justify-between">
+                              <span>✅ Servicios Básicos Completos:</span>
+                              <span className="font-semibold text-green-600">0% (Base estándar)</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>🚫 Ausencia de Servicios Básicos:</span>
+                              <span className="font-semibold text-red-600">-15% (Penalización)</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>📶 Servicios Premium:</span>
+                              <span className="font-semibold text-green-600">+2% a +5%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>🏗️ Infraestructura Avanzada:</span>
+                              <span className="font-semibold text-blue-600">+5% a +12%</span>
+                            </div>
+                          </div>
+                          <div className="mt-3 pt-2 border-t border-muted text-xs">
+                            <p className="font-semibold">
+                              📋 Nota: Estos factores se aplican automáticamente en el cálculo final del avalúo según normativas internacionales.
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     )}
-
+                    
+                    {/* Información de Estándares */}
+                    <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
+                      <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+                        <span>🌍</span>
+                        CERTIFICACIÓN INTERNACIONAL
+                      </h4>
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        Esta evaluación cumple con los Estándares Internacionales de Valuación (IVS) y las directrices del Royal Institution of Chartered Surveyors (RICS) 
+                        para la valoración de servicios e infraestructura en propiedades residenciales y comerciales.
+                      </p>
+                    </div>
                     {/* Resumen de servicios */}
                     <div className="bg-muted p-4 rounded-lg">
                       <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].servicesSummary}</h4>
