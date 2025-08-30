@@ -61,6 +61,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Áreas de Construcción (m²)',
     apartmentArea: 'Área del Apartamento (m²)',
+    apartmentAreaTab: 'Metros Cuadrados',
     basement: 'Sótano',
     firstFloor: 'Primer Nivel',
     secondFloor: 'Segundo Nivel',
@@ -443,6 +444,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Construction Areas (sqm)',
     apartmentArea: 'Apartment Area (sqm)',
+    apartmentAreaTab: 'Square Meters',
     basement: 'Basement',
     firstFloor: 'First Floor',
     secondFloor: 'Second Floor',
@@ -825,6 +827,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Superficies de Construction (m²)',
     apartmentArea: 'Surface de l\'Appartement (m²)',
+    apartmentAreaTab: 'Mètres Carrés',
     basement: 'Sous-sol',
     firstFloor: 'Rez-de-chaussée',
     secondFloor: 'Premier Étage',
@@ -1207,6 +1210,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Bauflächen (m²)',
     apartmentArea: 'Wohnungsfläche (m²)',
+    apartmentAreaTab: 'Quadratmeter',
     basement: 'Keller',
     firstFloor: 'Erdgeschoss',
     secondFloor: 'Erster Stock',
@@ -1591,6 +1595,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Aree di Costruzione (m²)',
     apartmentArea: 'Area dell\'Appartamento (m²)',
+    apartmentAreaTab: 'Metri Quadrati',
     basement: 'Seminterrato',
     firstFloor: 'Piano Terra',
     secondFloor: 'Primo Piano',
@@ -1971,6 +1976,7 @@ const translations = {
     // Sección de áreas
     constructionAreas: 'Áreas de Construção (m²)',
     apartmentArea: 'Área do Apartamento (m²)',
+    apartmentAreaTab: 'Metros Quadrados',
     basement: 'Subsolo',
     firstFloor: 'Térreo',
     secondFloor: 'Primeiro Andar',
@@ -5657,7 +5663,7 @@ const PropertyValuation = () => {
                      value="areas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].areas}
+                     {propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentAreaTab : translations[selectedLanguage].areas}
                    </TabsTrigger>
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
@@ -5700,85 +5706,103 @@ const PropertyValuation = () => {
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Área de construcción - para todas las propiedades excepto terrenos */}
-                      {propertyData.tipoPropiedad !== 'terreno' && (
-                        <div>
-                          <Label htmlFor="areaConstruccion">
-                            {propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentArea : translations[selectedLanguage].constructionAreas}
-                          </Label>
-                          <Input
-                            id="areaConstruccion"
-                            type="number"
-                            value={propertyData.areaPrimerNivel || ''}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                              handleInputChange('areaPrimerNivel', numValue);
-                            }}
-                            placeholder="Ej: 120"
-                            className="mt-1"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {propertyData.tipoPropiedad === 'departamento' 
-                              ? 'Ingrese el área total del apartamento en metros cuadrados'
-                              : 'Ingrese el área total construida de la propiedad'
-                            }
-                          </p>
+                    {propertyData.tipoPropiedad === 'departamento' ? (
+                      <>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].apartmentAreaTab}</h3>
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                          {/* Área del apartamento */}
+                          <div>
+                            <Label htmlFor="areaConstruccion">
+                              {translations[selectedLanguage].apartmentArea}
+                            </Label>
+                            <Input
+                              id="areaConstruccion"
+                              type="number"
+                              value={propertyData.areaPrimerNivel || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                handleInputChange('areaPrimerNivel', numValue);
+                              }}
+                              placeholder="Ej: 120"
+                              className="mt-1"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Ingrese el área total del apartamento en metros cuadrados
+                            </p>
+                          </div>
                         </div>
-                      )}
-                      
-                      {/* Área de terreno */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Label htmlFor="areaTerreno">Área de Terreno (m²)</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
-                                  <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent 
-                                side="top" 
-                                className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
-                              >
-                                <p className="text-sm leading-relaxed text-foreground">
-                                  {propertyData.tipoPropiedad === 'terreno' ? 
-                                    'Indique el área del terreno únicamente en metros cuadrados (m²).' :
-                                    propertyData.tipoPropiedad === 'departamento' ?
-                                    'Para departamentos, el área de terreno se calcula automáticamente igual al área del departamento.' :
-                                    'Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).'
-                                  }
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {/* Área de construcción - para todas las propiedades excepto terrenos */}
+                          {propertyData.tipoPropiedad !== 'terreno' && (
+                            <div>
+                              <Label htmlFor="areaConstruccion">
+                                {translations[selectedLanguage].constructionAreas}
+                              </Label>
+                              <Input
+                                id="areaConstruccion"
+                                type="number"
+                                value={propertyData.areaPrimerNivel || ''}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                  handleInputChange('areaPrimerNivel', numValue);
+                                }}
+                                placeholder="Ej: 120"
+                                className="mt-1"
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Ingrese el área total construida de la propiedad
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* Área de terreno */}
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Label htmlFor="areaTerreno">Área de Terreno (m²)</Label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
+                                      <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent 
+                                    side="top" 
+                                    className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg"
+                                  >
+                                    <p className="text-sm leading-relaxed text-foreground">
+                                      {propertyData.tipoPropiedad === 'terreno' ? 
+                                        'Indique el área del terreno únicamente en metros cuadrados (m²).' :
+                                        'Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).'
+                                      }
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <Input
+                              id="areaTerreno"
+                              type="number"
+                              value={propertyData.areaTerreno || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                              placeholder="Ej: 200"
+                              className="mt-1"
+                            />
+                          </div>
                         </div>
-                        <Input
-                          id="areaTerreno"
-                          type="number"
-                          value={propertyData.areaTerreno || ''}
-                          disabled={propertyData.tipoPropiedad === 'departamento'}
-                          readOnly={propertyData.tipoPropiedad === 'departamento'}
-                          onChange={(e) => {
-                            if (propertyData.tipoPropiedad !== 'departamento') {
-                              const value = e.target.value;
-                              handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
-                            }
-                          }}
-                          placeholder={propertyData.tipoPropiedad === 'departamento' ? "Se calcula automáticamente" : "Ej: 200"}
-                          className="mt-1"
-                        />
-                        {propertyData.tipoPropiedad === 'departamento' && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Se calcula automáticamente igual al área del departamento
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </TabsContent>
 
                  <TabsContent value="tipo" className="space-y-4 mt-6">
