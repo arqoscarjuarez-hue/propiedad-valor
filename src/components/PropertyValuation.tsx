@@ -209,6 +209,18 @@ export const estratoSocialLabels: Record<EstratoSocial, string> = {
   'bajo_bajo': 'Bajo Bajo'
 };
 
+const estratoMultipliers: Record<EstratoSocial, number> = {
+  bajo_bajo: 0.8,
+  bajo_medio: 0.9,
+  bajo_alto: 0.95,
+  medio_bajo: 0.98,
+  medio_medio: 1,
+  medio_alto: 1.08,
+  alto_bajo: 1.15,
+  alto_medio: 1.25,
+  alto_alto: 1.35,
+};
+
 interface PropertyData {
   areaSotano: number;
   areaPrimerNivel: number;
@@ -480,9 +492,11 @@ const PropertyValuation = () => {
         // Cálculo para apartamento: área * 2 * precio por m²
         const areaEfectiva = propertyData.areaApartamento * 2;
         const precioM2 = 1800; // USD por m² para apartamentos
-        const valorTotal = areaEfectiva * precioM2;
+        const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+        const valorTotal = areaEfectiva * precioM2 * factorEstrato;
         
         console.log('Área efectiva apartamento:', areaEfectiva);
+        console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
         console.log('Valor total calculado:', valorTotal);
         
         setValuationResult(valorTotal);
@@ -530,8 +544,9 @@ const PropertyValuation = () => {
         basePricePerM2 = 800;
       }
       
-      // Calcular valor total
-      const totalValue = effectiveArea * basePricePerM2;
+      // Calcular valor total con factor por estrato social
+      const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+      const totalValue = effectiveArea * basePricePerM2 * factorEstrato;
       
       setValuationResult(totalValue);
       
@@ -842,8 +857,11 @@ const PropertyValuation = () => {
                                return;
                              }
                              
+                             const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+                             valorTotal = valorTotal * factorEstrato;
                              console.log('Tipo:', propertyData.tipoPropiedad);
                              console.log('Área efectiva:', areaEfectiva);
+                             console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
                              console.log('Valor total:', valorTotal);
                              
                              // Establecer resultado
