@@ -6526,8 +6526,19 @@ const PropertyValuation = () => {
                      </div>
                    )}
                    
-                    <div className="space-y-2 text-sm">
-                    </div>
+                     <div className="space-y-2 text-sm">
+                    {propertyData.direccionCompleta && (
+                      <div className="flex justify-between">
+                        <span>{translations[selectedLanguage].locationLabel}:</span>
+                        <span className="font-medium text-xs">
+                          {propertyData.direccionCompleta.length > 30 
+                            ? `${propertyData.direccionCompleta.substring(0, 30)}...` 
+                            : propertyData.direccionCompleta
+                          }
+                        </span>
+                      </div>
+                    )}
+                     </div>
                    
                       
                   </div>
