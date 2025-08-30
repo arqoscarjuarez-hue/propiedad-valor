@@ -5718,7 +5718,7 @@ const PropertyValuation = () => {
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                     {propertyData.tipoPropiedad === 'departamento' ? (
+                     {propertyData.tipoPropiedad === 'apartamento' ? (
                        <>
                          
                          {/* Sub-tabs para apartamentos */}
@@ -5811,9 +5811,9 @@ const PropertyValuation = () => {
                            </TabsContent>
                          </Tabs>
                        </>
-                     ) : (
-                      <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
+                      ) : (
+                       <>
+                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {/* Área de construcción - para todas las propiedades excepto terrenos */}
@@ -5896,10 +5896,10 @@ const PropertyValuation = () => {
                               className="mt-1"
                             />
                           </div>
-                        </div>
-                      </>
-                     )}
-                   </TabsContent>
+                         </div>
+                       </>
+                      )}
+                    </TabsContent>
 
 
 
