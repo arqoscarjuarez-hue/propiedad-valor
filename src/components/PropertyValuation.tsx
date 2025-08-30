@@ -843,35 +843,43 @@ const PropertyValuation = () => {
                    <div className="space-y-4">
                       <button 
                         onClick={() => {
-                          console.log('=== BOTÓN CLICKEADO ===');
-                          alert('Botón funcionando!');
+                          console.log('=== INICIO CÁLCULO ===');
+                          console.log('Tipo:', propertyData.tipoPropiedad);
+                          console.log('Área apartamento:', propertyData.areaApartamento);
                           
-                          // Validación simple para apartamento
-                          if (propertyData.tipoPropiedad === 'apartamento') {
-                            if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-                              alert('Debe ingresar el área del apartamento');
-                              return;
+                          try {
+                            // Validación para apartamento
+                            if (propertyData.tipoPropiedad === 'apartamento') {
+                              if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
+                                console.log('ERROR: Área de apartamento no válida');
+                                alert('Debe ingresar el área del apartamento');
+                                return;
+                              }
+                              
+                              // Cálculo directo
+                              const areaEfectiva = propertyData.areaApartamento * 2;
+                              const valorTotal = areaEfectiva * 1800; // $1800 por m²
+                              
+                              console.log('Área efectiva:', areaEfectiva);
+                              console.log('Valor total:', valorTotal);
+                              
+                              // Establecer resultado
+                              setValuationResult(valorTotal);
+                              console.log('Resultado establecido');
+                              
+                              alert(`Valuación completada: $${valorTotal.toLocaleString("en-US")} USD`);
+                            } else {
+                              alert('Seleccione tipo Apartamento para probar');
                             }
-                            
-                            // Cálculo directo
-                            const areaEfectiva = propertyData.areaApartamento * 2;
-                            const valorTotal = areaEfectiva * 1800; // $1800 por m²
-                            
-                            console.log('Valor calculado:', valorTotal);
-                            setValuationResult(valorTotal);
-                            
-                            toast({
-                              title: "Valuación Completada",
-                              description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
-                            });
+                          } catch (error) {
+                            console.error('ERROR en cálculo:', error);
+                            alert('Error en el cálculo: ' + error.message);
                           }
                         }}
-                        disabled={isCalculating}
-                        className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md text-white"
+                        className="w-full h-12 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-lg transition-all duration-300"
                       >
                         <div className="flex items-center justify-center gap-2">
-                          <Calculator className="h-5 w-5" />
-                          <span>{isCalculating ? "CALCULANDO..." : valuationResult ? "NUEVA VALUACIÓN" : "REALIZAR VALUACIÓN"}</span>
+                          ⚡ REALIZAR VALUACIÓN
                         </div>
                       </button>
                    
