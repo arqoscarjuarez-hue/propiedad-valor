@@ -6559,18 +6559,7 @@ const PropertyValuation = () => {
                            selectedCurrency
                          )}
                       </span>
-                    </div>
-                    {comparativeProperties.length > 0 && (() => {
-                      const analysis = getMarketAnalysis();
-                      return analysis ? (
-                        <div className="flex justify-between">
-                          <span>{translations[selectedLanguage].marketComparison}:</span>
-                          <span className={`font-medium ${analysis.difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {analysis.difference > 0 ? '+' : ''}{analysis.difference.toFixed(1)}%
-                          </span>
-                        </div>
-                      ) : null;
-                    })()}
+                     </div>
                     </div>
                    
                     {/* Selector de Comparables */}
