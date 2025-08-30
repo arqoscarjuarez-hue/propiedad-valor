@@ -6527,10 +6527,6 @@ const PropertyValuation = () => {
                    )}
                    
                     <div className="space-y-2 text-sm">
-                     <div className="flex justify-between">
-                       <span>{translations[selectedLanguage].landAreaLabel}:</span>
-                       <span className="font-medium">{propertyData.areaTerreno.toLocaleString()} m²</span>
-                     </div>
                     {propertyData.direccionCompleta && (
                       <div className="flex justify-between">
                         <span>{translations[selectedLanguage].locationLabel}:</span>
@@ -6553,95 +6549,8 @@ const PropertyValuation = () => {
                      </div>
                     </div>
                    
-                    {/* Selector de Comparables */}
-                    {(allComparativeProperties.length > 0 || comparativeProperties.length > 0) && (
-                     <div className="pt-4 border-t">
-                        <Label className="text-sm font-medium mb-3 block">
-                          {allComparativeProperties.length > 0 ? 'Seleccionar Comparables (3 de 10)' : 'Propiedades Comparables Utilizadas'}
-                        </Label>
-                        <div className="space-y-3 max-h-80 overflow-y-auto">
-                           {(allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties).map((comp, index) => {
-                             const classification = classifyComparable(comp);
-                             return (
-                             <div 
-                               key={index}
-                               className={`p-3 border rounded-lg ${
-                                 allComparativeProperties.length > 0 ? 
-                                   `cursor-pointer transition-all ${
-                                     selectedComparatives.includes(index) 
-                                       ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                                       : 'border-gray-200 hover:border-gray-300'
-                                   }` :
-                                   'border-gray-200 bg-green-50 dark:bg-green-900/20'
-                               }`}
-                               onClick={allComparativeProperties.length > 0 ? () => {
-                                 if (selectedComparatives.includes(index)) {
-                                   if (selectedComparatives.length > 1) {
-                                     setSelectedComparatives(selectedComparatives.filter(i => i !== index));
-                                   }
-                                 } else if (selectedComparatives.length < 3) {
-                                   setSelectedComparatives([...selectedComparatives, index]);
-                                 } else {
-                                   // Reemplazar el último seleccionado
-                                   const newSelection = [...selectedComparatives.slice(0, 2), index];
-                                   setSelectedComparatives(newSelection);
-                                 }
-                               } : undefined}
-                            >
-                              <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <p className="text-sm font-medium truncate">{comp.address}</p>
-                                    <Badge 
-                                      variant={classification.proximity === 'bajo' ? 'default' : classification.proximity === 'medio' ? 'secondary' : 'destructive'} 
-                                      className="text-xs"
-                                    >
-                                      {classification.classification}
-                                    </Badge>
-                                  </div>
-                                  <div className="flex gap-4 mt-1 text-xs text-gray-600">
-                                    <span>{comp.areaConstruida}m²</span>
-                                    <span>{comp.recamaras} rec</span>
-                                    <span>{comp.banos} baños</span>
-                                    <span>{comp.distancia}m</span>
-                                  </div>
-                                  <p className="text-sm font-bold text-green-600 mt-1">
-                                    {formatCurrency(comp.precio, selectedCurrency)}
-                                  </p>
-                                </div>
-                                 <div className="ml-2">
-                                   {allComparativeProperties.length > 0 ? (
-                                     selectedComparatives.includes(index) && (
-                                       <Badge variant="default" className="text-xs">
-                                         #{selectedComparatives.indexOf(index) + 1}
-                                       </Badge>
-                                     )
-                                   ) : (
-                                     <Badge variant="secondary" className="text-xs">
-                                       #{index + 1}
-                                     </Badge>
-                                   )}
-                                 </div>
-                              </div>
-                            </div>
-                          )})}
-                        </div>
-                        {allComparativeProperties.length > 0 ? (
-                          <>
-                            <p className="text-xs text-gray-500 mt-2">
-                              Selecciona exactamente 3 propiedades para el avalúo final ({selectedComparatives.length}/3)
-                            </p>
-                            {/* Botón regenerar comparativas eliminado */}
-                          </>
-                        ) : (
-                          <p className="text-xs text-gray-500 mt-2">
-                            Propiedades utilizadas en la valuación actual
-                          </p>
-                        )}
-                      </div>
-                    )}
-                     
-                 </div>
+                      
+                  </div>
               ) : (
                 <div className="text-center py-8 space-y-6">
                   <div>
