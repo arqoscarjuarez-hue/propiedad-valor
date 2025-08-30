@@ -938,29 +938,31 @@ const PropertyValuation = () => {
                        {isLoadingComparables ? (
                          <div className="text-sm text-muted-foreground">Búsqueda progresiva en curso (1km → 50km)...</div>
                        ) : comparables.length > 0 ? (
-                         <div className="overflow-x-auto">
-                           <Table>
-                             <TableHeader>
-                               <TableRow>
-                                 <TableHead>Dirección</TableHead>
-                                  <TableHead className="text-right">Precio ajustado (-15%)</TableHead>
-                                  <TableHead className="text-right">Precio/m² ajustado (-15%)</TableHead>
-                                 <TableHead className="text-right">Área (m²)</TableHead>
-                                 <TableHead className="text-right">Distancia</TableHead>
-                               </TableRow>
-                             </TableHeader>
-                             <TableBody>
-                               {comparables.map((c) => (
-                                 <TableRow key={c.id}>
-                                   <TableCell className="max-w-[220px] truncate">{c.address}</TableCell>
-                                    <TableCell className="text-right">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                    <TableCell className="text-right">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                   <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
-                                   <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
-                                 </TableRow>
-                               ))}
-                             </TableBody>
-                           </Table>
+                          <div className="overflow-x-auto">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Dirección</TableHead>
+                                  <TableHead className="text-right">Precio Original</TableHead>
+                                  <TableHead className="text-right">Precio Ajustado (-15%)</TableHead>
+                                  <TableHead className="text-right">Precio/m² Ajustado (-15%)</TableHead>
+                                  <TableHead className="text-right">Área (m²)</TableHead>
+                                  <TableHead className="text-right">Distancia</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {comparables.map((c) => (
+                                  <TableRow key={c.id}>
+                                    <TableCell className="max-w-[180px] truncate">{c.address}</TableCell>
+                                    <TableCell className="text-right text-muted-foreground">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
+                                    <TableCell className="text-right font-semibold">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
+                                    <TableCell className="text-right font-semibold">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
+                                    <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
+                                    <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
                            <p className="text-xs text-green-600 dark:text-green-400 mt-2">
                              ✓ Se encontraron {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
                            </p>
