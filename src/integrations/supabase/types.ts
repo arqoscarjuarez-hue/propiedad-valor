@@ -69,6 +69,7 @@ export type Database = {
           construction_area: number | null
           country: string | null
           created_at: string
+          estrato_social: Database["public"]["Enums"]["estrato_social"] | null
           id: string
           land_area: number | null
           latitude: number | null
@@ -92,6 +93,7 @@ export type Database = {
           construction_area?: number | null
           country?: string | null
           created_at?: string
+          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
           id?: string
           land_area?: number | null
           latitude?: number | null
@@ -115,6 +117,7 @@ export type Database = {
           construction_area?: number | null
           country?: string | null
           created_at?: string
+          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
           id?: string
           land_area?: number | null
           latitude?: number | null
@@ -135,10 +138,38 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      find_comparables_progressive_radius: {
+        Args: {
+          target_estrato: Database["public"]["Enums"]["estrato_social"]
+          target_lat: number
+          target_lng: number
+          target_property_type?: string
+        }
+        Returns: {
+          address: string
+          distance_km: number
+          estrato_social: Database["public"]["Enums"]["estrato_social"]
+          id: string
+          latitude: number
+          longitude: number
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          total_area: number
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      estrato_social:
+        | "alto_alto"
+        | "alto_medio"
+        | "alto_bajo"
+        | "medio_alto"
+        | "medio_medio"
+        | "medio_bajo"
+        | "bajo_alto"
+        | "bajo_medio"
+        | "bajo_bajo"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -265,6 +296,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      estrato_social: [
+        "alto_alto",
+        "alto_medio",
+        "alto_bajo",
+        "medio_alto",
+        "medio_medio",
+        "medio_bajo",
+        "bajo_alto",
+        "bajo_medio",
+        "bajo_bajo",
+      ],
+    },
   },
 } as const
