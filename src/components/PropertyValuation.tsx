@@ -5761,9 +5761,10 @@ const PropertyValuation = () => {
                          
                          {/* Sub-tabs para apartamentos */}
                          <Tabs defaultValue="general" className="w-full">
-                           <TabsList className="grid w-full grid-cols-2">
+                           <TabsList className="grid w-full grid-cols-3">
                              <TabsTrigger value="general">Información General</TabsTrigger>
                              <TabsTrigger value="adicional">Información Adicional</TabsTrigger>
+                             <TabsTrigger value="apartamento">Apartamento</TabsTrigger>
                            </TabsList>
                            
                            <TabsContent value="general" className="space-y-4 mt-4">
@@ -5800,6 +5801,48 @@ const PropertyValuation = () => {
                                  </Label>
                                  <p className="text-sm text-muted-foreground mt-2">
                                    Esta sección está disponible para información adicional específica del apartamento.
+                                 </p>
+                               </div>
+                             </div>
+                           </TabsContent>
+                           
+                           <TabsContent value="apartamento" className="space-y-4 mt-4">
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                               <div>
+                                 <Label htmlFor="nivelApartamento">
+                                   Nivel del Apartamento
+                                 </Label>
+                                 <Input
+                                   id="nivelApartamento"
+                                   type="number"
+                                   placeholder="Ej: 5"
+                                   className="mt-1"
+                                 />
+                                 <p className="text-xs text-muted-foreground mt-1">
+                                   En qué piso se encuentra el apartamento
+                                 </p>
+                               </div>
+                               <div>
+                                 <Label htmlFor="orientacionApartamento">
+                                   Orientación
+                                 </Label>
+                                 <Select>
+                                   <SelectTrigger className="mt-1">
+                                     <SelectValue placeholder="Selecciona orientación" />
+                                   </SelectTrigger>
+                                   <SelectContent>
+                                     <SelectItem value="norte">Norte</SelectItem>
+                                     <SelectItem value="sur">Sur</SelectItem>
+                                     <SelectItem value="este">Este</SelectItem>
+                                     <SelectItem value="oeste">Oeste</SelectItem>
+                                     <SelectItem value="noreste">Noreste</SelectItem>
+                                     <SelectItem value="noroeste">Noroeste</SelectItem>
+                                     <SelectItem value="sureste">Sureste</SelectItem>
+                                     <SelectItem value="suroeste">Suroeste</SelectItem>
+                                   </SelectContent>
+                                 </Select>
+                                 <p className="text-xs text-muted-foreground mt-1">
+                                   Orientación principal del apartamento
                                  </p>
                                </div>
                              </div>
