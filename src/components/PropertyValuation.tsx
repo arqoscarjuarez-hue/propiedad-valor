@@ -583,6 +583,23 @@ const PropertyValuation = () => {
                         />
                       </div>
                       
+                      {/* Mapa para buscar ubicaciones */}
+                      <div>
+                        <Label>Mapa de Ubicación</Label>
+                        <div className="mt-2">
+                          <SimpleLocationMap
+                            onLocationChange={(lat, lng, address) => {
+                              handleInputChange('direccionCompleta', address);
+                              // También podríamos guardar las coordenadas si fuera necesario
+                              console.log('Nueva ubicación:', { lat, lng, address });
+                            }}
+                            initialLat={19.4326}
+                            initialLng={-99.1332}
+                            initialAddress={propertyData.direccionCompleta || ''}
+                          />
+                        </div>
+                      </div>
+                      
                       <div>
                         <Label htmlFor="ubicacion">Ubicación</Label>
                         <Select
