@@ -5720,17 +5720,6 @@ const PropertyValuation = () => {
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                      {propertyData.tipoPropiedad === 'departamento' ? (
                        <>
-                         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-6">
-                           <div className="flex items-center gap-3">
-                             <div className="bg-blue-500 text-white rounded-full p-2">
-                               <Home className="h-5 w-5" />
-                             </div>
-                             <div>
-                               <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200">CONFIGURACIÓN PARA APARTAMENTO</h3>
-                               <p className="text-sm text-blue-600 dark:text-blue-300">Estás configurando las áreas de un apartamento</p>
-                             </div>
-                           </div>
-                         </div>
                          
                          {/* Sub-tabs para apartamentos */}
                          <Tabs defaultValue="general" className="w-full">
