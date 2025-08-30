@@ -5730,35 +5730,58 @@ const PropertyValuation = () => {
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    {propertyData.tipoPropiedad === 'departamento' ? (
-                      <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].apartmentAreaTab}</h3>
-                        
-                        <div className="grid grid-cols-1 gap-4">
-                          {/* Área del apartamento */}
-                          <div>
-                            <Label htmlFor="areaConstruccion">
-                              {translations[selectedLanguage].apartmentArea}
-                            </Label>
-                            <Input
-                              id="areaConstruccion"
-                              type="number"
-                              value={propertyData.areaPrimerNivel || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                                handleInputChange('areaPrimerNivel', numValue);
-                              }}
-                              placeholder="Ej: 120"
-                              className="mt-1"
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Ingrese el área total del apartamento en metros cuadrados
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
+                     {propertyData.tipoPropiedad === 'departamento' ? (
+                       <>
+                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].apartmentAreaTab}</h3>
+                         
+                         {/* Sub-tabs para apartamentos */}
+                         <Tabs defaultValue="general" className="w-full">
+                           <TabsList className="grid w-full grid-cols-2">
+                             <TabsTrigger value="general">Información General</TabsTrigger>
+                             <TabsTrigger value="adicional">Información Adicional</TabsTrigger>
+                           </TabsList>
+                           
+                           <TabsContent value="general" className="space-y-4 mt-4">
+                             <div className="grid grid-cols-1 gap-4">
+                               {/* Área del apartamento */}
+                               <div>
+                                 <Label htmlFor="areaConstruccion">
+                                   {translations[selectedLanguage].apartmentArea}
+                                 </Label>
+                                 <Input
+                                   id="areaConstruccion"
+                                   type="number"
+                                   value={propertyData.areaPrimerNivel || ''}
+                                   onChange={(e) => {
+                                     const value = e.target.value;
+                                     const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                     handleInputChange('areaPrimerNivel', numValue);
+                                   }}
+                                   placeholder="Ej: 120"
+                                   className="mt-1"
+                                 />
+                                 <p className="text-xs text-muted-foreground mt-1">
+                                   Ingrese el área total del apartamento en metros cuadrados
+                                 </p>
+                               </div>
+                             </div>
+                           </TabsContent>
+                           
+                           <TabsContent value="adicional" className="space-y-4 mt-4">
+                             <div className="grid grid-cols-1 gap-4">
+                               <div>
+                                 <Label htmlFor="infoAdicional">
+                                   Información Adicional del Apartamento
+                                 </Label>
+                                 <p className="text-sm text-muted-foreground mt-2">
+                                   Esta sección está disponible para información adicional específica del apartamento.
+                                 </p>
+                               </div>
+                             </div>
+                           </TabsContent>
+                         </Tabs>
+                       </>
+                     ) : (
                       <>
                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
                         
