@@ -4285,7 +4285,7 @@ const PropertyValuation = () => {
           doc.setFont("helvetica", "normal");
           doc.text(`Precio Total: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft + 10, yPosition);
           yPosition += 6;
-          doc.text(`Precio por m²: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft + 10, yPosition);
+          
           yPosition += 6;
 
           // Análisis comparativo
@@ -5232,12 +5232,6 @@ const PropertyValuation = () => {
                   children: [
                     new TextRun({ text: "Precio Total: ", bold: true }),
                     new TextRun({ text: formatCurrency(comp.precio, selectedCurrency) })
-                  ]
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Precio por m²: ", bold: true }),
-                    new TextRun({ text: formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency) })
                   ]
                 }),
                 new Paragraph({ text: "" }), // Espacio
