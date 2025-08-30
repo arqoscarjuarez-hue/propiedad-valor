@@ -3059,7 +3059,7 @@ const PropertyValuation = () => {
                        (propertyData.areaSegundoNivel || 0) + 
                        (propertyData.areaTercerNivel || 0) + 
                        (propertyData.areaCuartoNivel || 0) +
-                       ((propertyData.areaApartamento || 0) * 2); // Duplicar área de apartamento
+                       (propertyData.areaApartamento || 0); // Área de apartamento sin duplicar
       
       // Validación diferente para terrenos vs propiedades construidas
       if (propertyData.tipoPropiedad === 'terreno') {
