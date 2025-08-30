@@ -325,10 +325,10 @@ const PropertyValuation = () => {
               <CardContent className="p-3 sm:p-6">
                 <Tabs defaultValue="areas" className="w-full">
                   <TabsList className="grid w-full grid-cols-4 h-auto">
+                    <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
                     <TabsTrigger value="espacios" className="h-8 sm:h-10 text-xs sm:text-sm">Espacios</TabsTrigger>
                     <TabsTrigger value="caracteristicas" className="h-8 sm:h-10 text-xs sm:text-sm">Características</TabsTrigger>
-                    <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
