@@ -6546,9 +6546,6 @@ const PropertyValuation = () => {
                 <div className="text-center py-8 space-y-6">
                   <div>
                     <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground mb-6">
-                      {translations[selectedLanguage].completeDataMessage}
-                    </p>
                   </div>
                   
                   {/* Botón Principal para Realizar Valuación */}
