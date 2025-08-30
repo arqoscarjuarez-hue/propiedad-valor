@@ -16,10 +16,8 @@ const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
 const DemoWalkthrough = lazy(() => import("@/components/DemoWalkthrough"));
 
 const Index = () => {
-  console.log('📱 Index component loading...');
   const { selectedLanguage } = useLanguage();
   const t = indexTranslations[selectedLanguage];
-  console.log('🌍 Selected language:', selectedLanguage);
   
   const [showValuation, setShowValuation] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
