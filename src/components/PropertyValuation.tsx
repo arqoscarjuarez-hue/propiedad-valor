@@ -634,7 +634,7 @@ const PropertyValuation = () => {
               <CardContent className="p-3 sm:p-6">
                 {/* Selector de Estrato Social */}
                 <div className="mb-6">
-                  <Label htmlFor="estratoSocial" className="text-base font-semibold">¿Cómo te consideras?</Label>
+                  <Label htmlFor="estratoSocial" className="text-base font-semibold">¿Cómo te consideras donde vives?</Label>
                   <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Selecciona el estrato social" />
