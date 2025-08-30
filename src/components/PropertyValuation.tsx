@@ -2599,14 +2599,14 @@ const PropertyValuation = () => {
           [field]: sanitizedValue
         };
         
-        // Para apartamentos: automáticamente igualar área de terreno al área del apartamento
-        if (newData.tipoPropiedad === 'apartamento') {
+        // Para departamentos: automáticamente igualar área de terreno al área del apartamento
+        if (newData.tipoPropiedad === 'departamento') {
           // Si se cambia el área del apartamento (primer nivel), igualar área de terreno
           if (field === 'areaPrimerNivel') {
             newData.areaTerreno = sanitizedValue as number;
           }
-          // Si se cambia el tipo a apartamento, igualar área de terreno al área del apartamento
-          else if (field === 'tipoPropiedad' && sanitizedValue === 'apartamento') {
+          // Si se cambia el tipo a departamento, igualar área de terreno al área del apartamento
+          else if (field === 'tipoPropiedad' && sanitizedValue === 'departamento') {
             newData.areaTerreno = prev.areaPrimerNivel || 0;
           }
         }
@@ -2717,59 +2717,56 @@ const PropertyValuation = () => {
   };
 
   const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
-    const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
+    const areaTotal = (propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0);
+    const desiredArea = propertyData.tipoPropiedad === 'terreno' ? (propertyData.areaTerreno || 0) : areaTotal;
     const lat = propertyData.latitud || 19.4326;
     const lng = propertyData.longitud || -99.1332;
-    
-    
-    
+
     // Primero intentar buscar propiedades reales
-    let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables);
-    
+    let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables * 2);
+
     // Si no hay suficientes propiedades reales, completar con simuladas
     if (nearbyAddresses.length < numComparables) {
-      
-      const simulatedAddresses = await generateNearbyAddresses(lat, lng, numComparables - nearbyAddresses.length);
+      const simulatedAddresses = await generateNearbyAddresses(lat, lng, (numComparables * 2) - nearbyAddresses.length);
       nearbyAddresses = [...nearbyAddresses, ...simulatedAddresses];
     }
-    
-    // Procesar comparables de forma más eficiente para móviles
+
+    // Ordenar por distancia ascendente para priorizar ubicación cercana
+    nearbyAddresses.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
+
+    // Procesar comparables de forma más eficiente para móviles y con mayor similitud de área
     const comparables = nearbyAddresses.map((addressInfo, index) => {
       try {
         const variation = (Math.random() - 0.5) * 0.2; // ±10% price variation
-        
-        // Lógica específica para terrenos vs propiedades construidas
+
         if (propertyData.tipoPropiedad === 'terreno') {
-          // Para terrenos, solo usamos área del terreno, no área construida
-          const areaVariationFactor = 0.6 + (Math.random() * 0.8); // Entre 0.6 y 1.4 (60% a 140% del área original)
-          const areaTerrenoComparable = Math.round(propertyData.areaTerreno * areaVariationFactor);
-          
-          // Asegurar que esté dentro del rango ±40%
-          const areaMinima = propertyData.areaTerreno * 0.6; // -40%
-          const areaMaxima = propertyData.areaTerreno * 1.4; // +40%
-          const areaTerrenoFinal = Math.max(areaMinima, Math.min(areaMaxima, areaTerrenoComparable));
-          
+          // Para terrenos, usar área del terreno con variación estrecha ±15%
+          const areaVariationFactor = 0.85 + (Math.random() * 0.30); // 0.85 - 1.15
+          const tentativeArea = (propertyData.areaTerreno || 0) * areaVariationFactor;
+          const areaMinima = (propertyData.areaTerreno || 0) * 0.85;
+          const areaMaxima = (propertyData.areaTerreno || 0) * 1.15;
+          const areaTerrenoFinal = Math.round(Math.max(areaMinima, Math.min(areaMaxima, tentativeArea)));
+
           // Generar características específicas de terreno
           const topografias = ['plano', 'pendiente-suave', 'pendiente-moderada', 'pendiente-pronunciada', 'irregular'];
           const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
           const topografiaComparable = topografias[Math.floor(Math.random() * topografias.length)];
           const tipoValoracionComparable = tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)];
-          
+
           return {
             id: `comp-${index + 1}`,
             address: addressInfo.address,
-            areaConstruida: 0, // Terrenos no tienen área construida
+            areaConstruida: 0,
             areaTerreno: areaTerrenoFinal,
             tipoPropiedad: 'terreno',
-            recamaras: 0, // Terrenos no tienen recámaras
-            banos: 0, // Terrenos no tienen baños
-            antiguedad: 0, // Terrenos no tienen antigüedad de construcción
+            recamaras: 0,
+            banos: 0,
+            antiguedad: 0,
             ubicacion: propertyData.ubicacion,
-            estadoGeneral: 'nuevo', // Terrenos se consideran en buen estado
-            // Campos específicos para terrenos
+            estadoGeneral: 'nuevo',
             topografia: topografiaComparable,
             tipoValoracion: tipoValoracionComparable,
-            precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
+            precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency),
             distancia: addressInfo.distance,
             descripcion: `Terreno de ${areaTerrenoFinal}m² con topografía ${topografiaComparable} para uso ${tipoValoracionComparable}. ${addressInfo.isReal ? 'Propiedad real encontrada en Google Maps' : 'Propiedad simulada'}.`,
             url: addressInfo.placeId ? `https://www.google.com/maps/place/?q=place_id:${addressInfo.placeId}` : `https://propiedades.com/terreno/${Math.random().toString(36).substr(2, 9)}`,
@@ -2831,8 +2828,11 @@ const PropertyValuation = () => {
           
           const variations = getPropertyVariations(tipoComparable);
           
-          // Aplicar variaciones
-          const areaComparable = Math.round(areaTotal * variations.areaVariation);
+          // Aplicar variaciones y acercar el área a la del sujeto (±15%)
+          const rawAreaComparable = Math.round(areaTotal * variations.areaVariation);
+          const areaMin = Math.round(desiredArea * 0.85);
+          const areaMax = Math.round(desiredArea * 1.15);
+          const areaComparable = Math.max(areaMin, Math.min(areaMax, rawAreaComparable));
           const recamarasComparable = Math.max(0, propertyData.recamaras + variations.recamarasVariation);
           const banosComparable = Math.max(1, propertyData.banos + variations.banosVariation);
           const antiguedadComparable = Math.max(0, propertyData.antiguedad + variations.antiguedadVariation);
@@ -5627,7 +5627,7 @@ const PropertyValuation = () => {
                         {translations[selectedLanguage].spaces}
                       </TabsTrigger>
                     )}
-                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                   {propertyData.tipoPropiedad !== 'departamento' && (
                      <TabsTrigger 
                        value="caracteristicas" 
                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5635,7 +5635,7 @@ const PropertyValuation = () => {
                        {translations[selectedLanguage].characteristics}
                      </TabsTrigger>
                    )}
-                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                   {propertyData.tipoPropiedad !== 'departamento' && (
                      <TabsTrigger 
                        value="servicios" 
                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5649,7 +5649,7 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].photos}
                    </TabsTrigger>
-                   {propertyData.tipoPropiedad !== 'apartamento' && (
+                   {propertyData.tipoPropiedad !== 'departamento' && (
                      <TabsTrigger 
                        value="ajustes" 
                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5660,38 +5660,38 @@ const PropertyValuation = () => {
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    {/* Campo específico para área de apartamento */}
-                    {propertyData.tipoPropiedad === 'apartamento' && (
-                      <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Área del Apartamento</h3>
-                        <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                          <div>
-                            <Label htmlFor="areaApartamento">Área del Apartamento (m²)</Label>
-                            <Input
-                              id="areaApartamento"
-                              type="number"
-                              value={propertyData.areaPrimerNivel || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                                handleInputChange('areaPrimerNivel', numValue);
-                              }}
-                              placeholder="Ej: 80"
-                              className="mt-1"
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Ingrese el área total del apartamento en metros cuadrados
-                            </p>
-                          </div>
+                  {/* Campo específico para área de departamento */}
+                  {propertyData.tipoPropiedad === 'departamento' && (
+                    <>
+                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Área del Departamento</h3>
+                      <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                        <div>
+                          <Label htmlFor="areaDepartamento">Área del Departamento (m²)</Label>
+                          <Input
+                            id="areaDepartamento"
+                            type="number"
+                            value={propertyData.areaPrimerNivel || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                              handleInputChange('areaPrimerNivel', numValue);
+                            }}
+                            placeholder="Ej: 80"
+                            className="mt-1"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Ingrese el área total del departamento en metros cuadrados
+                          </p>
                         </div>
-                      </>
-                    )}
-                    
-                    {/* Mostrar áreas de construcción solo si NO es terreno Y NO es apartamento */}
-                    {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'apartamento' && (
-                      <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].constructionAreas}</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      </div>
+                    </>
+                  )}
+                  
+                  {/* Mostrar áreas de construcción solo si NO es terreno Y NO es departamento */}
+                  {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
+                    <>
+                      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].constructionAreas}</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           <div>
                             <Label htmlFor="areaSotano">{translations[selectedLanguage].basement}</Label>
                             <Input
@@ -5799,15 +5799,15 @@ const PropertyValuation = () => {
                          id="areaTerreno"
                          type="number"
                          value={propertyData.areaTerreno || ''}
-                         disabled={propertyData.tipoPropiedad === 'apartamento'}
-                         readOnly={propertyData.tipoPropiedad === 'apartamento'}
+                         disabled={propertyData.tipoPropiedad === 'departamento'}
+                         readOnly={propertyData.tipoPropiedad === 'departamento'}
                           onChange={(e) => {
-                            if (propertyData.tipoPropiedad !== 'apartamento') {
+                            if (propertyData.tipoPropiedad !== 'departamento') {
                               const value = e.target.value;
                               handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
                             }
                           }}
-                         placeholder={propertyData.tipoPropiedad === 'apartamento' ? "Se calcula automáticamente" : "0"}
+                         placeholder={propertyData.tipoPropiedad === 'departamento' ? "Se calcula automáticamente" : "0"}
                        />
                      </div>
                    </div>
