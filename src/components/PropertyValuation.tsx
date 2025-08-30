@@ -6389,13 +6389,12 @@ const PropertyValuation = () => {
               <CardTitle className="text-lg sm:text-xl">{translations[selectedLanguage].valuationResultsTitle}</CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
-              {valuation && valuation > 0 ? (
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="text-center">
-                    <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">{translations[selectedLanguage].estimatedValue}</h3>
-                     <p className="text-2xl sm:text-3xl font-bold text-primary leading-tight break-words">
-                       {formatCurrency(valuation, selectedCurrency)}
-                     </p>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-center">
+                  <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">{translations[selectedLanguage].estimatedValue}</h3>
+                   <p className="text-2xl sm:text-3xl font-bold text-primary leading-tight break-words">
+                     {formatCurrency(valuation || 0, selectedCurrency)}
+                   </p>
                     <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
                     <p className="text-xs text-muted-foreground mt-1">Método: Comparables internacionales (IVS/RICS)</p>
                     
