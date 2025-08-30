@@ -6351,7 +6351,7 @@ const PropertyValuation = () => {
                        {formatCurrency(valuation, selectedCurrency)}
                      </p>
                     <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
-                    <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].basedOnComparablesText}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Método: Comparables internacionales (IVS/RICS)</p>
                     
                     {/* Mostrar información del ajuste si existe */}
                     {priceAdjustment !== 0 && baseValuation && (
@@ -6544,8 +6544,8 @@ const PropertyValuation = () => {
                     </Button>
                     
                     <div className="text-xs text-muted-foreground space-y-1">
+                      <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
                       <p>✓ Avalúo profesional con estándares IVS/RICS</p>
-                      <p>✓ Análisis de comparables del mercado</p>
                       <p>✓ Certificación internacional</p>
                     </div>
                   </div>
