@@ -5892,20 +5892,20 @@ const PropertyValuation = () => {
                                 const value = e.target.value;
                                 handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
                               }}
-                              placeholder="Ej: 85"
-                              className="mt-1"
-                            />
+                               placeholder="Ej: 85"
+                               className="mt-1"
+                             />
                            </div>
                          </div>
                        </>
                       )}
                     </TabsContent>
 
-
-
-
-
-                  <TabsContent value="servicios" className="space-y-4 mt-6">
+                   <TabsContent value="servicios" className="space-y-4 mt-6">
+                     <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                       <Home className="h-5 w-5" />
+                       {translations[selectedLanguage].availableServices}
+                     </h3>
                     <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                       <span className="text-lg">🌐</span>
                       EVALUACIÓN DE SERVICIOS - Estándares IVS/RICS
