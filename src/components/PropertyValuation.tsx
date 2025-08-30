@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
 
 import jsPDF from 'jspdf';
@@ -232,6 +232,18 @@ interface PropertyData {
   tipoValoracion?: string;
 }
 
+interface Comparable {
+  id: string;
+  address: string;
+  price_usd: number;
+  price_per_sqm_usd: number;
+  total_area: number | null;
+  latitude: number | null;
+  longitude: number | null;
+  property_type: string | null;
+  distance_km?: number;
+}
+
 const PropertyValuation = () => {
   const { toast } = useToast();
   const { selectedLanguage } = useLanguage();
@@ -239,6 +251,8 @@ const PropertyValuation = () => {
   // Estados para la valuación
   const [valuationResult, setValuationResult] = useState<number | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [comparables, setComparables] = useState<Comparable[]>([]);
+  const [isLoadingComparables, setIsLoadingComparables] = useState(false);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
     areaPrimerNivel: 0,
@@ -327,6 +341,71 @@ const PropertyValuation = () => {
            (propertyData.areaCuartoNivel || 0);
   };
 
+  // Util para calcular distancia entre dos coordenadas (Haversine)
+  const haversineDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const toRad = (v: number) => (v * Math.PI) / 180;
+    const R = 6371; // km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const fetchComparables = async () => {
+    try {
+      setIsLoadingComparables(true);
+      setComparables([]);
+
+      const lat = propertyData.latitud;
+      const lng = propertyData.longitud;
+
+      if (!lat || !lng) {
+        // Si no hay coordenadas, no bloqueamos el flujo; solo no mostramos comparables
+        return;
+      }
+
+      const delta = 0.3; // ~33km aprox, depende de la latitud
+      const { data, error } = await supabase
+        .from('property_comparables')
+        .select('id,address,price_usd,price_per_sqm_usd,total_area,latitude,longitude,property_type')
+        .gte('latitude', lat - delta)
+        .lte('latitude', lat + delta)
+        .gte('longitude', lng - delta)
+        .lte('longitude', lng + delta)
+        .limit(100);
+
+      if (error) throw error;
+
+      const withDistance: Comparable[] = (data || []).map((d: any) => ({
+        id: d.id,
+        address: d.address,
+        price_usd: Number(d.price_usd || 0),
+        price_per_sqm_usd: Number(d.price_per_sqm_usd || 0),
+        total_area: d.total_area !== null ? Number(d.total_area) : null,
+        latitude: d.latitude !== null ? Number(d.latitude) : null,
+        longitude: d.longitude !== null ? Number(d.longitude) : null,
+        property_type: d.property_type || null,
+        distance_km: d.latitude != null && d.longitude != null ? haversineDistanceKm(lat, lng, Number(d.latitude), Number(d.longitude)) : undefined,
+      }));
+
+      withDistance.sort((a, b) => (a.distance_km ?? Infinity) - (b.distance_km ?? Infinity));
+      setComparables(withDistance.slice(0, 5));
+    } catch (err) {
+      console.error('Error fetching comparables:', err);
+      toast({
+        title: 'Error obteniendo comparables',
+        description: 'Intenta nuevamente más tarde.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoadingComparables(false);
+    }
+  };
+
   // Función para calcular la valuación
   const performValuation = async () => {
     setIsCalculating(true);
@@ -363,6 +442,7 @@ const PropertyValuation = () => {
       const totalValue = effectiveArea * basePricePerM2;
       
       setValuationResult(totalValue);
+      await fetchComparables();
       
       toast({
         title: "Valuación Completada",
@@ -624,8 +704,8 @@ const PropertyValuation = () => {
                           <SimpleLocationMap
                             onLocationChange={(lat, lng, address) => {
                               handleInputChange('direccionCompleta', address);
-                              // También podríamos guardar las coordenadas si fuera necesario
-                              console.log('Nueva ubicación:', { lat, lng, address });
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
                             }}
                             initialLat={19.4326}
                             initialLng={-99.1332}
@@ -701,6 +781,48 @@ const PropertyValuation = () => {
                      >
                        Nueva Valuación
                      </Button>
+
+                     {/* Comparables cercanos */}
+                     <div className="space-y-3">
+                       <h4 className="text-base font-semibold">Comparables más cercanos</h4>
+                       {isLoadingComparables ? (
+                         <div className="text-sm text-muted-foreground">Buscando comparables cercanos...</div>
+                       ) : comparables.length > 0 ? (
+                         <div className="overflow-x-auto">
+                           <Table>
+                             <TableHeader>
+                               <TableRow>
+                                 <TableHead>Dirección</TableHead>
+                                 <TableHead className="text-right">Precio (USD)</TableHead>
+                                 <TableHead className="text-right">Precio/m²</TableHead>
+                                 <TableHead className="text-right">Área (m²)</TableHead>
+                                 <TableHead className="text-right">Distancia</TableHead>
+                               </TableRow>
+                             </TableHeader>
+                             <TableBody>
+                               {comparables.map((c) => (
+                                 <TableRow key={c.id}>
+                                   <TableCell className="max-w-[220px] truncate">{c.address}</TableCell>
+                                   <TableCell className="text-right">${(c.price_usd || 0).toLocaleString('en-US')}</TableCell>
+                                   <TableCell className="text-right">${(c.price_per_sqm_usd || 0).toLocaleString('en-US')}</TableCell>
+                                   <TableCell className="text-right">{c.total_area ?? '-'}</TableCell>
+                                   <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
+                                 </TableRow>
+                               ))}
+                             </TableBody>
+                           </Table>
+                           {comparables.length < 5 && (
+                             <p className="text-xs text-muted-foreground mt-2">
+                               Se encontraron {comparables.length} comparables cercanos.
+                             </p>
+                           )}
+                         </div>
+                       ) : (
+                         <div className="text-sm text-muted-foreground">
+                           No se encontraron comparables cercanos. Ajusta la ubicación para mejores resultados.
+                         </div>
+                       )}
+                     </div>
                      
                      <div className="text-xs text-muted-foreground space-y-1">
                        <p>✓ Método: Comparables internacionales (IVS/RICS)</p>
