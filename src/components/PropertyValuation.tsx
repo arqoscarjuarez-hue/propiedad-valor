@@ -6538,15 +6538,6 @@ const PropertyValuation = () => {
                         </span>
                       </div>
                     )}
-                    <div className="flex justify-between">
-                      <span>{translations[selectedLanguage].pricePerBuiltM2}:</span>
-                      <span className="font-medium">
-                         {formatCurrency(
-                           valuation / (propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel || 1), 
-                           selectedCurrency
-                         )}
-                      </span>
-                     </div>
                     </div>
                    
                       
