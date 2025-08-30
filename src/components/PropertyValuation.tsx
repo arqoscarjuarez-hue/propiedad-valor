@@ -209,17 +209,39 @@ export const estratoSocialLabels: Record<EstratoSocial, string> = {
   'bajo_bajo': 'Bajo Bajo'
 };
 
-const estratoMultipliers: Record<EstratoSocial, number> = {
-  bajo_bajo: 0.8,
-  bajo_medio: 0.9,
-  bajo_alto: 0.95,
-  medio_bajo: 0.98,
-  medio_medio: 1,
-  medio_alto: 1.08,
-  alto_bajo: 1.15,
-  alto_medio: 1.25,
-  alto_alto: 1.35,
+type SocialClass = 'baja' | 'media' | 'alta';
+
+const socialClassLabels: Record<SocialClass, string> = {
+  baja: 'Baja',
+  media: 'Media',
+  alta: 'Alta',
 };
+
+const estratoToClassMap: Record<EstratoSocial, SocialClass> = {
+  bajo_bajo: 'baja',
+  bajo_medio: 'baja',
+  bajo_alto: 'baja',
+  medio_bajo: 'media',
+  medio_medio: 'media',
+  medio_alto: 'media',
+  alto_bajo: 'alta',
+  alto_medio: 'alta',
+  alto_alto: 'alta',
+};
+
+const classToEstratos: Record<SocialClass, EstratoSocial[]> = {
+  baja: ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
+  media: ['medio_bajo', 'medio_medio', 'medio_alto'],
+  alta: ['alto_bajo', 'alto_medio', 'alto_alto'],
+};
+
+const classMultipliers: Record<SocialClass, number> = {
+  baja: 0.9,
+  media: 1.0,
+  alta: 1.2,
+};
+
+const getSocialClass = (e: EstratoSocial): SocialClass => estratoToClassMap[e];
 
 interface PropertyData {
   areaSotano: number;
@@ -415,20 +437,37 @@ const PropertyValuation = () => {
         return;
       }
 
-      // Usar la función de BD con búsqueda progresiva
-      const { data, error } = await supabase.rpc('find_comparables_progressive_radius', {
-        target_lat: lat,
-        target_lng: lng,
-        target_estrato: estrato,
-        target_property_type: propertyData.tipoPropiedad
-      });
+      // Buscar comparables por CLASE social (Baja/Media/Alta)
+      const clase = getSocialClass(estrato);
+      const estratosGrupo = classToEstratos[clase];
 
-      if (error) {
-        console.error('Error fetching comparables:', error);
-        return; // No bloquear, solo continuar sin comparables
+      const results = await Promise.all(
+        estratosGrupo.map(e => supabase.rpc('find_comparables_progressive_radius', {
+          target_lat: lat,
+          target_lng: lng,
+          target_estrato: e,
+          target_property_type: propertyData.tipoPropiedad
+        }))
+      );
+
+      const allData = results
+        .filter((r: any) => {
+          if (r.error) {
+            console.error('Error fetching comparables for estrato', r);
+            return false;
+          }
+          return Array.isArray(r.data);
+        })
+        .flatMap((r: any) => r.data as any[]);
+
+      // De-duplicar por id
+      const uniqueById: Record<string, any> = {};
+      for (const d of allData) {
+        uniqueById[d.id] = d;
       }
+      const merged = Object.values(uniqueById);
 
-      const comparablesData: Comparable[] = (data || []).map((d: any) => ({
+      const comparablesData: Comparable[] = (merged || []).map((d: any) => ({
         id: d.id,
         address: d.address,
         price_usd: Number(d.price_usd || 0),
@@ -444,15 +483,16 @@ const PropertyValuation = () => {
       setComparables(comparablesData);
 
       // Mostrar toast informativo pero no bloquear
+      const claseLabel = socialClassLabels[clase];
       if (comparablesData.length < 3) {
         toast({
           title: "Información de comparables",
-          description: `Se encontraron ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}. La valuación se basa en el método de costo.`,
+          description: `Se encontraron ${comparablesData.length} comparables de la clase social ${claseLabel}. La valuación se basa en el método de costo.`,
         });
       } else {
         toast({
           title: "Comparables encontrados",
-          description: `Se encontraron ${comparablesData.length} comparables del estrato ${estratoSocialLabels[estrato]}`,
+          description: `Se encontraron ${comparablesData.length} comparables de la misma clase social (${claseLabel})`,
         });
       }
 
@@ -492,7 +532,8 @@ const PropertyValuation = () => {
         // Cálculo para apartamento: área * precio por m²
         const areaEfectiva = propertyData.areaApartamento;
         const precioM2 = 1800; // USD por m² para apartamentos
-        const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+        const claseSocial = getSocialClass(propertyData.estratoSocial);
+        const factorEstrato = classMultipliers[claseSocial];
         const valorTotal = areaEfectiva * precioM2 * factorEstrato;
         
         console.log('Área efectiva apartamento:', areaEfectiva);
@@ -545,7 +586,8 @@ const PropertyValuation = () => {
       }
       
       // Calcular valor total con factor por estrato social
-      const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+      const claseSocial = getSocialClass(propertyData.estratoSocial);
+      const factorEstrato = classMultipliers[claseSocial];
       const totalValue = effectiveArea * basePricePerM2 * factorEstrato;
       
       setValuationResult(totalValue);
@@ -849,7 +891,8 @@ const PropertyValuation = () => {
                                return;
                              }
                              
-                             const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
+                              const claseSocial = getSocialClass(propertyData.estratoSocial);
+                              const factorEstrato = classMultipliers[claseSocial];
                              valorTotal = valorTotal * factorEstrato;
                              console.log('Tipo:', propertyData.tipoPropiedad);
                              console.log('Área efectiva:', areaEfectiva);
@@ -887,9 +930,9 @@ const PropertyValuation = () => {
                    {/* Comparables - solo mostrar si hay resultado */}
                    {valuationResult && (
                      <div className="space-y-3">
-                       <h4 className="text-base font-semibold">Comparables del mismo estrato social</h4>
+                       <h4 className="text-base font-semibold">Comparables de la misma clase social</h4>
                        <p className="text-xs text-muted-foreground">
-                         Estrato: {estratoSocialLabels[propertyData.estratoSocial]} | 
+                         Clase social: {socialClassLabels[getSocialClass(propertyData.estratoSocial)]} | 
                          Normas: UPAV, IVSC, Reglamentos Latinoamericanos
                        </p>
                        {isLoadingComparables ? (
