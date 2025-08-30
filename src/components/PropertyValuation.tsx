@@ -60,6 +60,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Áreas de Construcción (m²)',
+    apartmentArea: 'Área del Apartamento (m²)',
     basement: 'Sótano',
     firstFloor: 'Primer Nivel',
     secondFloor: 'Segundo Nivel',
@@ -441,6 +442,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Construction Areas (sqm)',
+    apartmentArea: 'Apartment Area (sqm)',
     basement: 'Basement',
     firstFloor: 'First Floor',
     secondFloor: 'Second Floor',
@@ -822,6 +824,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Superficies de Construction (m²)',
+    apartmentArea: 'Surface de l\'Appartement (m²)',
     basement: 'Sous-sol',
     firstFloor: 'Rez-de-chaussée',
     secondFloor: 'Premier Étage',
@@ -1203,6 +1206,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Bauflächen (m²)',
+    apartmentArea: 'Wohnungsfläche (m²)',
     basement: 'Keller',
     firstFloor: 'Erdgeschoss',
     secondFloor: 'Erster Stock',
@@ -1586,6 +1590,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Aree di Costruzione (m²)',
+    apartmentArea: 'Area dell\'Appartamento (m²)',
     basement: 'Seminterrato',
     firstFloor: 'Piano Terra',
     secondFloor: 'Primo Piano',
@@ -1965,6 +1970,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Áreas de Construção (m²)',
+    apartmentArea: 'Área do Apartamento (m²)',
     basement: 'Subsolo',
     firstFloor: 'Térreo',
     secondFloor: 'Primeiro Andar',
@@ -5701,7 +5707,7 @@ const PropertyValuation = () => {
                       {propertyData.tipoPropiedad !== 'terreno' && (
                         <div>
                           <Label htmlFor="areaConstruccion">
-                            {propertyData.tipoPropiedad === 'departamento' ? 'Área del Departamento (m²)' : 'Área de Construcción (m²)'}
+                            {propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentArea : translations[selectedLanguage].constructionAreas}
                           </Label>
                           <Input
                             id="areaConstruccion"
@@ -5717,7 +5723,7 @@ const PropertyValuation = () => {
                           />
                           <p className="text-xs text-muted-foreground mt-1">
                             {propertyData.tipoPropiedad === 'departamento' 
-                              ? 'Ingrese el área total del departamento'
+                              ? 'Ingrese el área total del apartamento en metros cuadrados'
                               : 'Ingrese el área total construida de la propiedad'
                             }
                           </p>
