@@ -2504,8 +2504,8 @@ const PropertyValuation = () => {
     }
   });
   
-  const [valuation, setValuation] = useState<number | null>(savedData.valuation);
-  const [baseValuation, setBaseValuation] = useState<number | null>(savedData.baseValuation);
+  const [valuation, setValuation] = useState<number | null>(null);
+  const [baseValuation, setBaseValuation] = useState<number | null>(null);
   const [priceAdjustment, setPriceAdjustment] = useState<number>(savedData.priceAdjustment);
   const [multipleValuations, setMultipleValuations] = useState<Array<{
     id: number;
