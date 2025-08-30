@@ -620,68 +620,47 @@ const PropertyValuation = () => {
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                     {propertyData.tipoPropiedad === 'apartamento' ? (
                       <>
-                        <Tabs defaultValue="general" className="w-full">
-                          <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="general">Información General</TabsTrigger>
-                            <TabsTrigger value="adicional">Información Adicional</TabsTrigger>
-                            <TabsTrigger value="apartamento">Apartamento</TabsTrigger>
-                          </TabsList>
-
-                          <TabsContent value="general" className="space-y-4 mt-4">
-                            <div className="grid grid-cols-1 gap-4">
-                              <div>
-                                <Label htmlFor="areaApartamento">Área del Apartamento (m²)</Label>
-                                <Input
-                                  id="areaApartamento"
-                                  type="number"
-                                  value={propertyData.areaApartamento || ''}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
-                                  }}
-                                  placeholder="0"
-                                  className="mt-1"
-                                />
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  Ingrese el área total del apartamento en metros cuadrados
-                                </p>
-                                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">
-                                  ℹ️ Para apartamentos solo se requiere esta área. Se duplica automáticamente para avalúo: {propertyData.areaApartamento ? `${propertyData.areaApartamento} × 2 = ${getEffectiveArea()} m²` : '0 × 2 = 0 m²'}
-                                </p>
-                                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                  ✓ No se requiere área de terreno para apartamentos
-                                </p>
-                              </div>
-                            </div>
-                          </TabsContent>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">🏢 Información del Apartamento</h3>
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                          <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">
+                              📋 Avalúo Especial para Apartamentos
+                            </h4>
+                            <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1 mb-4">
+                              <li>• Solo necesita ingresar el área interior del apartamento</li>
+                              <li>• No requiere área de terreno ni construcción adicional</li>
+                              <li>• El área se duplica automáticamente para el avalúo profesional</li>
+                              <li>• Incluye: sala, comedor, cocina, recámaras, baños</li>
+                            </ul>
+                          </div>
                           
-                          <TabsContent value="adicional" className="space-y-4 mt-4">
-                            <div className="grid grid-cols-1 gap-4">
-                              <div>
-                                <h4 className="text-sm font-medium">Información Adicional</h4>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  Esta sección está disponible para información adicional específica del apartamento.
-                                </p>
-                              </div>
+                          <div>
+                            <Label htmlFor="areaApartamento" className="text-base font-semibold">🏠 Área del Apartamento (m²)</Label>
+                            <Input
+                              id="areaApartamento"
+                              type="number"
+                              value={propertyData.areaApartamento || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                              placeholder="Ingrese el área total del apartamento"
+                              className="mt-2 text-lg"
+                            />
+                            <p className="text-sm text-muted-foreground mt-2">
+                              Ingrese el área total interior del apartamento en metros cuadrados
+                            </p>
+                            <div className="mt-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+                                ✅ Área efectiva para avalúo: {propertyData.areaApartamento ? `${propertyData.areaApartamento} × 2 = ${getEffectiveArea()} m²` : '0 × 2 = 0 m²'}
+                              </p>
+                              <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                Esta duplicación es estándar en avalúos profesionales de apartamentos
+                              </p>
                             </div>
-                          </TabsContent>
-                          
-                          <TabsContent value="apartamento" className="space-y-4 mt-4">
-                            <div className="grid grid-cols-1 gap-4">
-                              <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                                <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-                                  📋 Información para Apartamentos
-                                </h4>
-                                <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                                  <li>• Solo se requiere el área interior del apartamento</li>
-                                  <li>• No se necesita área de terreno ni construcción</li>
-                                  <li>• El área se duplica automáticamente para el avalúo</li>
-                                  <li>• Incluye: sala, comedor, cocina, recámaras, baños</li>
-                                </ul>
-                              </div>
-                            </div>
-                          </TabsContent>
-                        </Tabs>
+                          </div>
+                        </div>
                       </>
                     ) : (
                       <>
