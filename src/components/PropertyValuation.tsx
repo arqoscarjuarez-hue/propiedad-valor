@@ -309,6 +309,21 @@ const PropertyValuation = () => {
     });
   };
 
+  // Función para calcular el área efectiva para avalúo
+  const getEffectiveArea = () => {
+    if (propertyData.tipoPropiedad === 'apartamento') {
+      // Para apartamentos, el área se duplica para el avalúo
+      return (propertyData.areaApartamento || 0) * 2;
+    }
+    
+    // Para otras propiedades, usar la suma de áreas normales
+    return (propertyData.areaSotano || 0) + 
+           (propertyData.areaPrimerNivel || 0) + 
+           (propertyData.areaSegundoNivel || 0) + 
+           (propertyData.areaTercerNivel || 0) + 
+           (propertyData.areaCuartoNivel || 0);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -358,6 +373,9 @@ const PropertyValuation = () => {
                                 />
                                 <p className="text-xs text-muted-foreground mt-1">
                                   Ingrese el área total del apartamento en metros cuadrados
+                                </p>
+                                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 font-medium">
+                                  ℹ️ Para el avalúo se duplica automáticamente: {propertyData.areaApartamento ? `${propertyData.areaApartamento} × 2 = ${getEffectiveArea()} m²` : '0 × 2 = 0 m²'}
                                 </p>
                               </div>
                             </div>
