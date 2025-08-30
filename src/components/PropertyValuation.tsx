@@ -5666,23 +5666,20 @@ const PropertyValuation = () => {
                       {translations[selectedLanguage].areas}
                     </TabsTrigger>
                      {propertyData.tipoPropiedad === 'departamento' && (
-                       <>
-                         {console.log('SHOWING AREA TAB FOR APARTMENT!')}
-                         <TabsTrigger 
-                           value="area-apartamento" 
-                           className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                         >
-                           AREA
-                         </TabsTrigger>
-                       </>
-                     )}
-                     {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
                        <TabsTrigger 
-                         value="espacios" 
-                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                         value="area-apartamento" 
+                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-red-500 text-white font-bold data-[state=active]:bg-red-600"
                        >
-                         {translations[selectedLanguage].spaces}
+                         AAAAREA
                        </TabsTrigger>
+                     )}
+                      {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
+                        <TabsTrigger 
+                          value="espacios" 
+                          className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                        >
+                          {translations[selectedLanguage].spaces}
+                        </TabsTrigger>
                       )}
                     {propertyData.tipoPropiedad !== 'departamento' && (
                      <TabsTrigger 
