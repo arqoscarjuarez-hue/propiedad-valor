@@ -367,8 +367,8 @@ const PropertyValuation = () => {
   // Función para calcular el área efectiva para avalúo
   const getEffectiveArea = () => {
     if (propertyData.tipoPropiedad === 'apartamento') {
-      // Para apartamentos, solo se necesita el área del apartamento (se duplica para el avalúo)
-      return (propertyData.areaApartamento || 0) * 2;
+      // Para apartamentos, solo se necesita el área del apartamento
+      return (propertyData.areaApartamento || 0);
     } else if (propertyData.tipoPropiedad === 'terreno') {
       // Para terrenos, solo se necesita el área del terreno
       return propertyData.areaTerreno || 0;
@@ -489,8 +489,8 @@ const PropertyValuation = () => {
         // Simular cálculo con delay
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Cálculo para apartamento: área * 2 * precio por m²
-        const areaEfectiva = propertyData.areaApartamento * 2;
+        // Cálculo para apartamento: área * precio por m²
+        const areaEfectiva = propertyData.areaApartamento;
         const precioM2 = 1800; // USD por m² para apartamentos
         const factorEstrato = estratoMultipliers[propertyData.estratoSocial] ?? 1;
         const valorTotal = areaEfectiva * precioM2 * factorEstrato;
@@ -645,7 +645,7 @@ const PropertyValuation = () => {
                             <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1 mb-4">
                               <li>• Solo necesita ingresar el área interior del apartamento</li>
                               <li>• No requiere área de terreno ni construcción adicional</li>
-                              <li>• El área se duplica automáticamente para el avalúo profesional</li>
+                              <li>• Se aplica el área directa del apartamento para el avalúo</li>
                               <li>• Incluye: sala, comedor, cocina, recámaras, baños</li>
                             </ul>
                           </div>
