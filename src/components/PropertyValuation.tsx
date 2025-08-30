@@ -2599,27 +2599,15 @@ const PropertyValuation = () => {
           [field]: sanitizedValue
         };
         
-        // Para apartamentos: automáticamente igualar área de terreno al área construida total
+        // Para apartamentos: automáticamente igualar área de terreno al área del apartamento
         if (newData.tipoPropiedad === 'apartamento') {
-          // Si se cambia cualquier área de construcción, recalcular área de terreno
-          if (['areaSotano', 'areaPrimerNivel', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel'].includes(field)) {
-            const totalAreaConstruida = 
-              (newData.areaSotano || 0) + 
-              (newData.areaPrimerNivel || 0) + 
-              (newData.areaSegundoNivel || 0) + 
-              (newData.areaTercerNivel || 0) + 
-              (newData.areaCuartoNivel || 0);
-            newData.areaTerreno = totalAreaConstruida;
+          // Si se cambia el área del apartamento (primer nivel), igualar área de terreno
+          if (field === 'areaPrimerNivel') {
+            newData.areaTerreno = sanitizedValue as number;
           }
-          // Si se cambia el tipo a apartamento, igualar área de terreno
+          // Si se cambia el tipo a apartamento, igualar área de terreno al área del apartamento
           else if (field === 'tipoPropiedad' && sanitizedValue === 'apartamento') {
-            const totalAreaConstruida = 
-              (prev.areaSotano || 0) + 
-              (prev.areaPrimerNivel || 0) + 
-              (prev.areaSegundoNivel || 0) + 
-              (prev.areaTercerNivel || 0) + 
-              (prev.areaCuartoNivel || 0);
-            newData.areaTerreno = totalAreaConstruida;
+            newData.areaTerreno = prev.areaPrimerNivel || 0;
           }
         }
         
@@ -5672,8 +5660,35 @@ const PropertyValuation = () => {
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    {/* Mostrar áreas de construcción solo si NO es terreno */}
-                    {propertyData.tipoPropiedad !== 'terreno' && (
+                    {/* Campo específico para área de apartamento */}
+                    {propertyData.tipoPropiedad === 'apartamento' && (
+                      <>
+                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Área del Apartamento</h3>
+                        <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                          <div>
+                            <Label htmlFor="areaApartamento">Área del Apartamento (m²)</Label>
+                            <Input
+                              id="areaApartamento"
+                              type="number"
+                              value={propertyData.areaPrimerNivel || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                const numValue = value === '' ? 0 : parseFloat(value) || 0;
+                                handleInputChange('areaPrimerNivel', numValue);
+                              }}
+                              placeholder="Ej: 80"
+                              className="mt-1"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Ingrese el área total del apartamento en metros cuadrados
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Mostrar áreas de construcción solo si NO es terreno Y NO es apartamento */}
+                    {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'apartamento' && (
                       <>
                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].constructionAreas}</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
