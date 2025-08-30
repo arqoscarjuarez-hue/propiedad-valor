@@ -5661,10 +5661,15 @@ const PropertyValuation = () => {
                    </TabsTrigger>
                    <TabsTrigger 
                      value="areas" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentAreaTab : translations[selectedLanguage].areas}
-                   </TabsTrigger>
+                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    >
+                      {(() => {
+                        console.log('Property type:', propertyData.tipoPropiedad);
+                        console.log('apartmentAreaTab:', translations[selectedLanguage].apartmentAreaTab);
+                        console.log('areas:', translations[selectedLanguage].areas);
+                        return propertyData.tipoPropiedad === 'departamento' ? translations[selectedLanguage].apartmentAreaTab : translations[selectedLanguage].areas;
+                      })()}
+                    </TabsTrigger>
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
                         value="espacios" 
