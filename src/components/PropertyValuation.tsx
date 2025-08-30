@@ -2734,15 +2734,27 @@ const PropertyValuation = () => {
     const lat = propertyData.latitud || 19.4326;
     const lng = propertyData.longitud || -99.1332;
 
-    // Primero intentar buscar propiedades reales
-    let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables * 2);
+    // Primero intentar buscar propiedades reales con radios progresivos (1km, 2km, 3km, 5km)
+    const radii = [1000, 2000, 3000, 5000];
+    let nearbyAddresses: any[] = [];
+    const seen = new Set<string>();
+    for (const r of radii) {
+      const batch = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables * 2, r);
+      for (const item of batch) {
+        const key = item.placeId || item.address;
+        if (!seen.has(key)) {
+          seen.add(key);
+          nearbyAddresses.push(item);
+        }
+      }
+      if (nearbyAddresses.length >= numComparables) break;
+    }
 
-    // Si no hay suficientes propiedades reales, completar con simuladas
+    // Si no hay suficientes propiedades reales, completar con simuladas cercanas
     if (nearbyAddresses.length < numComparables) {
       const simulatedAddresses = await generateNearbyAddresses(lat, lng, (numComparables * 2) - nearbyAddresses.length);
       nearbyAddresses = [...nearbyAddresses, ...simulatedAddresses];
     }
-
     // Ordenar por distancia ascendente para priorizar ubicación cercana
     nearbyAddresses.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
 
@@ -2921,10 +2933,8 @@ const PropertyValuation = () => {
   };
 
   // Función para buscar propiedades cercanas usando Google Maps
-  const searchNearbyProperties = async (lat: number, lng: number, propertyType: string, numResults: number = 10) => {
+  const searchNearbyProperties = async (lat: number, lng: number, propertyType: string, numResults: number = 10, radiusMeters: number = 2000) => {
     try {
-      
-      
       const propertyTypeQueries = {
         'casa': 'casas en venta',
         'departamento': 'apartamentos en venta',
@@ -2937,36 +2947,30 @@ const PropertyValuation = () => {
         'restaurant': 'restaurantes en venta',
         'hotel': 'hoteles en venta'
       };
-      
       const query = propertyTypeQueries[propertyType as keyof typeof propertyTypeQueries] || 'propiedades en venta';
-      
       // Timeout más corto para móviles
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('Timeout - búsqueda muy lenta')), 8000)
       );
-      
       const searchPromise = supabase.functions.invoke('google-maps', {
         body: {
           action: 'places-search',
           data: {
-            query: query,
-            lat: lat,
-            lng: lng,
-            radius: 2000 // 2km radius
+            query,
+            lat,
+            lng,
+            radius: radiusMeters
           }
         }
       });
-      
       const response = await Promise.race([searchPromise, timeoutPromise]);
-
       if ((response as any)?.data?.results && (response as any).data.results.length > 0) {
-        
         return (response as any).data.results.slice(0, numResults).map((place: any, index: number) => ({
           id: `real-${index + 1}`,
           address: place.name || place.vicinity || `Propiedad ${index + 1}`,
           distance: place.geometry?.location ? 
             calculateDistance(lat, lng, place.geometry.location.lat, place.geometry.location.lng) :
-            Math.round(Math.random() * 2000),
+            Math.round(Math.random() * radiusMeters),
           lat: place.geometry?.location?.lat || lat + (Math.random() - 0.5) * 0.01,
           lng: place.geometry?.location?.lng || lng + (Math.random() - 0.5) * 0.01,
           placeId: place.place_id,
@@ -2974,7 +2978,6 @@ const PropertyValuation = () => {
           isReal: true
         }));
       } else {
-        
         return [];
       }
     } catch (error) {
@@ -3029,13 +3032,17 @@ const PropertyValuation = () => {
   const calcularValorConComparables = (valorBase: number, comparables: ComparativeProperty[]): number => {
     if (comparables.length === 0) return valorBase;
     
-    // Calcular precio promedio de comparables
-    const precioPromedioComparables = comparables.reduce((sum, comp) => sum + comp.precio, 0) / comparables.length;
+    // Calcular precio promedio ponderado por cercanía (mayor peso a los más cercanos)
+    const weights = comparables.map((comp) => {
+      const d = typeof comp.distancia === 'number' ? comp.distancia : 2000; // en metros
+      return 1 / (1 + d / 1000); // 0.5 a 1km, 0.25 a 3km, etc.
+    });
+    const totalWeight = weights.reduce((a, b) => a + b, 0) || 1;
+    const precioPromedioComparables = comparables.reduce((sum, comp, i) => sum + comp.precio * weights[i], 0) / totalWeight;
     
-    // Calcular factor de ajuste basado en comparables (60% valor calculado + 40% promedio comparables)
+    // Calcular factor de ajuste basado en comparables (60% valor calculado + 40% promedio comparables ponderado)
     const factorAjuste = 0.6;
     const valorAjustadoPorComparables = (valorBase * factorAjuste) + (precioPromedioComparables * (1 - factorAjuste));
-    
     
     return valorAjustadoPorComparables;
   };
