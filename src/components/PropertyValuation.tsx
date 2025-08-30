@@ -5816,8 +5816,8 @@ const PropertyValuation = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">{translations[selectedLanguage].areas}</h3>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Área de construcción - solo para casas y comerciales (no apartamentos ni terrenos) */}
-                          {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'apartamento' && (
+                          {/* Área de construcción - para todas las propiedades excepto terrenos */}
+                          {propertyData.tipoPropiedad !== 'terreno' && (
                             <div>
                               <Label htmlFor="areaConstruccion">
                                 Área de Construcción Casa (m²)
@@ -5840,8 +5840,8 @@ const PropertyValuation = () => {
                             </div>
                           )}
                           
-                          {/* Área de terreno - solo para casas y comerciales (no apartamentos) */}
-                          {propertyData.tipoPropiedad !== 'apartamento' && (
+                          {/* Área de terreno - siempre visible para el método de comparables */}
+                          <div>
                             <div>
                               <div className="flex items-center gap-2 mb-2">
                                 <Label htmlFor="areaTerreno">Área de Terreno Casa (m²)</Label>
@@ -5878,7 +5878,6 @@ const PropertyValuation = () => {
                                 className="mt-1"
                               />
                             </div>
-                          )}
 
                           {/* Área de Apartamento */}
                           <div>
