@@ -3438,7 +3438,7 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para clasificar comparables por proximidad y precio (matriz 3x3)
+  // Función para clasificar comparables por proximidad y precio (matriz 3x3) - Estratificación Latino América
   const classifyComparable = (comparable: ComparativeProperty) => {
     // Calcular distancia
     const distance = comparable.distancia || 0;
@@ -3456,22 +3456,15 @@ const PropertyValuation = () => {
     // Calcular precio por m² del comparable
     const pricePerSqm = comparable.precio / comparable.areaConstruida;
     
-    // Obtener todos los precios para calcular terciles
-    const allPrices = (allComparativeProperties.length > 0 ? allComparativeProperties : comparativeProperties)
-      .map(p => p.precio / p.areaConstruida);
-    allPrices.sort((a, b) => a - b);
-    
-    const firstTertile = allPrices[Math.floor(allPrices.length / 3)];
-    const secondTertile = allPrices[Math.floor((allPrices.length * 2) / 3)];
-    
-    // Clasificar por precio
+    // Estratificación de precios para Latino América (USD/m²)
+    // Rangos típicos del mercado latinoamericano
     let priceClass = '';
-    if (pricePerSqm <= firstTertile) {
-      priceClass = 'bajo';
-    } else if (pricePerSqm <= secondTertile) {
-      priceClass = 'medio';
+    if (pricePerSqm <= 800) {
+      priceClass = 'bajo';    // Segmento económico
+    } else if (pricePerSqm <= 1500) {
+      priceClass = 'medio';   // Segmento medio
     } else {
-      priceClass = 'alto';
+      priceClass = 'alto';    // Segmento alto/premium
     }
     
     // Crear la clasificación 3x3: ubicación-precio
