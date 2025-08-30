@@ -5665,14 +5665,12 @@ const PropertyValuation = () => {
                     >
                       {translations[selectedLanguage].areas}
                      </TabsTrigger>
-                     {propertyData.tipoPropiedad === 'departamento' ? (
-                       <TabsTrigger 
-                         value="area-apartamento" 
-                         className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                       >
-                         AREA
-                       </TabsTrigger>
-                     ) : null}
+                     <TabsTrigger 
+                       value="area-apartamento" 
+                       className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-orange-500 text-white font-bold"
+                     >
+                       AREA-TEST
+                     </TabsTrigger>
                      {propertyData.tipoPropiedad !== 'terreno' && propertyData.tipoPropiedad !== 'departamento' && (
                       <TabsTrigger 
                         value="espacios" 
