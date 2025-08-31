@@ -991,90 +991,90 @@ const PropertyValuation = () => {
                             <p className="text-sm text-amber-100">Haga clic en el estado que corresponda a su propiedad</p>
                           </CardHeader>
                           <CardContent className="p-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando NUEVO');
-                                  handleInputChange('estadoConservacion', 'nuevo');
-                                }}
-                                className={`p-4 bg-green-50 dark:bg-green-950 rounded-lg border-2 border-green-200 dark:border-green-800 text-left hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'nuevo' ? 'ring-4 ring-green-500 bg-green-100 dark:bg-green-900' : ''}`}
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando NUEVO');
+                                   handleInputChange('estadoConservacion', 'nuevo');
+                                 }}
+                                 className={`p-2 bg-green-50 dark:bg-green-950 rounded-md border border-green-200 dark:border-green-800 text-left hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'nuevo' ? 'ring-2 ring-green-500 bg-green-100 dark:bg-green-900' : ''}`}
                               >
-                                <div className="font-bold text-green-700 dark:text-green-300 mb-2 text-lg">🟢 NUEVO (Factor: 1.0000)</div>
-                                <p className="text-green-600 dark:text-green-400 text-sm">Construcción reciente o recién terminada. Sin desgaste visible. Todos los sistemas funcionando perfectamente.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando BUENO');
-                                  handleInputChange('estadoConservacion', 'bueno');
-                                }}
-                                className={`p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border-2 border-blue-200 dark:border-blue-800 text-left hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'bueno' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900' : ''}`}
-                              >
-                                <div className="font-bold text-blue-700 dark:text-blue-300 mb-2 text-lg">🔵 BUENO (Factor: 0.9968)</div>
-                                <p className="text-blue-600 dark:text-blue-400 text-sm">Excelente estado general. Mantenimiento adecuado. Desgaste mínimo por uso normal.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando MEDIO');
-                                  handleInputChange('estadoConservacion', 'medio');
-                                }}
-                                className={`p-4 bg-cyan-50 dark:bg-cyan-950 rounded-lg border-2 border-cyan-200 dark:border-cyan-800 text-left hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'medio' ? 'ring-4 ring-cyan-500 bg-cyan-100 dark:bg-cyan-900' : ''}`}
-                              >
-                                <div className="font-bold text-cyan-700 dark:text-cyan-300 mb-2 text-lg">🔷 MEDIO (Factor: 0.9748)</div>
-                                <p className="text-cyan-600 dark:text-cyan-400 text-sm">Buen estado con desgaste moderado. Algunos elementos requieren mantenimiento preventivo.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando REGULAR');
-                                  handleInputChange('estadoConservacion', 'regular');
-                                }}
-                                className={`p-4 bg-yellow-50 dark:bg-yellow-950 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 text-left hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'regular' ? 'ring-4 ring-yellow-500 bg-yellow-100 dark:bg-yellow-900' : ''}`}
-                              >
-                                <div className="font-bold text-yellow-700 dark:text-yellow-300 mb-2 text-lg">🟡 REGULAR (Factor: 0.9191)</div>
-                                <p className="text-yellow-600 dark:text-yellow-400 text-sm">Estado aceptable pero con desgaste visible. Necesita mantenimiento correctivo menor.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando REPARACIONES SENCILLAS');
-                                  handleInputChange('estadoConservacion', 'reparaciones_sencillas');
-                                }}
-                                className={`p-4 bg-orange-50 dark:bg-orange-950 rounded-lg border-2 border-orange-200 dark:border-orange-800 text-left hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'ring-4 ring-orange-500 bg-orange-100 dark:bg-orange-900' : ''}`}
-                              >
-                                <div className="font-bold text-orange-700 dark:text-orange-300 mb-2 text-lg">🟠 REPARACIONES SENCILLAS (Factor: 0.8190)</div>
-                                <p className="text-orange-600 dark:text-orange-400 text-sm">Requiere reparaciones menores como pintura, plomería básica, o cambio de accesorios.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando REPARACIONES MEDIAS');
-                                  handleInputChange('estadoConservacion', 'reparaciones_medias');
-                                }}
-                                className={`p-4 bg-red-50 dark:bg-red-950 rounded-lg border-2 border-red-200 dark:border-red-800 text-left hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900' : ''}`}
-                              >
-                                <div className="font-bold text-red-700 dark:text-red-300 mb-2 text-lg">🔴 REPARACIONES MEDIAS (Factor: 0.6680)</div>
-                                <p className="text-red-600 dark:text-red-400 text-sm">Necesita reparaciones importantes: pisos, instalaciones eléctricas, o sistemas de clima.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando REPARACIONES IMPORTANTES');
-                                  handleInputChange('estadoConservacion', 'reparaciones_importantes');
-                                }}
-                                className={`p-4 bg-purple-50 dark:bg-purple-950 rounded-lg border-2 border-purple-200 dark:border-purple-800 text-left hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'ring-4 ring-purple-500 bg-purple-100 dark:bg-purple-900' : ''}`}
-                              >
-                                <div className="font-bold text-purple-700 dark:text-purple-300 mb-2 text-lg">🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)</div>
-                                <p className="text-purple-600 dark:text-purple-400 text-sm">Requiere rehabilitación mayor: estructura, techumbres, o sistemas completos.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => {
-                                  console.log('Clickeando DAÑOS GRAVES');
-                                  handleInputChange('estadoConservacion', 'danos_graves');
-                                }}
-                                className={`p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border-2 border-gray-200 dark:border-gray-800 text-left hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-lg transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'danos_graves' ? 'ring-4 ring-gray-500 bg-gray-100 dark:bg-gray-900' : ''}`}
+                                 <div className="font-bold text-green-700 dark:text-green-300 mb-1 text-sm">🟢 NUEVO (Factor: 1.0000)</div>
+                                 <p className="text-green-600 dark:text-green-400 text-xs">Construcción reciente o recién terminada. Sin desgaste visible.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando BUENO');
+                                   handleInputChange('estadoConservacion', 'bueno');
+                                 }}
+                                 className={`p-2 bg-blue-50 dark:bg-blue-950 rounded-md border border-blue-200 dark:border-blue-800 text-left hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'bueno' ? 'ring-2 ring-blue-500 bg-blue-100 dark:bg-blue-900' : ''}`}
+                               >
+                                 <div className="font-bold text-blue-700 dark:text-blue-300 mb-1 text-sm">🔵 BUENO (Factor: 0.9968)</div>
+                                 <p className="text-blue-600 dark:text-blue-400 text-xs">Excelente estado general. Mantenimiento adecuado.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando MEDIO');
+                                   handleInputChange('estadoConservacion', 'medio');
+                                 }}
+                                 className={`p-2 bg-cyan-50 dark:bg-cyan-950 rounded-md border border-cyan-200 dark:border-cyan-800 text-left hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'medio' ? 'ring-2 ring-cyan-500 bg-cyan-100 dark:bg-cyan-900' : ''}`}
+                               >
+                                 <div className="font-bold text-cyan-700 dark:text-cyan-300 mb-1 text-sm">🔷 MEDIO (Factor: 0.9748)</div>
+                                 <p className="text-cyan-600 dark:text-cyan-400 text-xs">Buen estado con desgaste moderado.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando REGULAR');
+                                   handleInputChange('estadoConservacion', 'regular');
+                                 }}
+                                 className={`p-2 bg-yellow-50 dark:bg-yellow-950 rounded-md border border-yellow-200 dark:border-yellow-800 text-left hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'regular' ? 'ring-2 ring-yellow-500 bg-yellow-100 dark:bg-yellow-900' : ''}`}
+                               >
+                                 <div className="font-bold text-yellow-700 dark:text-yellow-300 mb-1 text-sm">🟡 REGULAR (Factor: 0.9191)</div>
+                                 <p className="text-yellow-600 dark:text-yellow-400 text-xs">Estado aceptable pero con desgaste visible.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando REPARACIONES SENCILLAS');
+                                   handleInputChange('estadoConservacion', 'reparaciones_sencillas');
+                                 }}
+                                 className={`p-2 bg-orange-50 dark:bg-orange-950 rounded-md border border-orange-200 dark:border-orange-800 text-left hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'ring-2 ring-orange-500 bg-orange-100 dark:bg-orange-900' : ''}`}
+                               >
+                                 <div className="font-bold text-orange-700 dark:text-orange-300 mb-1 text-sm">🟠 REPARACIONES SENCILLAS (Factor: 0.8190)</div>
+                                 <p className="text-orange-600 dark:text-orange-400 text-xs">Requiere reparaciones menores como pintura o plomería básica.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando REPARACIONES MEDIAS');
+                                   handleInputChange('estadoConservacion', 'reparaciones_medias');
+                                 }}
+                                 className={`p-2 bg-red-50 dark:bg-red-950 rounded-md border border-red-200 dark:border-red-800 text-left hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'ring-2 ring-red-500 bg-red-100 dark:bg-red-900' : ''}`}
+                               >
+                                 <div className="font-bold text-red-700 dark:text-red-300 mb-1 text-sm">🔴 REPARACIONES MEDIAS (Factor: 0.6680)</div>
+                                 <p className="text-red-600 dark:text-red-400 text-xs">Necesita reparaciones importantes: pisos, instalaciones eléctricas.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando REPARACIONES IMPORTANTES');
+                                   handleInputChange('estadoConservacion', 'reparaciones_importantes');
+                                 }}
+                                 className={`p-2 bg-purple-50 dark:bg-purple-950 rounded-md border border-purple-200 dark:border-purple-800 text-left hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900' : ''}`}
+                               >
+                                 <div className="font-bold text-purple-700 dark:text-purple-300 mb-1 text-sm">🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)</div>
+                                 <p className="text-purple-600 dark:text-purple-400 text-xs">Requiere rehabilitación mayor: estructura, techumbres.</p>
+                               </button>
+                               
+                               <button 
+                                 onClick={() => {
+                                   console.log('Clickeando DAÑOS GRAVES');
+                                   handleInputChange('estadoConservacion', 'danos_graves');
+                                 }}
+                                 className={`p-2 bg-gray-50 dark:bg-gray-950 rounded-md border border-gray-200 dark:border-gray-800 text-left hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md transition-all duration-200 cursor-pointer ${propertyData.estadoConservacion === 'danos_graves' ? 'ring-2 ring-gray-500 bg-gray-100 dark:bg-gray-900' : ''}`}
                               >
                                 <div className="font-bold text-gray-700 dark:text-gray-300 mb-2 text-lg">⚫ DAÑOS GRAVES (Factor: 0.2480)</div>
                                 <p className="text-gray-600 dark:text-gray-400 text-sm">Daños estructurales severos. Requiere reconstrucción parcial o total.</p>
