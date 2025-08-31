@@ -87,7 +87,7 @@ interface Comparable {
 }
 
 // Tipos de estrato social
-export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-alto' | 'alto';
+export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-alto' | 'alto' | 'alto-bajo' | 'alto-medio' | 'alto-alto';
 
 // Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
@@ -96,7 +96,10 @@ export const estratoSocialLabels: Record<EstratoSocial, string> = {
   'medio-bajo': 'Estrato 3 - Medio-Bajo',
   'medio': 'Estrato 4 - Medio',
   'medio-alto': 'Estrato 5 - Medio-Alto',
-  'alto': 'Estrato 6 - Alto'
+  'alto': 'Estrato 6 - Alto',
+  'alto-bajo': 'Estrato 7 - Alto-Bajo',
+  'alto-medio': 'Estrato 8 - Alto-Medio',
+  'alto-alto': 'Estrato 9 - Alto-Alto'
 };
 
 // Mapeo de estratos a clases sociales simplificadas
@@ -106,14 +109,17 @@ export const estratoToClassMap: Record<EstratoSocial, string> = {
   'medio-bajo': 'media',
   'medio': 'media',
   'medio-alto': 'alta',
-  'alto': 'alta'
+  'alto': 'alta',
+  'alto-bajo': 'alta',
+  'alto-medio': 'alta',
+  'alto-alto': 'alta'
 };
 
 // Mapeo inverso: clases a estratos
 export const classToEstratos: Record<string, EstratoSocial[]> = {
   'popular': ['bajo-bajo', 'bajo'],
   'media': ['medio-bajo', 'medio'],
-  'alta': ['medio-alto', 'alto']
+  'alta': ['medio-alto', 'alto', 'alto-bajo', 'alto-medio', 'alto-alto']
 };
 
 // Multiplicadores de valor según estrato social
@@ -123,7 +129,10 @@ export const estratoMultipliers: Record<EstratoSocial, number> = {
   'medio-bajo': 0.9,
   'medio': 1.0,
   'medio-alto': 1.2,
-  'alto': 1.5
+  'alto': 1.5,
+  'alto-bajo': 1.6,
+  'alto-medio': 1.8,
+  'alto-alto': 2.2
 };
 
 // Factores de conservación
