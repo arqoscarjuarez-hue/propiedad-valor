@@ -1102,9 +1102,21 @@ const PropertyValuation = () => {
                   </TabsContent>
 
                    <TabsContent value="depreciacion" className="space-y-4 mt-6">
-                    
-                    {/* Indicador del estado seleccionado */}
-                    {propertyData.estadoConservacion && (
+                     {propertyData.tipoPropiedad === 'terreno' ? (
+                       <div className="p-8 text-center bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                         <div className="text-6xl mb-4">🏞️</div>
+                         <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                           Terrenos no requieren evaluación de depreciación
+                         </h3>
+                         <p className="text-blue-700 dark:text-blue-300">
+                           Los terrenos no tienen construcciones que se deprecien con el tiempo.
+                         </p>
+                       </div>
+                     ) : (
+                       <>
+                     
+                     {/* Indicador del estado seleccionado */}
+                     {propertyData.estadoConservacion && (
                       <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg border-2 border-primary">
                         <div className="flex items-center justify-between">
                           <div>
@@ -1383,10 +1395,12 @@ const PropertyValuation = () => {
                               </p>
                             </div>
                           </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  </TabsContent>
+                         </Card>
+                       </div>
+                     </div>
+                     </>
+                     )}
+                   </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>
