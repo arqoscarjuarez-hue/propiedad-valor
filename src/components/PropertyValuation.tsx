@@ -237,7 +237,7 @@ const PropertyValuation = () => {
     estratoSocial: 'medio' as EstratoSocial
   });
 
-  const [activeTab, setActiveTab] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<string>('estrato');
   const [valuationResult, setValuationResult] = useState<any>(null);
   const [comparables, setComparables] = useState<Comparable[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -392,7 +392,7 @@ const PropertyValuation = () => {
       descripcion: '',
       estratoSocial: 'medio' as EstratoSocial
     });
-    setActiveTab('');
+    setActiveTab('estrato');
     setValuationResult(null);
     setComparables([]);
     toast.info("Formulario reiniciado");
@@ -437,391 +437,309 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent className="p-6">
               
-              {/* Guía de pasos mejorada */}
-              <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 via-cyan-50 to-indigo-50 dark:from-blue-950 dark:via-cyan-950 dark:to-indigo-950 rounded-xl border-2 border-blue-200 dark:border-blue-700 shadow-lg">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                    <Info className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="font-bold text-lg text-blue-900 dark:text-blue-100">🎯 Guía de Pasos</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={reiniciarFormulario}
-                    className="ml-auto text-xs h-8 hover:bg-blue-100 dark:hover:bg-blue-900 hover:scale-105 transition-all"
-                  >
-                    🔄 Reiniciar
-                  </Button>
-                </div>
-                <p className="text-sm text-blue-800 dark:text-blue-200 mb-4 font-medium">
-                  {getNextRequiredStep() === 'valuacion'
-                    ? "🎉 ¡Todos los pasos están completados! Ahora puede realizar la valuación tocando el botón 'Realizar Valuación'."
-                    : getNextRequiredStep() 
-                      ? `📋 Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
-                      : "✅ ¡Todos los pasos están completados! Puede proceder con la valuación."
-                  }
-                </p>
-                <div className="flex items-center gap-3 flex-wrap">
-                  {[1, 2, 3, 4, 5].map((step) => {
-                    if (step === 5 && propertyData.tipoPropiedad === 'terreno') return null;
-                    const isComplete = (
-                      (step === 1 && isStep1Complete()) ||
-                      (step === 2 && isStep2Complete()) ||
-                      (step === 3 && isStep3Complete()) ||
-                      (step === 4 && isStep4Complete()) ||
-                      (step === 5 && isStep5Complete())
-                    );
-                    const isCurrent = getNextRequiredStep() === step;
+              {/* PESTAÑAS PRINCIPALES - SIEMPRE VISIBLES CON GRADIENTES LLAMATIVOS */}
+              <div className="mb-8">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-6 gap-2 h-auto p-2 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-2xl border-2 border-violet-300 shadow-2xl backdrop-blur-sm">
+                    <TabsTrigger 
+                      value="estrato" 
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-violet-600 data-[state=active]:via-purple-600 data-[state=active]:to-fuchsia-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-violet-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-violet-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          isStep1Complete() 
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                            : activeTab === 'estrato' 
+                              ? 'bg-gradient-to-r from-white to-violet-50 text-violet-700 ring-2 ring-violet-300' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          {isStep1Complete() ? '✓' : '1'}
+                        </div>
+                        <span className={activeTab === 'estrato' ? 'text-white' : 'text-gray-700'}>🏘️ Estrato</span>
+                      </div>
+                    </TabsTrigger>
                     
-                    return (
-                      <div 
-                        key={step} 
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition-all duration-300 ${
-                          isComplete 
-                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200 scale-110' 
-                            : isCurrent 
-                              ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white ring-4 ring-orange-200 animate-pulse scale-110' 
-                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 scale-95'
-                        }`}
+                    <TabsTrigger 
+                      value="tipo" 
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-600 data-[state=active]:via-cyan-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-blue-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-blue-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          isStep2Complete() 
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                            : activeTab === 'tipo' 
+                              ? 'bg-gradient-to-r from-white to-blue-50 text-blue-700 ring-2 ring-blue-300' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          {isStep2Complete() ? '✓' : '2'}
+                        </div>
+                        <span className={activeTab === 'tipo' ? 'text-white' : 'text-gray-700'}>🏠 Tipo</span>
+                      </div>
+                    </TabsTrigger>
+                    
+                    <TabsTrigger 
+                      value="ubicacion" 
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-600 data-[state=active]:via-green-600 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-emerald-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-emerald-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          isStep3Complete() 
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                            : activeTab === 'ubicacion' 
+                              ? 'bg-gradient-to-r from-white to-emerald-50 text-emerald-700 ring-2 ring-emerald-300' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          {isStep3Complete() ? '✓' : '3'}
+                        </div>
+                        <span className={activeTab === 'ubicacion' ? 'text-white' : 'text-gray-700'}>🌍 Ubicación</span>
+                      </div>
+                    </TabsTrigger>
+                    
+                    <TabsTrigger 
+                      value="caracteristicas" 
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-600 data-[state=active]:via-red-600 data-[state=active]:to-orange-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-orange-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-orange-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          isStep4Complete() 
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                            : activeTab === 'caracteristicas' 
+                              ? 'bg-gradient-to-r from-white to-orange-50 text-orange-700 ring-2 ring-orange-300' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          {isStep4Complete() ? '✓' : '4'}
+                        </div>
+                        <span className={activeTab === 'caracteristicas' ? 'text-white' : 'text-gray-700'}>📐 Área</span>
+                      </div>
+                    </TabsTrigger>
+                    
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <TabsTrigger 
+                        value="detalles" 
+                        className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-600 data-[state=active]:via-purple-600 data-[state=active]:to-indigo-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-indigo-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-indigo-200"
                       >
-                        {isComplete ? '✓' : step}
-                      </div>
-                    );
-                  })}
-                  {/* Indicador del botón de valuación */}
-                  <div className={`px-4 h-10 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all duration-300 ${
-                    getNextRequiredStep() === 'valuacion' 
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white ring-4 ring-purple-200 animate-pulse scale-110' 
-                      : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 scale-95'
-                  }`}>
-                    📊 Valuación
-                  </div>
-                </div>
-              </div>
-              
-              {/* Paso 1: Estrato Social */}
-              <div className={`mb-6 p-6 rounded-xl border-2 transition-all duration-300 shadow-md ${
-                highlightedElement === 'estrato-social-select' 
-                  ? 'ring-4 ring-yellow-400 bg-yellow-50 dark:bg-yellow-950 border-yellow-300 shadow-yellow-200' 
-                  : isStep1Complete() 
-                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-300 dark:border-green-700 shadow-green-200'
-                    : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-300 dark:border-blue-700 shadow-blue-200'
-              }`} id="estrato-social-select">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
-                    isStep1Complete() 
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-2 ring-green-200' 
-                      : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-2 ring-blue-200'
-                  }`}>
-                    {isStep1Complete() ? '✓' : '1'}
-                  </div>
-                  <Label htmlFor="estratoSocial" className="text-lg font-bold">🏘️ Paso 1: Estrato Social</Label>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4 ml-11">¿Cómo te consideras donde vives?</p>
-                <div className="ml-11">
-                  <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
-                    <SelectTrigger className="border-2 focus:border-primary hover:border-primary/70 transition-colors">
-                      <SelectValue placeholder="Selecciona el estrato social" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
-                        return (
-                          <SelectItem key={key} value={key} className="font-medium">
-                            {label}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground mt-3">
-                    💡 Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
-                  </p>
-                </div>
-              </div>
-
-              {/* Paso 2: Tipo de Propiedad */}
-              <div className={`mb-6 p-6 rounded-xl border-2 transition-all duration-300 shadow-md ${
-                isStep2Complete() 
-                  ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-300 dark:border-green-700 shadow-green-200'
-                  : isStep1Complete()
-                    ? 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-300 dark:border-blue-700 shadow-blue-200'
-                    : 'bg-gray-50 dark:bg-gray-950 border-gray-300 dark:border-gray-700 opacity-60'
-              }`} id="tipo-propiedad-select">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
-                    isStep2Complete() 
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-2 ring-green-200' 
-                      : isStep1Complete() 
-                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-2 ring-blue-200' 
-                        : 'bg-gray-400 text-white'
-                  }`}>
-                    {isStep2Complete() ? '✓' : '2'}
-                  </div>
-                  <Label htmlFor="tipoPropiedad" className="text-lg font-bold">🏠 Paso 2: Tipo de Propiedad</Label>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4 ml-11">Selecciona el tipo de propiedad a valuar</p>
-                <div className="ml-11">
-                  <Select 
-                    value={propertyData.tipoPropiedad} 
-                    onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
-                    disabled={!isStep1Complete()}
-                  >
-                    <SelectTrigger className="border-2 focus:border-primary hover:border-primary/70 transition-colors">
-                      <SelectValue placeholder="Selecciona el tipo de propiedad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="casa" className="font-medium">🏠 Casa</SelectItem>
-                      <SelectItem value="apartamento" className="font-medium">🏢 Apartamento</SelectItem>
-                      <SelectItem value="terreno" className="font-medium">🌳 Terreno</SelectItem>
-                      <SelectItem value="comercial" className="font-medium">🏪 Comercial</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Pasos colapsables */}
-              <div className="space-y-6">
-                
-                {/* Paso 3: Ubicación */}
-                {(isStep1Complete() && isStep2Complete()) && (
-                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
-                    activeTab === 'ubicacion' 
-                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
-                      : isStep3Complete()
-                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
-                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
-                  }`}>
-                    <CardHeader 
-                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
-                      onClick={() => setActiveTab(activeTab === 'ubicacion' ? '' : 'ubicacion')}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
-                            isStep3Complete() 
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
-                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
-                          }`}>
-                            {isStep3Complete() ? '✓' : '3'}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-                              🌍 Paso 3: Ubicación de la Propiedad
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {isStep3Complete() 
-                                ? `✅ Ubicación: ${propertyData.direccionCompleta.substring(0, 50)}...`
-                                : '📍 Haga clic para ingresar la ubicación de la propiedad'
-                              }
-                            </p>
-                          </div>
-                        </div>
-                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
-                          activeTab === 'ubicacion' ? 'rotate-180 text-primary' : 'text-muted-foreground'
-                        }`}>
-                          <ChevronDown />
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    {activeTab === 'ubicacion' && (
-                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
-                        <div className="space-y-6">
-                          <div className="grid grid-cols-1 gap-6">
-                            <div>
-                              <Label htmlFor="direccion" className="text-base font-semibold text-foreground mb-2 block">
-                                📍 Dirección Completa
-                              </Label>
-                              <Input
-                                id="direccion"
-                                value={propertyData.direccionCompleta}
-                                onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                                placeholder="Ingrese la dirección completa"
-                                className="border-2 focus:border-primary"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-base font-semibold text-foreground mb-3 block">
-                                🗺️ Seleccione la ubicación en el mapa
-                              </Label>
-                              <div className="border-2 border-primary/20 rounded-lg overflow-hidden shadow-md">
-                                <SupabaseGoogleLocationMap />
-                              </div>
-                            </div>
-                            {isStep3Complete() && (
-                              <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-                                <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                                  ✅ Ubicación confirmada: {propertyData.direccionCompleta}
-                                </p>
-                                {propertyData.barrio && (
-                                  <p className="text-xs text-green-700 dark:text-green-300 mt-1">
-                                    📍 Barrio: {propertyData.barrio}
-                                  </p>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    )}
-                  </Card>
-                )}
-
-                {/* Paso 4: Características Básicas */}
-                {(isStep1Complete() && isStep2Complete() && isStep3Complete()) && (
-                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
-                    activeTab === 'caracteristicas' 
-                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
-                      : isStep4Complete()
-                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
-                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
-                  }`}>
-                    <CardHeader 
-                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
-                      onClick={() => setActiveTab(activeTab === 'caracteristicas' ? '' : 'caracteristicas')}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
-                            isStep4Complete() 
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
-                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
-                          }`}>
-                            {isStep4Complete() ? '✓' : '4'}
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-                              📐 Paso 4: Características Básicas
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {isStep4Complete() 
-                                ? `✅ Área: ${propertyData.area}m² - Estado: ${propertyData.estadoConservacion}`
-                                : '📝 Haga clic para ingresar área y estado de conservación'
-                              }
-                            </p>
-                          </div>
-                        </div>
-                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
-                          activeTab === 'caracteristicas' ? 'rotate-180 text-primary' : 'text-muted-foreground'
-                        }`}>
-                          <ChevronDown />
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    {activeTab === 'caracteristicas' && (
-                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
-                        <div className="space-y-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                              <Label htmlFor="area" className="text-base font-semibold text-foreground mb-2 block">
-                                📐 Área Total (m²) *
-                              </Label>
-                              <Input
-                                id="area"
-                                type="number"
-                                value={propertyData.area || ''}
-                                onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                                placeholder="Ej: 120"
-                                className="border-2 focus:border-primary"
-                                min="1"
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="antiguedad" className="text-base font-semibold text-foreground mb-2 block">
-                                🗓️ Antigüedad (años)
-                              </Label>
-                              <Input
-                                id="antiguedad"
-                                type="number"
-                                value={propertyData.antiguedad || ''}
-                                onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                                placeholder="Ej: 5"
-                                className="border-2 focus:border-primary"
-                                min="0"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <Label htmlFor="estadoConservacion" className="text-base font-semibold text-foreground mb-2 block">
-                              🔨 Estado de Conservación *
-                            </Label>
-                            <Select 
-                              value={propertyData.estadoConservacion} 
-                              onValueChange={(value) => handleInputChange('estadoConservacion', value)}
-                            >
-                              <SelectTrigger className="border-2 focus:border-primary">
-                                <SelectValue placeholder="Selecciona el estado de conservación" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
-                                <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
-                                <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
-                                <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          {isStep4Complete() && (
-                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-                              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                                ✅ Características básicas completadas
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    )}
-                  </Card>
-                )}
-
-                {/* Paso 5: Detalles Adicionales (Solo para casas y apartamentos) */}
-                {(isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete() && propertyData.tipoPropiedad !== 'terreno') && (
-                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
-                    activeTab === 'detalles' 
-                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
-                      : isStep5Complete()
-                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
-                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
-                  }`}>
-                    <CardHeader 
-                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
-                      onClick={() => setActiveTab(activeTab === 'detalles' ? '' : 'detalles')}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
+                        <div className="flex flex-col items-center gap-1">
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
                             isStep5Complete() 
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
-                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
+                              ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                              : activeTab === 'detalles' 
+                                ? 'bg-gradient-to-r from-white to-indigo-50 text-indigo-700 ring-2 ring-indigo-300' 
+                                : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
                           }`}>
                             {isStep5Complete() ? '✓' : '5'}
                           </div>
+                          <span className={activeTab === 'detalles' ? 'text-white' : 'text-gray-700'}>🏠 Detalles</span>
+                        </div>
+                      </TabsTrigger>
+                    )}
+                    
+                    <TabsTrigger 
+                      value="valuacion" 
+                      disabled={getNextRequiredStep() !== 'valuacion'}
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-600 data-[state=active]:via-rose-600 data-[state=active]:to-pink-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-pink-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-pink-200 disabled:opacity-50"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          getNextRequiredStep() === 'valuacion' 
+                            ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white animate-pulse ring-2 ring-pink-300' 
+                            : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          📊
+                        </div>
+                        <span className={activeTab === 'valuacion' ? 'text-white' : 'text-gray-700'}>💎 Valuación</span>
+                      </div>
+                    </TabsTrigger>
+                  </TabsList>
+
+                  {/* CONTENIDO DE LAS PESTAÑAS */}
+                  
+                  {/* Paso 1: Estrato Social */}
+                  <TabsContent value="estrato" className="mt-6">
+                    <Card className="border-2 border-violet-200 shadow-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50">
+                      <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            {isStep1Complete() ? '✓' : '1'}
+                          </div>
+                          🏘️ Paso 1: Estrato Social
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <p className="text-muted-foreground mb-4">¿Cómo te consideras donde vives?</p>
+                        <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
+                          <SelectTrigger className="border-2 focus:border-violet-500 hover:border-violet-400 transition-colors">
+                            <SelectValue placeholder="Selecciona el estrato social" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => (
+                              <SelectItem key={key} value={key} className="font-medium">
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-3">
+                          💡 Requerido para encontrar comparables del mismo nivel socioeconómico
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* Paso 2: Tipo de Propiedad */}
+                  <TabsContent value="tipo" className="mt-6">
+                    <Card className="border-2 border-blue-200 shadow-xl bg-gradient-to-br from-blue-50/50 to-cyan-50/50">
+                      <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            {isStep2Complete() ? '✓' : '2'}
+                          </div>
+                          🏠 Paso 2: Tipo de Propiedad
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <p className="text-muted-foreground mb-4">Selecciona el tipo de propiedad a valuar</p>
+                        <Select 
+                          value={propertyData.tipoPropiedad} 
+                          onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
+                          disabled={!isStep1Complete()}
+                        >
+                          <SelectTrigger className="border-2 focus:border-blue-500 hover:border-blue-400 transition-colors">
+                            <SelectValue placeholder="Selecciona el tipo de propiedad" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="casa" className="font-medium">🏠 Casa</SelectItem>
+                            <SelectItem value="apartamento" className="font-medium">🏢 Apartamento</SelectItem>
+                            <SelectItem value="terreno" className="font-medium">🌳 Terreno</SelectItem>
+                            <SelectItem value="comercial" className="font-medium">🏪 Comercial</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* Paso 3: Ubicación */}
+                  <TabsContent value="ubicacion" className="mt-6">
+                    <Card className="border-2 border-emerald-200 shadow-xl bg-gradient-to-br from-emerald-50/50 to-green-50/50">
+                      <CardHeader className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            {isStep3Complete() ? '✓' : '3'}
+                          </div>
+                          🌍 Paso 3: Ubicación de la Propiedad
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="space-y-6">
                           <div>
-                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-                              🏠 Paso 5: Detalles Adicionales
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {isStep5Complete() 
-                                ? `✅ ${propertyData.habitaciones} hab, ${propertyData.banos} baños, ${propertyData.parqueaderos} parqueaderos`
-                                : '🏠 Haga clic para ingresar habitaciones, baños y parqueaderos'
-                              }
-                            </p>
+                            <Label htmlFor="direccion" className="text-base font-semibold mb-2 block">
+                              📍 Dirección Completa
+                            </Label>
+                            <Input
+                              id="direccion"
+                              value={propertyData.direccionCompleta}
+                              onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                              placeholder="Ingrese la dirección completa"
+                              className="border-2 focus:border-emerald-500"
+                              disabled={!isStep2Complete()}
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-base font-semibold mb-3 block">
+                              🗺️ Seleccione la ubicación en el mapa
+                            </Label>
+                            <div className="border-2 border-emerald-200 rounded-lg overflow-hidden shadow-md">
+                              <SupabaseGoogleLocationMap />
+                            </div>
                           </div>
                         </div>
-                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
-                          activeTab === 'detalles' ? 'rotate-180 text-primary' : 'text-muted-foreground'
-                        }`}>
-                          <ChevronDown />
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* Paso 4: Características */}
+                  <TabsContent value="caracteristicas" className="mt-6">
+                    <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-red-50/50">
+                      <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            {isStep4Complete() ? '✓' : '4'}
+                          </div>
+                          📐 Paso 4: Características Básicas
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <Label htmlFor="area" className="text-base font-semibold mb-2 block">
+                              📐 Área Total (m²) *
+                            </Label>
+                            <Input
+                              id="area"
+                              type="number"
+                              value={propertyData.area || ''}
+                              onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                              placeholder="Ej: 120"
+                              className="border-2 focus:border-orange-500"
+                              min="1"
+                              disabled={!isStep3Complete()}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="antiguedad" className="text-base font-semibold mb-2 block">
+                              🗓️ Antigüedad (años)
+                            </Label>
+                            <Input
+                              id="antiguedad"
+                              type="number"
+                              value={propertyData.antiguedad || ''}
+                              onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                              placeholder="Ej: 5"
+                              className="border-2 focus:border-orange-500"
+                              min="0"
+                              disabled={!isStep3Complete()}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    
-                    {activeTab === 'detalles' && (
-                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
-                        <div className="space-y-6">
+                        <div className="mt-6">
+                          <Label htmlFor="estadoConservacion" className="text-base font-semibold mb-2 block">
+                            🔨 Estado de Conservación *
+                          </Label>
+                          <Select 
+                            value={propertyData.estadoConservacion} 
+                            onValueChange={(value) => handleInputChange('estadoConservacion', value)}
+                            disabled={!isStep3Complete()}
+                          >
+                            <SelectTrigger className="border-2 focus:border-orange-500">
+                              <SelectValue placeholder="Selecciona el estado de conservación" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
+                              <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
+                              <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
+                              <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  {/* Paso 5: Detalles */}
+                  {propertyData.tipoPropiedad !== 'terreno' && (
+                    <TabsContent value="detalles" className="mt-6">
+                      <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
+                        <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                          <CardTitle className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                              {isStep5Complete() ? '✓' : '5'}
+                            </div>
+                            🏠 Paso 5: Detalles Adicionales
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                              <Label htmlFor="habitaciones" className="text-base font-semibold text-foreground mb-2 block">
+                              <Label htmlFor="habitaciones" className="text-base font-semibold mb-2 block">
                                 🛏️ Habitaciones *
                               </Label>
                               <Input
@@ -830,12 +748,13 @@ const PropertyValuation = () => {
                                 value={propertyData.habitaciones || ''}
                                 onChange={(e) => handleInputChange('habitaciones', Number(e.target.value))}
                                 placeholder="Ej: 3"
-                                className="border-2 focus:border-primary"
-                                min="1"
+                                className="border-2 focus:border-indigo-500"
+                                min="0"
+                                disabled={!isStep4Complete()}
                               />
                             </div>
                             <div>
-                              <Label htmlFor="banos" className="text-base font-semibold text-foreground mb-2 block">
+                              <Label htmlFor="banos" className="text-base font-semibold mb-2 block">
                                 🚿 Baños *
                               </Label>
                               <Input
@@ -844,12 +763,13 @@ const PropertyValuation = () => {
                                 value={propertyData.banos || ''}
                                 onChange={(e) => handleInputChange('banos', Number(e.target.value))}
                                 placeholder="Ej: 2"
-                                className="border-2 focus:border-primary"
-                                min="1"
+                                className="border-2 focus:border-indigo-500"
+                                min="0"
+                                disabled={!isStep4Complete()}
                               />
                             </div>
                             <div>
-                              <Label htmlFor="parqueaderos" className="text-base font-semibold text-foreground mb-2 block">
+                              <Label htmlFor="parqueaderos" className="text-base font-semibold mb-2 block">
                                 🚗 Parqueaderos
                               </Label>
                               <Input
@@ -858,82 +778,72 @@ const PropertyValuation = () => {
                                 value={propertyData.parqueaderos || ''}
                                 onChange={(e) => handleInputChange('parqueaderos', Number(e.target.value))}
                                 placeholder="Ej: 1"
-                                className="border-2 focus:border-primary"
+                                className="border-2 focus:border-indigo-500"
                                 min="0"
+                                disabled={!isStep4Complete()}
                               />
                             </div>
                           </div>
-                          <div>
-                            <Label htmlFor="descripcion" className="text-base font-semibold text-foreground mb-2 block">
+                          <div className="mt-6">
+                            <Label htmlFor="descripcion" className="text-base font-semibold mb-2 block">
                               📝 Descripción Adicional
                             </Label>
                             <Textarea
                               id="descripcion"
                               value={propertyData.descripcion}
                               onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                              placeholder="Describa características especiales de la propiedad..."
-                              className="border-2 focus:border-primary"
-                              rows={3}
+                              placeholder="Describe características especiales de la propiedad..."
+                              className="border-2 focus:border-indigo-500 min-h-[100px]"
+                              disabled={!isStep4Complete()}
                             />
                           </div>
-                          {isStep5Complete() && (
-                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-                              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                                ✅ Detalles adicionales completados
-                              </p>
-                            </div>
-                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  )}
+
+                  {/* Paso 6: Valuación */}
+                  <TabsContent value="valuacion" className="mt-6">
+                    <Card className="border-2 border-pink-200 shadow-xl bg-gradient-to-br from-pink-50/50 to-rose-50/50">
+                      <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            📊
+                          </div>
+                          💎 Realizar Valuación
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="text-center py-6">
+                          <div className="mb-4">
+                            <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
+                          </div>
+                          <h3 className="text-xl font-bold mb-4">🎉 ¡Listo para la valuación!</h3>
+                          <Button
+                            onClick={performValuation}
+                            disabled={isCalculating}
+                            size="lg"
+                            className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                          >
+                            {isCalculating ? (
+                              <>
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                Calculando...
+                              </>
+                            ) : (
+                              <>
+                                <Calculator className="w-5 h-5 mr-2" />
+                                💎 Realizar Valuación
+                              </>
+                            )}
+                          </Button>
                         </div>
                       </CardContent>
-                    )}
-                  </Card>
-                )}
+                    </Card>
+                  </TabsContent>
+                  
+                </Tabs>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Botón de Valuación */}
-          <Card className="shadow-xl border-2 border-primary/30">
-            <CardContent className="p-6">
-              {getNextRequiredStep() !== 'valuacion' ? (
-                <div className="text-center py-8">
-                  <div className="mb-4">
-                    <AlertCircle className="w-16 h-16 text-orange-500 mx-auto" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">⚠️ Complete todos los pasos</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Debe completar el Paso {getNextRequiredStep()} antes de realizar la valuación.
-                  </p>
-                  <Badge variant="outline" className="text-orange-600 border-orange-300">
-                    Paso {getNextRequiredStep()} pendiente
-                  </Badge>
-                </div>
-              ) : (
-                <div className="text-center py-6">
-                  <div className="mb-4">
-                    <Calculator className="w-16 h-16 text-primary mx-auto" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-4">🎉 ¡Listo para la valuación!</h3>
-                  <Button
-                    onClick={performValuation}
-                    disabled={isCalculating}
-                    size="lg"
-                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    {isCalculating ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Calculando...
-                      </>
-                    ) : (
-                      <>
-                        <Calculator className="w-5 h-5 mr-2" />
-                        💎 Realizar Valuación
-                      </>
-                    )}
-                  </Button>
-                </div>
-              )}
             </CardContent>
           </Card>
 
