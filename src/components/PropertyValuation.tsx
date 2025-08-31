@@ -437,10 +437,54 @@ const PropertyValuation = () => {
       return newData;
     });
     
-    // Forzar re-render para actualizar la guía de pasos
+    // Lógica para mantener orden secuencial de pasos
     setTimeout(() => {
-      // Trigger re-render
-    }, 0);
+      // Si se modifica el Paso 1 (estrato social), resetear pasos posteriores si es necesario
+      if (field === 'estratoSocial') {
+        // No resetear nada, solo continuar al siguiente paso si está completo
+        if (value && propertyData.tipoPropiedad) {
+          // Dirigir al paso 3 si los pasos 1 y 2 están completos
+          if (propertyData.direccionCompleta === '' || propertyData.latitud === 0) {
+            setActiveTab('ubicacion');
+          }
+        }
+      }
+      
+      // Si se modifica el Paso 2 (tipo de propiedad), puede afectar pasos posteriores
+      if (field === 'tipoPropiedad') {
+        // Si cambia a terreno, limpiar estado de conservación y dirigir a ubicación
+        if (value === 'terreno') {
+          setPropertyData(prev => ({ ...prev, estadoConservacion: '' }));
+        }
+        // Dirigir al paso 3 si los pasos 1 y 2 están completos
+        if (propertyData.estratoSocial && value) {
+          if (propertyData.direccionCompleta === '' || propertyData.latitud === 0) {
+            setActiveTab('ubicacion');
+          }
+        }
+      }
+      
+      // Si se modifica el Paso 3 (ubicación), dirigir al paso 4
+      if ((field === 'direccionCompleta' || field === 'latitud' || field === 'longitud') && 
+          finalValue && propertyData.estratoSocial && propertyData.tipoPropiedad) {
+        // Verificar si ubicación está completa para dirigir al paso 4
+        if (propertyData.direccionCompleta && propertyData.latitud !== 0 && propertyData.longitud !== 0) {
+          setActiveTab('areas');
+        }
+      }
+      
+      // Si se completa el Paso 4 (áreas), dirigir al paso 5 (solo si no es terreno)
+      if (['areaApartamento', 'areaTerreno', 'areaPrimerNivel', 'areaSotano', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel'].includes(field)) {
+        const newEffectiveArea = field === 'areaApartamento' ? (finalValue as number) : 
+          (propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + 
+          (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + 
+          (propertyData.areaCuartoNivel || 0);
+        
+        if (newEffectiveArea > 0 && propertyData.tipoPropiedad !== 'terreno') {
+          setActiveTab('depreciacion');
+        }
+      }
+    }, 100);
   };
 
   // Funciones de validación para cada paso
@@ -500,11 +544,41 @@ const PropertyValuation = () => {
       setActiveTab(tabValue);
     } else {
       const nextStep = getNextRequiredStep();
-      toast({
-        title: "Paso requerido",
-        description: `Debe completar el Paso ${nextStep} antes de continuar.`,
-        variant: "destructive"
-      });
+      // Navegación automática al paso requerido
+      if (typeof nextStep === 'number') {
+        if (nextStep <= 2) {
+          // Los pasos 1 y 2 están en la página principal, hacer scroll
+          const element = nextStep === 1 ? 
+            document.getElementById('estrato-social-select') : 
+            document.getElementById('tipo-propiedad-select');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else {
+          // Para pasos 3, 4, 5 cambiar a la pestaña correspondiente
+          const tabMap = { 3: 'ubicacion', 4: 'areas', 5: 'depreciacion' };
+          setActiveTab(tabMap[nextStep as keyof typeof tabMap]);
+        }
+        
+        toast({
+          title: "Paso requerido",
+          description: `Debe completar el Paso ${nextStep} antes de continuar.`,
+          variant: "destructive"
+        });
+      } else if (nextStep === 'valuacion') {
+        // Hacer scroll al botón de valuación
+        setTimeout(() => {
+          const button = document.getElementById('boton-valuacion');
+          if (button) {
+            button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+        
+        toast({
+          title: "¡Listo para valuación!",
+          description: "Todos los pasos están completos. Presione 'Realizar Valuación'.",
+        });
+      }
     }
   };
 
@@ -1451,7 +1525,7 @@ const PropertyValuation = () => {
                    
                    <div className="space-y-4">
                         <button 
-                          id="calcular-button"
+                          id="boton-valuacion"
                           onClick={() => {
                             console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
                             console.log('Datos de propiedad:', propertyData);
