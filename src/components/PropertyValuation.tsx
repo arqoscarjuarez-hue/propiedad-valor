@@ -992,59 +992,90 @@ const PropertyValuation = () => {
                         </p>
                       </div>
 
-                      {propertyData.estadoConservacion && (
-                        <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                          <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">
-                            📈 Factor de Conservación Aplicado
-                          </h4>
-                          <div className="space-y-3">
-                            <div className="text-center">
-                              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                                {propertyData.estadoConservacion === 'nuevo' ? '1.0000' :
-                                 propertyData.estadoConservacion === 'bueno' ? '0.9968' :
-                                 propertyData.estadoConservacion === 'medio' ? '0.9748' :
-                                 propertyData.estadoConservacion === 'regular' ? '0.9191' :
-                                 propertyData.estadoConservacion === 'reparaciones_sencillas' ? '0.8190' :
-                                 propertyData.estadoConservacion === 'reparaciones_medias' ? '0.6680' :
-                                 propertyData.estadoConservacion === 'reparaciones_importantes' ? '0.4740' : '0.2480'}
-                              </div>
-                              <p className="text-sm text-muted-foreground">Factor multiplicador</p>
-                            </div>
-                            
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                              <div className="text-center p-2 bg-white dark:bg-gray-800 rounded">
-                                <div className="text-xs text-muted-foreground">Estado</div>
-                                <div className="font-semibold">
-                                  {propertyData.estadoConservacion === 'nuevo' ? 'NUEVO' :
-                                   propertyData.estadoConservacion === 'bueno' ? 'BUENO' :
-                                   propertyData.estadoConservacion === 'medio' ? 'MEDIO' :
-                                   propertyData.estadoConservacion === 'regular' ? 'REGULAR' :
-                                   propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'REPARACIONES SENCILLAS' :
-                                   propertyData.estadoConservacion === 'reparaciones_medias' ? 'REPARACIONES MEDIAS' :
-                                   propertyData.estadoConservacion === 'reparaciones_importantes' ? 'REPARACIONES IMPORTANTES' : 'DAÑOS GRAVES'}
-                                </div>
-                              </div>
+                      {/* Guía de Estados de Conservación */}
+                      <div className="mt-6">
+                        <Card className="shadow-lg">
+                          <CardHeader className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4">
+                            <CardTitle className="text-lg">📚 Guía de Estados de Conservación</CardTitle>
+                            <p className="text-sm text-amber-100">Haga clic en cualquier estado para seleccionarlo automáticamente</p>
+                          </CardHeader>
+                          <CardContent className="p-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'nuevo')}
+                                className={`p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800 text-left hover:bg-green-100 dark:hover:bg-green-900 transition-colors ${propertyData.estadoConservacion === 'nuevo' ? 'ring-2 ring-green-500' : ''}`}
+                              >
+                                <div className="font-semibold text-green-700 dark:text-green-300 mb-1">🟢 NUEVO (Factor: 1.0000)</div>
+                                <p className="text-green-600 dark:text-green-400">Construcción reciente o recién terminada. Sin desgaste visible. Todos los sistemas funcionando perfectamente.</p>
+                              </button>
                               
-                              <div className="text-center p-2 bg-white dark:bg-gray-800 rounded">
-                                <div className="text-xs text-muted-foreground">Depreciación</div>
-                                <div className="font-semibold text-red-600 dark:text-red-400">
-                                  {propertyData.estadoConservacion === 'nuevo' ? '0.00%' :
-                                   propertyData.estadoConservacion === 'bueno' ? '0.32%' :
-                                   propertyData.estadoConservacion === 'medio' ? '2.52%' :
-                                   propertyData.estadoConservacion === 'regular' ? '8.09%' :
-                                   propertyData.estadoConservacion === 'reparaciones_sencillas' ? '18.10%' :
-                                   propertyData.estadoConservacion === 'reparaciones_medias' ? '33.20%' :
-                                   propertyData.estadoConservacion === 'reparaciones_importantes' ? '52.60%' : '75.20%'}
-                                </div>
-                              </div>
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'bueno')}
+                                className={`p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800 text-left hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors ${propertyData.estadoConservacion === 'bueno' ? 'ring-2 ring-blue-500' : ''}`}
+                              >
+                                <div className="font-semibold text-blue-700 dark:text-blue-300 mb-1">🔵 BUENO (Factor: 0.9968)</div>
+                                <p className="text-blue-600 dark:text-blue-400">Excelente estado general. Mantenimiento adecuado. Desgaste mínimo por uso normal.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'medio')}
+                                className={`p-3 bg-cyan-50 dark:bg-cyan-950 rounded-lg border border-cyan-200 dark:border-cyan-800 text-left hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors ${propertyData.estadoConservacion === 'medio' ? 'ring-2 ring-cyan-500' : ''}`}
+                              >
+                                <div className="font-semibold text-cyan-700 dark:text-cyan-300 mb-1">🔷 MEDIO (Factor: 0.9748)</div>
+                                <p className="text-cyan-600 dark:text-cyan-400">Buen estado con desgaste moderado. Algunos elementos requieren mantenimiento preventivo.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'regular')}
+                                className={`p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800 text-left hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors ${propertyData.estadoConservacion === 'regular' ? 'ring-2 ring-yellow-500' : ''}`}
+                              >
+                                <div className="font-semibold text-yellow-700 dark:text-yellow-300 mb-1">🟡 REGULAR (Factor: 0.9191)</div>
+                                <p className="text-yellow-600 dark:text-yellow-400">Estado aceptable pero con desgaste visible. Necesita mantenimiento correctivo menor.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_sencillas')}
+                                className={`p-3 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800 text-left hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'ring-2 ring-orange-500' : ''}`}
+                              >
+                                <div className="font-semibold text-orange-700 dark:text-orange-300 mb-1">🟠 REPARACIONES SENCILLAS (Factor: 0.8190)</div>
+                                <p className="text-orange-600 dark:text-orange-400">Requiere reparaciones menores como pintura, plomería básica, o cambio de accesorios.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_medias')}
+                                className={`p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800 text-left hover:bg-red-100 dark:hover:bg-red-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'ring-2 ring-red-500' : ''}`}
+                              >
+                                <div className="font-semibold text-red-700 dark:text-red-300 mb-1">🔴 REPARACIONES MEDIAS (Factor: 0.6680)</div>
+                                <p className="text-red-600 dark:text-red-400">Necesita reparaciones importantes: pisos, instalaciones eléctricas, o sistemas de clima.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_importantes')}
+                                className={`p-3 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800 text-left hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'ring-2 ring-purple-500' : ''}`}
+                              >
+                                <div className="font-semibold text-purple-700 dark:text-purple-300 mb-1">🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)</div>
+                                <p className="text-purple-600 dark:text-purple-400">Requiere rehabilitación mayor: estructura, techumbres, o sistemas completos.</p>
+                              </button>
+                              
+                              <button 
+                                onClick={() => handleInputChange('estadoConservacion', 'danos_graves')}
+                                className={`p-3 bg-gray-50 dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 text-left hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors ${propertyData.estadoConservacion === 'danos_graves' ? 'ring-2 ring-gray-500' : ''}`}
+                              >
+                                <div className="font-semibold text-gray-700 dark:text-gray-300 mb-1">⚫ DAÑOS GRAVES (Factor: 0.2480)</div>
+                                <p className="text-gray-600 dark:text-gray-400">Daños estructurales severos. Requiere reconstrucción parcial o total.</p>
+                              </button>
                             </div>
                             
-                            <div className="text-center text-xs text-muted-foreground mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded">
-                              <strong>Fórmula:</strong> Valor Depreciado = Valor de Reposición × Factor de Conservación
+                            <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">💡 Tip Profesional</h4>
+                              <p className="text-sm text-blue-600 dark:text-blue-400">
+                                El estado de conservación afecta directamente el valor final de la propiedad. 
+                                Una evaluación precisa es fundamental para un avalúo confiable según normas UPAV/IVSC.
+                              </p>
                             </div>
-                          </div>
-                        </div>
-                      )}
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -1221,93 +1252,6 @@ const PropertyValuation = () => {
                            </div>
                        )}
                      </div>
-                    )}
-
-                    {/* Explicaciones de Estados de Conservación - Solo aparece cuando la pestaña depreciación está activa */}
-                    {activeTab === 'depreciacion' && (
-                      <div className="mt-6">
-                        <Card className="shadow-lg">
-                          <CardHeader className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4">
-                            <CardTitle className="text-lg">📚 Guía de Estados de Conservación</CardTitle>
-                            <p className="text-sm text-amber-100">Haga clic en cualquier estado para seleccionarlo automáticamente</p>
-                          </CardHeader>
-                          <CardContent className="p-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'nuevo')}
-                                className={`p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800 text-left hover:bg-green-100 dark:hover:bg-green-900 transition-colors ${propertyData.estadoConservacion === 'nuevo' ? 'ring-2 ring-green-500' : ''}`}
-                              >
-                                <div className="font-semibold text-green-700 dark:text-green-300 mb-1">🟢 NUEVO (Factor: 1.0000)</div>
-                                <p className="text-green-600 dark:text-green-400">Construcción reciente o recién terminada. Sin desgaste visible. Todos los sistemas funcionando perfectamente.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'bueno')}
-                                className={`p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800 text-left hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors ${propertyData.estadoConservacion === 'bueno' ? 'ring-2 ring-blue-500' : ''}`}
-                              >
-                                <div className="font-semibold text-blue-700 dark:text-blue-300 mb-1">🔵 BUENO (Factor: 0.9968)</div>
-                                <p className="text-blue-600 dark:text-blue-400">Excelente estado general. Mantenimiento adecuado. Desgaste mínimo por uso normal.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'medio')}
-                                className={`p-3 bg-cyan-50 dark:bg-cyan-950 rounded-lg border border-cyan-200 dark:border-cyan-800 text-left hover:bg-cyan-100 dark:hover:bg-cyan-900 transition-colors ${propertyData.estadoConservacion === 'medio' ? 'ring-2 ring-cyan-500' : ''}`}
-                              >
-                                <div className="font-semibold text-cyan-700 dark:text-cyan-300 mb-1">🔷 MEDIO (Factor: 0.9748)</div>
-                                <p className="text-cyan-600 dark:text-cyan-400">Buen estado con desgaste moderado. Algunos elementos requieren mantenimiento preventivo.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'regular')}
-                                className={`p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800 text-left hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors ${propertyData.estadoConservacion === 'regular' ? 'ring-2 ring-yellow-500' : ''}`}
-                              >
-                                <div className="font-semibold text-yellow-700 dark:text-yellow-300 mb-1">🟡 REGULAR (Factor: 0.9191)</div>
-                                <p className="text-yellow-600 dark:text-yellow-400">Estado aceptable pero con desgaste visible. Necesita mantenimiento correctivo menor.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_sencillas')}
-                                className={`p-3 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800 text-left hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'ring-2 ring-orange-500' : ''}`}
-                              >
-                                <div className="font-semibold text-orange-700 dark:text-orange-300 mb-1">🟠 REPARACIONES SENCILLAS (Factor: 0.8190)</div>
-                                <p className="text-orange-600 dark:text-orange-400">Requiere reparaciones menores como pintura, plomería básica, o cambio de accesorios.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_medias')}
-                                className={`p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800 text-left hover:bg-red-100 dark:hover:bg-red-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'ring-2 ring-red-500' : ''}`}
-                              >
-                                <div className="font-semibold text-red-700 dark:text-red-300 mb-1">🔴 REPARACIONES MEDIAS (Factor: 0.6680)</div>
-                                <p className="text-red-600 dark:text-red-400">Necesita reparaciones importantes: pisos, instalaciones eléctricas, o sistemas de clima.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'reparaciones_importantes')}
-                                className={`p-3 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800 text-left hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'ring-2 ring-purple-500' : ''}`}
-                              >
-                                <div className="font-semibold text-purple-700 dark:text-purple-300 mb-1">🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)</div>
-                                <p className="text-purple-600 dark:text-purple-400">Requiere rehabilitación mayor: estructura, techumbres, o sistemas completos.</p>
-                              </button>
-                              
-                              <button 
-                                onClick={() => handleInputChange('estadoConservacion', 'danos_graves')}
-                                className={`p-3 bg-gray-50 dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 text-left hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors ${propertyData.estadoConservacion === 'danos_graves' ? 'ring-2 ring-gray-500' : ''}`}
-                              >
-                                <div className="font-semibold text-gray-700 dark:text-gray-300 mb-1">⚫ DAÑOS GRAVES (Factor: 0.2480)</div>
-                                <p className="text-gray-600 dark:text-gray-400">Daños estructurales severos. Requiere reconstrucción parcial o total.</p>
-                              </button>
-                            </div>
-                            
-                            <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">💡 Tip Profesional</h4>
-                              <p className="text-sm text-blue-600 dark:text-blue-400">
-                                El estado de conservación afecta directamente el valor final de la propiedad. 
-                                Una evaluación precisa es fundamental para un avalúo confiable según normas UPAV/IVSC.
-                              </p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
                     )}
                   </div>
                </CardContent>
