@@ -792,13 +792,13 @@ const PropertyValuation = () => {
                           <span className="font-semibold">Paso 5</span>
                           <span className="text-xs">Depreciación</span>
                           <span className="text-[10px] font-medium text-primary">
-                            {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo (1.0000)' :
-                             propertyData.estadoConservacion === 'bueno' ? 'Bueno (0.9968)' :
-                             propertyData.estadoConservacion === 'medio' ? 'Medio (0.9748)' :
-                             propertyData.estadoConservacion === 'regular' ? 'Regular (0.9191)' :
-                             propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'R.Sencillas (0.8190)' :
-                             propertyData.estadoConservacion === 'reparaciones_medias' ? 'R.Medias (0.6680)' :
-                             propertyData.estadoConservacion === 'reparaciones_importantes' ? 'R.Importantes (0.4740)' : 'D.Graves (0.2480)'}
+                             {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo (1.0000)' :
+                              propertyData.estadoConservacion === 'bueno' ? 'Bueno (0.9968)' :
+                              propertyData.estadoConservacion === 'medio' ? 'Medio' :
+                              propertyData.estadoConservacion === 'regular' ? 'Regular (0.9191)' :
+                              propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'R.Sencillas (0.8190)' :
+                              propertyData.estadoConservacion === 'reparaciones_medias' ? 'R.Medias (0.6680)' :
+                              propertyData.estadoConservacion === 'reparaciones_importantes' ? 'R.Importantes (0.4740)' : 'D.Graves (0.2480)'}
                           </span>
                         </div>
                       ) : (
