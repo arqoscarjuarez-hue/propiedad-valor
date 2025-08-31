@@ -687,9 +687,10 @@ const PropertyValuation = () => {
                 </div>
 
                 <Tabs defaultValue="areas" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 h-auto">
+                  <TabsList className="grid w-full grid-cols-3 h-auto">
                     <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
                     <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
+                    <TabsTrigger value="depreciacion" className="h-8 sm:h-10 text-xs sm:text-sm">Depreciación</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
@@ -829,6 +830,102 @@ const PropertyValuation = () => {
                             initialAddress={propertyData.direccionCompleta || ''}
                           />
                         </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="depreciacion" className="space-y-4 mt-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Depreciación</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
+                        <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
+                          📊 Factores de Depreciación
+                        </h4>
+                        <ul className="text-xs text-amber-700 dark:text-amber-300 space-y-1">
+                          <li>• Antigüedad de la construcción</li>
+                          <li>• Estado de conservación</li>
+                          <li>• Obsolescencia funcional</li>
+                          <li>• Vida útil remanente</li>
+                        </ul>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4">
+                        <div>
+                          <Label htmlFor="antiguedad" className="text-base font-semibold">Antigüedad (años)</Label>
+                          <Input
+                            id="antiguedad"
+                            type="number"
+                            value={propertyData.antiguedad || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
+                            }}
+                            placeholder="0"
+                            className="mt-2"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Años transcurridos desde la construcción
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="estadoGeneral" className="text-base font-semibold">Estado General</Label>
+                          <Select value={propertyData.estadoGeneral} onValueChange={(value) => handleInputChange('estadoGeneral', value)}>
+                            <SelectTrigger className="mt-2">
+                              <SelectValue placeholder="Selecciona el estado general" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="excelente">Excelente</SelectItem>
+                              <SelectItem value="muy_bueno">Muy Bueno</SelectItem>
+                              <SelectItem value="bueno">Bueno</SelectItem>
+                              <SelectItem value="regular">Regular</SelectItem>
+                              <SelectItem value="malo">Malo</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Estado actual de la construcción y acabados
+                          </p>
+                        </div>
+
+                        {propertyData.antiguedad > 0 && (
+                          <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                              📈 Cálculo de Depreciación
+                            </h4>
+                            <div className="space-y-2 text-xs text-blue-700 dark:text-blue-300">
+                              <div className="flex justify-between">
+                                <span>Vida útil estimada:</span>
+                                <span className="font-semibold">
+                                  {propertyData.tipoPropiedad === 'apartamento' ? '80 años' : 
+                                   propertyData.tipoPropiedad === 'comercial' ? '60 años' : '100 años'}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Antigüedad:</span>
+                                <span className="font-semibold">{propertyData.antiguedad} años</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Depreciación por edad:</span>
+                                <span className="font-semibold text-amber-600">
+                                  {((propertyData.antiguedad / (propertyData.tipoPropiedad === 'apartamento' ? 80 : 
+                                    propertyData.tipoPropiedad === 'comercial' ? 60 : 100)) * 100).toFixed(1)}%
+                                </span>
+                              </div>
+                              {propertyData.estadoGeneral && (
+                                <div className="flex justify-between">
+                                  <span>Factor por estado:</span>
+                                  <span className="font-semibold">
+                                    {propertyData.estadoGeneral === 'excelente' ? '+5%' :
+                                     propertyData.estadoGeneral === 'muy_bueno' ? '0%' :
+                                     propertyData.estadoGeneral === 'bueno' ? '-5%' :
+                                     propertyData.estadoGeneral === 'regular' ? '-15%' : '-25%'}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </TabsContent>
