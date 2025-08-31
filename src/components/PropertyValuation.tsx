@@ -573,21 +573,46 @@ const PropertyValuation = () => {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6">
-                        <p className="text-muted-foreground mb-4">¿Cómo te consideras donde vives?</p>
-                        <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
+                        <p className="text-muted-foreground mb-4">¿En qué estrato socioeconómico vives?</p>
+                        <Select 
+                          value={propertyData.estratoSocial} 
+                          onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}
+                        >
                           <SelectTrigger className="border-2 focus:border-violet-500 hover:border-violet-400 transition-colors">
-                            <SelectValue placeholder="Selecciona el estrato social" />
+                            <SelectValue placeholder="Selecciona tu estrato socioeconómico" />
                           </SelectTrigger>
-                          <SelectContent>
-                            {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => (
-                              <SelectItem key={key} value={key} className="font-medium">
-                                {label}
-                              </SelectItem>
-                            ))}
+                          <SelectContent className="max-h-60">
+                            <SelectItem value="bajo-bajo" className="font-medium text-sm py-3">
+                              🏚️ Estrato 1 - Bajo-Bajo
+                            </SelectItem>
+                            <SelectItem value="bajo" className="font-medium text-sm py-3">
+                              🏠 Estrato 2 - Bajo
+                            </SelectItem>
+                            <SelectItem value="medio-bajo" className="font-medium text-sm py-3">
+                              🏘️ Estrato 3 - Medio-Bajo
+                            </SelectItem>
+                            <SelectItem value="medio" className="font-medium text-sm py-3">
+                              🏡 Estrato 4 - Medio
+                            </SelectItem>
+                            <SelectItem value="medio-alto" className="font-medium text-sm py-3">
+                              🏰 Estrato 5 - Medio-Alto
+                            </SelectItem>
+                            <SelectItem value="alto" className="font-medium text-sm py-3">
+                              🏛️ Estrato 6 - Alto
+                            </SelectItem>
+                            <SelectItem value="alto-bajo" className="font-medium text-sm py-3">
+                              🏯 Estrato 7 - Alto-Bajo
+                            </SelectItem>
+                            <SelectItem value="alto-medio" className="font-medium text-sm py-3">
+                              🏰 Estrato 8 - Alto-Medio
+                            </SelectItem>
+                            <SelectItem value="alto-alto" className="font-medium text-sm py-3">
+                              💎 Estrato 9 - Alto-Alto
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-3">
-                          💡 Requerido para encontrar comparables del mismo nivel socioeconómico
+                          💡 Requerido para encontrar propiedades comparables del mismo nivel
                         </p>
                       </CardContent>
                     </Card>
