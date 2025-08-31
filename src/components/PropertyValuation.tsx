@@ -722,12 +722,9 @@ const PropertyValuation = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
-                        const multiplier = estratoMultipliers[key];
-                        const percentage = ((multiplier - 1) * 100).toFixed(0);
-                        const sign = multiplier >= 1 ? '+' : '';
                         return (
                           <SelectItem key={key} value={key}>
-                            {label} ({sign}{percentage}%)
+                            {label}
                           </SelectItem>
                         );
                       })}
