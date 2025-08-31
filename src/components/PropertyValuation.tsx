@@ -87,7 +87,7 @@ interface Comparable {
 }
 
 // Tipos de estrato social
-export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-alto' | 'alto' | 'alto-bajo' | 'alto-medio' | 'alto-alto';
+export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-medio' | 'medio-alto' | 'alto' | 'alto-bajo' | 'alto-medio' | 'alto-alto';
 
 // Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
@@ -95,6 +95,7 @@ export const estratoSocialLabels: Record<EstratoSocial, string> = {
   'bajo': 'Estrato 2 - Bajo',
   'medio-bajo': 'Estrato 3 - Medio-Bajo',
   'medio': 'Estrato 4 - Medio',
+  'medio-medio': 'Estrato 4.5 - Medio-Medio',
   'medio-alto': 'Estrato 5 - Medio-Alto',
   'alto': 'Estrato 6 - Alto',
   'alto-bajo': 'Estrato 7 - Alto-Bajo',
@@ -108,6 +109,7 @@ export const estratoToClassMap: Record<EstratoSocial, string> = {
   'bajo': 'popular',
   'medio-bajo': 'media',
   'medio': 'media',
+  'medio-medio': 'media',
   'medio-alto': 'alta',
   'alto': 'alta',
   'alto-bajo': 'alta',
@@ -118,7 +120,7 @@ export const estratoToClassMap: Record<EstratoSocial, string> = {
 // Mapeo inverso: clases a estratos
 export const classToEstratos: Record<string, EstratoSocial[]> = {
   'popular': ['bajo-bajo', 'bajo'],
-  'media': ['medio-bajo', 'medio'],
+  'media': ['medio-bajo', 'medio', 'medio-medio'],
   'alta': ['medio-alto', 'alto', 'alto-bajo', 'alto-medio', 'alto-alto']
 };
 
@@ -128,6 +130,7 @@ export const estratoMultipliers: Record<EstratoSocial, number> = {
   'bajo': 0.8,
   'medio-bajo': 0.9,
   'medio': 1.0,
+  'medio-medio': 1.1,
   'medio-alto': 1.2,
   'alto': 1.5,
   'alto-bajo': 1.6,
@@ -593,6 +596,9 @@ const PropertyValuation = () => {
                             </SelectItem>
                             <SelectItem value="medio" className="font-medium text-sm py-3">
                               🏡 Estrato 4 - Medio
+                            </SelectItem>
+                            <SelectItem value="medio-medio" className="font-medium text-sm py-3">
+                              🏢 Estrato 4.5 - Medio-Medio
                             </SelectItem>
                             <SelectItem value="medio-alto" className="font-medium text-sm py-3">
                               🏰 Estrato 5 - Medio-Alto
