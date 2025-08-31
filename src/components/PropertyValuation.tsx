@@ -335,6 +335,7 @@ interface Comparable {
   property_type: string | null;
   estrato_social: EstratoSocial;
   distance_km?: number;
+  price_range?: string; // Nuevo campo para rangos de precio sanitizados
 }
 
 const PropertyValuation = () => {
@@ -486,8 +487,9 @@ const PropertyValuation = () => {
       const clase = getSocialClass(estrato);
       const estratosGrupo = classToEstratos[clase];
 
+      // Usar función pública con datos sanitizados por seguridad
       const results = await Promise.all(
-        estratosGrupo.map(e => supabase.rpc('find_comparables_progressive_radius', {
+        estratosGrupo.map(e => supabase.rpc('find_comparables_public', {
           target_lat: lat,
           target_lng: lng,
           target_estrato: e,
@@ -514,15 +516,18 @@ const PropertyValuation = () => {
 
       const comparablesData: Comparable[] = (merged || []).map((d: any) => ({
         id: d.id,
-        address: d.address,
-        price_usd: Number(d.price_usd || 0),
+        address: d.general_location || d.address || 'Ubicación no disponible',
+        price_usd: Number(d.price_usd || 0), // Puede ser 0 si viene de función pública
         price_per_sqm_usd: Number(d.price_per_sqm_usd || 0),
         total_area: d.total_area !== null ? Number(d.total_area) : null,
-        latitude: d.latitude !== null ? Number(d.latitude) : null,
-        longitude: d.longitude !== null ? Number(d.longitude) : null,
+        latitude: d.approximate_latitude !== null ? Number(d.approximate_latitude) : 
+                 (d.latitude !== null ? Number(d.latitude) : null),
+        longitude: d.approximate_longitude !== null ? Number(d.approximate_longitude) : 
+                  (d.longitude !== null ? Number(d.longitude) : null),
         property_type: d.property_type || null,
         estrato_social: d.estrato_social as EstratoSocial,
         distance_km: d.distance_km !== null ? Number(d.distance_km) : undefined,
+        price_range: d.price_range // Nuevo campo para mostrar rango de precio sanitizado
       }));
 
       setComparables(comparablesData);

@@ -135,48 +135,7 @@ export type Database = {
       }
     }
     Views: {
-      property_comparables_public: {
-        Row: {
-          age_years: number | null
-          approximate_latitude: number | null
-          approximate_longitude: number | null
-          bathrooms: number | null
-          bedrooms: number | null
-          estrato_social: Database["public"]["Enums"]["estrato_social"] | null
-          general_location: string | null
-          id: string | null
-          price_range: string | null
-          property_type: string | null
-          total_area: number | null
-        }
-        Insert: {
-          age_years?: number | null
-          approximate_latitude?: never
-          approximate_longitude?: never
-          bathrooms?: number | null
-          bedrooms?: number | null
-          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
-          general_location?: never
-          id?: string | null
-          price_range?: never
-          property_type?: string | null
-          total_area?: number | null
-        }
-        Update: {
-          age_years?: number | null
-          approximate_latitude?: never
-          approximate_longitude?: never
-          bathrooms?: number | null
-          bedrooms?: number | null
-          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
-          general_location?: never
-          id?: string | null
-          price_range?: never
-          property_type?: string | null
-          total_area?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       find_comparables_progressive_radius: {
@@ -210,6 +169,19 @@ export type Database = {
           approximate_latitude: number
           approximate_longitude: number
           distance_km: number
+          estrato_social: Database["public"]["Enums"]["estrato_social"]
+          general_location: string
+          id: string
+          price_range: string
+          property_type: string
+          total_area: number
+        }[]
+      }
+      get_property_comparables_public: {
+        Args: { limit_rows?: number; offset_rows?: number }
+        Returns: {
+          approximate_latitude: number
+          approximate_longitude: number
           estrato_social: Database["public"]["Enums"]["estrato_social"]
           general_location: string
           id: string
