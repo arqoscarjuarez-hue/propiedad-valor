@@ -248,6 +248,18 @@ const estratoMultipliers: Record<EstratoSocial, number> = {
   alto_alto: 1.35,    // +35%
 };
 
+// Factores de depreciación por estado de conservación
+const conservationFactors: Record<string, number> = {
+  nuevo: 1.0000,
+  bueno: 0.9968,
+  medio: 0.9748,
+  regular: 0.9191,
+  reparaciones_sencillas: 0.8190,
+  reparaciones_medias: 0.6680,
+  reparaciones_importantes: 0.4740,
+  danos_graves: 0.2480,
+};
+
 const classMultipliers: Record<SocialClass, number> = {
   baja: 0.9,
   media: 1.0,
@@ -555,10 +567,17 @@ const PropertyValuation = () => {
         const precioM2 = 1800; // USD por m² para apartamentos
         const claseSocial = getSocialClass(propertyData.estratoSocial);
         const factorEstrato = classMultipliers[claseSocial];
-        const valorTotal = areaEfectiva * precioM2 * factorEstrato;
+        
+        // Aplicar factor de conservación si está seleccionado
+        const factorConservacion = propertyData.estadoConservacion 
+          ? conservationFactors[propertyData.estadoConservacion] 
+          : 1.0;
+        
+        const valorTotal = areaEfectiva * precioM2 * factorEstrato * factorConservacion;
         
         console.log('Área efectiva apartamento:', areaEfectiva);
         console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
+        console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
         console.log('Valor total calculado:', valorTotal);
         
         setValuationResult(valorTotal);
@@ -1055,13 +1074,21 @@ const PropertyValuation = () => {
                               // Aplicar factor específico por estrato socioeconómico
                               const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
                               valorTotal = valorTotal * factorEstrato;
-                             console.log('Tipo:', propertyData.tipoPropiedad);
-                             console.log('Área efectiva:', areaEfectiva);
-                             console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
-                             console.log('Valor total:', valorTotal);
-                             
-                             // Establecer resultado
-                             setValuationResult(valorTotal);
+                              
+                              // Aplicar factor de conservación si está seleccionado
+                              const factorConservacion = propertyData.estadoConservacion 
+                                ? conservationFactors[propertyData.estadoConservacion] 
+                                : 1.0;
+                              valorTotal = valorTotal * factorConservacion;
+                              
+                              console.log('Tipo:', propertyData.tipoPropiedad);
+                              console.log('Área efectiva:', areaEfectiva);
+                              console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
+                              console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
+                              console.log('Valor total:', valorTotal);
+                              
+                              // Establecer resultado
+                              setValuationResult(valorTotal);
                              
                              toast({
                                title: "Valuación Completada",
