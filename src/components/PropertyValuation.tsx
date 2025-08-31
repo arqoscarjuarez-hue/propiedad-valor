@@ -976,12 +976,7 @@ const PropertyValuation = () => {
                         <p className="text-xs text-muted-foreground mt-1 mb-4">
                           Haga clic en el estado que mejor describa la condición actual del inmueble
                         </p>
-                        
-                        {/* Debug info */}
-                        <div className="text-xs text-blue-600 mb-4">
-                          Estado actual: {propertyData.estadoConservacion || 'ninguno seleccionado'}
-                        </div>
-                      </div>
+                       </div>
 
                       {/* Guía de Estados de Conservación */}
                       <div>
