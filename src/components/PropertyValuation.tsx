@@ -1577,11 +1577,150 @@ const PropertyValuation = () => {
                      </div>
                      </>
                      )}
-                   </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </div>
+                    </TabsContent>
+                 </Tabs>
+               </CardContent>
+             </Card>
+           </div>
+
+           {/* Botón de Valuación - Ahora separado del formulario */}
+           <div>
+             <Card className="shadow-lg">
+               <CardContent className="p-6">
+                 {getNextRequiredStep() !== 'valuacion' ? (
+                   // Mostrar mensaje de pasos pendientes
+                   <div className="text-center py-8">
+                     <div className="mb-4">
+                       <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center">
+                         <Info className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+                       </div>
+                       <h3 className="text-lg font-semibold text-foreground mb-2">
+                         Complete todos los pasos para realizar la valuación
+                       </h3>
+                       <p className="text-muted-foreground mb-4">
+                         Para obtener una valuación precisa y profesional, debe completar todos los pasos requeridos.
+                       </p>
+                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                         <span className="text-blue-700 dark:text-blue-300 font-medium">
+                           Paso pendiente: {getNextRequiredStep()}
+                         </span>
+                       </div>
+                     </div>
+                   </div>
+                 ) : (
+                   // Mostrar botón de valuación cuando todos los pasos estén completos
+                   <div className="space-y-4">
+                     <div className="text-center py-4">
+                       <div className="w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                         <Calculator className="w-8 h-8 text-green-600 dark:text-green-400" />
+                       </div>
+                       <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                         ¡Listo para valuación!
+                       </h3>
+                       <p className="text-green-700 dark:text-green-300 mb-4">
+                         Todos los pasos están completos. Presione el botón para obtener su valuación profesional.
+                       </p>
+                     </div>
+                     
+                     <button 
+                       id="boton-valuacion"
+                       onClick={() => {
+                         console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
+                         console.log('Datos de propiedad:', propertyData);
+                         
+                         try {
+                           let valorTotal = 0;
+                           let areaEfectiva = 0;
+                           
+                           // Método comparativo según tipo de propiedad
+                           if (propertyData.tipoPropiedad === 'apartamento') {
+                             if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
+                               alert('Debe ingresar el área del apartamento');
+                               return;
+                             }
+                             areaEfectiva = propertyData.areaApartamento;
+                             valorTotal = areaEfectiva * 1800; // $1800 por m²
+                             
+                           } else if (propertyData.tipoPropiedad === 'casa') {
+                             if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                               alert('Debe ingresar el área construida de la casa');
+                               return;
+                             }
+                             areaEfectiva = propertyData.areaPrimerNivel;
+                             valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
+                             
+                           } else if (propertyData.tipoPropiedad === 'comercial') {
+                             if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                               alert('Debe ingresar el área del local comercial');
+                               return;
+                             }
+                             areaEfectiva = propertyData.areaPrimerNivel;
+                             valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
+                             
+                           } else {
+                             alert('Debe seleccionar un tipo de propiedad válido');
+                             return;
+                           }
+                           
+                           // Aplicar factor específico por estrato socioeconómico
+                           const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
+                           valorTotal = valorTotal * factorEstrato;
+                           
+                           // Aplicar factor de conservación si está seleccionado
+                           const factorConservacion = propertyData.estadoConservacion 
+                             ? conservationFactors[propertyData.estadoConservacion] 
+                             : 1.0;
+                           valorTotal = valorTotal * factorConservacion;
+                           
+                           console.log('Tipo:', propertyData.tipoPropiedad);
+                           console.log('Área efectiva:', areaEfectiva);
+                           console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
+                           console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
+                           console.log('Valor total:', valorTotal);
+                           
+                            // Establecer resultado
+                            setValuationResult(valorTotal);
+                            
+                            // Hacer scroll automático al resultado después de un breve delay
+                            setTimeout(() => {
+                              const resultElement = document.getElementById('resultado-valuacion');
+                              if (resultElement) {
+                                resultElement.scrollIntoView({ 
+                                  behavior: 'smooth', 
+                                  block: 'center' 
+                                });
+                              }
+                            }, 500);
+                            
+                            toast({
+                              title: "Valuación Completada",
+                             description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
+                           });
+                           
+                         } catch (error) {
+                           console.error('ERROR en cálculo:', error);
+                           alert('Error en el cálculo: ' + error.message);
+                         }
+                       }}
+                       disabled={isCalculating}
+                       className={`w-full h-16 text-xl font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg text-white ${highlightedElement === 'calcular-button' ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}`}
+                     >
+                      <div className="flex items-center justify-center gap-3">
+                        <Calculator className="w-6 h-6" />
+                        ⚡ REALIZAR VALUACIÓN PROFESIONAL
+                      </div>
+                    </button>
+                
+                    <div className="text-xs text-muted-foreground space-y-1 text-center">
+                      <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
+                      <p>✓ Avalúo profesional con estándares latinoamericanos</p>
+                      <p>✓ Certificación internacional y reglamentos regionales</p>
+                    </div>
+                   </div>
+                 )}
+               </CardContent>
+             </Card>
+           </div>
 
           {/* Panel de Resultados - Solo aparece después de calcular */}
           {valuationResult && (
