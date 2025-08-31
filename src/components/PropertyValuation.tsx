@@ -469,7 +469,7 @@ const PropertyValuation = () => {
     if (!isStep3Complete()) return 3;
     if (!isStep4Complete()) return 4;
     if (!isStep5Complete()) return 5;
-    return null;
+    return 'valuacion'; // Paso final: realizar valuación
   };
 
   const canAccessTab = (tabValue: string) => {
@@ -833,9 +833,11 @@ const PropertyValuation = () => {
                     <span className="font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos</span>
                   </div>
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    {getNextRequiredStep() 
-                      ? `Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
-                      : "¡Todos los pasos están completados! Puede proceder con la valuación."
+                    {getNextRequiredStep() === 'valuacion'
+                      ? "¡Todos los pasos están completados! Ahora debe tocar el botón 'Realizar Valuación' para obtener el resultado."
+                      : getNextRequiredStep() 
+                        ? `Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
+                        : "¡Todos los pasos están completados! Puede proceder con la valuación."
                     }
                   </p>
                   <div className="flex items-center gap-2 mt-2">
@@ -865,6 +867,16 @@ const PropertyValuation = () => {
                         </div>
                       );
                     })}
+                    {/* Indicador del botón de valuación */}
+                    <div className={`w-auto px-3 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                      getNextRequiredStep() === 'valuacion' 
+                        ? 'bg-orange-500 text-white animate-pulse' 
+                        : isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete() && isStep5Complete()
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-300 text-gray-600'
+                    }`}>
+                      📊 Valuación
+                    </div>
                   </div>
                 </div>
                 
