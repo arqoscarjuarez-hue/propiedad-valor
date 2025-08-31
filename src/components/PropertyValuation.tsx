@@ -899,42 +899,42 @@ const PropertyValuation = () => {
                       {/* Explicaciones detalladas de cada estado */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                         <div className="p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                          <div className="font-semibold text-green-700 dark:text-green-300 mb-1">🟢 NUEVO (1.0000)</div>
+                          <div className="font-semibold text-green-700 dark:text-green-300 mb-1">🟢 NUEVO (Factor: 1.0000)</div>
                           <p className="text-green-600 dark:text-green-400">Construcción reciente o recién terminada. Sin desgaste visible. Todos los sistemas funcionando perfectamente.</p>
                         </div>
                         
                         <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                          <div className="font-semibold text-blue-700 dark:text-blue-300 mb-1">🔵 BUENO (0.9968)</div>
+                          <div className="font-semibold text-blue-700 dark:text-blue-300 mb-1">🔵 BUENO (Factor: 0.9968)</div>
                           <p className="text-blue-600 dark:text-blue-400">Excelente estado general. Mantenimiento adecuado. Desgaste mínimo por uso normal.</p>
                         </div>
                         
                         <div className="p-3 bg-cyan-50 dark:bg-cyan-950 rounded-lg border border-cyan-200 dark:border-cyan-800">
-                          <div className="font-semibold text-cyan-700 dark:text-cyan-300 mb-1">🔷 MEDIO (0.9748)</div>
+                          <div className="font-semibold text-cyan-700 dark:text-cyan-300 mb-1">🔷 MEDIO (Factor: 0.9748)</div>
                           <p className="text-cyan-600 dark:text-cyan-400">Buen estado con desgaste moderado. Algunos elementos requieren mantenimiento preventivo.</p>
                         </div>
                         
                         <div className="p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                          <div className="font-semibold text-yellow-700 dark:text-yellow-300 mb-1">🟡 REGULAR (0.9191)</div>
+                          <div className="font-semibold text-yellow-700 dark:text-yellow-300 mb-1">🟡 REGULAR (Factor: 0.9191)</div>
                           <p className="text-yellow-600 dark:text-yellow-400">Estado aceptable pero con desgaste visible. Necesita mantenimiento correctivo menor.</p>
                         </div>
                         
                         <div className="p-3 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800">
-                          <div className="font-semibold text-orange-700 dark:text-orange-300 mb-1">🟠 REPARACIONES SENCILLAS (0.8190)</div>
+                          <div className="font-semibold text-orange-700 dark:text-orange-300 mb-1">🟠 REPARACIONES SENCILLAS (Factor: 0.8190)</div>
                           <p className="text-orange-600 dark:text-orange-400">Requiere reparaciones menores como pintura, plomería básica, o cambio de accesorios.</p>
                         </div>
                         
                         <div className="p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
-                          <div className="font-semibold text-red-700 dark:text-red-300 mb-1">🔴 REPARACIONES MEDIAS (0.6680)</div>
+                          <div className="font-semibold text-red-700 dark:text-red-300 mb-1">🔴 REPARACIONES MEDIAS (Factor: 0.6680)</div>
                           <p className="text-red-600 dark:text-red-400">Necesita reparaciones importantes: pisos, instalaciones eléctricas, o sistemas de clima.</p>
                         </div>
                         
                         <div className="p-3 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800">
-                          <div className="font-semibold text-purple-700 dark:text-purple-300 mb-1">🟣 REPARACIONES IMPORTANTES (0.4740)</div>
+                          <div className="font-semibold text-purple-700 dark:text-purple-300 mb-1">🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)</div>
                           <p className="text-purple-600 dark:text-purple-400">Requiere rehabilitación mayor: estructura, techumbres, o sistemas completos.</p>
                         </div>
                         
                         <div className="p-3 bg-gray-50 dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
-                          <div className="font-semibold text-gray-700 dark:text-gray-300 mb-1">⚫ DAÑOS GRAVES (0.2480)</div>
+                          <div className="font-semibold text-gray-700 dark:text-gray-300 mb-1">⚫ DAÑOS GRAVES (Factor: 0.2480)</div>
                           <p className="text-gray-600 dark:text-gray-400">Daños estructurales severos. Requiere reconstrucción parcial o total.</p>
                         </div>
                       </div>
