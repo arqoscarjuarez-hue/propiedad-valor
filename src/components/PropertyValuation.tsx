@@ -1,913 +1,406 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info, HelpCircle } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { supabase } from '@/integrations/supabase/client';
-import DemoWalkthrough from '@/components/DemoWalkthrough';
+import { Calculator, MapPin, Building, DollarSign, FileText, HelpCircle, CheckCircle, AlertCircle, Shuffle, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
+import SupabaseGoogleLocationMap from '@/components/SupabaseGoogleLocationMap';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
 
-import jsPDF from 'jspdf';
-import { 
-  Document as DocxDocument, 
-  Packer, 
-  Paragraph, 
-  TextRun, 
-  HeadingLevel, 
-  Table as DocxTable, 
-  TableCell as DocxTableCell, 
-  TableRow as DocxTableRow,
-  ImageRun,
-  AlignmentType 
-} from 'docx';
-import { saveAs } from 'file-saver';
-import { useToast } from '@/hooks/use-toast';
-import { useLanguage } from '@/hooks/useLanguage';
-import { LanguageSelector } from '@/components/LanguageSelector';
-import LocationMap from './LocationMap';
-import GoogleLocationMap from './GoogleLocationMap';
-import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
-import SimpleLocationMap from './SimpleLocationMap';
-import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
-
-import PropertyComparison from './PropertyComparison';
-
+// Interfaces y tipos
 interface Translation {
-  [key: string]: string;
+  propertyType: string;
+  area: string;
+  bedrooms: string;
+  bathrooms: string;
+  parkingSpaces: string;
+  age: string;
+  conservationState: string;
+  location: string;
+  neighborhood: string;
+  address: string;
+  description: string;
+  calculate: string;
+  result: string;
+  estimatedValue: string;
+  comparables: string;
+  noComparables: string;
+  loading: string;
+  errors: {
+    fillRequired: string;
+    selectPropertyType: string;
+    enterArea: string;
+    enterLocation: string;
+  };
+  propertyTypes: {
+    casa: string;
+    apartamento: string;
+    terreno: string;
+    comercial: string;
+  };
+  conservationStates: {
+    excelente: string;
+    bueno: string;
+    regular: string;
+    malo: string;
+  };
 }
 
 interface Translations {
   [key: string]: Translation;
 }
 
-const translations: Translations = {
-  es: {
-    propertyValuation: 'Valuación de Propiedad',
-    propertyType: 'Tipo de Propiedad',
-    house: 'Casa',
-    apartment: 'Apartamento',
-    land: 'Terreno',
-    commercial: 'Comercial',
-    rooms: 'Habitaciones',
-    bathrooms: 'Baños',
-    age: 'Antigüedad (años)',
-    address: 'Dirección',
-    valuationResults: 'Resultados de la Valuación',
-    performValuation: 'Realizar Valuación',
-    method: 'Método: Comparables internacionales (IVS/RICS)',
-    professionalAppraisal: 'Avalúo profesional con estándares IVS/RICS',
-    internationalCertification: 'Certificación internacional',
-    areas: 'Áreas',
-    spaces: 'Espacios',
-    features: 'Características',
-    location: 'Ubicación',
-    propertyAreas: 'Áreas de la Propiedad',
-    basementArea: 'Área del Sótano (m²)',
-    firstFloorArea: 'Área del Primer Nivel (m²)',
-    secondFloorArea: 'Área del Segundo Nivel (m²)',
-    thirdFloorArea: 'Área del Tercer Nivel (m²)',
-    fourthFloorArea: 'Área del Cuarto Nivel (m²)',
-    landArea: 'Área del Terreno (m²)',
-    apartmentArea: 'Área del Apartamento (m²)',
-    propertySpaces: 'Espacios de la Propiedad',
-    livingRooms: 'Salas',
-    diningRooms: 'Comedor',
-    kitchens: 'Cocina',
-    storageRooms: 'Bodega',
-    serviceArea: 'Área de Servicio',
-    garages: 'Cochera',
-    otherSpaces: 'Otros',
-    propertyFeatures: 'Características de la Propiedad',
-    generalCondition: 'Estado General',
-    accessType: 'Tipo de Acceso',
-    propertyLocation: 'Ubicación de la Propiedad',
-    fullAddress: 'Dirección Completa',
-    services: 'Servicios',
-    water: 'Agua',
-    electricity: 'Electricidad',
-    gas: 'Gas',
-    drainage: 'Drenaje',
-    internet: 'Internet',
-    cable: 'Cable',
-    phone: 'Teléfono',
-    security: 'Seguridad',
-    pool: 'Alberca',
-    garden: 'Jardín',
-    elevator: 'Elevador',
-    airConditioning: 'Aire Acondicionado',
-    heating: 'Calefacción',
-    solarPanels: 'Paneles Solares',
-    waterTank: 'Tinaco',
-    topography: 'Topografía',
-    valuationType: 'Tipo de Valuación',
-    selectPropertyType: 'Selecciona el tipo de propiedad',
-    additionalInformation: 'Información Adicional',
-    generalInformation: 'Información General',
-    apartmentInformation: 'Apartamento',
-    constructionAreaHouse: 'Área de Construcción Casa (m²)',
-    enterTotalPropertyArea: 'Ingrese el área total construida de la propiedad',
-    indicateLandArea: 'Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).',
-    enterTotalApartmentArea: 'Ingrese el área total del apartamento en metros cuadrados',
-  },
-  en: {
-    propertyValuation: 'Property Valuation',
-    propertyType: 'Property Type',
-    house: 'House',
-    apartment: 'Apartment',
-    land: 'Land',
-    commercial: 'Commercial',
-    rooms: 'Rooms',
-    bathrooms: 'Bathrooms',
-    age: 'Age (years)',
-    address: 'Address',
-    valuationResults: 'Valuation Results',
-    performValuation: 'Perform Valuation',
-    method: 'Method: International comparables (IVS/RICS)',
-    professionalAppraisal: 'Professional appraisal with IVS/RICS standards',
-    internationalCertification: 'International certification',
-    areas: 'Areas',
-    spaces: 'Spaces',
-    features: 'Features',
-    location: 'Location',
-    propertyAreas: 'Property Areas',
-    basementArea: 'Basement Area (m²)',
-    firstFloorArea: 'First Floor Area (m²)',
-    secondFloorArea: 'Second Floor Area (m²)',
-    thirdFloorArea: 'Third Floor Area (m²)',
-    fourthFloorArea: 'Fourth Floor Area (m²)',
-    landArea: 'Land Area (m²)',
-    apartmentArea: 'Apartment Area (m²)',
-    propertySpaces: 'Property Spaces',
-    livingRooms: 'Living Rooms',
-    diningRooms: 'Dining Room',
-    kitchens: 'Kitchen',
-    storageRooms: 'Storage Room',
-    serviceArea: 'Service Area',
-    garages: 'Garage',
-    otherSpaces: 'Other',
-    propertyFeatures: 'Property Features',
-    generalCondition: 'General Condition',
-    accessType: 'Access Type',
-    propertyLocation: 'Property Location',
-    fullAddress: 'Full Address',
-    services: 'Services',
-    water: 'Water',
-    electricity: 'Electricity',
-    gas: 'Gas',
-    drainage: 'Drainage',
-    internet: 'Internet',
-    cable: 'Cable',
-    phone: 'Phone',
-    security: 'Security',
-    pool: 'Pool',
-    garden: 'Garden',
-    elevator: 'Elevator',
-    airConditioning: 'Air Conditioning',
-    heating: 'Heating',
-    solarPanels: 'Solar Panels',
-    waterTank: 'Water Tank',
-    topography: 'Topography',
-    valuationType: 'Valuation Type',
-    selectPropertyType: 'Select property type',
-    additionalInformation: 'Additional Information',
-    generalInformation: 'General Information',
-    apartmentInformation: 'Apartment',
-    constructionAreaHouse: 'Construction Area House (m²)',
-    enterTotalPropertyArea: 'Enter the total built area of the property',
-    indicateLandArea: 'Indicate the land area where the construction is located in square meters (m²).',
-    enterTotalApartmentArea: 'Enter the total area of the apartment in square meters',
-  },
-};
-
-// Estrato social latinoamericano
-export type EstratoSocial = 
-  | 'alto_alto'
-  | 'alto_medio'
-  | 'alto_bajo'
-  | 'medio_alto'
-  | 'medio_medio'
-  | 'medio_bajo'
-  | 'bajo_alto'
-  | 'bajo_medio'
-  | 'bajo_bajo';
-
-export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  'alto_alto': 'Alto Alto',
-  'alto_medio': 'Alto Medio', 
-  'alto_bajo': 'Alto Bajo',
-  'medio_alto': 'Medio Alto',
-  'medio_medio': 'Medio Medio',
-  'medio_bajo': 'Medio Bajo',
-  'bajo_alto': 'Bajo Alto',
-  'bajo_medio': 'Bajo Medio',
-  'bajo_bajo': 'Bajo Bajo'
-};
-
-type SocialClass = 'baja' | 'media' | 'alta';
-
-const socialClassLabels: Record<SocialClass, string> = {
-  baja: 'Baja',
-  media: 'Media',
-  alta: 'Alta',
-};
-
-const estratoToClassMap: Record<EstratoSocial, SocialClass> = {
-  bajo_bajo: 'baja',
-  bajo_medio: 'baja',
-  bajo_alto: 'baja',
-  medio_bajo: 'media',
-  medio_medio: 'media',
-  medio_alto: 'media',
-  alto_bajo: 'alta',
-  alto_medio: 'alta',
-  alto_alto: 'alta',
-};
-
-const classToEstratos: Record<SocialClass, EstratoSocial[]> = {
-  baja: ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
-  media: ['medio_bajo', 'medio_medio', 'medio_alto'],
-  alta: ['alto_bajo', 'alto_medio', 'alto_alto'],
-};
-
-// Multiplicadores específicos por estrato socioeconómico
-const estratoMultipliers: Record<EstratoSocial, number> = {
-  bajo_bajo: 0.85,    // -15%
-  bajo_medio: 0.90,   // -10%
-  bajo_alto: 0.95,    // -5%
-  medio_bajo: 0.97,   // -3%
-  medio_medio: 1.00,  // 0% (base)
-  medio_alto: 1.03,   // +3%
-  alto_bajo: 1.10,    // +10%
-  alto_medio: 1.20,   // +20%
-  alto_alto: 1.35,    // +35%
-};
-
-// Factores de depreciación por estado de conservación
-const conservationFactors: Record<string, number> = {
-  nuevo: 1.0000,
-  bueno: 0.9968,
-  medio: 0.9748,
-  regular: 0.9191,
-  reparaciones_sencillas: 0.8190,
-  reparaciones_medias: 0.6680,
-  reparaciones_importantes: 0.4740,
-  danos_graves: 0.2480,
-};
-
-const classMultipliers: Record<SocialClass, number> = {
-  baja: 0.9,
-  media: 1.0,
-  alta: 1.2,
-};
-
-const getSocialClass = (e: EstratoSocial): SocialClass => estratoToClassMap[e];
-
 interface PropertyData {
-  areaSotano: number;
-  areaPrimerNivel: number;
-  areaSegundoNivel: number;
-  areaTercerNivel: number;
-  areaCuartoNivel: number;
-  areaTerreno: number;
-  areaApartamento: number;
   tipoPropiedad: string;
-  estratoSocial: EstratoSocial | null;
-  recamaras: number;
-  salas: number;
-  comedor: number;
-  cocina: number;
-  bodega: number;
-  areaServicio: number;
-  cochera: number;
+  area: number;
+  habitaciones: number;
   banos: number;
-  otros: number;
+  parqueaderos: number;
   antiguedad: number;
-  ubicacion: string;
-  estadoGeneral: string;
-  tipoAcceso: string;
+  estadoConservacion: string;
   latitud: number;
   longitud: number;
   direccionCompleta: string;
-  servicios: {
-    agua: boolean;
-    electricidad: boolean;
-    gas: boolean;
-    drenaje: boolean;
-    internet: boolean;
-    cable: boolean;
-    telefono: boolean;
-    seguridad: boolean;
-    alberca: boolean;
-    jardin: boolean;
-    elevador: boolean;
-    aireAcondicionado: boolean;
-    calefaccion: boolean;
-    panelesSolares: boolean;
-    tinaco: boolean;
-  };
-  topografia?: string;
-  tipoValoracion?: string;
-  // Ross-Heindecke parameters
-  vidaUtil?: number;
-  estadoConservacion?: string;
-  mantenimiento?: number;
-  obsolescenciaFuncional?: number;
-  obsolescenciaTecnologica?: number;
-  factorUbicacion?: number;
-  factorMercado?: number;
+  barrio: string;
+  descripcion: string;
+  estratoSocial: EstratoSocial;
 }
 
 interface Comparable {
-  id: string;
-  address: string;
-  price_usd: number;
-  price_per_sqm_usd: number;
-  total_area: number | null;
-  latitude: number | null;
-  longitude: number | null;
-  property_type: string | null;
-  estrato_social: EstratoSocial;
-  distance_km?: number;
-  price_range?: string; // Nuevo campo para rangos de precio sanitizados
+  id?: string;
+  tipo_propiedad: string;
+  area: number;
+  precio_m2: number;
+  precio_total: number;
+  habitaciones?: number;
+  banos?: number;
+  direccion: string;
+  fecha_venta: string;
+  distancia?: number;
+  estrato_social: string;
 }
 
+// Tipos de estrato social
+export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-alto' | 'alto';
+
+// Etiquetas para estratos sociales
+export const estratoSocialLabels: Record<EstratoSocial, string> = {
+  'bajo-bajo': 'Estrato 1 - Bajo-Bajo',
+  'bajo': 'Estrato 2 - Bajo',
+  'medio-bajo': 'Estrato 3 - Medio-Bajo',
+  'medio': 'Estrato 4 - Medio',
+  'medio-alto': 'Estrato 5 - Medio-Alto',
+  'alto': 'Estrato 6 - Alto'
+};
+
+// Mapeo de estratos a clases sociales simplificadas
+export const estratoToClassMap: Record<EstratoSocial, string> = {
+  'bajo-bajo': 'popular',
+  'bajo': 'popular',
+  'medio-bajo': 'media',
+  'medio': 'media',
+  'medio-alto': 'alta',
+  'alto': 'alta'
+};
+
+// Mapeo inverso: clases a estratos
+export const classToEstratos: Record<string, EstratoSocial[]> = {
+  'popular': ['bajo-bajo', 'bajo'],
+  'media': ['medio-bajo', 'medio'],
+  'alta': ['medio-alto', 'alto']
+};
+
+// Multiplicadores de valor según estrato social
+export const estratoMultipliers: Record<EstratoSocial, number> = {
+  'bajo-bajo': 0.7,
+  'bajo': 0.8,
+  'medio-bajo': 0.9,
+  'medio': 1.0,
+  'medio-alto': 1.2,
+  'alto': 1.5
+};
+
+// Factores de conservación
+export const conservationFactors: Record<string, number> = {
+  'excelente': 1.15,
+  'bueno': 1.0,
+  'regular': 0.9,
+  'malo': 0.75
+};
+
+// Multiplicadores por clase social
+export const classMultipliers: Record<string, number> = {
+  'popular': 0.75,
+  'media': 1.0,
+  'alta': 1.35
+};
+
+// Traducciones
+const translations: Translations = {
+  es: {
+    propertyType: "Tipo de Propiedad",
+    area: "Área (m²)",
+    bedrooms: "Habitaciones",
+    bathrooms: "Baños",
+    parkingSpaces: "Parqueaderos",
+    age: "Antigüedad (años)",
+    conservationState: "Estado de Conservación",
+    location: "Ubicación",
+    neighborhood: "Barrio",
+    address: "Dirección",
+    description: "Descripción",
+    calculate: "Calcular Valuación",
+    result: "Resultado de la Valuación",
+    estimatedValue: "Valor Estimado",
+    comparables: "Propiedades Comparables",
+    noComparables: "No se encontraron propiedades comparables",
+    loading: "Calculando valuación...",
+    errors: {
+      fillRequired: "Complete todos los campos requeridos",
+      selectPropertyType: "Seleccione el tipo de propiedad",
+      enterArea: "Ingrese el área de la propiedad",
+      enterLocation: "Seleccione la ubicación en el mapa"
+    },
+    propertyTypes: {
+      casa: "Casa",
+      apartamento: "Apartamento",
+      terreno: "Terreno",
+      comercial: "Comercial"
+    },
+    conservationStates: {
+      excelente: "Excelente",
+      bueno: "Bueno",
+      regular: "Regular",
+      malo: "Malo"
+    }
+  },
+  en: {
+    propertyType: "Property Type",
+    area: "Area (m²)",
+    bedrooms: "Bedrooms",
+    bathrooms: "Bathrooms",
+    parkingSpaces: "Parking Spaces",
+    age: "Age (years)",
+    conservationState: "Conservation State",
+    location: "Location",
+    neighborhood: "Neighborhood",
+    address: "Address",
+    description: "Description",
+    calculate: "Calculate Valuation",
+    result: "Valuation Result",
+    estimatedValue: "Estimated Value",
+    comparables: "Comparable Properties",
+    noComparables: "No comparable properties found",
+    loading: "Calculating valuation...",
+    errors: {
+      fillRequired: "Fill in all required fields",
+      selectPropertyType: "Select property type",
+      enterArea: "Enter property area",
+      enterLocation: "Select location on map"
+    },
+    propertyTypes: {
+      casa: "House",
+      apartamento: "Apartment",
+      terreno: "Land",
+      comercial: "Commercial"
+    },
+    conservationStates: {
+      excelente: "Excellent",
+      bueno: "Good",
+      regular: "Regular",
+      malo: "Poor"
+    }
+  }
+};
+
 const PropertyValuation = () => {
-  const { toast } = useToast();
-  const { selectedLanguage } = useLanguage();
-  
-  // Estados para la valuación
-  const [valuationResult, setValuationResult] = useState<number | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [comparables, setComparables] = useState<Comparable[]>([]);
-  const [isLoadingComparables, setIsLoadingComparables] = useState(false);
-  const [showWalkthrough, setShowWalkthrough] = useState(false);
-  const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState(''); // Sin pestaña activa inicialmente
-  const [currentStep, setCurrentStep] = useState(1);
   const [propertyData, setPropertyData] = useState<PropertyData>({
-    areaSotano: 0,
-    areaPrimerNivel: 0,
-    areaSegundoNivel: 0,
-    areaTercerNivel: 0,
-    areaCuartoNivel: 0,
-    areaTerreno: 0,
-    areaApartamento: 0,
-    tipoPropiedad: '', // Vacío por defecto
-    estratoSocial: null, // Vacío por defecto
-    recamaras: 0,
-    salas: 0,
-    comedor: 0,
-    cocina: 0,
-    bodega: 0,
-    areaServicio: 0,
-    cochera: 0,
+    tipoPropiedad: '',
+    area: 0,
+    habitaciones: 0,
     banos: 0,
-    otros: 0,
+    parqueaderos: 0,
     antiguedad: 0,
-    ubicacion: '',
-    estadoGeneral: '',
     estadoConservacion: '',
-    tipoAcceso: '',
     latitud: 0,
     longitud: 0,
     direccionCompleta: '',
-    servicios: {
-      agua: false,
-      electricidad: false,
-      gas: false,
-      drenaje: false,
-      internet: false,
-      cable: false,
-      telefono: false,
-      seguridad: false,
-      alberca: false,
-      jardin: false,
-      elevador: false,
-      aireAcondicionado: false,
-      calefaccion: false,
-      panelesSolares: false,
-      tinaco: false,
-    }
+    barrio: '',
+    descripcion: '',
+    estratoSocial: 'medio' as EstratoSocial
   });
 
-  // Efecto para asegurar estado inicial limpio
-  useEffect(() => {
-    // Asegurar que no hay pestañas activas inicialmente
-    setActiveTab('');
-  }, []);
+  const [activeTab, setActiveTab] = useState<string>('');
+  const [valuationResult, setValuationResult] = useState<any>(null);
+  const [comparables, setComparables] = useState<Comparable[]>([]);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
+  const [selectedLanguage] = useState('es');
 
-  // Debug effect para encontrar el cero que aparece
-  useEffect(() => {
-    console.log('=== DEBUG ESTADO CONSERVACIÓN ===');
-    console.log('estadoConservacion actual:', propertyData.estadoConservacion);
-    console.log('Hay estado seleccionado:', !!propertyData.estadoConservacion);
-  }, [propertyData.estadoConservacion]);
+  const t = translations[selectedLanguage];
 
-  const handleInputChange = (field: keyof PropertyData, value: string | number | EstratoSocial) => {
-    const isStringField = ['ubicacion', 'estadoGeneral', 'estadoConservacion', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion', 'estratoSocial'].includes(field);
-    
-    let finalValue = value;
-    if (!isStringField && typeof value === 'string') {
-      const numValue = parseFloat(value);
-      finalValue = isNaN(numValue) ? 0 : Math.max(0, numValue);
-    }
-    
-    setPropertyData(current => {
-      const newData = {
-        ...current,
-        [field]: finalValue
-      };
-      
-      // Cuando se modifica el área de apartamento, poner a cero las áreas de construcción y terreno
-      if (field === 'areaApartamento') {
-        newData.areaPrimerNivel = 0;  // Este es el campo que se muestra como "Área de Construcción Casa"
-        newData.areaTerreno = 0;      // Este es el campo que se muestra como "Área de Terreno Casa"
-        newData.areaSotano = 0;
-        newData.areaSegundoNivel = 0;
-        newData.areaTercerNivel = 0;
-        newData.areaCuartoNivel = 0;
-      }
-      
-      // Si se cambia el tipo de propiedad a terreno, limpiar estado de conservación
-      if (field === 'tipoPropiedad' && value === 'terreno') {
-        newData.estadoConservacion = '';
-      }
-      
-      return newData;
-    });
-    
-    // Lógica para mantener orden secuencial de pasos
-    setTimeout(() => {
-      // Si se modifica el Paso 1 (estrato social), resetear pasos posteriores si es necesario
-      if (field === 'estratoSocial') {
-        // No resetear nada, solo continuar al siguiente paso si está completo
-        if (value && propertyData.tipoPropiedad) {
-          // Dirigir al paso 3 si los pasos 1 y 2 están completos
-          if (propertyData.direccionCompleta === '' || propertyData.latitud === 0) {
-            setActiveTab('ubicacion');
-          }
-        }
-      }
-      
-      // Si se modifica el Paso 2 (tipo de propiedad), puede afectar pasos posteriores
-      if (field === 'tipoPropiedad') {
-        // Si cambia a terreno, limpiar estado de conservación y dirigir a ubicación
-        if (value === 'terreno') {
-          setPropertyData(prev => ({ ...prev, estadoConservacion: '' }));
-        }
-        // Dirigir al paso 3 si los pasos 1 y 2 están completos
-        if (propertyData.estratoSocial && value) {
-          if (propertyData.direccionCompleta === '' || propertyData.latitud === 0) {
-            setActiveTab('ubicacion');
-          }
-        }
-      }
-      
-      // Si se modifica el Paso 3 (ubicación), dirigir al paso 4
-      if ((field === 'direccionCompleta' || field === 'latitud' || field === 'longitud') && 
-          finalValue && propertyData.estratoSocial && propertyData.tipoPropiedad) {
-        // Verificar si ubicación está completa para dirigir al paso 4
-        if (propertyData.direccionCompleta && propertyData.latitud !== 0 && propertyData.longitud !== 0) {
-          setActiveTab('areas');
-        }
-      }
-      
-      // Si se completa el Paso 4 (áreas), dirigir al paso 5 (solo si no es terreno)
-      if (['areaApartamento', 'areaTerreno', 'areaPrimerNivel', 'areaSotano', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel'].includes(field)) {
-        const newEffectiveArea = field === 'areaApartamento' ? (finalValue as number) : 
-          (propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + 
-          (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + 
-          (propertyData.areaCuartoNivel || 0);
-        
-        if (newEffectiveArea > 0 && propertyData.tipoPropiedad !== 'terreno') {
-          setActiveTab('depreciacion');
-        }
-      }
-    }, 100);
-  };
-
-  // Funciones de validación para cada paso
+  // Funciones de validación de pasos
   const isStep1Complete = () => {
-    return propertyData.estratoSocial !== null && propertyData.estratoSocial !== undefined;
+    return propertyData.estratoSocial && propertyData.estratoSocial !== 'medio';
   };
 
   const isStep2Complete = () => {
-    return propertyData.tipoPropiedad !== '' && propertyData.tipoPropiedad !== null;
+    return propertyData.tipoPropiedad !== '';
   };
 
   const isStep3Complete = () => {
-    return propertyData.direccionCompleta !== '' && propertyData.latitud !== 0 && propertyData.longitud !== 0;
+    return propertyData.latitud !== 0 && propertyData.longitud !== 0 && propertyData.direccionCompleta !== '';
   };
 
   const isStep4Complete = () => {
-    if (propertyData.tipoPropiedad === 'apartamento') {
-      return propertyData.areaApartamento > 0;
-    } else if (propertyData.tipoPropiedad === 'terreno') {
-      return propertyData.areaTerreno > 0;
-    } else {
-      return getEffectiveArea() > 0;
-    }
+    return propertyData.area > 0 && propertyData.estadoConservacion !== '';
   };
 
   const isStep5Complete = () => {
-    if (propertyData.tipoPropiedad === 'terreno') {
-      return true; // Los terrenos no necesitan paso 5
-    }
-    return propertyData.estadoConservacion !== '';
+    if (propertyData.tipoPropiedad === 'terreno') return true;
+    return propertyData.habitaciones > 0 && propertyData.banos > 0;
   };
 
+  // Función para obtener el siguiente paso requerido
   const getNextRequiredStep = () => {
     if (!isStep1Complete()) return 1;
     if (!isStep2Complete()) return 2;
     if (!isStep3Complete()) return 3;
     if (!isStep4Complete()) return 4;
     if (!isStep5Complete()) return 5;
-    return 'valuacion'; // Paso final: realizar valuación
+    return 'valuacion';
   };
 
-  const canAccessTab = (tabValue: string) => {
-    switch (tabValue) {
-      case 'ubicacion':
-        return isStep1Complete() && isStep2Complete();
-      case 'areas':
-        return isStep1Complete() && isStep2Complete() && isStep3Complete();
-      case 'depreciacion':
-        return isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete();
-      default:
-        return true;
+  const handleInputChange = (field: string, value: any) => {
+    setPropertyData(prev => ({ ...prev, [field]: value }));
+    
+    // Auto-abrir el siguiente paso
+    if (field === 'estratoSocial' && value && isStep2Complete()) {
+      setActiveTab('tipo');
+    } else if (field === 'tipoPropiedad' && value && isStep3Complete()) {
+      setActiveTab('ubicacion');
+    } else if ((field === 'latitud' || field === 'direccionCompleta') && value && isStep4Complete()) {
+      setActiveTab('caracteristicas');
+    } else if ((field === 'area' || field === 'estadoConservacion') && value && !isStep5Complete() && propertyData.tipoPropiedad !== 'terreno') {
+      setActiveTab('detalles');
     }
   };
 
-  const handleTabChange = (tabValue: string) => {
-    if (canAccessTab(tabValue)) {
-      setActiveTab(tabValue);
-    } else {
-      const nextStep = getNextRequiredStep();
-      // Navegación automática al paso requerido
-      if (typeof nextStep === 'number') {
-        if (nextStep <= 2) {
-          // Los pasos 1 y 2 están en la página principal, hacer scroll
-          const element = nextStep === 1 ? 
-            document.getElementById('estrato-social-select') : 
-            document.getElementById('tipo-propiedad-select');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        } else {
-          // Para pasos 3, 4, 5 cambiar a la pestaña correspondiente
-          const tabMap = { 3: 'ubicacion', 4: 'areas', 5: 'depreciacion' };
-          setActiveTab(tabMap[nextStep as keyof typeof tabMap]);
-        }
-        
-        toast({
-          title: "Paso requerido",
-          description: `Debe completar el Paso ${nextStep} antes de continuar.`,
-          variant: "destructive"
-        });
-      } else if (nextStep === 'valuacion') {
-        // Hacer scroll al botón de valuación
-        setTimeout(() => {
-          const button = document.getElementById('boton-valuacion');
-          if (button) {
-            button.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        }, 100);
-        
-        toast({
-          title: "¡Listo para valuación!",
-          description: "Todos los pasos están completos. Presione 'Realizar Valuación'.",
-        });
-      }
-    }
+  const handleLocationSelect = (location: { lat: number; lng: number; address: string; neighborhood: string }) => {
+    setPropertyData(prev => ({
+      ...prev,
+      latitud: location.lat,
+      longitud: location.lng,
+      direccionCompleta: location.address,
+      barrio: location.neighborhood
+    }));
   };
 
-  // Función para reiniciar todos los campos
-  const reiniciarFormulario = () => {
-    setPropertyData({
-      areaSotano: 0,
-      areaPrimerNivel: 0,
-      areaSegundoNivel: 0,
-      areaTercerNivel: 0,
-      areaCuartoNivel: 0,
-      areaTerreno: 0,
-      areaApartamento: 0,
-      tipoPropiedad: '',
-      estratoSocial: null,
-      recamaras: 0,
-      salas: 0,
-      comedor: 0,
-      cocina: 0,
-      bodega: 0,
-      areaServicio: 0,
-      cochera: 0,
-      banos: 0,
-      otros: 0,
-      antiguedad: 0,
-      ubicacion: '',
-      estadoGeneral: '',
-      estadoConservacion: '',
-      tipoAcceso: '',
-      latitud: 0,
-      longitud: 0,
-      direccionCompleta: '',
-      servicios: {
-        agua: false,
-        electricidad: false,
-        gas: false,
-        drenaje: false,
-        internet: false,
-        cable: false,
-        telefono: false,
-        seguridad: false,
-        alberca: false,
-        jardin: false,
-        elevador: false,
-        aireAcondicionado: false,
-        calefaccion: false,
-        panelesSolares: false,
-        tinaco: false,
-      }
-    });
-    
-    // Limpiar resultados
-    setValuationResult(null);
-    setComparables([]);
-    
-    // Volver al inicio
-    setActiveTab('ubicacion');
-    
-    // Scroll al principio
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    toast({
-      title: "Formulario Reiniciado",
-      description: "Todos los campos han sido limpiados. Puede comenzar desde el Paso 1.",
-    });
-  };
-
-  // Función para calcular el área efectiva para avalúo
-  const getEffectiveArea = () => {
-    if (propertyData.tipoPropiedad === 'apartamento') {
-      // Para apartamentos, solo se necesita el área del apartamento
-      return (propertyData.areaApartamento || 0);
-    } else if (propertyData.tipoPropiedad === 'terreno') {
-      // Para terrenos, solo se necesita el área del terreno
-      return propertyData.areaTerreno || 0;
-    }
-    
-    // Para casas y comerciales, usar la suma de áreas de construcción
-    return (propertyData.areaSotano || 0) + 
-           (propertyData.areaPrimerNivel || 0) + 
-           (propertyData.areaSegundoNivel || 0) + 
-           (propertyData.areaTercerNivel || 0) + 
-           (propertyData.areaCuartoNivel || 0);
-  };
-
-  // Función para validar si hay área suficiente según el tipo de propiedad
-  const hasValidArea = () => {
-    console.log('Validando área para:', propertyData.tipoPropiedad);
-    console.log('Área apartamento:', propertyData.areaApartamento);
-    
-    if (propertyData.tipoPropiedad === 'apartamento') {
-      const valid = propertyData.areaApartamento > 0;
-      console.log('Apartamento válido:', valid);
-      return valid;
-    } else if (propertyData.tipoPropiedad === 'terreno') {
-      return propertyData.areaTerreno > 0;
-    } else {
-      // Para casas y comerciales, verificar áreas de construcción
-      return getEffectiveArea() > 0;
-    }
-  };
-
-  // Función actualizada para usar la función de BD con búsqueda progresiva
   const fetchComparables = async () => {
     try {
-      setIsLoadingComparables(true);
-      setComparables([]);
+      const { data, error } = await supabase
+        .from('property_comparables')
+        .select('*')
+        .eq('tipo_propiedad', propertyData.tipoPropiedad)
+        .in('estrato_social', classToEstratos[estratoToClassMap[propertyData.estratoSocial]])
+        .limit(10);
 
-      const lat = propertyData.latitud;
-      const lng = propertyData.longitud;
-      const estrato = propertyData.estratoSocial;
-
-      if (!lat || !lng) {
-        // Si no hay coordenadas, solo log pero no bloquear
-        console.log('Sin coordenadas para buscar comparables');
-        return;
+      if (error) {
+        console.error('Error fetching comparables:', error);
+        return [];
       }
 
-      // Buscar comparables por CLASE social (Baja/Media/Alta)
-      const clase = getSocialClass(estrato);
-      const estratosGrupo = classToEstratos[clase];
-
-      // Usar función pública con datos sanitizados por seguridad
-      const results = await Promise.all(
-        estratosGrupo.map(e => supabase.rpc('find_comparables_public', {
-          target_lat: lat,
-          target_lng: lng,
-          target_estrato: e,
-          target_property_type: propertyData.tipoPropiedad
-        }))
-      );
-
-      const allData = results
-        .filter((r: any) => {
-          if (r.error) {
-            console.error('Error fetching comparables for estrato', r);
-            return false;
-          }
-          return Array.isArray(r.data);
-        })
-        .flatMap((r: any) => r.data as any[]);
-
-      // De-duplicar por id
-      const uniqueById: Record<string, any> = {};
-      for (const d of allData) {
-        uniqueById[d.id] = d;
-      }
-      const merged = Object.values(uniqueById);
-
-      const comparablesData: Comparable[] = (merged || []).map((d: any) => ({
-        id: d.id,
-        address: d.general_location || d.address || 'Ubicación no disponible',
-        price_usd: Number(d.price_usd || 0), // Puede ser 0 si viene de función pública
-        price_per_sqm_usd: Number(d.price_per_sqm_usd || 0),
-        total_area: d.total_area !== null ? Number(d.total_area) : null,
-        latitude: d.approximate_latitude !== null ? Number(d.approximate_latitude) : 
-                 (d.latitude !== null ? Number(d.latitude) : null),
-        longitude: d.approximate_longitude !== null ? Number(d.approximate_longitude) : 
-                  (d.longitude !== null ? Number(d.longitude) : null),
-        property_type: d.property_type || null,
-        estrato_social: d.estrato_social as EstratoSocial,
-        distance_km: d.distance_km !== null ? Number(d.distance_km) : undefined,
-        price_range: d.price_range // Nuevo campo para mostrar rango de precio sanitizado
-      }));
-
-      setComparables(comparablesData);
-
-      // Mostrar toast informativo pero no bloquear
-      const claseLabel = socialClassLabels[clase];
-      if (comparablesData.length < 3) {
-        toast({
-          title: "Información de comparables",
-          description: `Se encontraron ${comparablesData.length} comparables de la clase social ${claseLabel}. La valuación se basa en el método de costo.`,
-        });
-      } else {
-        toast({
-          title: "Comparables encontrados",
-          description: `Se encontraron ${comparablesData.length} comparables de la misma clase social (${claseLabel})`,
-        });
-      }
-
-    } catch (err) {
-      console.error('Error fetching comparables:', err);
-      // No mostrar error al usuario, solo continuar
-    } finally {
-      setIsLoadingComparables(false);
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching comparables:', error);
+      return [];
     }
   };
 
-  // Función para calcular la valuación
   const performValuation = async () => {
-    console.log('=== INICIANDO VALUACIÓN ===');
-    console.log('Tipo de propiedad:', propertyData.tipoPropiedad);
-    console.log('Área apartamento:', propertyData.areaApartamento);
-    
+    if (getNextRequiredStep() !== 'valuacion') {
+      toast.error("Debe completar todos los pasos antes de realizar la valuación");
+      return;
+    }
+
     setIsCalculating(true);
     
     try {
-      // Para apartamentos, validación directa y simple
-      if (propertyData.tipoPropiedad === 'apartamento') {
-        if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-          console.log('ERROR: Área de apartamento inválida');
-          toast({
-            title: "Error en la valuación",
-            description: "Debe ingresar el área del apartamento para realizar la valuación",
-            variant: "destructive"
-          });
-          setIsCalculating(false);
-          return;
-        }
-        
-        // Simular cálculo con delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Cálculo para apartamento: área * precio por m²
-        const areaEfectiva = propertyData.areaApartamento;
-        const precioM2 = 1800; // USD por m² para apartamentos
-        const claseSocial = getSocialClass(propertyData.estratoSocial);
-        const factorEstrato = classMultipliers[claseSocial];
-        
-        // Aplicar factor de conservación si está seleccionado
-        const factorConservacion = propertyData.estadoConservacion 
-          ? conservationFactors[propertyData.estadoConservacion] 
-          : 1.0;
-        
-        const valorTotal = areaEfectiva * precioM2 * factorEstrato * factorConservacion;
-        
-        console.log('Área efectiva apartamento:', areaEfectiva);
-        console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
-        console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
-        console.log('Valor total calculado:', valorTotal);
-        
-        setValuationResult(valorTotal);
-        
-        // Buscar comparables
-        await fetchComparables();
-        
-        toast({
-          title: "Valuación Completada",
-          description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD (Apartamento)`,
-        });
-        
-        console.log('=== VALUACIÓN COMPLETADA ===');
-        return;
+      const comparablesData = await fetchComparables();
+      setComparables(comparablesData);
+
+      let basePrice = 1500000; // Precio base por m² en pesos colombianos
+      
+      if (comparablesData.length > 0) {
+        const avgPricePerM2 = comparablesData.reduce((sum, comp) => sum + comp.precio_m2, 0) / comparablesData.length;
+        basePrice = avgPricePerM2;
       }
-      
-      // Para otros tipos de propiedad
-      const effectiveArea = getEffectiveArea();
-      console.log('Área efectiva otros:', effectiveArea);
-      
-      if (effectiveArea <= 0) {
-        const areaMessage = propertyData.tipoPropiedad === 'terreno'
-          ? "Debe ingresar el área del terreno para realizar la valuación"  
-          : "Debe ingresar el área de construcción para realizar la valuación";
-          
-        console.log('ERROR: Área no válida para otros tipos');
-        toast({
-          title: "Error en la valuación",
-          description: areaMessage,
-          variant: "destructive"
-        });
-        setIsCalculating(false);
-        return;
-      }
-      
-      // Cálculo básico de valuación (puedes ajustar esta fórmula)
-      let basePricePerM2 = 1500; // USD por m² base
-      
-      // Ajustes según tipo de propiedad
-      if (propertyData.tipoPropiedad === 'apartamento') {
-        basePricePerM2 = 1800;
-      } else if (propertyData.tipoPropiedad === 'comercial') {
-        basePricePerM2 = 2200;
-      } else if (propertyData.tipoPropiedad === 'terreno') {
-        basePricePerM2 = 800;
-      }
-      
-      // Calcular valor total con factor por estrato social
-      const claseSocial = getSocialClass(propertyData.estratoSocial);
-      const factorEstrato = classMultipliers[claseSocial];
-      const totalValue = effectiveArea * basePricePerM2 * factorEstrato;
-      
-      setValuationResult(totalValue);
-      
-      // Hacer scroll automático al resultado después de un breve delay
-      setTimeout(() => {
-        const resultElement = document.getElementById('resultado-valuacion');
-        if (resultElement) {
-          resultElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-        }
-      }, 500);
-      
-      // Buscar comparables (no bloquear si no hay suficientes)
-      await fetchComparables();
-      
-      toast({
-        title: "Valuación Completada",
-        description: `Valor estimado: $${totalValue.toLocaleString("en-US")} USD (Normas UPAV/IVSC)`,
-      });
+
+      // Aplicar factores de ajuste
+      const estratoMultiplier = estratoMultipliers[propertyData.estratoSocial];
+      const conservationMultiplier = conservationFactors[propertyData.estadoConservacion];
+      const ageMultiplier = Math.max(0.7, 1 - (propertyData.antiguedad * 0.02));
+
+      const adjustedPrice = basePrice * estratoMultiplier * conservationMultiplier * ageMultiplier;
+      const totalValue = adjustedPrice * propertyData.area;
+
+      const result = {
+        valorTotal: totalValue,
+        valorPorM2: adjustedPrice,
+        factores: {
+          estrato: estratoMultiplier,
+          conservacion: conservationMultiplier,
+          antiguedad: ageMultiplier
+        },
+        metodologia: "Método de Comparación de Mercado según normas UPAV e IVSC",
+        fecha: new Date().toLocaleDateString(),
+        comparables: comparablesData.length
+      };
+
+      setValuationResult(result);
+      toast.success("¡Valuación completada exitosamente!");
       
     } catch (error) {
       console.error('Error performing valuation:', error);
-      setValuationResult(null);
-      setComparables([]);
-      
-      toast({
-        title: "Error en la valuación",
-        description: "Ocurrió un error al realizar la valuación. Verifique los datos e intente nuevamente.",
-        variant: "destructive"
-      });
+      toast.error("Error al realizar la valuación");
     } finally {
       setIsCalculating(false);
     }
   };
 
-  // Función para manejar los pasos del tutorial
+  const reiniciarFormulario = () => {
+    setPropertyData({
+      tipoPropiedad: '',
+      area: 0,
+      habitaciones: 0,
+      banos: 0,
+      parqueaderos: 0,
+      antiguedad: 0,
+      estadoConservacion: '',
+      latitud: 0,
+      longitud: 0,
+      direccionCompleta: '',
+      barrio: '',
+      descripcion: '',
+      estratoSocial: 'medio' as EstratoSocial
+    });
+    setActiveTab('');
+    setValuationResult(null);
+    setComparables([]);
+    toast.info("Formulario reiniciado");
+  };
+
   const handleWalkthroughStep = (stepId: string) => {
     setHighlightedElement(stepId);
     
-    // Auto-scroll al elemento resaltado después de un breve delay
     setTimeout(() => {
       const element = document.getElementById(stepId);
       if (element) {
@@ -921,993 +414,593 @@ const PropertyValuation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Panel Principal - Formulario */}
-          <div>
-            <Card className="shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-3 sm:p-6">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg sm:text-xl">Valuador Latinoamericano</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setShowWalkthrough(true)}
-                      className="text-xs"
-                    >
-                      <HelpCircle className="w-3 h-3 mr-1" />
-                      Tutorial
-                    </Button>
-                    <LanguageSelector />
-                  </div>
+          <Card className="shadow-lg border-2 border-primary/20">
+            <CardHeader className="bg-gradient-to-r from-primary via-primary/90 to-secondary text-primary-foreground p-6">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl font-bold">💎 Valuador Latinoamericano</CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setShowWalkthrough(true)}
+                    className="text-xs font-semibold hover:scale-105 transition-transform"
+                  >
+                    <HelpCircle className="w-3 h-3 mr-1" />
+                    Tutorial
+                  </Button>
+                  <LanguageSelector />
                 </div>
-                <p className="text-sm text-primary-foreground/90 mt-2">
-                  Siguiendo normas UPAV, IVSC y reglamentos de valuación latinoamericanos
+              </div>
+              <p className="text-sm text-primary-foreground/90 mt-2">
+                ✨ Siguiendo normas UPAV, IVSC y reglamentos de valuación latinoamericanos
+              </p>
+            </CardHeader>
+            <CardContent className="p-6">
+              
+              {/* Guía de pasos mejorada */}
+              <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 via-cyan-50 to-indigo-50 dark:from-blue-950 dark:via-cyan-950 dark:to-indigo-950 rounded-xl border-2 border-blue-200 dark:border-blue-700 shadow-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                    <Info className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="font-bold text-lg text-blue-900 dark:text-blue-100">🎯 Guía de Pasos</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={reiniciarFormulario}
+                    className="ml-auto text-xs h-8 hover:bg-blue-100 dark:hover:bg-blue-900 hover:scale-105 transition-all"
+                  >
+                    🔄 Reiniciar
+                  </Button>
+                </div>
+                <p className="text-sm text-blue-800 dark:text-blue-200 mb-4 font-medium">
+                  {getNextRequiredStep() === 'valuacion'
+                    ? "🎉 ¡Todos los pasos están completados! Ahora puede realizar la valuación tocando el botón 'Realizar Valuación'."
+                    : getNextRequiredStep() 
+                      ? `📋 Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
+                      : "✅ ¡Todos los pasos están completados! Puede proceder con la valuación."
+                  }
                 </p>
-              </CardHeader>
-              <CardContent className="p-3 sm:p-6">
-                
-                {/* Guía de pasos - Siempre al principio */}
-                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Info className="h-4 w-4 text-blue-600" />
-                    <span className="font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={reiniciarFormulario}
-                      className="ml-auto text-xs h-6"
-                    >
-                      🔄 Reiniciar
-                    </Button>
-                  </div>
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    {getNextRequiredStep() === 'valuacion'
-                      ? "¡Todos los pasos están completados! Ahora debe tocar el botón 'Realizar Valuación' para obtener el resultado."
-                      : getNextRequiredStep() 
-                        ? `Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
-                        : "¡Todos los pasos están completados! Puede proceder con la valuación."
-                    }
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    {[1, 2, 3, 4, 5].map((step) => {
-                      if (step === 5 && propertyData.tipoPropiedad === 'terreno') return null;
-                      const isComplete = (
-                        (step === 1 && isStep1Complete()) ||
-                        (step === 2 && isStep2Complete()) ||
-                        (step === 3 && isStep3Complete()) ||
-                        (step === 4 && isStep4Complete()) ||
-                        (step === 5 && isStep5Complete())
-                      );
-                      const isCurrent = getNextRequiredStep() === step;
-                      
-                      return (
-                        <div 
-                          key={step} 
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                            isComplete 
-                              ? 'bg-green-500 text-white' 
-                              : isCurrent 
-                                ? 'bg-blue-500 text-white' 
-                                : 'bg-gray-300 text-gray-600'
-                          }`}
-                        >
-                          {step}
-                        </div>
-                      );
-                    })}
-                    {/* Indicador del botón de valuación */}
-                    <div className={`w-auto px-3 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
-                      getNextRequiredStep() === 'valuacion' 
-                        ? 'bg-orange-500 text-white animate-pulse' 
-                        : isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete() && isStep5Complete()
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-300 text-gray-600'
-                    }`}>
-                      📊 Valuación
-                    </div>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {[1, 2, 3, 4, 5].map((step) => {
+                    if (step === 5 && propertyData.tipoPropiedad === 'terreno') return null;
+                    const isComplete = (
+                      (step === 1 && isStep1Complete()) ||
+                      (step === 2 && isStep2Complete()) ||
+                      (step === 3 && isStep3Complete()) ||
+                      (step === 4 && isStep4Complete()) ||
+                      (step === 5 && isStep5Complete())
+                    );
+                    const isCurrent = getNextRequiredStep() === step;
+                    
+                    return (
+                      <div 
+                        key={step} 
+                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition-all duration-300 ${
+                          isComplete 
+                            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200 scale-110' 
+                            : isCurrent 
+                              ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white ring-4 ring-orange-200 animate-pulse scale-110' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 scale-95'
+                        }`}
+                      >
+                        {isComplete ? '✓' : step}
+                      </div>
+                    );
+                  })}
+                  {/* Indicador del botón de valuación */}
+                  <div className={`px-4 h-10 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all duration-300 ${
+                    getNextRequiredStep() === 'valuacion' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white ring-4 ring-purple-200 animate-pulse scale-110' 
+                      : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 scale-95'
+                  }`}>
+                    📊 Valuación
                   </div>
                 </div>
-                
-                {/* Selector de Estrato Social */}
-                <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
-                    {isStep1Complete() && <span className="text-green-500 font-bold">✓</span>}
+              </div>
+              
+              {/* Paso 1: Estrato Social */}
+              <div className={`mb-6 p-6 rounded-xl border-2 transition-all duration-300 shadow-md ${
+                highlightedElement === 'estrato-social-select' 
+                  ? 'ring-4 ring-yellow-400 bg-yellow-50 dark:bg-yellow-950 border-yellow-300 shadow-yellow-200' 
+                  : isStep1Complete() 
+                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-300 dark:border-green-700 shadow-green-200'
+                    : 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-300 dark:border-blue-700 shadow-blue-200'
+              }`} id="estrato-social-select">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+                    isStep1Complete() 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-2 ring-green-200' 
+                      : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-2 ring-blue-200'
+                  }`}>
+                    {isStep1Complete() ? '✓' : '1'}
                   </div>
-                  <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
+                  <Label htmlFor="estratoSocial" className="text-lg font-bold">🏘️ Paso 1: Estrato Social</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4 ml-11">¿Cómo te consideras donde vives?</p>
+                <div className="ml-11">
                   <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
-                    <SelectTrigger className="mt-2">
+                    <SelectTrigger className="border-2 focus:border-primary hover:border-primary/70 transition-colors">
                       <SelectValue placeholder="Selecciona el estrato social" />
                     </SelectTrigger>
                     <SelectContent>
                       {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
                         return (
-                          <SelectItem key={key} value={key}>
+                          <SelectItem key={key} value={key} className="font-medium">
                             {label}
                           </SelectItem>
                         );
                       })}
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
+                  <p className="text-xs text-muted-foreground mt-3">
+                    💡 Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
                   </p>
                 </div>
+              </div>
 
-                {/* Selector de Tipo de Propiedad */}
-                <div className="mb-6" id="tipo-propiedad-select">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
-                    {isStep2Complete() && <span className="text-green-500 font-bold">✓</span>}
+              {/* Paso 2: Tipo de Propiedad */}
+              <div className={`mb-6 p-6 rounded-xl border-2 transition-all duration-300 shadow-md ${
+                isStep2Complete() 
+                  ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-300 dark:border-green-700 shadow-green-200'
+                  : isStep1Complete()
+                    ? 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border-blue-300 dark:border-blue-700 shadow-blue-200'
+                    : 'bg-gray-50 dark:bg-gray-950 border-gray-300 dark:border-gray-700 opacity-60'
+              }`} id="tipo-propiedad-select">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+                    isStep2Complete() 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-2 ring-green-200' 
+                      : isStep1Complete() 
+                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-2 ring-blue-200' 
+                        : 'bg-gray-400 text-white'
+                  }`}>
+                    {isStep2Complete() ? '✓' : '2'}
                   </div>
-                  <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
-                  <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                    <SelectTrigger className="mt-2">
+                  <Label htmlFor="tipoPropiedad" className="text-lg font-bold">🏠 Paso 2: Tipo de Propiedad</Label>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4 ml-11">Selecciona el tipo de propiedad a valuar</p>
+                <div className="ml-11">
+                  <Select 
+                    value={propertyData.tipoPropiedad} 
+                    onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
+                    disabled={!isStep1Complete()}
+                  >
+                    <SelectTrigger className="border-2 focus:border-primary hover:border-primary/70 transition-colors">
                       <SelectValue placeholder="Selecciona el tipo de propiedad" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="casa">Casa</SelectItem>
-                      <SelectItem value="apartamento">Apartamento</SelectItem>
-                      <SelectItem value="terreno">Terreno</SelectItem>
-                      <SelectItem value="comercial">Comercial</SelectItem>
+                      <SelectItem value="casa" className="font-medium">🏠 Casa</SelectItem>
+                      <SelectItem value="apartamento" className="font-medium">🏢 Apartamento</SelectItem>
+                      <SelectItem value="terreno" className="font-medium">🌳 Terreno</SelectItem>
+                      <SelectItem value="comercial" className="font-medium">🏪 Comercial</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
 
+              {/* Pasos colapsables */}
+              <div className="space-y-6">
                 
-                {/* Sistema de pasos colapsables */}
-                <div className="space-y-4">
-                  
-                  {/* Paso 3: Ubicación */}
-                  {(isStep1Complete() && isStep2Complete()) && (
-                    <Card className={`transition-all duration-300 ${activeTab === 'ubicacion' ? 'ring-2 ring-primary shadow-lg' : 'shadow-md'}`}>
-                      <CardHeader 
-                        className="cursor-pointer hover:bg-muted/50 transition-colors p-4"
-                        onClick={() => setActiveTab(activeTab === 'ubicacion' ? '' : 'ubicacion')}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                              isStep3Complete() 
-                                ? 'bg-green-500 text-white' 
-                                : 'bg-blue-500 text-white'
-                            }`}>
-                              {isStep3Complete() ? '✓' : '3'}
-                            </div>
-                            <div>
-                              <h3 className="font-semibold">Paso 3: Ubicación de la Propiedad</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {isStep3Complete() 
-                                  ? `Ubicación: ${propertyData.direccionCompleta.substring(0, 30)}...`
-                                  : 'Haga clic para ingresar la ubicación'
-                                }
-                              </p>
-                            </div>
-                          </div>
-                          <div className={`transform transition-transform duration-200 ${
-                            activeTab === 'ubicacion' ? 'rotate-180' : ''
+                {/* Paso 3: Ubicación */}
+                {(isStep1Complete() && isStep2Complete()) && (
+                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
+                    activeTab === 'ubicacion' 
+                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
+                      : isStep3Complete()
+                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
+                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
+                  }`}>
+                    <CardHeader 
+                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
+                      onClick={() => setActiveTab(activeTab === 'ubicacion' ? '' : 'ubicacion')}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
+                            isStep3Complete() 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
+                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
                           }`}>
-                            ▼
+                            {isStep3Complete() ? '✓' : '3'}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
+                              🌍 Paso 3: Ubicación de la Propiedad
+                            </h3>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {isStep3Complete() 
+                                ? `✅ Ubicación: ${propertyData.direccionCompleta.substring(0, 50)}...`
+                                : '📍 Haga clic para ingresar la ubicación de la propiedad'
+                              }
+                            </p>
                           </div>
                         </div>
-                      </CardHeader>
-                      
-                      {activeTab === 'ubicacion' && (
-                        <CardContent className="border-t p-4">
-                          <div className="space-y-4">
-                            <h4 className="text-base font-semibold text-foreground mb-3">🌍 Ubicación de la Propiedad</h4>
-                            
-                            <div className="grid grid-cols-1 gap-4">
-                              <div>
-                                <Label htmlFor="direccion-completa" className="text-sm font-medium">
-                                  Dirección Completa
-                                </Label>
-                                <Input
-                                  id="direccion-completa"
-                                  type="text"
-                                  placeholder="Ingrese la dirección completa"
-                                  value={propertyData.direccionCompleta}
-                                  onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                                  className="mt-1"
-                                />
-                              </div>
-                              
-                              <div className="mt-4">
-                                <h4 className="text-sm font-medium mb-2">📍 Seleccione la ubicación exacta en el mapa</h4>
-                                <div className="h-64 border rounded-lg overflow-hidden">
-                                  <SupabaseGoogleLocationMap
-                                    onLocationSelect={(lat, lng, address) => {
-                                      handleInputChange('latitud', lat);
-                                      handleInputChange('longitud', lng);
-                                      if (address && !propertyData.direccionCompleta) {
-                                        handleInputChange('direccionCompleta', address);
-                                      }
-                                    }}
-                                    initialLocation={
-                                      propertyData.latitud && propertyData.longitud 
-                                        ? { lat: propertyData.latitud, lng: propertyData.longitud }
-                                        : undefined
-                                    }
-                                  />
-                                </div>
+                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
+                          activeTab === 'ubicacion' ? 'rotate-180 text-primary' : 'text-muted-foreground'
+                        }`}>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    {activeTab === 'ubicacion' && (
+                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 gap-6">
+                            <div>
+                              <Label htmlFor="direccion" className="text-base font-semibold text-foreground mb-2 block">
+                                📍 Dirección Completa
+                              </Label>
+                              <Input
+                                id="direccion"
+                                value={propertyData.direccionCompleta}
+                                onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                                placeholder="Ingrese la dirección completa"
+                                className="border-2 focus:border-primary"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-base font-semibold text-foreground mb-3 block">
+                                🗺️ Seleccione la ubicación en el mapa
+                              </Label>
+                              <div className="border-2 border-primary/20 rounded-lg overflow-hidden shadow-md">
+                                <SupabaseGoogleLocationMap />
                               </div>
                             </div>
-                            
                             {isStep3Complete() && (
-                              <div className="mt-4 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                                <p className="text-sm text-green-700 dark:text-green-300 font-medium">
-                                  ✅ Ubicación completada. Ahora puede continuar con el <strong>Paso 4: Áreas</strong>
+                              <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+                                <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+                                  ✅ Ubicación confirmada: {propertyData.direccionCompleta}
                                 </p>
+                                {propertyData.barrio && (
+                                  <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                                    📍 Barrio: {propertyData.barrio}
+                                  </p>
+                                )}
                               </div>
                             )}
                           </div>
-                        </CardContent>
-                      )}
-                    </Card>
-                  )}
+                        </div>
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
 
-                  {/* Paso 4: Áreas */}
-                  {isStep3Complete() && (
-                    <Card className={`transition-all duration-300 ${activeTab === 'areas' ? 'ring-2 ring-primary shadow-lg' : 'shadow-md'}`}>
-                      <CardHeader 
-                        className="cursor-pointer hover:bg-muted/50 transition-colors p-4"
-                        onClick={() => setActiveTab(activeTab === 'areas' ? '' : 'areas')}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                              isStep4Complete() 
-                                ? 'bg-green-500 text-white' 
-                                : 'bg-blue-500 text-white'
-                            }`}>
-                              {isStep4Complete() ? '✓' : '4'}
+                {/* Paso 4: Características Básicas */}
+                {(isStep1Complete() && isStep2Complete() && isStep3Complete()) && (
+                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
+                    activeTab === 'caracteristicas' 
+                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
+                      : isStep4Complete()
+                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
+                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
+                  }`}>
+                    <CardHeader 
+                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
+                      onClick={() => setActiveTab(activeTab === 'caracteristicas' ? '' : 'caracteristicas')}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
+                            isStep4Complete() 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
+                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
+                          }`}>
+                            {isStep4Complete() ? '✓' : '4'}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
+                              📐 Paso 4: Características Básicas
+                            </h3>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {isStep4Complete() 
+                                ? `✅ Área: ${propertyData.area}m² - Estado: ${propertyData.estadoConservacion}`
+                                : '📝 Haga clic para ingresar área y estado de conservación'
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
+                          activeTab === 'caracteristicas' ? 'rotate-180 text-primary' : 'text-muted-foreground'
+                        }`}>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    {activeTab === 'caracteristicas' && (
+                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                              <Label htmlFor="area" className="text-base font-semibold text-foreground mb-2 block">
+                                📐 Área Total (m²) *
+                              </Label>
+                              <Input
+                                id="area"
+                                type="number"
+                                value={propertyData.area || ''}
+                                onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                                placeholder="Ej: 120"
+                                className="border-2 focus:border-primary"
+                                min="1"
+                              />
                             </div>
                             <div>
-                              <h3 className="font-semibold">Paso 4: Áreas de la Propiedad</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {isStep4Complete() 
-                                  ? `Área efectiva: ${getEffectiveArea()} m²`
-                                  : 'Haga clic para ingresar las áreas'
-                                }
-                              </p>
+                              <Label htmlFor="antiguedad" className="text-base font-semibold text-foreground mb-2 block">
+                                🗓️ Antigüedad (años)
+                              </Label>
+                              <Input
+                                id="antiguedad"
+                                type="number"
+                                value={propertyData.antiguedad || ''}
+                                onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                                placeholder="Ej: 5"
+                                className="border-2 focus:border-primary"
+                                min="0"
+                              />
                             </div>
                           </div>
-                          <div className={`transform transition-transform duration-200 ${
-                            activeTab === 'areas' ? 'rotate-180' : ''
-                          }`}>
-                            ▼
-                          </div>
-                        </div>
-                      </CardHeader>
-                      
-                      {activeTab === 'areas' && (
-                        <CardContent className="border-t p-4">
-
-                  <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    {propertyData.tipoPropiedad === 'apartamento' ? (
-                      <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">🏢 Información del Apartamento</h3>
-                        
-                        <div className="grid grid-cols-1 gap-4">
-                          <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">
-                              📋 Avalúo Especial para Apartamentos
-                            </h4>
-                            <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1 mb-4">
-                              <li>• Solo necesita ingresar el área interior del apartamento</li>
-                              <li>• No requiere área de terreno ni construcción adicional</li>
-                              <li>• Se aplica el área directa del apartamento para el avalúo</li>
-                              <li>• Incluye: sala, comedor, cocina, recámaras, baños</li>
-                            </ul>
-                          </div>
-                          
                           <div>
-                            <Label htmlFor="areaApartamento" className="text-base font-semibold">🏠 Área del Apartamento (m²)</Label>
-                            <Input
-                              id="areaApartamento"
-                              type="number"
-                              value={propertyData.areaApartamento || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                handleInputChange('areaApartamento', value === '' ? 0 : parseFloat(value) || 0);
-                              }}
-                              placeholder="Ingrese el área total del apartamento"
-                              className="mt-2 text-lg"
-                            />
-                            <p className="text-sm text-muted-foreground mt-2">
-                              Ingrese el área total interior del apartamento en metros cuadrados
-                            </p>
-                            <div className="mt-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                            <Label htmlFor="estadoConservacion" className="text-base font-semibold text-foreground mb-2 block">
+                              🔨 Estado de Conservación *
+                            </Label>
+                            <Select 
+                              value={propertyData.estadoConservacion} 
+                              onValueChange={(value) => handleInputChange('estadoConservacion', value)}
+                            >
+                              <SelectTrigger className="border-2 focus:border-primary">
+                                <SelectValue placeholder="Selecciona el estado de conservación" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
+                                <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
+                                <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
+                                <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          {isStep4Complete() && (
+                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                               <p className="text-sm text-green-800 dark:text-green-200 font-medium">
-                                ✅ Área efectiva para avalúo: {propertyData.areaApartamento ? `${propertyData.areaApartamento} m²` : '0 m²'}
+                                ✅ Características básicas completadas
                               </p>
                             </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+
+                {/* Paso 5: Detalles Adicionales (Solo para casas y apartamentos) */}
+                {(isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete() && propertyData.tipoPropiedad !== 'terreno') && (
+                  <Card className={`transition-all duration-300 border-2 shadow-xl hover:shadow-2xl ${
+                    activeTab === 'detalles' 
+                      ? 'ring-4 ring-primary/50 shadow-primary/30 border-primary bg-gradient-to-r from-primary/5 to-secondary/5 scale-[1.02]' 
+                      : isStep5Complete()
+                        ? 'border-green-300 dark:border-green-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 hover:scale-[1.01]'
+                        : 'border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 hover:border-primary/50 hover:scale-[1.01]'
+                  }`}>
+                    <CardHeader 
+                      className="cursor-pointer hover:bg-muted/70 transition-all duration-200 p-6 rounded-t-xl group"
+                      onClick={() => setActiveTab(activeTab === 'detalles' ? '' : 'detalles')}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all duration-300 group-hover:scale-110 ${
+                            isStep5Complete() 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white ring-4 ring-green-200' 
+                              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white ring-4 ring-blue-200'
+                          }`}>
+                            {isStep5Complete() ? '✓' : '5'}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
+                              🏠 Paso 5: Detalles Adicionales
+                            </h3>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {isStep5Complete() 
+                                ? `✅ ${propertyData.habitaciones} hab, ${propertyData.banos} baños, ${propertyData.parqueaderos} parqueaderos`
+                                : '🏠 Haga clic para ingresar habitaciones, baños y parqueaderos'
+                              }
+                            </p>
                           </div>
                         </div>
+                        <div className={`transform transition-transform duration-300 text-2xl group-hover:scale-125 ${
+                          activeTab === 'detalles' ? 'rotate-180 text-primary' : 'text-muted-foreground'
+                        }`}>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    {activeTab === 'detalles' && (
+                      <CardContent className="border-t-2 border-primary/20 p-6 bg-background/80 backdrop-blur-sm">
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                              <Label htmlFor="habitaciones" className="text-base font-semibold text-foreground mb-2 block">
+                                🛏️ Habitaciones *
+                              </Label>
+                              <Input
+                                id="habitaciones"
+                                type="number"
+                                value={propertyData.habitaciones || ''}
+                                onChange={(e) => handleInputChange('habitaciones', Number(e.target.value))}
+                                placeholder="Ej: 3"
+                                className="border-2 focus:border-primary"
+                                min="1"
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="banos" className="text-base font-semibold text-foreground mb-2 block">
+                                🚿 Baños *
+                              </Label>
+                              <Input
+                                id="banos"
+                                type="number"
+                                value={propertyData.banos || ''}
+                                onChange={(e) => handleInputChange('banos', Number(e.target.value))}
+                                placeholder="Ej: 2"
+                                className="border-2 focus:border-primary"
+                                min="1"
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="parqueaderos" className="text-base font-semibold text-foreground mb-2 block">
+                                🚗 Parqueaderos
+                              </Label>
+                              <Input
+                                id="parqueaderos"
+                                type="number"
+                                value={propertyData.parqueaderos || ''}
+                                onChange={(e) => handleInputChange('parqueaderos', Number(e.target.value))}
+                                placeholder="Ej: 1"
+                                className="border-2 focus:border-primary"
+                                min="0"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label htmlFor="descripcion" className="text-base font-semibold text-foreground mb-2 block">
+                              📝 Descripción Adicional
+                            </Label>
+                            <Textarea
+                              id="descripcion"
+                              value={propertyData.descripcion}
+                              onChange={(e) => handleInputChange('descripcion', e.target.value)}
+                              placeholder="Describa características especiales de la propiedad..."
+                              className="border-2 focus:border-primary"
+                              rows={3}
+                            />
+                          </div>
+                          {isStep5Complete() && (
+                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+                              <p className="text-sm text-green-800 dark:text-green-200 font-medium">
+                                ✅ Detalles adicionales completados
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Botón de Valuación */}
+          <Card className="shadow-xl border-2 border-primary/30">
+            <CardContent className="p-6">
+              {getNextRequiredStep() !== 'valuacion' ? (
+                <div className="text-center py-8">
+                  <div className="mb-4">
+                    <AlertCircle className="w-16 h-16 text-orange-500 mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">⚠️ Complete todos los pasos</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Debe completar el Paso {getNextRequiredStep()} antes de realizar la valuación.
+                  </p>
+                  <Badge variant="outline" className="text-orange-600 border-orange-300">
+                    Paso {getNextRequiredStep()} pendiente
+                  </Badge>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <div className="mb-4">
+                    <Calculator className="w-16 h-16 text-primary mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-4">🎉 ¡Listo para la valuación!</h3>
+                  <Button
+                    onClick={performValuation}
+                    disabled={isCalculating}
+                    size="lg"
+                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    {isCalculating ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Calculando...
                       </>
                     ) : (
                       <>
-                        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Áreas</h3>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Área de construcción - para todas las propiedades excepto terrenos */}
-                          {propertyData.tipoPropiedad !== 'terreno' && (
-                            <div>
-                              <Label htmlFor="areaConstruccion">Área de Construcción Casa (m²)</Label>
-                              <Input
-                                id="areaConstruccion"
-                                type="number"
-                                value={propertyData.areaPrimerNivel || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  const numValue = value === '' ? 0 : parseFloat(value) || 0;
-                                  handleInputChange('areaPrimerNivel', numValue);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Ingrese el área total construida de la propiedad
-                              </p>
-                            </div>
-                          )}
-                          
-                          {/* Área de terreno - no mostrar para apartamentos */}
-                          {propertyData.tipoPropiedad !== 'apartamento' && (
-                            <div>
-                              <div className="flex items-center gap-2 mb-2">
-                                <Label htmlFor="areaTerreno">
-                                  {propertyData.tipoPropiedad === 'terreno' ? 'Área de Terreno (m²)' : 'Área de Terreno Casa (m²)'}
-                                </Label>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" className="h-5 w-5 p-0 hover:bg-muted">
-                                        <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="top" className="z-50 max-w-xs p-3 bg-background border border-border shadow-lg">
-                                      <p className="text-sm leading-relaxed text-foreground">
-                                        Indique el área del terreno donde se encuentra la construcción en metros cuadrados (m²).
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                              <Input
-                                id="areaTerreno"
-                                type="number"
-                                value={propertyData.areaTerreno || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('areaTerreno', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                            </div>
-                          )}
-
-                        </div>
+                        <Calculator className="w-5 h-5 mr-2" />
+                        💎 Realizar Valuación
                       </>
                     )}
-                  </TabsContent>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-                  <TabsContent value="ubicacion" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Ubicación</h3>
-                    <div className="grid grid-cols-1 gap-4">
-                      <div>
-                        <Label htmlFor="direccion">Dirección</Label>
-                        <Input
-                          id="direccion"
-                          value={propertyData.direccionCompleta || ''}
-                          onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                          placeholder="Ingrese la dirección completa"
-                          className="mt-1"
-                        />
-                      </div>
-                      
-                      {/* Mapa para buscar ubicaciones */}
-                      <div>
-                        <Label>Mapa de Ubicación</Label>
-                        <div className="mt-2">
-                          <SimpleLocationMap
-                            onLocationChange={(lat, lng, address) => {
-                              handleInputChange('direccionCompleta', address);
-                              handleInputChange('latitud', lat);
-                              handleInputChange('longitud', lng);
-                            }}
-                            initialLat={19.4326}
-                            initialLng={-99.1332}
-                            initialAddress={propertyData.direccionCompleta || ''}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                   <TabsContent value="depreciacion" className="space-y-4 mt-6">
-                     {propertyData.tipoPropiedad === 'terreno' ? (
-                       <div className="p-8 text-center bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                         <div className="text-6xl mb-4">🏞️</div>
-                         <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                           Terrenos no requieren evaluación de depreciación
-                         </h3>
-                         <p className="text-blue-700 dark:text-blue-300">
-                           Los terrenos no tienen construcciones que se deprecien con el tiempo.
-                         </p>
-                       </div>
-                     ) : (
-                       <>
-                     
-                     {/* Indicador del estado seleccionado */}
-                     {propertyData.estadoConservacion && (
-                      <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg border-2 border-primary">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="text-base font-bold text-primary">✅ Estado Seleccionado</h4>
-                            <p className="text-lg font-semibold text-foreground">
-                              {propertyData.estadoConservacion === 'nuevo' ? '🟢 NUEVO' :
-                               propertyData.estadoConservacion === 'bueno' ? '🔵 BUENO' :
-                               propertyData.estadoConservacion === 'medio' ? '🔷 MEDIO' :
-                               propertyData.estadoConservacion === 'regular' ? '🟡 REGULAR' :
-                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? '🟠 REPARACIONES SENCILLAS' :
-                               propertyData.estadoConservacion === 'reparaciones_medias' ? '🔴 REPARACIONES MEDIAS' :
-                               propertyData.estadoConservacion === 'reparaciones_importantes' ? '🟣 REPARACIONES IMPORTANTES' : '⚫ DAÑOS GRAVES'}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                     <div className="space-y-4">
-
-                      {/* Guía de Estados de Conservación - Método único de selección */}
-                      <div>
-                         <Label className="text-base font-semibold">Estado de Conservación</Label>
-                         <p className="text-xs text-muted-foreground mt-1 mb-4">
-                           Haga clic en el estado que mejor describa la condición actual del inmueble
-                         </p>
-                       </div>
-
-                      {/* Guía de Estados de Conservación */}
-                      <div>
-                        <Card className="shadow-lg border-2 border-amber-200 dark:border-amber-800">
-                          <CardHeader className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4">
-                            <CardTitle className="text-lg">📚 Selecciona el Estado de Conservación</CardTitle>
-                            <p className="text-sm text-amber-100">Haga clic en el estado que corresponda a su propiedad</p>
-                          </CardHeader>
-                          <CardContent className="p-4">
-                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                               <button 
-                               onClick={() => {
-                                 console.log('Clickeando NUEVO');
-                                 handleInputChange('estadoConservacion', 'nuevo');
-                                 console.log('Estado después del click:', 'nuevo');
-                               }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'nuevo' 
-                                   ? 'bg-gradient-to-r from-green-400 to-green-600 border-green-700 shadow-2xl transform scale-110 ring-4 ring-green-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'nuevo'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'nuevo' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'nuevo'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-green-700 dark:text-green-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'nuevo' && <span className="text-2xl">✅</span>}
-                                   🟢 NUEVO
-                                   {propertyData.estadoConservacion === 'nuevo' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-green-600 dark:text-green-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'nuevo' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Construcción reciente o recién terminada. Sin desgaste visible.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando BUENO');
-                                   handleInputChange('estadoConservacion', 'bueno');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'bueno' 
-                                   ? 'bg-gradient-to-r from-blue-400 to-blue-600 border-blue-700 shadow-2xl transform scale-110 ring-4 ring-blue-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'bueno'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'bueno' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'bueno'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-blue-700 dark:text-blue-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'bueno' && <span className="text-2xl">✅</span>}
-                                   🔵 BUENO
-                                   {propertyData.estadoConservacion === 'bueno' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-blue-600 dark:text-blue-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'bueno' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Excelente estado general. Mantenimiento adecuado.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando MEDIO');
-                                   handleInputChange('estadoConservacion', 'medio');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'medio' 
-                                   ? 'bg-gradient-to-r from-cyan-400 to-cyan-600 border-cyan-700 shadow-2xl transform scale-110 ring-4 ring-cyan-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'medio'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-cyan-50 dark:bg-cyan-950 border-cyan-200 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'medio' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'medio'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-cyan-700 dark:text-cyan-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'medio' && <span className="text-2xl">✅</span>}
-                                   🔷 MEDIO
-                                   {propertyData.estadoConservacion === 'medio' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-cyan-600 dark:text-cyan-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'medio' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Buen estado con desgaste moderado.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando REGULAR');
-                                   handleInputChange('estadoConservacion', 'regular');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'regular' 
-                                   ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 border-yellow-700 shadow-2xl transform scale-110 ring-4 ring-yellow-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'regular'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'regular' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'regular'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-yellow-700 dark:text-yellow-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'regular' && <span className="text-2xl">✅</span>}
-                                   🟡 REGULAR
-                                   {propertyData.estadoConservacion === 'regular' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-yellow-600 dark:text-yellow-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'regular' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Estado aceptable pero con desgaste visible.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando REPARACIONES SENCILLAS');
-                                   handleInputChange('estadoConservacion', 'reparaciones_sencillas');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'reparaciones_sencillas' 
-                                   ? 'bg-gradient-to-r from-orange-400 to-orange-600 border-orange-700 shadow-2xl transform scale-110 ring-4 ring-orange-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_sencillas'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'reparaciones_sencillas' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_sencillas'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-orange-700 dark:text-orange-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="text-2xl">✅</span>}
-                                   🟠 REPARACIONES SENCILLAS
-                                   {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-orange-600 dark:text-orange-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Requiere reparaciones menores como pintura o plomería básica.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando REPARACIONES MEDIAS');
-                                   handleInputChange('estadoConservacion', 'reparaciones_medias');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'reparaciones_medias' 
-                                   ? 'bg-gradient-to-r from-red-400 to-red-600 border-red-700 shadow-2xl transform scale-110 ring-4 ring-red-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_medias'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'reparaciones_medias' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_medias'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-red-700 dark:text-red-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="text-2xl">✅</span>}
-                                   🔴 REPARACIONES MEDIAS
-                                   {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-red-600 dark:text-red-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Necesita reparaciones importantes: pisos, instalaciones eléctricas.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando REPARACIONES IMPORTANTES');
-                                   handleInputChange('estadoConservacion', 'reparaciones_importantes');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'reparaciones_importantes' 
-                                   ? 'bg-gradient-to-r from-purple-400 to-purple-600 border-purple-700 shadow-2xl transform scale-110 ring-4 ring-purple-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_importantes'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'reparaciones_importantes' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_importantes'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-purple-700 dark:text-purple-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="text-2xl">✅</span>}
-                                   🟣 REPARACIONES IMPORTANTES
-                                   {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-purple-600 dark:text-purple-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Requiere rehabilitación mayor: estructura, techumbres.
-                                 </p>
-                               </button>
-                               
-                               <button 
-                                 onClick={() => {
-                                   console.log('Clickeando DAÑOS GRAVES');
-                                   handleInputChange('estadoConservacion', 'danos_graves');
-                                 }}
-                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
-                                   propertyData.estadoConservacion === 'danos_graves' 
-                                   ? 'bg-gradient-to-r from-gray-400 to-gray-600 border-gray-700 shadow-2xl transform scale-110 ring-4 ring-gray-300' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'danos_graves'
-                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
-                                   : 'bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md'
-                                 }`}
-                               >
-                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
-                                   propertyData.estadoConservacion === 'danos_graves' 
-                                   ? 'text-white text-lg' 
-                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'danos_graves'
-                                   ? 'text-gray-600 dark:text-gray-400'
-                                   : 'text-gray-700 dark:text-gray-300'
-                                 }`}>
-                                   {propertyData.estadoConservacion === 'danos_graves' && <span className="text-2xl">✅</span>}
-                                   ⚫ DAÑOS GRAVES
-                                   {propertyData.estadoConservacion === 'danos_graves' && <span className="ml-auto text-xl">🎯</span>}
-                                 </div>
-                                 <p className={`text-gray-600 dark:text-gray-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'danos_graves' ? 'block' : 'hidden group-hover:block'}`}>
-                                   Daños estructurales severos. Requiere reconstrucción parcial o total.
-                                 </p>
-                              </button>
-                            </div>
-                            
-                            <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">💡 Tip Profesional</h4>
-                              <p className="text-sm text-blue-600 dark:text-blue-400">
-                                El estado de conservación afecta directamente el valor final de la propiedad. 
-                                Una evaluación precisa es fundamental para un avalúo confiable según normas UPAV/IVSC.
-                              </p>
-                            </div>
-                          </CardContent>
-                         </Card>
-                       </div>
-                     </div>
-                     </>
-                     )}
-                    </TabsContent>
-                 </Tabs>
-               </CardContent>
-             </Card>
-           </div>
-
-           {/* Botón de Valuación - Ahora separado del formulario */}
-           <div>
-             <Card className="shadow-lg">
-               <CardContent className="p-6">
-                 {getNextRequiredStep() !== 'valuacion' ? (
-                   // Mostrar mensaje de pasos pendientes
-                   <div className="text-center py-8">
-                     <div className="mb-4">
-                       <div className="w-16 h-16 mx-auto mb-4 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center">
-                         <Info className="w-8 h-8 text-amber-600 dark:text-amber-400" />
-                       </div>
-                       <h3 className="text-lg font-semibold text-foreground mb-2">
-                         Complete todos los pasos para realizar la valuación
-                       </h3>
-                       <p className="text-muted-foreground mb-4">
-                         Para obtener una valuación precisa y profesional, debe completar todos los pasos requeridos.
-                       </p>
-                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                         <span className="text-blue-700 dark:text-blue-300 font-medium">
-                           Paso pendiente: {getNextRequiredStep()}
-                         </span>
-                       </div>
-                     </div>
-                   </div>
-                 ) : (
-                   // Mostrar botón de valuación cuando todos los pasos estén completos
-                   <div className="space-y-4">
-                     <div className="text-center py-4">
-                       <div className="w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                         <Calculator className="w-8 h-8 text-green-600 dark:text-green-400" />
-                       </div>
-                       <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
-                         ¡Listo para valuación!
-                       </h3>
-                       <p className="text-green-700 dark:text-green-300 mb-4">
-                         Todos los pasos están completos. Presione el botón para obtener su valuación profesional.
-                       </p>
-                     </div>
-                     
-                     <button 
-                       id="boton-valuacion"
-                       onClick={() => {
-                         console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
-                         console.log('Datos de propiedad:', propertyData);
-                         
-                         try {
-                           let valorTotal = 0;
-                           let areaEfectiva = 0;
-                           
-                           // Método comparativo según tipo de propiedad
-                           if (propertyData.tipoPropiedad === 'apartamento') {
-                             if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-                               alert('Debe ingresar el área del apartamento');
-                               return;
-                             }
-                             areaEfectiva = propertyData.areaApartamento;
-                             valorTotal = areaEfectiva * 1800; // $1800 por m²
-                             
-                           } else if (propertyData.tipoPropiedad === 'casa') {
-                             if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                               alert('Debe ingresar el área construida de la casa');
-                               return;
-                             }
-                             areaEfectiva = propertyData.areaPrimerNivel;
-                             valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
-                             
-                           } else if (propertyData.tipoPropiedad === 'comercial') {
-                             if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                               alert('Debe ingresar el área del local comercial');
-                               return;
-                             }
-                             areaEfectiva = propertyData.areaPrimerNivel;
-                             valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
-                             
-                           } else {
-                             alert('Debe seleccionar un tipo de propiedad válido');
-                             return;
-                           }
-                           
-                           // Aplicar factor específico por estrato socioeconómico
-                           const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
-                           valorTotal = valorTotal * factorEstrato;
-                           
-                           // Aplicar factor de conservación si está seleccionado
-                           const factorConservacion = propertyData.estadoConservacion 
-                             ? conservationFactors[propertyData.estadoConservacion] 
-                             : 1.0;
-                           valorTotal = valorTotal * factorConservacion;
-                           
-                           console.log('Tipo:', propertyData.tipoPropiedad);
-                           console.log('Área efectiva:', areaEfectiva);
-                           console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
-                           console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
-                           console.log('Valor total:', valorTotal);
-                           
-                            // Establecer resultado
-                            setValuationResult(valorTotal);
-                            
-                            // Hacer scroll automático al resultado después de un breve delay
-                            setTimeout(() => {
-                              const resultElement = document.getElementById('resultado-valuacion');
-                              if (resultElement) {
-                                resultElement.scrollIntoView({ 
-                                  behavior: 'smooth', 
-                                  block: 'center' 
-                                });
-                              }
-                            }, 500);
-                            
-                            toast({
-                              title: "Valuación Completada",
-                             description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
-                           });
-                           
-                         } catch (error) {
-                           console.error('ERROR en cálculo:', error);
-                           alert('Error en el cálculo: ' + error.message);
-                         }
-                       }}
-                       disabled={isCalculating}
-                       className={`w-full h-16 text-xl font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg text-white ${highlightedElement === 'calcular-button' ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}`}
-                     >
-                      <div className="flex items-center justify-center gap-3">
-                        <Calculator className="w-6 h-6" />
-                        ⚡ REALIZAR VALUACIÓN PROFESIONAL
-                      </div>
-                    </button>
-                
-                    <div className="text-xs text-muted-foreground space-y-1 text-center">
-                      <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
-                      <p>✓ Avalúo profesional con estándares latinoamericanos</p>
-                      <p>✓ Certificación internacional y reglamentos regionales</p>
-                    </div>
-                   </div>
-                 )}
-               </CardContent>
-             </Card>
-           </div>
-
-          {/* Panel de Resultados - Solo aparece después de calcular */}
+          {/* Resultados de la Valuación */}
           {valuationResult && (
-            <div>
-              <Card className="shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
-                  <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
-                </CardHeader>
-                  <CardContent className="p-3 sm:p-6">
-                    {/* Resultado de la valuación */}
-                    <div className="mb-6" id="resultado-valuacion">
-                      <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                       <div className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
-                         Valor Estimado
-                       </div>
-                       <div className="text-4xl font-bold text-green-900 dark:text-green-100">
-                         ${valuationResult.toLocaleString("en-US")} USD
-                       </div>
-                       <div className="text-sm text-green-700 dark:text-green-300 mt-2">
-                         Área efectiva: {getEffectiveArea()} m²
-                       </div>
-                     </div>
-                   </div>
+            <Card className="shadow-xl border-2 border-green-300 dark:border-green-700">
+              <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
+                <CardTitle className="text-2xl font-bold flex items-center gap-3">
+                  <CheckCircle className="w-8 h-8" />
+                  🎊 Resultado de la Valuación
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
+                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total</h3>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                      ${valuationResult.valorTotal?.toLocaleString('es-CO')} COP
+                    </p>
+                  </div>
+                  <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m²</h3>
+                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                      ${valuationResult.valorPorM2?.toLocaleString('es-CO')} COP
+                    </p>
+                  </div>
+                </div>
 
-                   {/* Comparables */}
-                   <div className="space-y-3">
-                     <h4 className="text-base font-semibold">Comparables de la misma clase social</h4>
-                     <p className="text-xs text-muted-foreground">
-                       Clase social: {socialClassLabels[getSocialClass(propertyData.estratoSocial)]} | 
-                       Normas: UPAV, IVSC, Reglamentos Latinoamericanos
-                     </p>
-                     {isLoadingComparables ? (
-                       <div className="text-sm text-muted-foreground">Búsqueda progresiva en curso (1km → 50km)...</div>
-                     ) : comparables.length > 0 ? (
-                        <div className="overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Dirección</TableHead>
-                                <TableHead className="text-right">Precio Original</TableHead>
-                                <TableHead className="text-right">Precio Ajustado (-15%)</TableHead>
-                                <TableHead className="text-right">Precio/m² Ajustado (-15%)</TableHead>
-                                <TableHead className="text-right">Área (m²)</TableHead>
-                                <TableHead className="text-right">Distancia</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {comparables.slice(0, 3).map((c) => (
-                                <TableRow key={c.id}>
-                                  <TableCell className="max-w-[180px] truncate">{c.address}</TableCell>
-                                  <TableCell className="text-right text-muted-foreground">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
-                                  <TableCell className="text-right font-semibold">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                  <TableCell className="text-right font-semibold">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                  <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
-                                  <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                         <p className="text-xs text-green-600 dark:text-green-400 mt-2">
-                           ✓ Mostrando los 3 más cercanos de {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
-                         </p>
-                       </div>
-                       ) : comparables.length === 0 ? (
-                         <div className="text-sm text-muted-foreground">
-                           No se encontraron comparables del mismo estrato social en la zona. 
-                           La valuación se realizó usando el método de costo de reposición.
-                         </div>
-                       ) : (
-                         <div className="text-sm text-amber-600 dark:text-amber-400">
-                           Advertencia: Solo se encontraron {comparables.length} comparables. 
-                           Se requieren mínimo 3 para cumplir normas latinoamericanas.
-                         </div>
-                       )}
-                   </div>
+                <div className="space-y-4">
+                  <div className="p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border">
+                    <h4 className="font-semibold text-foreground mb-2">📊 Factores de Ajuste Aplicados</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Estrato Social:</span>
+                        <span className="font-semibold ml-2">{(valuationResult.factores?.estrato * 100).toFixed(0)}%</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Conservación:</span>
+                        <span className="font-semibold ml-2">{(valuationResult.factores?.conservacion * 100).toFixed(0)}%</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Antigüedad:</span>
+                        <span className="font-semibold ml-2">{(valuationResult.factores?.antiguedad * 100).toFixed(0)}%</span>
+                      </div>
+                    </div>
+                  </div>
 
-                   {/* Botón para nueva valuación */}
-                   <div className="mt-6 pt-6 border-t">
-                     <Button 
-                       onClick={() => {
-                         setPropertyData({
-                           areaSotano: 0,
-                           areaPrimerNivel: 0,
-                           areaSegundoNivel: 0,
-                           areaTercerNivel: 0,
-                           areaCuartoNivel: 0,
-                           areaTerreno: 0,
-                           areaApartamento: 0,
-                           tipoPropiedad: '',
-                           estratoSocial: null,
-                           recamaras: 0,
-                           salas: 0,
-                           comedor: 0,
-                           cocina: 0,
-                           bodega: 0,
-                           areaServicio: 0,
-                           cochera: 0,
-                           banos: 0,
-                           otros: 0,
-                           antiguedad: 0,
-                           ubicacion: '',
-                           estadoGeneral: '',
-                           estadoConservacion: '',
-                           tipoAcceso: '',
-                           latitud: 0,
-                           longitud: 0,
-                           direccionCompleta: '',
-                           servicios: {
-                             agua: false,
-                             electricidad: false,
-                             gas: false,
-                             drenaje: false,
-                             internet: false,
-                             cable: false,
-                             telefono: false,
-                             seguridad: false,
-                             alberca: false,
-                             jardin: false,
-                             elevador: false,
-                             aireAcondicionado: false,
-                             calefaccion: false,
-                             panelesSolares: false,
-                             tinaco: false,
-                           }
-                         });
-                         setValuationResult(null);
-                         setComparables([]);
-                         setActiveTab('ubicacion');
-                         setCurrentStep(1);
-                       }}
-                       variant="outline" 
-                       className="w-full"
-                     >
-                       <Shuffle className="w-4 h-4 mr-2" />
-                       Nueva Valuación
-                     </Button>
-                   </div>
-                 </CardContent>
-               </Card>
-             </div>
+                  <div className="p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border">
+                    <h4 className="font-semibold text-foreground mb-2">📋 Detalles de la Valuación</h4>
+                    <div className="text-sm space-y-1">
+                      <p><span className="text-muted-foreground">Metodología:</span> <span className="font-medium">{valuationResult.metodologia}</span></p>
+                      <p><span className="text-muted-foreground">Fecha:</span> <span className="font-medium">{valuationResult.fecha}</span></p>
+                      <p><span className="text-muted-foreground">Comparables utilizados:</span> <span className="font-medium">{valuationResult.comparables} propiedades</span></p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={reiniciarFormulario}
+                    variant="outline" 
+                    className="w-full mt-6 hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    <Shuffle className="w-4 h-4 mr-2" />
+                    🔄 Nueva Valuación
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
