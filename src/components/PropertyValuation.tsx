@@ -1004,7 +1004,7 @@ const PropertyValuation = () => {
                                    : 'text-green-700 dark:text-green-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'nuevo' && <span className="text-2xl">✅</span>}
-                                   🟢 NUEVO (Factor: 1.0000)
+                                   🟢 NUEVO
                                    {propertyData.estadoConservacion === 'nuevo' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-green-600 dark:text-green-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'nuevo' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1029,7 +1029,7 @@ const PropertyValuation = () => {
                                    : 'text-blue-700 dark:text-blue-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'bueno' && <span className="text-2xl">✅</span>}
-                                   🔵 BUENO (Factor: 0.9968)
+                                   🔵 BUENO
                                    {propertyData.estadoConservacion === 'bueno' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-blue-600 dark:text-blue-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'bueno' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1054,7 +1054,7 @@ const PropertyValuation = () => {
                                    : 'text-cyan-700 dark:text-cyan-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'medio' && <span className="text-2xl">✅</span>}
-                                   🔷 MEDIO (Factor: 0.9748)
+                                   🔷 MEDIO
                                    {propertyData.estadoConservacion === 'medio' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-cyan-600 dark:text-cyan-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'medio' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1079,7 +1079,7 @@ const PropertyValuation = () => {
                                    : 'text-yellow-700 dark:text-yellow-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'regular' && <span className="text-2xl">✅</span>}
-                                   🟡 REGULAR (Factor: 0.9191)
+                                   🟡 REGULAR
                                    {propertyData.estadoConservacion === 'regular' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-yellow-600 dark:text-yellow-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'regular' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1104,7 +1104,7 @@ const PropertyValuation = () => {
                                    : 'text-orange-700 dark:text-orange-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="text-2xl">✅</span>}
-                                   🟠 REPARACIONES SENCILLAS (Factor: 0.8190)
+                                   🟠 REPARACIONES SENCILLAS
                                    {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-orange-600 dark:text-orange-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1129,7 +1129,7 @@ const PropertyValuation = () => {
                                    : 'text-red-700 dark:text-red-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="text-2xl">✅</span>}
-                                   🔴 REPARACIONES MEDIAS (Factor: 0.6680)
+                                   🔴 REPARACIONES MEDIAS
                                    {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-red-600 dark:text-red-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1154,7 +1154,7 @@ const PropertyValuation = () => {
                                    : 'text-purple-700 dark:text-purple-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="text-2xl">✅</span>}
-                                   🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)
+                                   🟣 REPARACIONES IMPORTANTES
                                    {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-purple-600 dark:text-purple-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'block' : 'hidden group-hover:block'}`}>
@@ -1179,7 +1179,7 @@ const PropertyValuation = () => {
                                    : 'text-gray-700 dark:text-gray-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'danos_graves' && <span className="text-2xl">✅</span>}
-                                   ⚫ DAÑOS GRAVES (Factor: 0.2480)
+                                   ⚫ DAÑOS GRAVES
                                    {propertyData.estadoConservacion === 'danos_graves' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-gray-600 dark:text-gray-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'danos_graves' ? 'block' : 'hidden group-hover:block'}`}>
