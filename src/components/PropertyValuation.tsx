@@ -765,7 +765,22 @@ const PropertyValuation = () => {
                       id="depreciacion-tab"
                       onClick={() => setActiveTab('depreciacion')}
                     >
-                      Depreciación
+                      {propertyData.estadoConservacion ? (
+                        <div className="flex flex-col items-center">
+                          <span>Depreciación</span>
+                          <span className="text-[10px] font-medium text-primary">
+                            {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo' :
+                             propertyData.estadoConservacion === 'bueno' ? 'Bueno' :
+                             propertyData.estadoConservacion === 'medio' ? 'Medio' :
+                             propertyData.estadoConservacion === 'regular' ? 'Regular' :
+                             propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'Rep. Sencillas' :
+                             propertyData.estadoConservacion === 'reparaciones_medias' ? 'Rep. Medias' :
+                             propertyData.estadoConservacion === 'reparaciones_importantes' ? 'Rep. Importantes' : 'Daños Graves'}
+                          </span>
+                        </div>
+                      ) : (
+                        'Depreciación'
+                      )}
                     </TabsTrigger>
                   </TabsList>
 
