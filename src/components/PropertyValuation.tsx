@@ -992,10 +992,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando NUEVO');
                                    handleInputChange('estadoConservacion', 'nuevo');
                                  }}
-                                 className={`p-2 bg-green-50 dark:bg-green-950 rounded-md border text-left hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'nuevo' ? 'border-4 border-green-600 bg-green-200 dark:bg-green-800 shadow-lg transform scale-105' : 'border-green-200 dark:border-green-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'nuevo' 
+                                   ? 'bg-gradient-to-r from-green-400 to-green-600 border-green-700 shadow-2xl transform scale-110 ring-4 ring-green-300' 
+                                   : 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'nuevo' ? 'text-green-900 dark:text-green-100' : 'text-green-700 dark:text-green-300'}`}>
-                                   {propertyData.estadoConservacion === 'nuevo' && '✅ '} 🟢 NUEVO (Factor: 1.0000)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'nuevo' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-green-700 dark:text-green-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'nuevo' && <span className="text-2xl">✅</span>}
+                                   🟢 NUEVO (Factor: 1.0000)
+                                   {propertyData.estadoConservacion === 'nuevo' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-green-600 dark:text-green-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'nuevo' ? 'block' : 'hidden group-hover:block'}`}>
                                    Construcción reciente o recién terminada. Sin desgaste visible.
@@ -1007,10 +1017,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando BUENO');
                                    handleInputChange('estadoConservacion', 'bueno');
                                  }}
-                                 className={`p-2 bg-blue-50 dark:bg-blue-950 rounded-md border text-left hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'bueno' ? 'border-4 border-blue-600 bg-blue-200 dark:bg-blue-800 shadow-lg transform scale-105' : 'border-blue-200 dark:border-blue-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'bueno' 
+                                   ? 'bg-gradient-to-r from-blue-400 to-blue-600 border-blue-700 shadow-2xl transform scale-110 ring-4 ring-blue-300' 
+                                   : 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'bueno' ? 'text-blue-900 dark:text-blue-100' : 'text-blue-700 dark:text-blue-300'}`}>
-                                   {propertyData.estadoConservacion === 'bueno' && '✅ '} 🔵 BUENO (Factor: 0.9968)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'bueno' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-blue-700 dark:text-blue-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'bueno' && <span className="text-2xl">✅</span>}
+                                   🔵 BUENO (Factor: 0.9968)
+                                   {propertyData.estadoConservacion === 'bueno' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-blue-600 dark:text-blue-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'bueno' ? 'block' : 'hidden group-hover:block'}`}>
                                    Excelente estado general. Mantenimiento adecuado.
@@ -1022,10 +1042,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando MEDIO');
                                    handleInputChange('estadoConservacion', 'medio');
                                  }}
-                                 className={`p-2 bg-cyan-50 dark:bg-cyan-950 rounded-md border text-left hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'medio' ? 'border-4 border-cyan-600 bg-cyan-200 dark:bg-cyan-800 shadow-lg transform scale-105' : 'border-cyan-200 dark:border-cyan-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'medio' 
+                                   ? 'bg-gradient-to-r from-cyan-400 to-cyan-600 border-cyan-700 shadow-2xl transform scale-110 ring-4 ring-cyan-300' 
+                                   : 'bg-cyan-50 dark:bg-cyan-950 border-cyan-200 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'medio' ? 'text-cyan-900 dark:text-cyan-100' : 'text-cyan-700 dark:text-cyan-300'}`}>
-                                   {propertyData.estadoConservacion === 'medio' && '✅ '} 🔷 MEDIO (Factor: 0.9748)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'medio' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-cyan-700 dark:text-cyan-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'medio' && <span className="text-2xl">✅</span>}
+                                   🔷 MEDIO (Factor: 0.9748)
+                                   {propertyData.estadoConservacion === 'medio' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-cyan-600 dark:text-cyan-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'medio' ? 'block' : 'hidden group-hover:block'}`}>
                                    Buen estado con desgaste moderado.
@@ -1037,10 +1067,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando REGULAR');
                                    handleInputChange('estadoConservacion', 'regular');
                                  }}
-                                 className={`p-2 bg-yellow-50 dark:bg-yellow-950 rounded-md border text-left hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'regular' ? 'border-4 border-yellow-600 bg-yellow-200 dark:bg-yellow-800 shadow-lg transform scale-105' : 'border-yellow-200 dark:border-yellow-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'regular' 
+                                   ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 border-yellow-700 shadow-2xl transform scale-110 ring-4 ring-yellow-300' 
+                                   : 'bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'regular' ? 'text-yellow-900 dark:text-yellow-100' : 'text-yellow-700 dark:text-yellow-300'}`}>
-                                   {propertyData.estadoConservacion === 'regular' && '✅ '} 🟡 REGULAR (Factor: 0.9191)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'regular' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-yellow-700 dark:text-yellow-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'regular' && <span className="text-2xl">✅</span>}
+                                   🟡 REGULAR (Factor: 0.9191)
+                                   {propertyData.estadoConservacion === 'regular' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-yellow-600 dark:text-yellow-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'regular' ? 'block' : 'hidden group-hover:block'}`}>
                                    Estado aceptable pero con desgaste visible.
@@ -1052,10 +1092,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando REPARACIONES SENCILLAS');
                                    handleInputChange('estadoConservacion', 'reparaciones_sencillas');
                                  }}
-                                 className={`p-2 bg-orange-50 dark:bg-orange-950 rounded-md border text-left hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'border-4 border-orange-600 bg-orange-200 dark:bg-orange-800 shadow-lg transform scale-105' : 'border-orange-200 dark:border-orange-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'reparaciones_sencillas' 
+                                   ? 'bg-gradient-to-r from-orange-400 to-orange-600 border-orange-700 shadow-2xl transform scale-110 ring-4 ring-orange-300' 
+                                   : 'bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'text-orange-900 dark:text-orange-100' : 'text-orange-700 dark:text-orange-300'}`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_sencillas' && '✅ '} 🟠 REPARACIONES SENCILLAS (Factor: 0.8190)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'reparaciones_sencillas' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-orange-700 dark:text-orange-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="text-2xl">✅</span>}
+                                   🟠 REPARACIONES SENCILLAS (Factor: 0.8190)
+                                   {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-orange-600 dark:text-orange-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'block' : 'hidden group-hover:block'}`}>
                                    Requiere reparaciones menores como pintura o plomería básica.
@@ -1067,10 +1117,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando REPARACIONES MEDIAS');
                                    handleInputChange('estadoConservacion', 'reparaciones_medias');
                                  }}
-                                 className={`p-2 bg-red-50 dark:bg-red-950 rounded-md border text-left hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'border-4 border-red-600 bg-red-200 dark:bg-red-800 shadow-lg transform scale-105' : 'border-red-200 dark:border-red-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'reparaciones_medias' 
+                                   ? 'bg-gradient-to-r from-red-400 to-red-600 border-red-700 shadow-2xl transform scale-110 ring-4 ring-red-300' 
+                                   : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'text-red-900 dark:text-red-100' : 'text-red-700 dark:text-red-300'}`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_medias' && '✅ '} 🔴 REPARACIONES MEDIAS (Factor: 0.6680)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'reparaciones_medias' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-red-700 dark:text-red-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="text-2xl">✅</span>}
+                                   🔴 REPARACIONES MEDIAS (Factor: 0.6680)
+                                   {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-red-600 dark:text-red-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_medias' ? 'block' : 'hidden group-hover:block'}`}>
                                    Necesita reparaciones importantes: pisos, instalaciones eléctricas.
@@ -1082,10 +1142,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando REPARACIONES IMPORTANTES');
                                    handleInputChange('estadoConservacion', 'reparaciones_importantes');
                                  }}
-                                 className={`p-2 bg-purple-50 dark:bg-purple-950 rounded-md border text-left hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'border-4 border-purple-600 bg-purple-200 dark:bg-purple-800 shadow-lg transform scale-105' : 'border-purple-200 dark:border-purple-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'reparaciones_importantes' 
+                                   ? 'bg-gradient-to-r from-purple-400 to-purple-600 border-purple-700 shadow-2xl transform scale-110 ring-4 ring-purple-300' 
+                                   : 'bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'text-purple-900 dark:text-purple-100' : 'text-purple-700 dark:text-purple-300'}`}>
-                                   {propertyData.estadoConservacion === 'reparaciones_importantes' && '✅ '} 🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'reparaciones_importantes' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-purple-700 dark:text-purple-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="text-2xl">✅</span>}
+                                   🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)
+                                   {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-purple-600 dark:text-purple-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'reparaciones_importantes' ? 'block' : 'hidden group-hover:block'}`}>
                                    Requiere rehabilitación mayor: estructura, techumbres.
@@ -1097,10 +1167,20 @@ const PropertyValuation = () => {
                                    console.log('Clickeando DAÑOS GRAVES');
                                    handleInputChange('estadoConservacion', 'danos_graves');
                                  }}
-                                 className={`p-2 bg-gray-50 dark:bg-gray-950 rounded-md border text-left hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md transition-all duration-200 cursor-pointer group ${propertyData.estadoConservacion === 'danos_graves' ? 'border-4 border-gray-600 bg-gray-200 dark:bg-gray-800 shadow-lg transform scale-105' : 'border-gray-200 dark:border-gray-800'}`}
+                                 className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
+                                   propertyData.estadoConservacion === 'danos_graves' 
+                                   ? 'bg-gradient-to-r from-gray-400 to-gray-600 border-gray-700 shadow-2xl transform scale-110 ring-4 ring-gray-300' 
+                                   : 'bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md'
+                                 }`}
                                >
-                                 <div className={`font-bold mb-1 text-sm ${propertyData.estadoConservacion === 'danos_graves' ? 'text-gray-900 dark:text-gray-100' : 'text-gray-700 dark:text-gray-300'}`}>
-                                   {propertyData.estadoConservacion === 'danos_graves' && '✅ '} ⚫ DAÑOS GRAVES (Factor: 0.2480)
+                                 <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
+                                   propertyData.estadoConservacion === 'danos_graves' 
+                                   ? 'text-white text-lg' 
+                                   : 'text-gray-700 dark:text-gray-300'
+                                 }`}>
+                                   {propertyData.estadoConservacion === 'danos_graves' && <span className="text-2xl">✅</span>}
+                                   ⚫ DAÑOS GRAVES (Factor: 0.2480)
+                                   {propertyData.estadoConservacion === 'danos_graves' && <span className="ml-auto text-xl">🎯</span>}
                                  </div>
                                  <p className={`text-gray-600 dark:text-gray-400 text-xs transition-all duration-200 ${propertyData.estadoConservacion === 'danos_graves' ? 'block' : 'hidden group-hover:block'}`}>
                                    Daños estructurales severos. Requiere reconstrucción parcial o total.
