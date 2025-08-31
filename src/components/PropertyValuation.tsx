@@ -935,8 +935,7 @@ const PropertyValuation = () => {
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="depreciacion" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Depreciación por Estado de Conservación</h3>
+                   <TabsContent value="depreciacion" className="space-y-4 mt-6">
                     
                     {/* Indicador del estado seleccionado */}
                     {propertyData.estadoConservacion && (
@@ -969,16 +968,7 @@ const PropertyValuation = () => {
                         </div>
                       </div>
                     )}
-                    
-                    <div className="space-y-4">
-                      <div className="p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
-                        <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
-                          📊 Factor de Depreciación por Estado de Conservación
-                        </h4>
-                         <p className="text-xs text-amber-700 dark:text-amber-300">
-                           El factor de depreciación se aplica al valor de reposición nuevo para obtener el valor neto actual del inmueble, considerando su estado físico. Consulta las explicaciones.
-                         </p>
-                      </div>
+                     <div className="space-y-4">
 
                       {/* Guía de Estados de Conservación - Método único de selección */}
                       <div>
