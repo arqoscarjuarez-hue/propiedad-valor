@@ -1583,15 +1583,15 @@ const PropertyValuation = () => {
             </Card>
           </div>
 
-          {/* Panel de Resultados - Ahora abajo del formulario */}
-          <div>
-            <Card className="shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
-                <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
-              </CardHeader>
-                <CardContent className="p-3 sm:p-6">
-                  {/* Resultado de la valuación - siempre visible después del cálculo */}
-                  {valuationResult && (
+          {/* Panel de Resultados - Solo aparece después de calcular */}
+          {valuationResult && (
+            <div>
+              <Card className="shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
+                  <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
+                </CardHeader>
+                  <CardContent className="p-3 sm:p-6">
+                    {/* Resultado de la valuación */}
                     <div className="mb-6" id="resultado-valuacion">
                       <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                        <div className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
@@ -1605,169 +1605,124 @@ const PropertyValuation = () => {
                        </div>
                      </div>
                    </div>
-                 )}
 
-                 {/* Sección del botón de cálculo */}
-                 <div className="space-y-6">
-                   {!valuationResult && (
-                     <div className="text-center py-8">
-                       <Calculator className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                     </div>
-                   )}
-                   
-                   <div className="space-y-4">
-                        <button 
-                          id="boton-valuacion"
-                          onClick={() => {
-                            console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
-                            console.log('Datos de propiedad:', propertyData);
-                            
-                            try {
-                              let valorTotal = 0;
-                              let areaEfectiva = 0;
-                              
-                              // Método comparativo según tipo de propiedad
-                              if (propertyData.tipoPropiedad === 'apartamento') {
-                                if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-                                  alert('Debe ingresar el área del apartamento');
-                                  return;
-                                }
-                                areaEfectiva = propertyData.areaApartamento;
-                                valorTotal = areaEfectiva * 1800; // $1800 por m²
-                                
-                              } else if (propertyData.tipoPropiedad === 'casa') {
-                                if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                                  alert('Debe ingresar el área construida de la casa');
-                                  return;
-                                }
-                                areaEfectiva = propertyData.areaPrimerNivel;
-                                valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
-                                
-                              } else if (propertyData.tipoPropiedad === 'comercial') {
-                                if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                                  alert('Debe ingresar el área del local comercial');
-                                  return;
-                                }
-                                areaEfectiva = propertyData.areaPrimerNivel;
-                                valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
-                                
-                              } else {
-                                alert('Debe seleccionar un tipo de propiedad válido');
-                                return;
-                              }
-                              
-                              // Aplicar factor específico por estrato socioeconómico
-                              const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
-                              valorTotal = valorTotal * factorEstrato;
-                              
-                              // Aplicar factor de conservación si está seleccionado
-                              const factorConservacion = propertyData.estadoConservacion 
-                                ? conservationFactors[propertyData.estadoConservacion] 
-                                : 1.0;
-                              valorTotal = valorTotal * factorConservacion;
-                              
-                              console.log('Tipo:', propertyData.tipoPropiedad);
-                              console.log('Área efectiva:', areaEfectiva);
-                              console.log('Factor estrato:', factorEstrato, 'Estrato:', propertyData.estratoSocial);
-                              console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
-                              console.log('Valor total:', valorTotal);
-                              
-                               // Establecer resultado
-                               setValuationResult(valorTotal);
-                               
-                               // Hacer scroll automático al resultado después de un breve delay
-                               setTimeout(() => {
-                                 const resultElement = document.getElementById('resultado-valuacion');
-                                 if (resultElement) {
-                                   resultElement.scrollIntoView({ 
-                                     behavior: 'smooth', 
-                                     block: 'center' 
-                                   });
-                                 }
-                               }, 500);
-                               
-                               toast({
-                                 title: "Valuación Completada",
-                                description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
-                              });
-                              
-                            } catch (error) {
-                              console.error('ERROR en cálculo:', error);
-                              alert('Error en el cálculo: ' + error.message);
-                            }
-                          }}
-                          disabled={isCalculating}
-                          className={`w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md text-white ${highlightedElement === 'calcular-button' ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}`}
-                        >
-                         <div className="flex items-center justify-center gap-2">
-                           ⚡ REALIZAR VALUACIÓN
-                         </div>
-                       </button>
-                   
-                   <div className="text-xs text-muted-foreground space-y-1">
-                     <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
-                     <p>✓ Avalúo profesional con estándares latinoamericanos</p>
-                     <p>✓ Certificación internacional y reglamentos regionales</p>
-                   </div>
-                   </div>
-
-                   {/* Comparables - solo mostrar si hay resultado */}
-                   {valuationResult && (
-                     <div className="space-y-3">
-                       <h4 className="text-base font-semibold">Comparables de la misma clase social</h4>
-                       <p className="text-xs text-muted-foreground">
-                         Clase social: {socialClassLabels[getSocialClass(propertyData.estratoSocial)]} | 
-                         Normas: UPAV, IVSC, Reglamentos Latinoamericanos
-                       </p>
-                       {isLoadingComparables ? (
-                         <div className="text-sm text-muted-foreground">Búsqueda progresiva en curso (1km → 50km)...</div>
-                       ) : comparables.length > 0 ? (
-                          <div className="overflow-x-auto">
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Dirección</TableHead>
-                                  <TableHead className="text-right">Precio Original</TableHead>
-                                  <TableHead className="text-right">Precio Ajustado (-15%)</TableHead>
-                                  <TableHead className="text-right">Precio/m² Ajustado (-15%)</TableHead>
-                                  <TableHead className="text-right">Área (m²)</TableHead>
-                                  <TableHead className="text-right">Distancia</TableHead>
+                   {/* Comparables */}
+                   <div className="space-y-3">
+                     <h4 className="text-base font-semibold">Comparables de la misma clase social</h4>
+                     <p className="text-xs text-muted-foreground">
+                       Clase social: {socialClassLabels[getSocialClass(propertyData.estratoSocial)]} | 
+                       Normas: UPAV, IVSC, Reglamentos Latinoamericanos
+                     </p>
+                     {isLoadingComparables ? (
+                       <div className="text-sm text-muted-foreground">Búsqueda progresiva en curso (1km → 50km)...</div>
+                     ) : comparables.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Dirección</TableHead>
+                                <TableHead className="text-right">Precio Original</TableHead>
+                                <TableHead className="text-right">Precio Ajustado (-15%)</TableHead>
+                                <TableHead className="text-right">Precio/m² Ajustado (-15%)</TableHead>
+                                <TableHead className="text-right">Área (m²)</TableHead>
+                                <TableHead className="text-right">Distancia</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {comparables.slice(0, 3).map((c) => (
+                                <TableRow key={c.id}>
+                                  <TableCell className="max-w-[180px] truncate">{c.address}</TableCell>
+                                  <TableCell className="text-right text-muted-foreground">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
+                                  <TableCell className="text-right font-semibold">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
+                                  <TableCell className="text-right font-semibold">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
+                                  <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
+                                  <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
                                 </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {comparables.slice(0, 3).map((c) => (
-                                  <TableRow key={c.id}>
-                                    <TableCell className="max-w-[180px] truncate">{c.address}</TableCell>
-                                    <TableCell className="text-right text-muted-foreground">${(c.price_usd || 0).toLocaleString("en-US")}</TableCell>
-                                    <TableCell className="text-right font-semibold">${Math.round((c.price_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                    <TableCell className="text-right font-semibold">${Math.round((c.price_per_sqm_usd || 0) * 0.85).toLocaleString("en-US")}</TableCell>
-                                    <TableCell className="text-right">{c.total_area ?? "-"}</TableCell>
-                                    <TableCell className="text-right">{c.distance_km?.toFixed(2)} km</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                           <p className="text-xs text-green-600 dark:text-green-400 mt-2">
-                             ✓ Mostrando los 3 más cercanos de {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
-                           </p>
+                              ))}
+                            </TableBody>
+                          </Table>
+                         <p className="text-xs text-green-600 dark:text-green-400 mt-2">
+                           ✓ Mostrando los 3 más cercanos de {comparables.length} comparables válidos (mínimo 3 requerido por normas latinoamericanas)
+                         </p>
+                       </div>
+                       ) : comparables.length === 0 ? (
+                         <div className="text-sm text-muted-foreground">
+                           No se encontraron comparables del mismo estrato social en la zona. 
+                           La valuación se realizó usando el método de costo de reposición.
                          </div>
-                         ) : comparables.length === 0 ? (
-                           <div className="text-sm text-muted-foreground">
-                             No se encontraron comparables del mismo estrato social en la zona. 
-                             La valuación se realizó usando el método de costo de reposición.
-                           </div>
-                         ) : (
-                           <div className="text-sm text-amber-600 dark:text-amber-400">
-                             Se encontraron solo {comparables.length} comparables. 
-                             Se recomienda tener mínimo 3 según normas UPAV/IVSC.
-                           </div>
+                       ) : (
+                         <div className="text-sm text-amber-600 dark:text-amber-400">
+                           Advertencia: Solo se encontraron {comparables.length} comparables. 
+                           Se requieren mínimo 3 para cumplir normas latinoamericanas.
+                         </div>
                        )}
-                     </div>
-                    )}
-                  </div>
-               </CardContent>
-             </Card>
-           </div>
+                   </div>
+
+                   {/* Botón para nueva valuación */}
+                   <div className="mt-6 pt-6 border-t">
+                     <Button 
+                       onClick={() => {
+                         setPropertyData({
+                           areaSotano: 0,
+                           areaPrimerNivel: 0,
+                           areaSegundoNivel: 0,
+                           areaTercerNivel: 0,
+                           areaCuartoNivel: 0,
+                           areaTerreno: 0,
+                           areaApartamento: 0,
+                           tipoPropiedad: '',
+                           estratoSocial: null,
+                           recamaras: 0,
+                           salas: 0,
+                           comedor: 0,
+                           cocina: 0,
+                           bodega: 0,
+                           areaServicio: 0,
+                           cochera: 0,
+                           banos: 0,
+                           otros: 0,
+                           antiguedad: 0,
+                           ubicacion: '',
+                           estadoGeneral: '',
+                           estadoConservacion: '',
+                           tipoAcceso: '',
+                           latitud: 0,
+                           longitud: 0,
+                           direccionCompleta: '',
+                           servicios: {
+                             agua: false,
+                             electricidad: false,
+                             gas: false,
+                             drenaje: false,
+                             internet: false,
+                             cable: false,
+                             telefono: false,
+                             seguridad: false,
+                             alberca: false,
+                             jardin: false,
+                             elevador: false,
+                             aireAcondicionado: false,
+                             calefaccion: false,
+                             panelesSolares: false,
+                             tinaco: false,
+                           }
+                         });
+                         setValuationResult(null);
+                         setComparables([]);
+                         setActiveTab('ubicacion');
+                         setCurrentStep(1);
+                       }}
+                       variant="outline" 
+                       className="w-full"
+                     >
+                       <Shuffle className="w-4 h-4 mr-2" />
+                       Nueva Valuación
+                     </Button>
+                   </div>
+                 </CardContent>
+               </Card>
+             </div>
+          )}
         </div>
       </div>
 
