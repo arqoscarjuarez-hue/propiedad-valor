@@ -371,6 +371,7 @@ const PropertyValuation = () => {
     antiguedad: 0,
     ubicacion: '',
     estadoGeneral: '',
+    estadoConservacion: '',
     tipoAcceso: '',
     latitud: 0,
     longitud: 0,
@@ -396,13 +397,10 @@ const PropertyValuation = () => {
 
   // Debug effect para encontrar el cero que aparece
   useEffect(() => {
-    console.log('=== DEBUG CERO EN DEPRECIACIÓN ===');
-    console.log('estadoGeneral:', propertyData.estadoGeneral);
-    console.log('estadoConservacion:', propertyData.estadoConservacion);
-    console.log('antiguedad:', propertyData.antiguedad);
-    console.log('tipoAcceso:', propertyData.tipoAcceso);
-    console.log('otros:', propertyData.otros);
-  }, [propertyData.estadoGeneral, propertyData.estadoConservacion, activeTab]);
+    console.log('=== DEBUG ESTADO CONSERVACIÓN ===');
+    console.log('estadoConservacion actual:', propertyData.estadoConservacion);
+    console.log('Hay estado seleccionado:', !!propertyData.estadoConservacion);
+  }, [propertyData.estadoConservacion]);
 
   const handleInputChange = (field: keyof PropertyData, value: string | number | EstratoSocial) => {
     const isStringField = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion', 'estratoSocial'].includes(field);
