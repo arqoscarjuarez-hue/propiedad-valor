@@ -8,10 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info, HelpCircle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
+import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
 
 import jsPDF from 'jspdf';
 import { 
@@ -345,6 +346,8 @@ const PropertyValuation = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [comparables, setComparables] = useState<Comparable[]>([]);
   const [isLoadingComparables, setIsLoadingComparables] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
     areaPrimerNivel: 0,
@@ -655,6 +658,19 @@ const PropertyValuation = () => {
     }
   };
 
+  // Función para manejar los pasos del tutorial
+  const handleWalkthroughStep = (stepId: string) => {
+    setHighlightedElement(stepId);
+    
+    // Auto-scroll al elemento resaltado después de un breve delay
+    setTimeout(() => {
+      const element = document.getElementById(stepId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -665,7 +681,18 @@ const PropertyValuation = () => {
               <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-3 sm:p-6">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg sm:text-xl">Valuador Latinoamericano</CardTitle>
-                  <LanguageSelector />
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setShowWalkthrough(true)}
+                      className="text-xs"
+                    >
+                      <HelpCircle className="w-3 h-3 mr-1" />
+                      Tutorial
+                    </Button>
+                    <LanguageSelector />
+                  </div>
                 </div>
                 <p className="text-sm text-primary-foreground/90 mt-2">
                   Siguiendo normas UPAV, IVSC y reglamentos de valuación latinoamericanos
@@ -673,7 +700,7 @@ const PropertyValuation = () => {
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
                 {/* Selector de Estrato Social */}
-                <div className="mb-6">
+                <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
                   <Label htmlFor="estratoSocial" className="text-base font-semibold">¿Cómo te consideras donde vives?</Label>
                   <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
                     <SelectTrigger className="mt-2">
@@ -698,7 +725,7 @@ const PropertyValuation = () => {
                 </div>
 
                 {/* Selector de Tipo de Propiedad */}
-                <div className="mb-6">
+                <div className="mb-6" id="tipo-propiedad-select">
                   <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Tipo de Propiedad</Label>
                   <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
                     <SelectTrigger className="mt-2">
@@ -715,9 +742,9 @@ const PropertyValuation = () => {
 
                 <Tabs defaultValue="areas" className="w-full">
                   <TabsList className="grid w-full grid-cols-3 h-auto">
-                    <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm">Ubicación</TabsTrigger>
-                    <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm">Áreas</TabsTrigger>
-                    <TabsTrigger value="depreciacion" className="h-8 sm:h-10 text-xs sm:text-sm">Depreciación</TabsTrigger>
+                    <TabsTrigger value="ubicacion" className="h-8 sm:h-10 text-xs sm:text-sm" id="ubicacion-tab">Ubicación</TabsTrigger>
+                    <TabsTrigger value="areas" className="h-8 sm:h-10 text-xs sm:text-sm" id="areas-tab">Áreas</TabsTrigger>
+                    <TabsTrigger value="depreciacion" className="h-8 sm:h-10 text-xs sm:text-sm" id="depreciacion-tab">Depreciación</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
@@ -1056,45 +1083,46 @@ const PropertyValuation = () => {
                    )}
                    
                    <div className="space-y-4">
-                       <button 
-                         onClick={() => {
-                           console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
-                           console.log('Datos de propiedad:', propertyData);
-                           
-                           try {
-                             let valorTotal = 0;
-                             let areaEfectiva = 0;
-                             
-                             // Método comparativo según tipo de propiedad
-                             if (propertyData.tipoPropiedad === 'apartamento') {
-                               if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
-                                 alert('Debe ingresar el área del apartamento');
-                                 return;
-                               }
-                               areaEfectiva = propertyData.areaApartamento;
-                               valorTotal = areaEfectiva * 1800; // $1800 por m²
-                               
-                             } else if (propertyData.tipoPropiedad === 'casa') {
-                               if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                                 alert('Debe ingresar el área construida de la casa');
-                                 return;
-                               }
-                               areaEfectiva = propertyData.areaPrimerNivel;
-                               valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
-                               
-                             } else if (propertyData.tipoPropiedad === 'comercial') {
-                               if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
-                                 alert('Debe ingresar el área del local comercial');
-                                 return;
-                               }
-                               areaEfectiva = propertyData.areaPrimerNivel;
-                               valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
-                               
-                             } else {
-                               alert('Debe seleccionar un tipo de propiedad válido');
-                               return;
-                             }
-                             
+                        <button 
+                          id="calcular-button"
+                          onClick={() => {
+                            console.log('=== INICIO CÁLCULO MÉTODO COMPARATIVO ===');
+                            console.log('Datos de propiedad:', propertyData);
+                            
+                            try {
+                              let valorTotal = 0;
+                              let areaEfectiva = 0;
+                              
+                              // Método comparativo según tipo de propiedad
+                              if (propertyData.tipoPropiedad === 'apartamento') {
+                                if (!propertyData.areaApartamento || propertyData.areaApartamento <= 0) {
+                                  alert('Debe ingresar el área del apartamento');
+                                  return;
+                                }
+                                areaEfectiva = propertyData.areaApartamento;
+                                valorTotal = areaEfectiva * 1800; // $1800 por m²
+                                
+                              } else if (propertyData.tipoPropiedad === 'casa') {
+                                if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                                  alert('Debe ingresar el área construida de la casa');
+                                  return;
+                                }
+                                areaEfectiva = propertyData.areaPrimerNivel;
+                                valorTotal = areaEfectiva * 1500; // $1500 por m² para casas
+                                
+                              } else if (propertyData.tipoPropiedad === 'comercial') {
+                                if (!propertyData.areaPrimerNivel || propertyData.areaPrimerNivel <= 0) {
+                                  alert('Debe ingresar el área del local comercial');
+                                  return;
+                                }
+                                areaEfectiva = propertyData.areaPrimerNivel;
+                                valorTotal = areaEfectiva * 2200; // $2200 por m² para locales comerciales
+                                
+                              } else {
+                                alert('Debe seleccionar un tipo de propiedad válido');
+                                return;
+                              }
+                              
                               // Aplicar factor específico por estrato socioeconómico
                               const factorEstrato = estratoMultipliers[propertyData.estratoSocial];
                               valorTotal = valorTotal * factorEstrato;
@@ -1113,24 +1141,24 @@ const PropertyValuation = () => {
                               
                               // Establecer resultado
                               setValuationResult(valorTotal);
-                             
-                             toast({
-                               title: "Valuación Completada",
-                               description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
-                             });
-                             
-                           } catch (error) {
-                             console.error('ERROR en cálculo:', error);
-                             alert('Error en el cálculo: ' + error.message);
-                           }
-                         }}
-                         disabled={isCalculating}
-                         className="w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md text-white"
-                       >
-                        <div className="flex items-center justify-center gap-2">
-                          ⚡ REALIZAR VALUACIÓN
-                        </div>
-                      </button>
+                              
+                              toast({
+                                title: "Valuación Completada",
+                                description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
+                              });
+                              
+                            } catch (error) {
+                              console.error('ERROR en cálculo:', error);
+                              alert('Error en el cálculo: ' + error.message);
+                            }
+                          }}
+                          disabled={isCalculating}
+                          className={`w-full h-12 text-lg font-bold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all duration-300 rounded-md text-white ${highlightedElement === 'calcular-button' ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}`}
+                        >
+                         <div className="flex items-center justify-center gap-2">
+                           ⚡ REALIZAR VALUACIÓN
+                         </div>
+                       </button>
                    
                    <div className="text-xs text-muted-foreground space-y-1">
                      <p>✓ Método: Comparables por estrato social (UPAV/IVSC)</p>
@@ -1198,6 +1226,16 @@ const PropertyValuation = () => {
           </div>
         </div>
       </div>
+
+      {/* Tutorial paso a paso */}
+      <ValuationWalkthrough
+        isOpen={showWalkthrough}
+        onClose={() => {
+          setShowWalkthrough(false);
+          setHighlightedElement(null);
+        }}
+        onStepChange={handleWalkthroughStep}
+      />
     </div>
   );
 };
