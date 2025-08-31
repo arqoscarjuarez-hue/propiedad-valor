@@ -394,6 +394,16 @@ const PropertyValuation = () => {
     }
   });
 
+  // Debug effect para encontrar el cero que aparece
+  useEffect(() => {
+    console.log('=== DEBUG CERO EN DEPRECIACIÓN ===');
+    console.log('estadoGeneral:', propertyData.estadoGeneral);
+    console.log('estadoConservacion:', propertyData.estadoConservacion);
+    console.log('antiguedad:', propertyData.antiguedad);
+    console.log('tipoAcceso:', propertyData.tipoAcceso);
+    console.log('otros:', propertyData.otros);
+  }, [propertyData.estadoGeneral, propertyData.estadoConservacion, activeTab]);
+
   const handleInputChange = (field: keyof PropertyData, value: string | number | EstratoSocial) => {
     const isStringField = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion', 'estratoSocial'].includes(field);
     
@@ -972,10 +982,10 @@ const PropertyValuation = () => {
 
                       {/* Guía de Estados de Conservación - Método único de selección */}
                       <div>
-                        <Label className="text-base font-semibold">Estado de Conservación</Label>
-                        <p className="text-xs text-muted-foreground mt-1 mb-4">
-                          Haga clic en el estado que mejor describa la condición actual del inmueble
-                        </p>
+                         <Label className="text-base font-semibold">Estado de Conservación</Label>
+                         <p className="text-xs text-muted-foreground mt-1 mb-4">
+                           Haga clic en el estado que mejor describa la condición actual del inmueble
+                         </p>
                        </div>
 
                       {/* Guía de Estados de Conservación */}
