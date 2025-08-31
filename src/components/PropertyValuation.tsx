@@ -86,56 +86,109 @@ interface Comparable {
   estrato_social: string;
 }
 
-// Tipos de estrato social
-export type EstratoSocial = 'bajo-bajo' | 'bajo' | 'medio-bajo' | 'medio' | 'medio-medio' | 'medio-alto' | 'alto' | 'alto-bajo' | 'alto-medio' | 'alto-alto';
+// Tipos de estrato social completos
+export type EstratoSocial = 
+  | 'bajo-bajo' | 'bajo' | 'bajo-medio' | 'bajo-alto'
+  | 'medio-bajo' | 'medio' | 'medio-medio' | 'medio-alto' | 'medio-superior'
+  | 'alto-bajo' | 'alto' | 'alto-medio' | 'alto-alto' | 'alto-superior'
+  | 'premium-bajo' | 'premium' | 'premium-alto' | 'lujo' | 'ultra-lujo';
 
-// Etiquetas para estratos sociales
+// Etiquetas para estratos sociales completos
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  'bajo-bajo': 'Estrato 1 - Bajo-Bajo',
-  'bajo': 'Estrato 2 - Bajo',
-  'medio-bajo': 'Estrato 3 - Medio-Bajo',
-  'medio': 'Estrato 4 - Medio',
-  'medio-medio': 'Estrato 4.5 - Medio-Medio',
-  'medio-alto': 'Estrato 5 - Medio-Alto',
-  'alto': 'Estrato 6 - Alto',
-  'alto-bajo': 'Estrato 7 - Alto-Bajo',
-  'alto-medio': 'Estrato 8 - Alto-Medio',
-  'alto-alto': 'Estrato 9 - Alto-Alto'
+  // Nivel Bajo
+  'bajo-bajo': 'Estrato 1.1 - Bajo-Bajo',
+  'bajo': 'Estrato 1.2 - Bajo',
+  'bajo-medio': 'Estrato 1.3 - Bajo-Medio',
+  'bajo-alto': 'Estrato 1.4 - Bajo-Alto',
+  
+  // Nivel Medio
+  'medio-bajo': 'Estrato 2.1 - Medio-Bajo',
+  'medio': 'Estrato 2.2 - Medio',
+  'medio-medio': 'Estrato 2.3 - Medio-Medio',
+  'medio-alto': 'Estrato 2.4 - Medio-Alto',
+  'medio-superior': 'Estrato 2.5 - Medio-Superior',
+  
+  // Nivel Alto
+  'alto-bajo': 'Estrato 3.1 - Alto-Bajo',
+  'alto': 'Estrato 3.2 - Alto',
+  'alto-medio': 'Estrato 3.3 - Alto-Medio',
+  'alto-alto': 'Estrato 3.4 - Alto-Alto',
+  'alto-superior': 'Estrato 3.5 - Alto-Superior',
+  
+  // Nivel Premium/Lujo
+  'premium-bajo': 'Estrato 4.1 - Premium-Bajo',
+  'premium': 'Estrato 4.2 - Premium',
+  'premium-alto': 'Estrato 4.3 - Premium-Alto',
+  'lujo': 'Estrato 4.4 - Lujo',
+  'ultra-lujo': 'Estrato 4.5 - Ultra-Lujo'
 };
 
 // Mapeo de estratos a clases sociales simplificadas
 export const estratoToClassMap: Record<EstratoSocial, string> = {
+  // Clase Popular/Baja
   'bajo-bajo': 'popular',
   'bajo': 'popular',
+  'bajo-medio': 'popular',
+  'bajo-alto': 'popular',
+  
+  // Clase Media
   'medio-bajo': 'media',
   'medio': 'media',
   'medio-medio': 'media',
-  'medio-alto': 'alta',
-  'alto': 'alta',
+  'medio-alto': 'media',
+  'medio-superior': 'media',
+  
+  // Clase Alta
   'alto-bajo': 'alta',
+  'alto': 'alta',
   'alto-medio': 'alta',
-  'alto-alto': 'alta'
+  'alto-alto': 'alta',
+  'alto-superior': 'alta',
+  
+  // Clase Premium/Lujo
+  'premium-bajo': 'premium',
+  'premium': 'premium',
+  'premium-alto': 'premium',
+  'lujo': 'premium',
+  'ultra-lujo': 'premium'
 };
 
 // Mapeo inverso: clases a estratos
 export const classToEstratos: Record<string, EstratoSocial[]> = {
-  'popular': ['bajo-bajo', 'bajo'],
-  'media': ['medio-bajo', 'medio', 'medio-medio'],
-  'alta': ['medio-alto', 'alto', 'alto-bajo', 'alto-medio', 'alto-alto']
+  'popular': ['bajo-bajo', 'bajo', 'bajo-medio', 'bajo-alto'],
+  'media': ['medio-bajo', 'medio', 'medio-medio', 'medio-alto', 'medio-superior'],
+  'alta': ['alto-bajo', 'alto', 'alto-medio', 'alto-alto', 'alto-superior'],
+  'premium': ['premium-bajo', 'premium', 'premium-alto', 'lujo', 'ultra-lujo']
 };
 
-// Multiplicadores de valor según estrato social
+// Multiplicadores de valor según estrato social completo
 export const estratoMultipliers: Record<EstratoSocial, number> = {
-  'bajo-bajo': 0.7,
-  'bajo': 0.8,
-  'medio-bajo': 0.9,
+  // Nivel Bajo (0.6-0.9)
+  'bajo-bajo': 0.6,
+  'bajo': 0.7,
+  'bajo-medio': 0.8,
+  'bajo-alto': 0.9,
+  
+  // Nivel Medio (0.95-1.3)
+  'medio-bajo': 0.95,
   'medio': 1.0,
   'medio-medio': 1.1,
   'medio-alto': 1.2,
+  'medio-superior': 1.3,
+  
+  // Nivel Alto (1.4-2.0)
+  'alto-bajo': 1.4,
   'alto': 1.5,
-  'alto-bajo': 1.6,
-  'alto-medio': 1.8,
-  'alto-alto': 2.2
+  'alto-medio': 1.6,
+  'alto-alto': 1.8,
+  'alto-superior': 2.0,
+  
+  // Nivel Premium/Lujo (2.2-4.0)
+  'premium-bajo': 2.2,
+  'premium': 2.5,
+  'premium-alto': 3.0,
+  'lujo': 3.5,
+  'ultra-lujo': 4.0
 };
 
 // Factores de conservación
@@ -150,7 +203,8 @@ export const conservationFactors: Record<string, number> = {
 export const classMultipliers: Record<string, number> = {
   'popular': 0.75,
   'media': 1.0,
-  'alta': 1.35
+  'alta': 1.35,
+  'premium': 2.8
 };
 
 // Traducciones
@@ -584,36 +638,70 @@ const PropertyValuation = () => {
                           <SelectTrigger className="border-2 focus:border-violet-500 hover:border-violet-400 transition-colors">
                             <SelectValue placeholder="Selecciona tu estrato socioeconómico" />
                           </SelectTrigger>
-                          <SelectContent className="max-h-60">
+                          <SelectContent className="max-h-60 bg-white dark:bg-gray-900 z-50">
+                            {/* Nivel Bajo */}
                             <SelectItem value="bajo-bajo" className="font-medium text-sm py-3">
-                              🏚️ Estrato 1 - Bajo-Bajo
+                              🏚️ {estratoSocialLabels['bajo-bajo']}
                             </SelectItem>
                             <SelectItem value="bajo" className="font-medium text-sm py-3">
-                              🏠 Estrato 2 - Bajo
+                              🏠 {estratoSocialLabels['bajo']}
                             </SelectItem>
+                            <SelectItem value="bajo-medio" className="font-medium text-sm py-3">
+                              🏡 {estratoSocialLabels['bajo-medio']}
+                            </SelectItem>
+                            <SelectItem value="bajo-alto" className="font-medium text-sm py-3">
+                              🏘️ {estratoSocialLabels['bajo-alto']}
+                            </SelectItem>
+                            
+                            {/* Nivel Medio */}
                             <SelectItem value="medio-bajo" className="font-medium text-sm py-3">
-                              🏘️ Estrato 3 - Medio-Bajo
+                              🏙️ {estratoSocialLabels['medio-bajo']}
                             </SelectItem>
                             <SelectItem value="medio" className="font-medium text-sm py-3">
-                              🏡 Estrato 4 - Medio
+                              🏢 {estratoSocialLabels['medio']}
                             </SelectItem>
                             <SelectItem value="medio-medio" className="font-medium text-sm py-3">
-                              🏢 Estrato 4.5 - Medio-Medio
+                              🏬 {estratoSocialLabels['medio-medio']}
                             </SelectItem>
                             <SelectItem value="medio-alto" className="font-medium text-sm py-3">
-                              🏰 Estrato 5 - Medio-Alto
+                              🏰 {estratoSocialLabels['medio-alto']}
+                            </SelectItem>
+                            <SelectItem value="medio-superior" className="font-medium text-sm py-3">
+                              🏯 {estratoSocialLabels['medio-superior']}
+                            </SelectItem>
+                            
+                            {/* Nivel Alto */}
+                            <SelectItem value="alto-bajo" className="font-medium text-sm py-3">
+                              🏛️ {estratoSocialLabels['alto-bajo']}
                             </SelectItem>
                             <SelectItem value="alto" className="font-medium text-sm py-3">
-                              🏛️ Estrato 6 - Alto
-                            </SelectItem>
-                            <SelectItem value="alto-bajo" className="font-medium text-sm py-3">
-                              🏯 Estrato 7 - Alto-Bajo
+                              🏟️ {estratoSocialLabels['alto']}
                             </SelectItem>
                             <SelectItem value="alto-medio" className="font-medium text-sm py-3">
-                              🏰 Estrato 8 - Alto-Medio
+                              🗼 {estratoSocialLabels['alto-medio']}
                             </SelectItem>
                             <SelectItem value="alto-alto" className="font-medium text-sm py-3">
-                              💎 Estrato 9 - Alto-Alto
+                              🏰 {estratoSocialLabels['alto-alto']}
+                            </SelectItem>
+                            <SelectItem value="alto-superior" className="font-medium text-sm py-3">
+                              🏛️ {estratoSocialLabels['alto-superior']}
+                            </SelectItem>
+                            
+                            {/* Nivel Premium/Lujo */}
+                            <SelectItem value="premium-bajo" className="font-medium text-sm py-3">
+                              💎 {estratoSocialLabels['premium-bajo']}
+                            </SelectItem>
+                            <SelectItem value="premium" className="font-medium text-sm py-3">
+                              💍 {estratoSocialLabels['premium']}
+                            </SelectItem>
+                            <SelectItem value="premium-alto" className="font-medium text-sm py-3">
+                              👑 {estratoSocialLabels['premium-alto']}
+                            </SelectItem>
+                            <SelectItem value="lujo" className="font-medium text-sm py-3">
+                              🏆 {estratoSocialLabels['lujo']}
+                            </SelectItem>
+                            <SelectItem value="ultra-lujo" className="font-medium text-sm py-3">
+                              ⭐ {estratoSocialLabels['ultra-lujo']}
                             </SelectItem>
                           </SelectContent>
                         </Select>
