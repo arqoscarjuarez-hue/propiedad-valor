@@ -972,11 +972,17 @@ const PropertyValuation = () => {
 
                       <div>
                         <Label htmlFor="estadoConservacion" className="text-base font-semibold">Estado de Conservación</Label>
-                        <Select value={propertyData.estadoConservacion} onValueChange={(value) => handleInputChange('estadoConservacion', value)}>
+                        <Select 
+                          value={propertyData.estadoConservacion} 
+                          onValueChange={(value) => {
+                            console.log('Seleccionando estado:', value);
+                            handleInputChange('estadoConservacion', value);
+                          }}
+                        >
                           <SelectTrigger className="mt-2">
                             <SelectValue placeholder="Selecciona el estado de conservación" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-background border border-border shadow-lg z-50">
                             <SelectItem value="nuevo">Nuevo (Factor: 1.0000)</SelectItem>
                             <SelectItem value="bueno">Bueno (Factor: 0.9968)</SelectItem>
                             <SelectItem value="medio">Medio (Factor: 0.9748)</SelectItem>
@@ -990,6 +996,11 @@ const PropertyValuation = () => {
                         <p className="text-xs text-muted-foreground mt-1">
                           Seleccione el estado que mejor describa la condición actual del inmueble
                         </p>
+                        
+                        {/* Debug info */}
+                        <div className="text-xs text-blue-600 mt-1">
+                          Estado actual: {propertyData.estadoConservacion || 'ninguno'}
+                        </div>
                       </div>
 
                       {/* Guía de Estados de Conservación */}
