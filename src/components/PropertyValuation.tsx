@@ -995,12 +995,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'nuevo' 
                                    ? 'bg-gradient-to-r from-green-400 to-green-600 border-green-700 shadow-2xl transform scale-110 ring-4 ring-green-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'nuevo'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'nuevo' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'nuevo'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-green-700 dark:text-green-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'nuevo' && <span className="text-2xl">✅</span>}
@@ -1020,12 +1024,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'bueno' 
                                    ? 'bg-gradient-to-r from-blue-400 to-blue-600 border-blue-700 shadow-2xl transform scale-110 ring-4 ring-blue-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'bueno'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'bueno' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'bueno'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-blue-700 dark:text-blue-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'bueno' && <span className="text-2xl">✅</span>}
@@ -1045,12 +1053,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'medio' 
                                    ? 'bg-gradient-to-r from-cyan-400 to-cyan-600 border-cyan-700 shadow-2xl transform scale-110 ring-4 ring-cyan-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'medio'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-cyan-50 dark:bg-cyan-950 border-cyan-200 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'medio' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'medio'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-cyan-700 dark:text-cyan-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'medio' && <span className="text-2xl">✅</span>}
@@ -1070,12 +1082,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'regular' 
                                    ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 border-yellow-700 shadow-2xl transform scale-110 ring-4 ring-yellow-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'regular'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'regular' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'regular'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-yellow-700 dark:text-yellow-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'regular' && <span className="text-2xl">✅</span>}
@@ -1095,12 +1111,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'reparaciones_sencillas' 
                                    ? 'bg-gradient-to-r from-orange-400 to-orange-600 border-orange-700 shadow-2xl transform scale-110 ring-4 ring-orange-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_sencillas'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'reparaciones_sencillas' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_sencillas'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-orange-700 dark:text-orange-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_sencillas' && <span className="text-2xl">✅</span>}
@@ -1120,12 +1140,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'reparaciones_medias' 
                                    ? 'bg-gradient-to-r from-red-400 to-red-600 border-red-700 shadow-2xl transform scale-110 ring-4 ring-red-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_medias'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'reparaciones_medias' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_medias'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-red-700 dark:text-red-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_medias' && <span className="text-2xl">✅</span>}
@@ -1145,12 +1169,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'reparaciones_importantes' 
                                    ? 'bg-gradient-to-r from-purple-400 to-purple-600 border-purple-700 shadow-2xl transform scale-110 ring-4 ring-purple-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_importantes'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'reparaciones_importantes' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'reparaciones_importantes'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-purple-700 dark:text-purple-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'reparaciones_importantes' && <span className="text-2xl">✅</span>}
@@ -1170,12 +1198,16 @@ const PropertyValuation = () => {
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'danos_graves' 
                                    ? 'bg-gradient-to-r from-gray-400 to-gray-600 border-gray-700 shadow-2xl transform scale-110 ring-4 ring-gray-300' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'danos_graves'
+                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md grayscale'
                                    : 'bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 hover:shadow-md'
                                  }`}
                                >
                                  <div className={`font-bold mb-1 text-base flex items-center gap-2 ${
                                    propertyData.estadoConservacion === 'danos_graves' 
                                    ? 'text-white text-lg' 
+                                   : propertyData.estadoConservacion && propertyData.estadoConservacion !== 'danos_graves'
+                                   ? 'text-gray-600 dark:text-gray-400'
                                    : 'text-gray-700 dark:text-gray-300'
                                  }`}>
                                    {propertyData.estadoConservacion === 'danos_graves' && <span className="text-2xl">✅</span>}
