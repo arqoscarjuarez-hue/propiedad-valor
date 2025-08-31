@@ -403,7 +403,7 @@ const PropertyValuation = () => {
   }, [propertyData.estadoConservacion]);
 
   const handleInputChange = (field: keyof PropertyData, value: string | number | EstratoSocial) => {
-    const isStringField = ['ubicacion', 'estadoGeneral', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion', 'estratoSocial'].includes(field);
+    const isStringField = ['ubicacion', 'estadoGeneral', 'estadoConservacion', 'tipoPropiedad', 'direccion', 'tipoAcceso', 'topografia', 'tipoValoracion', 'estratoSocial'].includes(field);
     
     let finalValue = value;
     if (!isStringField && typeof value === 'string') {
@@ -986,10 +986,11 @@ const PropertyValuation = () => {
                           <CardContent className="p-4">
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                                <button 
-                                 onClick={() => {
-                                   console.log('Clickeando NUEVO');
-                                   handleInputChange('estadoConservacion', 'nuevo');
-                                 }}
+                               onClick={() => {
+                                 console.log('Clickeando NUEVO');
+                                 handleInputChange('estadoConservacion', 'nuevo');
+                                 console.log('Estado después del click:', 'nuevo');
+                               }}
                                  className={`p-3 rounded-lg border-2 text-left transition-all duration-300 cursor-pointer group ${
                                    propertyData.estadoConservacion === 'nuevo' 
                                    ? 'bg-gradient-to-r from-green-400 to-green-600 border-green-700 shadow-2xl transform scale-110 ring-4 ring-green-300' 
