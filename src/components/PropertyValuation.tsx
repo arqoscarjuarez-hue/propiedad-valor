@@ -349,7 +349,7 @@ const PropertyValuation = () => {
   const [isLoadingComparables, setIsLoadingComparables] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('ubicacion'); // Comienza en ubicación pero estará bloqueada
+  const [activeTab, setActiveTab] = useState(''); // Sin pestaña activa inicialmente
   const [currentStep, setCurrentStep] = useState(1);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
@@ -399,10 +399,8 @@ const PropertyValuation = () => {
 
   // Efecto para asegurar estado inicial limpio
   useEffect(() => {
-    // Asegurar que las pestañas están bloqueadas inicialmente
-    if (!isStep1Complete() || !isStep2Complete()) {
-      setActiveTab('ubicacion'); // Pestaña por defecto (pero estará bloqueada)
-    }
+    // Asegurar que no hay pestañas activas inicialmente
+    setActiveTab('');
   }, []);
 
   // Debug effect para encontrar el cero que aparece
@@ -1056,84 +1054,133 @@ const PropertyValuation = () => {
                 </div>
 
                 
-                {/* Mostrar mensaje si intenta acceder a pestañas sin completar pasos previos */}
-                {(!isStep1Complete() || !isStep2Complete()) && (
-                  <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                    <div className="flex items-center gap-2">
-                      <span className="text-yellow-600">⚠️</span>
-                      <span className="font-semibold text-yellow-900 dark:text-yellow-100">
-                        Complete los Pasos 1 y 2 para acceder a las opciones de configuración
-                      </span>
-                    </div>
-                  </div>
-                )}
-                
-                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                  <TabsList className={`grid w-full ${propertyData.tipoPropiedad === 'terreno' ? 'grid-cols-2' : 'grid-cols-3'} h-auto`}>
-                    <TabsTrigger 
-                      value="ubicacion" 
-                      className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('ubicacion') ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      id="ubicacion-tab"
-                      disabled={!canAccessTab('ubicacion')}
-                    >
-                      <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-1">
-                          <span className="font-semibold">Paso 3</span>
-                          {isStep3Complete() && <span className="text-green-500">✓</span>}
-                        </div>
-                        <span className="text-xs">Ubicación</span>
-                      </div>
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="areas" 
-                      className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('areas') ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      id="areas-tab"
-                      disabled={!canAccessTab('areas')}
-                    >
-                      <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-1">
-                          <span className="font-semibold">Paso 4</span>
-                          {isStep4Complete() && <span className="text-green-500">✓</span>}
-                        </div>
-                        <span className="text-xs">Áreas</span>
-                      </div>
-                    </TabsTrigger>
-                    {propertyData.tipoPropiedad !== 'terreno' && (
-                      <TabsTrigger 
-                        value="depreciacion" 
-                        className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('depreciacion') ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        id="depreciacion-tab"
-                        disabled={!canAccessTab('depreciacion')}
+                {/* Sistema de pasos colapsables */}
+                <div className="space-y-4">
+                  
+                  {/* Paso 3: Ubicación */}
+                  {(isStep1Complete() && isStep2Complete()) && (
+                    <Card className={`transition-all duration-300 ${activeTab === 'ubicacion' ? 'ring-2 ring-primary shadow-lg' : 'shadow-md'}`}>
+                      <CardHeader 
+                        className="cursor-pointer hover:bg-muted/50 transition-colors p-4"
+                        onClick={() => setActiveTab(activeTab === 'ubicacion' ? '' : 'ubicacion')}
                       >
-                        {propertyData.estadoConservacion ? (
-                          <div className="flex flex-col items-center">
-                            <div className="flex items-center gap-1">
-                              <span className="font-semibold">Paso 5</span>
-                              {isStep5Complete() && <span className="text-green-500">✓</span>}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                              isStep3Complete() 
+                                ? 'bg-green-500 text-white' 
+                                : 'bg-blue-500 text-white'
+                            }`}>
+                              {isStep3Complete() ? '✓' : '3'}
                             </div>
-                            <span className="text-xs">Depreciación</span>
-                            <span className="text-[10px] font-medium text-primary">
-                              {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo' :
-                               propertyData.estadoConservacion === 'bueno' ? 'Bueno' :
-                               propertyData.estadoConservacion === 'medio' ? 'Medio' :
-                               propertyData.estadoConservacion === 'regular' ? 'Regular' :
-                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'R.Sencillas' :
-                               propertyData.estadoConservacion === 'reparaciones_medias' ? 'R.Medias' :
-                               propertyData.estadoConservacion === 'reparaciones_importantes' ? 'R.Importantes' : 'D.Graves'}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center">
-                            <div className="flex items-center gap-1">
-                              <span className="font-semibold">Paso 5</span>
-                              {isStep5Complete() && <span className="text-green-500">✓</span>}
+                            <div>
+                              <h3 className="font-semibold">Paso 3: Ubicación de la Propiedad</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {isStep3Complete() 
+                                  ? `Ubicación: ${propertyData.direccionCompleta.substring(0, 30)}...`
+                                  : 'Haga clic para ingresar la ubicación'
+                                }
+                              </p>
                             </div>
-                            <span className="text-xs">Depreciación</span>
                           </div>
-                        )}
-                      </TabsTrigger>
-                    )}
-                  </TabsList>
+                          <div className={`transform transition-transform duration-200 ${
+                            activeTab === 'ubicacion' ? 'rotate-180' : ''
+                          }`}>
+                            ▼
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      {activeTab === 'ubicacion' && (
+                        <CardContent className="border-t p-4">
+                          <div className="space-y-4">
+                            <h4 className="text-base font-semibold text-foreground mb-3">🌍 Ubicación de la Propiedad</h4>
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                              <div>
+                                <Label htmlFor="direccion-completa" className="text-sm font-medium">
+                                  Dirección Completa
+                                </Label>
+                                <Input
+                                  id="direccion-completa"
+                                  type="text"
+                                  placeholder="Ingrese la dirección completa"
+                                  value={propertyData.direccionCompleta}
+                                  onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                                  className="mt-1"
+                                />
+                              </div>
+                              
+                              <div className="mt-4">
+                                <h4 className="text-sm font-medium mb-2">📍 Seleccione la ubicación exacta en el mapa</h4>
+                                <div className="h-64 border rounded-lg overflow-hidden">
+                                  <SupabaseGoogleLocationMap
+                                    onLocationSelect={(lat, lng, address) => {
+                                      handleInputChange('latitud', lat);
+                                      handleInputChange('longitud', lng);
+                                      if (address && !propertyData.direccionCompleta) {
+                                        handleInputChange('direccionCompleta', address);
+                                      }
+                                    }}
+                                    initialLocation={
+                                      propertyData.latitud && propertyData.longitud 
+                                        ? { lat: propertyData.latitud, lng: propertyData.longitud }
+                                        : undefined
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {isStep3Complete() && (
+                              <div className="mt-4 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                                <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                                  ✅ Ubicación completada. Ahora puede continuar con el <strong>Paso 4: Áreas</strong>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      )}
+                    </Card>
+                  )}
+
+                  {/* Paso 4: Áreas */}
+                  {isStep3Complete() && (
+                    <Card className={`transition-all duration-300 ${activeTab === 'areas' ? 'ring-2 ring-primary shadow-lg' : 'shadow-md'}`}>
+                      <CardHeader 
+                        className="cursor-pointer hover:bg-muted/50 transition-colors p-4"
+                        onClick={() => setActiveTab(activeTab === 'areas' ? '' : 'areas')}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                              isStep4Complete() 
+                                ? 'bg-green-500 text-white' 
+                                : 'bg-blue-500 text-white'
+                            }`}>
+                              {isStep4Complete() ? '✓' : '4'}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold">Paso 4: Áreas de la Propiedad</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {isStep4Complete() 
+                                  ? `Área efectiva: ${getEffectiveArea()} m²`
+                                  : 'Haga clic para ingresar las áreas'
+                                }
+                              </p>
+                            </div>
+                          </div>
+                          <div className={`transform transition-transform duration-200 ${
+                            activeTab === 'areas' ? 'rotate-180' : ''
+                          }`}>
+                            ▼
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      {activeTab === 'areas' && (
+                        <CardContent className="border-t p-4">
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
                     {propertyData.tipoPropiedad === 'apartamento' ? (
