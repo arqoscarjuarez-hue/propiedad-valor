@@ -715,7 +715,10 @@ const PropertyValuation = () => {
               <CardContent className="p-3 sm:p-6">
                 {/* Selector de Estrato Social */}
                 <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
-                  <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
+                  <div>
+                    <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
+                    <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
+                  </div>
                   <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Selecciona el estrato social" />
@@ -737,7 +740,10 @@ const PropertyValuation = () => {
 
                 {/* Selector de Tipo de Propiedad */}
                 <div className="mb-6" id="tipo-propiedad-select">
-                  <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
+                  <div>
+                    <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
+                    <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
+                  </div>
                   <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Selecciona el tipo de propiedad" />
@@ -759,7 +765,10 @@ const PropertyValuation = () => {
                       id="ubicacion-tab"
                       onClick={() => setActiveTab('ubicacion')}
                     >
-                      Paso 3
+                      <div className="flex flex-col items-center">
+                        <span className="font-semibold">Paso 3</span>
+                        <span className="text-xs">Ubicación</span>
+                      </div>
                     </TabsTrigger>
                     <TabsTrigger 
                       value="areas" 
@@ -767,7 +776,10 @@ const PropertyValuation = () => {
                       id="areas-tab"
                       onClick={() => setActiveTab('areas')}
                     >
-                      Paso 4
+                      <div className="flex flex-col items-center">
+                        <span className="font-semibold">Paso 4</span>
+                        <span className="text-xs">Áreas</span>
+                      </div>
                     </TabsTrigger>
                     <TabsTrigger 
                       value="depreciacion" 
@@ -777,7 +789,8 @@ const PropertyValuation = () => {
                     >
                       {propertyData.estadoConservacion ? (
                         <div className="flex flex-col items-center">
-                          <span>Paso 5</span>
+                          <span className="font-semibold">Paso 5</span>
+                          <span className="text-xs">Depreciación</span>
                           <span className="text-[10px] font-medium text-primary">
                             {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo (1.0000)' :
                              propertyData.estadoConservacion === 'bueno' ? 'Bueno (0.9968)' :
@@ -789,7 +802,10 @@ const PropertyValuation = () => {
                           </span>
                         </div>
                       ) : (
-                        'Paso 5'
+                        <div className="flex flex-col items-center">
+                          <span className="font-semibold">Paso 5</span>
+                          <span className="text-xs">Depreciación</span>
+                        </div>
                       )}
                     </TabsTrigger>
                   </TabsList>
