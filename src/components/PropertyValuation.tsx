@@ -758,7 +758,7 @@ const PropertyValuation = () => {
                 </div>
 
                 <Tabs defaultValue="areas" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 h-auto">
+                  <TabsList className={`grid w-full ${propertyData.tipoPropiedad === 'terreno' ? 'grid-cols-2' : 'grid-cols-3'} h-auto`}>
                     <TabsTrigger 
                       value="ubicacion" 
                       className="h-8 sm:h-10 text-xs sm:text-sm" 
@@ -781,33 +781,35 @@ const PropertyValuation = () => {
                         <span className="text-xs">Áreas</span>
                       </div>
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="depreciacion" 
-                      className="h-8 sm:h-10 text-xs sm:text-sm" 
-                      id="depreciacion-tab"
-                      onClick={() => setActiveTab('depreciacion')}
-                    >
-                      {propertyData.estadoConservacion ? (
-                        <div className="flex flex-col items-center">
-                          <span className="font-semibold">Paso 5</span>
-                          <span className="text-xs">Depreciación</span>
-                          <span className="text-[10px] font-medium text-primary">
-                             {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo' :
-                              propertyData.estadoConservacion === 'bueno' ? 'Bueno' :
-                              propertyData.estadoConservacion === 'medio' ? 'Medio' :
-                              propertyData.estadoConservacion === 'regular' ? 'Regular' :
-                              propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'R.Sencillas' :
-                              propertyData.estadoConservacion === 'reparaciones_medias' ? 'R.Medias' :
-                              propertyData.estadoConservacion === 'reparaciones_importantes' ? 'R.Importantes' : 'D.Graves'}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center">
-                          <span className="font-semibold">Paso 5</span>
-                          <span className="text-xs">Depreciación</span>
-                        </div>
-                      )}
-                    </TabsTrigger>
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <TabsTrigger 
+                        value="depreciacion" 
+                        className="h-8 sm:h-10 text-xs sm:text-sm" 
+                        id="depreciacion-tab"
+                        onClick={() => setActiveTab('depreciacion')}
+                      >
+                        {propertyData.estadoConservacion ? (
+                          <div className="flex flex-col items-center">
+                            <span className="font-semibold">Paso 5</span>
+                            <span className="text-xs">Depreciación</span>
+                            <span className="text-[10px] font-medium text-primary">
+                              {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo' :
+                               propertyData.estadoConservacion === 'bueno' ? 'Bueno' :
+                               propertyData.estadoConservacion === 'medio' ? 'Medio' :
+                               propertyData.estadoConservacion === 'regular' ? 'Regular' :
+                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'R.Sencillas' :
+                               propertyData.estadoConservacion === 'reparaciones_medias' ? 'R.Medias' :
+                               propertyData.estadoConservacion === 'reparaciones_importantes' ? 'R.Importantes' : 'D.Graves'}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center">
+                            <span className="font-semibold">Paso 5</span>
+                            <span className="text-xs">Depreciación</span>
+                          </div>
+                        )}
+                      </TabsTrigger>
+                    )}
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
