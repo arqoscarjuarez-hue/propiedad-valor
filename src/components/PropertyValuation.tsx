@@ -715,6 +715,17 @@ const PropertyValuation = () => {
       
       setValuationResult(totalValue);
       
+      // Hacer scroll automático al resultado después de un breve delay
+      setTimeout(() => {
+        const resultElement = document.getElementById('resultado-valuacion');
+        if (resultElement) {
+          resultElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 500);
+      
       // Buscar comparables (no bloquear si no hay suficientes)
       await fetchComparables();
       
@@ -1387,11 +1398,11 @@ const PropertyValuation = () => {
               <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
                 <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
               </CardHeader>
-               <CardContent className="p-3 sm:p-6">
-                 {/* Resultado de la valuación - siempre visible después del cálculo */}
-                 {valuationResult && (
-                   <div className="mb-6">
-                     <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                <CardContent className="p-3 sm:p-6">
+                  {/* Resultado de la valuación - siempre visible después del cálculo */}
+                  {valuationResult && (
+                    <div className="mb-6" id="resultado-valuacion">
+                      <div className="text-center p-6 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                        <div className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
                          Valor Estimado
                        </div>
@@ -1470,11 +1481,22 @@ const PropertyValuation = () => {
                               console.log('Factor conservación:', factorConservacion, 'Estado:', propertyData.estadoConservacion);
                               console.log('Valor total:', valorTotal);
                               
-                              // Establecer resultado
-                              setValuationResult(valorTotal);
-                              
-                              toast({
-                                title: "Valuación Completada",
+                               // Establecer resultado
+                               setValuationResult(valorTotal);
+                               
+                               // Hacer scroll automático al resultado después de un breve delay
+                               setTimeout(() => {
+                                 const resultElement = document.getElementById('resultado-valuacion');
+                                 if (resultElement) {
+                                   resultElement.scrollIntoView({ 
+                                     behavior: 'smooth', 
+                                     block: 'center' 
+                                   });
+                                 }
+                               }, 500);
+                               
+                               toast({
+                                 title: "Valuación Completada",
                                 description: `Valor estimado: $${valorTotal.toLocaleString("en-US")} USD`,
                               });
                               
