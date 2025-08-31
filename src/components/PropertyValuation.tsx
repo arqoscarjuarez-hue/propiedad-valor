@@ -429,8 +429,18 @@ const PropertyValuation = () => {
         newData.areaCuartoNivel = 0;
       }
       
+      // Si se cambia el tipo de propiedad a terreno, limpiar estado de conservación
+      if (field === 'tipoPropiedad' && value === 'terreno') {
+        newData.estadoConservacion = '';
+      }
+      
       return newData;
     });
+    
+    // Forzar re-render para actualizar la guía de pasos
+    setTimeout(() => {
+      // Trigger re-render
+    }, 0);
   };
 
   // Funciones de validación para cada paso
@@ -790,55 +800,9 @@ const PropertyValuation = () => {
                 </p>
               </CardHeader>
               <CardContent className="p-3 sm:p-6">
-                {/* Selector de Estrato Social */}
-                <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
-                    {isStep1Complete() && <span className="text-green-500 font-bold">✓</span>}
-                  </div>
-                  <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
-                  <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
-                    <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Selecciona el estrato social" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
-                        return (
-                          <SelectItem key={key} value={key}>
-                            {label}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
-                  </p>
-                </div>
-
-                {/* Selector de Tipo de Propiedad */}
-                <div className="mb-6" id="tipo-propiedad-select">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
-                    {isStep2Complete() && <span className="text-green-500 font-bold">✓</span>}
-                  </div>
-                  <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
-                  <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                    <SelectTrigger className="mt-2">
-                      <SelectValue placeholder="Selecciona el tipo de propiedad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="casa">Casa</SelectItem>
-                      <SelectItem value="apartamento">Apartamento</SelectItem>
-                      <SelectItem value="terreno">Terreno</SelectItem>
-                      <SelectItem value="comercial">Comercial</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 
-                {/* Guía de pasos */}
-                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                {/* Guía de pasos - Siempre al principio */}
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
                   <div className="flex items-center gap-2 mb-2">
                     <Info className="h-4 w-4 text-blue-600" />
                     <span className="font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos</span>
@@ -890,6 +854,53 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Selector de Estrato Social */}
+                <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
+                    {isStep1Complete() && <span className="text-green-500 font-bold">✓</span>}
+                  </div>
+                  <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
+                  <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecciona el estrato social" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([key, label]) => {
+                        return (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Requerido para encontrar comparables del mismo nivel socioeconómico según normas latinoamericanas
+                  </p>
+                </div>
+
+                {/* Selector de Tipo de Propiedad */}
+                <div className="mb-6" id="tipo-propiedad-select">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
+                    {isStep2Complete() && <span className="text-green-500 font-bold">✓</span>}
+                  </div>
+                  <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
+                  <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="Selecciona el tipo de propiedad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="casa">Casa</SelectItem>
+                      <SelectItem value="apartamento">Apartamento</SelectItem>
+                      <SelectItem value="terreno">Terreno</SelectItem>
+                      <SelectItem value="comercial">Comercial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 
                 <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                   <TabsList className={`grid w-full ${propertyData.tipoPropiedad === 'terreno' ? 'grid-cols-2' : 'grid-cols-3'} h-auto`}>
