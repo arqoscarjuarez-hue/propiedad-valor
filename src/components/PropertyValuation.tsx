@@ -979,18 +979,38 @@ const PropertyValuation = () => {
                             handleInputChange('estadoConservacion', value);
                           }}
                         >
-                          <SelectTrigger className="mt-2">
+                          <SelectTrigger className="mt-2 bg-background border-border hover:bg-accent hover:text-accent-foreground">
                             <SelectValue placeholder="Selecciona el estado de conservación" />
                           </SelectTrigger>
-                          <SelectContent className="bg-background border border-border shadow-lg z-50">
-                            <SelectItem value="nuevo">Nuevo (Factor: 1.0000)</SelectItem>
-                            <SelectItem value="bueno">Bueno (Factor: 0.9968)</SelectItem>
-                            <SelectItem value="medio">Medio (Factor: 0.9748)</SelectItem>
-                            <SelectItem value="regular">Regular (Factor: 0.9191)</SelectItem>
-                            <SelectItem value="reparaciones_sencillas">Reparaciones Sencillas (Factor: 0.8190)</SelectItem>
-                            <SelectItem value="reparaciones_medias">Reparaciones Medias (Factor: 0.6680)</SelectItem>
-                            <SelectItem value="reparaciones_importantes">Reparaciones Importantes (Factor: 0.4740)</SelectItem>
-                            <SelectItem value="danos_graves">Daños Graves (Factor: 0.2480)</SelectItem>
+                          <SelectContent 
+                            className="bg-background border border-border shadow-lg z-[9999] max-h-[300px] overflow-y-auto"
+                            position="popper"
+                            sideOffset={5}
+                          >
+                            <SelectItem value="nuevo" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Nuevo (Factor: 1.0000)
+                            </SelectItem>
+                            <SelectItem value="bueno" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Bueno (Factor: 0.9968)
+                            </SelectItem>
+                            <SelectItem value="medio" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Medio (Factor: 0.9748)
+                            </SelectItem>
+                            <SelectItem value="regular" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Regular (Factor: 0.9191)
+                            </SelectItem>
+                            <SelectItem value="reparaciones_sencillas" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Reparaciones Sencillas (Factor: 0.8190)
+                            </SelectItem>
+                            <SelectItem value="reparaciones_medias" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Reparaciones Medias (Factor: 0.6680)
+                            </SelectItem>
+                            <SelectItem value="reparaciones_importantes" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Reparaciones Importantes (Factor: 0.4740)
+                            </SelectItem>
+                            <SelectItem value="danos_graves" className="hover:bg-accent hover:text-accent-foreground cursor-pointer">
+                              Daños Graves (Factor: 0.2480)
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">
