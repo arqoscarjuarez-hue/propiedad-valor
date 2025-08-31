@@ -848,10 +848,10 @@ const PropertyValuation = () => {
                     <div className="space-y-4">
                       <div className="p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
                         <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
-                          📊 Factor de Depreciación
+                          📊 Factor de Depreciación por Estado de Conservación
                         </h4>
                         <p className="text-xs text-amber-700 dark:text-amber-300">
-                          Estado de conservación de la construcción y acabados
+                          Calificación basada en el estado físico actual de la construcción
                         </p>
                       </div>
 
@@ -862,35 +862,71 @@ const PropertyValuation = () => {
                             <SelectValue placeholder="Selecciona el estado de conservación" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="excelente">Excelente (0% depreciación)</SelectItem>
-                            <SelectItem value="muy_bueno">Muy Bueno (5% depreciación)</SelectItem>
-                            <SelectItem value="bueno">Bueno (10% depreciación)</SelectItem>
-                            <SelectItem value="regular">Regular (20% depreciación)</SelectItem>
-                            <SelectItem value="malo">Malo (35% depreciación)</SelectItem>
-                            <SelectItem value="muy_malo">Muy Malo (50% depreciación)</SelectItem>
+                            <SelectItem value="nuevo">Nuevo (Factor: 1.0000)</SelectItem>
+                            <SelectItem value="bueno">Bueno (Factor: 0.9968)</SelectItem>
+                            <SelectItem value="medio">Medio (Factor: 0.9748)</SelectItem>
+                            <SelectItem value="regular">Regular (Factor: 0.9191)</SelectItem>
+                            <SelectItem value="reparaciones_sencillas">Reparaciones Sencillas (Factor: 0.8190)</SelectItem>
+                            <SelectItem value="reparaciones_medias">Reparaciones Medias (Factor: 0.6680)</SelectItem>
+                            <SelectItem value="reparaciones_importantes">Reparaciones Importantes (Factor: 0.4740)</SelectItem>
+                            <SelectItem value="danos_graves">Daños Graves (Factor: 0.2480)</SelectItem>
                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Evalúa el estado actual de la construcción, acabados y mantenimiento general
+                          Seleccione el estado que mejor describa la condición actual del inmueble
                         </p>
                       </div>
 
                       {propertyData.estadoConservacion && (
                         <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-                          <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-                            📈 Factor de Depreciación Aplicado
+                          <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">
+                            📈 Factor de Conservación Aplicado
                           </h4>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                              {propertyData.estadoConservacion === 'excelente' ? '0%' :
-                               propertyData.estadoConservacion === 'muy_bueno' ? '5%' :
-                               propertyData.estadoConservacion === 'bueno' ? '10%' :
-                               propertyData.estadoConservacion === 'regular' ? '20%' :
-                               propertyData.estadoConservacion === 'malo' ? '35%' : '50%'}
+                          <div className="space-y-3">
+                            <div className="text-center">
+                              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                                {propertyData.estadoConservacion === 'nuevo' ? '1.0000' :
+                                 propertyData.estadoConservacion === 'bueno' ? '0.9968' :
+                                 propertyData.estadoConservacion === 'medio' ? '0.9748' :
+                                 propertyData.estadoConservacion === 'regular' ? '0.9191' :
+                                 propertyData.estadoConservacion === 'reparaciones_sencillas' ? '0.8190' :
+                                 propertyData.estadoConservacion === 'reparaciones_medias' ? '0.6680' :
+                                 propertyData.estadoConservacion === 'reparaciones_importantes' ? '0.4740' : '0.2480'}
+                              </div>
+                              <p className="text-sm text-muted-foreground">Factor multiplicador</p>
                             </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Factor aplicado al valor de reposición nuevo
-                            </p>
+                            
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div className="text-center p-2 bg-white dark:bg-gray-800 rounded">
+                                <div className="text-xs text-muted-foreground">Estado</div>
+                                <div className="font-semibold">
+                                  {propertyData.estadoConservacion === 'nuevo' ? 'NUEVO' :
+                                   propertyData.estadoConservacion === 'bueno' ? 'BUENO' :
+                                   propertyData.estadoConservacion === 'medio' ? 'MEDIO' :
+                                   propertyData.estadoConservacion === 'regular' ? 'REGULAR' :
+                                   propertyData.estadoConservacion === 'reparaciones_sencillas' ? 'REPARACIONES SENCILLAS' :
+                                   propertyData.estadoConservacion === 'reparaciones_medias' ? 'REPARACIONES MEDIAS' :
+                                   propertyData.estadoConservacion === 'reparaciones_importantes' ? 'REPARACIONES IMPORTANTES' : 'DAÑOS GRAVES'}
+                                </div>
+                              </div>
+                              
+                              <div className="text-center p-2 bg-white dark:bg-gray-800 rounded">
+                                <div className="text-xs text-muted-foreground">Depreciación</div>
+                                <div className="font-semibold text-red-600 dark:text-red-400">
+                                  {propertyData.estadoConservacion === 'nuevo' ? '0.00%' :
+                                   propertyData.estadoConservacion === 'bueno' ? '0.32%' :
+                                   propertyData.estadoConservacion === 'medio' ? '2.52%' :
+                                   propertyData.estadoConservacion === 'regular' ? '8.09%' :
+                                   propertyData.estadoConservacion === 'reparaciones_sencillas' ? '18.10%' :
+                                   propertyData.estadoConservacion === 'reparaciones_medias' ? '33.20%' :
+                                   propertyData.estadoConservacion === 'reparaciones_importantes' ? '52.60%' : '75.20%'}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="text-center text-xs text-muted-foreground mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded">
+                              Valor Depreciado = Valor de Reposición × Factor de Conservación
+                            </div>
                           </div>
                         </div>
                       )}
