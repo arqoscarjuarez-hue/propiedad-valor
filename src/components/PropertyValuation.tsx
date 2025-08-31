@@ -951,18 +951,6 @@ const PropertyValuation = () => {
                                propertyData.estadoConservacion === 'reparaciones_importantes' ? '🟣 REPARACIONES IMPORTANTES' : '⚫ DAÑOS GRAVES'}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm text-muted-foreground">Factor</p>
-                            <p className="text-2xl font-bold text-primary">
-                              {propertyData.estadoConservacion === 'nuevo' ? '1.0000' :
-                               propertyData.estadoConservacion === 'bueno' ? '0.9968' :
-                               propertyData.estadoConservacion === 'medio' ? '0.9748' :
-                               propertyData.estadoConservacion === 'regular' ? '0.9191' :
-                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? '0.8190' :
-                               propertyData.estadoConservacion === 'reparaciones_medias' ? '0.6680' :
-                               propertyData.estadoConservacion === 'reparaciones_importantes' ? '0.4740' : '0.2480'}
-                            </p>
-                          </div>
                         </div>
                       </div>
                     )}
