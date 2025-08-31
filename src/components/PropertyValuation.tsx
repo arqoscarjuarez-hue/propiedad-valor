@@ -975,9 +975,9 @@ const PropertyValuation = () => {
                         <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
                           📊 Factor de Depreciación por Estado de Conservación
                         </h4>
-                        <p className="text-xs text-amber-700 dark:text-amber-300">
-                          El factor de depreciación se aplica al valor de reposición nuevo para obtener el valor neto actual del inmueble, considerando su estado físico. Consulta las explicaciones en el panel derecho.
-                        </p>
+                         <p className="text-xs text-amber-700 dark:text-amber-300">
+                           El factor de depreciación se aplica al valor de reposición nuevo para obtener el valor neto actual del inmueble, considerando su estado físico. Consulta las explicaciones.
+                         </p>
                       </div>
 
                       {/* Guía de Estados de Conservación - Método único de selección */}
