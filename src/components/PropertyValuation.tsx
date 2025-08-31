@@ -350,6 +350,7 @@ const PropertyValuation = () => {
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('areas');
+  const [currentStep, setCurrentStep] = useState(1);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
     areaPrimerNivel: 0,
@@ -430,6 +431,71 @@ const PropertyValuation = () => {
       
       return newData;
     });
+  };
+
+  // Funciones de validación para cada paso
+  const isStep1Complete = () => {
+    return propertyData.estratoSocial !== 'medio_medio' || propertyData.estratoSocial;
+  };
+
+  const isStep2Complete = () => {
+    return propertyData.tipoPropiedad !== '';
+  };
+
+  const isStep3Complete = () => {
+    return propertyData.direccionCompleta !== '' && propertyData.latitud !== 0 && propertyData.longitud !== 0;
+  };
+
+  const isStep4Complete = () => {
+    if (propertyData.tipoPropiedad === 'apartamento') {
+      return propertyData.areaApartamento > 0;
+    } else if (propertyData.tipoPropiedad === 'terreno') {
+      return propertyData.areaTerreno > 0;
+    } else {
+      return getEffectiveArea() > 0;
+    }
+  };
+
+  const isStep5Complete = () => {
+    if (propertyData.tipoPropiedad === 'terreno') {
+      return true; // Los terrenos no necesitan paso 5
+    }
+    return propertyData.estadoConservacion !== '';
+  };
+
+  const getNextRequiredStep = () => {
+    if (!isStep1Complete()) return 1;
+    if (!isStep2Complete()) return 2;
+    if (!isStep3Complete()) return 3;
+    if (!isStep4Complete()) return 4;
+    if (!isStep5Complete()) return 5;
+    return null;
+  };
+
+  const canAccessTab = (tabValue: string) => {
+    switch (tabValue) {
+      case 'ubicacion':
+        return isStep1Complete() && isStep2Complete();
+      case 'areas':
+        return isStep1Complete() && isStep2Complete() && isStep3Complete();
+      case 'depreciacion':
+        return isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete();
+      default:
+        return true;
+    }
+  };
+
+  const handleTabChange = (tabValue: string) => {
+    if (canAccessTab(tabValue)) {
+      setActiveTab(tabValue);
+    } else {
+      const nextStep = getNextRequiredStep();
+      toast({
+        title: "Paso requerido",
+        description: `Debe completar el Paso ${nextStep} antes de continuar.`,
+        variant: "destructive"
+      });
+    }
   };
 
   // Función para calcular el área efectiva para avalúo
@@ -715,10 +781,11 @@ const PropertyValuation = () => {
               <CardContent className="p-3 sm:p-6">
                 {/* Selector de Estrato Social */}
                 <div className={`mb-6 ${highlightedElement === 'estrato-social-select' ? 'ring-4 ring-yellow-400 ring-opacity-75 rounded-lg p-2 bg-yellow-50 dark:bg-yellow-950' : ''}`} id="estrato-social-select">
-                  <div>
+                  <div className="flex items-center gap-2">
                     <Label htmlFor="estratoSocial" className="text-base font-semibold">Paso 1</Label>
-                    <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
+                    {isStep1Complete() && <span className="text-green-500 font-bold">✓</span>}
                   </div>
+                  <p className="text-sm text-muted-foreground">¿Cómo te consideras donde vives?</p>
                   <Select value={propertyData.estratoSocial} onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Selecciona el estrato social" />
@@ -740,10 +807,11 @@ const PropertyValuation = () => {
 
                 {/* Selector de Tipo de Propiedad */}
                 <div className="mb-6" id="tipo-propiedad-select">
-                  <div>
+                  <div className="flex items-center gap-2">
                     <Label htmlFor="tipoPropiedad" className="text-base font-semibold">Paso 2</Label>
-                    <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
+                    {isStep2Complete() && <span className="text-green-500 font-bold">✓</span>}
                   </div>
+                  <p className="text-sm text-muted-foreground">Tipo de Propiedad</p>
                   <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Selecciona el tipo de propiedad" />
@@ -757,40 +825,92 @@ const PropertyValuation = () => {
                   </Select>
                 </div>
 
-                <Tabs defaultValue="areas" className="w-full">
+                
+                {/* Guía de pasos */}
+                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Info className="h-4 w-4 text-blue-600" />
+                    <span className="font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos</span>
+                  </div>
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    {getNextRequiredStep() 
+                      ? `Complete el Paso ${getNextRequiredStep()} para continuar con la valuación.`
+                      : "¡Todos los pasos están completados! Puede proceder con la valuación."
+                    }
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    {[1, 2, 3, 4, 5].map((step) => {
+                      if (step === 5 && propertyData.tipoPropiedad === 'terreno') return null;
+                      const isComplete = (
+                        (step === 1 && isStep1Complete()) ||
+                        (step === 2 && isStep2Complete()) ||
+                        (step === 3 && isStep3Complete()) ||
+                        (step === 4 && isStep4Complete()) ||
+                        (step === 5 && isStep5Complete())
+                      );
+                      const isCurrent = getNextRequiredStep() === step;
+                      
+                      return (
+                        <div 
+                          key={step} 
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                            isComplete 
+                              ? 'bg-green-500 text-white' 
+                              : isCurrent 
+                                ? 'bg-blue-500 text-white' 
+                                : 'bg-gray-300 text-gray-600'
+                          }`}
+                        >
+                          {step}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                   <TabsList className={`grid w-full ${propertyData.tipoPropiedad === 'terreno' ? 'grid-cols-2' : 'grid-cols-3'} h-auto`}>
                     <TabsTrigger 
                       value="ubicacion" 
-                      className="h-8 sm:h-10 text-xs sm:text-sm" 
+                      className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('ubicacion') ? 'opacity-50 cursor-not-allowed' : ''}`}
                       id="ubicacion-tab"
-                      onClick={() => setActiveTab('ubicacion')}
+                      disabled={!canAccessTab('ubicacion')}
                     >
                       <div className="flex flex-col items-center">
-                        <span className="font-semibold">Paso 3</span>
+                        <div className="flex items-center gap-1">
+                          <span className="font-semibold">Paso 3</span>
+                          {isStep3Complete() && <span className="text-green-500">✓</span>}
+                        </div>
                         <span className="text-xs">Ubicación</span>
                       </div>
                     </TabsTrigger>
                     <TabsTrigger 
                       value="areas" 
-                      className="h-8 sm:h-10 text-xs sm:text-sm" 
+                      className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('areas') ? 'opacity-50 cursor-not-allowed' : ''}`}
                       id="areas-tab"
-                      onClick={() => setActiveTab('areas')}
+                      disabled={!canAccessTab('areas')}
                     >
                       <div className="flex flex-col items-center">
-                        <span className="font-semibold">Paso 4</span>
+                        <div className="flex items-center gap-1">
+                          <span className="font-semibold">Paso 4</span>
+                          {isStep4Complete() && <span className="text-green-500">✓</span>}
+                        </div>
                         <span className="text-xs">Áreas</span>
                       </div>
                     </TabsTrigger>
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
                         value="depreciacion" 
-                        className="h-8 sm:h-10 text-xs sm:text-sm" 
+                        className={`h-8 sm:h-10 text-xs sm:text-sm ${!canAccessTab('depreciacion') ? 'opacity-50 cursor-not-allowed' : ''}`}
                         id="depreciacion-tab"
-                        onClick={() => setActiveTab('depreciacion')}
+                        disabled={!canAccessTab('depreciacion')}
                       >
                         {propertyData.estadoConservacion ? (
                           <div className="flex flex-col items-center">
-                            <span className="font-semibold">Paso 5</span>
+                            <div className="flex items-center gap-1">
+                              <span className="font-semibold">Paso 5</span>
+                              {isStep5Complete() && <span className="text-green-500">✓</span>}
+                            </div>
                             <span className="text-xs">Depreciación</span>
                             <span className="text-[10px] font-medium text-primary">
                               {propertyData.estadoConservacion === 'nuevo' ? 'Nuevo' :
@@ -804,7 +924,10 @@ const PropertyValuation = () => {
                           </div>
                         ) : (
                           <div className="flex flex-col items-center">
-                            <span className="font-semibold">Paso 5</span>
+                            <div className="flex items-center gap-1">
+                              <span className="font-semibold">Paso 5</span>
+                              {isStep5Complete() && <span className="text-green-500">✓</span>}
+                            </div>
                             <span className="text-xs">Depreciación</span>
                           </div>
                         )}
