@@ -278,7 +278,7 @@ interface PropertyData {
   areaTerreno: number;
   areaApartamento: number;
   tipoPropiedad: string;
-  estratoSocial: EstratoSocial;
+  estratoSocial: EstratoSocial | null;
   recamaras: number;
   salas: number;
   comedor: number;
@@ -349,7 +349,7 @@ const PropertyValuation = () => {
   const [isLoadingComparables, setIsLoadingComparables] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('areas');
+  const [activeTab, setActiveTab] = useState('ubicacion'); // Comienza en ubicación pero estará bloqueada
   const [currentStep, setCurrentStep] = useState(1);
   const [propertyData, setPropertyData] = useState<PropertyData>({
     areaSotano: 0,
@@ -359,8 +359,8 @@ const PropertyValuation = () => {
     areaCuartoNivel: 0,
     areaTerreno: 0,
     areaApartamento: 0,
-    tipoPropiedad: 'casa',
-    estratoSocial: 'medio_medio' as EstratoSocial,
+    tipoPropiedad: '', // Vacío por defecto
+    estratoSocial: null, // Vacío por defecto
     recamaras: 0,
     salas: 0,
     comedor: 0,
@@ -396,6 +396,14 @@ const PropertyValuation = () => {
       tinaco: false,
     }
   });
+
+  // Efecto para asegurar estado inicial limpio
+  useEffect(() => {
+    // Asegurar que las pestañas están bloqueadas inicialmente
+    if (!isStep1Complete() || !isStep2Complete()) {
+      setActiveTab('ubicacion'); // Pestaña por defecto (pero estará bloqueada)
+    }
+  }, []);
 
   // Debug effect para encontrar el cero que aparece
   useEffect(() => {
@@ -489,11 +497,11 @@ const PropertyValuation = () => {
 
   // Funciones de validación para cada paso
   const isStep1Complete = () => {
-    return propertyData.estratoSocial !== 'medio_medio' || propertyData.estratoSocial;
+    return propertyData.estratoSocial !== null && propertyData.estratoSocial !== undefined;
   };
 
   const isStep2Complete = () => {
-    return propertyData.tipoPropiedad !== '';
+    return propertyData.tipoPropiedad !== '' && propertyData.tipoPropiedad !== null;
   };
 
   const isStep3Complete = () => {
@@ -580,6 +588,70 @@ const PropertyValuation = () => {
         });
       }
     }
+  };
+
+  // Función para reiniciar todos los campos
+  const reiniciarFormulario = () => {
+    setPropertyData({
+      areaSotano: 0,
+      areaPrimerNivel: 0,
+      areaSegundoNivel: 0,
+      areaTercerNivel: 0,
+      areaCuartoNivel: 0,
+      areaTerreno: 0,
+      areaApartamento: 0,
+      tipoPropiedad: '',
+      estratoSocial: null,
+      recamaras: 0,
+      salas: 0,
+      comedor: 0,
+      cocina: 0,
+      bodega: 0,
+      areaServicio: 0,
+      cochera: 0,
+      banos: 0,
+      otros: 0,
+      antiguedad: 0,
+      ubicacion: '',
+      estadoGeneral: '',
+      estadoConservacion: '',
+      tipoAcceso: '',
+      latitud: 0,
+      longitud: 0,
+      direccionCompleta: '',
+      servicios: {
+        agua: false,
+        electricidad: false,
+        gas: false,
+        drenaje: false,
+        internet: false,
+        cable: false,
+        telefono: false,
+        seguridad: false,
+        alberca: false,
+        jardin: false,
+        elevador: false,
+        aireAcondicionado: false,
+        calefaccion: false,
+        panelesSolares: false,
+        tinaco: false,
+      }
+    });
+    
+    // Limpiar resultados
+    setValuationResult(null);
+    setComparables([]);
+    
+    // Volver al inicio
+    setActiveTab('ubicacion');
+    
+    // Scroll al principio
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    toast({
+      title: "Formulario Reiniciado",
+      description: "Todos los campos han sido limpiados. Puede comenzar desde el Paso 1.",
+    });
   };
 
   // Función para calcular el área efectiva para avalúo
@@ -880,6 +952,14 @@ const PropertyValuation = () => {
                   <div className="flex items-center gap-2 mb-2">
                     <Info className="h-4 w-4 text-blue-600" />
                     <span className="font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={reiniciarFormulario}
+                      className="ml-auto text-xs h-6"
+                    >
+                      🔄 Reiniciar
+                    </Button>
                   </div>
                   <p className="text-sm text-blue-800 dark:text-blue-200">
                     {getNextRequiredStep() === 'valuacion'
@@ -975,6 +1055,18 @@ const PropertyValuation = () => {
                   </Select>
                 </div>
 
+                
+                {/* Mostrar mensaje si intenta acceder a pestañas sin completar pasos previos */}
+                {(!isStep1Complete() || !isStep2Complete()) && (
+                  <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-center gap-2">
+                      <span className="text-yellow-600">⚠️</span>
+                      <span className="font-semibold text-yellow-900 dark:text-yellow-100">
+                        Complete los Pasos 1 y 2 para acceder a las opciones de configuración
+                      </span>
+                    </div>
+                  </div>
+                )}
                 
                 <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                   <TabsList className={`grid w-full ${propertyData.tipoPropiedad === 'terreno' ? 'grid-cols-2' : 'grid-cols-3'} h-auto`}>
