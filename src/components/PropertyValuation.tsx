@@ -843,287 +843,56 @@ const PropertyValuation = () => {
                   </TabsContent>
 
                   <TabsContent value="depreciacion" className="space-y-4 mt-6">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">Depreciación - Fórmula Ross-Heindecke</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Depreciación</h3>
                     
                     <div className="space-y-4">
-                      <div className="p-4 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800">
-                        <h4 className="text-sm font-medium text-purple-800 dark:text-purple-200 mb-3">
-                          📐 Fórmula Ross-Heindecke
+                      <div className="p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
+                        <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
+                          📊 Factor de Depreciación
                         </h4>
-                        <div className="text-xs text-purple-700 dark:text-purple-300 space-y-2">
-                          <div><strong>VN = VRN × (1 - D)</strong></div>
-                          <div><strong>D = DF + DO + DE</strong></div>
-                          <ul className="mt-2 space-y-1 ml-4">
-                            <li>• VN = Valor Neto</li>
-                            <li>• VRN = Valor de Reposición Nuevo</li>
-                            <li>• DF = Depreciación Física</li>
-                            <li>• DO = Depreciación por Obsolescencia</li>
-                            <li>• DE = Depreciación Económica</li>
-                          </ul>
-                        </div>
+                        <p className="text-xs text-amber-700 dark:text-amber-300">
+                          Estado de conservación de la construcción y acabados
+                        </p>
                       </div>
 
-                      {/* Depreciación Física */}
-                      <Card className="border-red-200 dark:border-red-800">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base text-red-700 dark:text-red-300">🔧 Depreciación Física (DF)</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="antiguedad" className="text-sm font-medium">Antigüedad (años)</Label>
-                              <Input
-                                id="antiguedad"
-                                type="number"
-                                value={propertyData.antiguedad || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
+                      <div>
+                        <Label htmlFor="estadoConservacion" className="text-base font-semibold">Estado de Conservación</Label>
+                        <Select value={propertyData.estadoConservacion} onValueChange={(value) => handleInputChange('estadoConservacion', value)}>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Selecciona el estado de conservación" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="excelente">Excelente (0% depreciación)</SelectItem>
+                            <SelectItem value="muy_bueno">Muy Bueno (5% depreciación)</SelectItem>
+                            <SelectItem value="bueno">Bueno (10% depreciación)</SelectItem>
+                            <SelectItem value="regular">Regular (20% depreciación)</SelectItem>
+                            <SelectItem value="malo">Malo (35% depreciación)</SelectItem>
+                            <SelectItem value="muy_malo">Muy Malo (50% depreciación)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Evalúa el estado actual de la construcción, acabados y mantenimiento general
+                        </p>
+                      </div>
+
+                      {propertyData.estadoConservacion && (
+                        <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                          <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                            📈 Factor de Depreciación Aplicado
+                          </h4>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                              {propertyData.estadoConservacion === 'excelente' ? '0%' :
+                               propertyData.estadoConservacion === 'muy_bueno' ? '5%' :
+                               propertyData.estadoConservacion === 'bueno' ? '10%' :
+                               propertyData.estadoConservacion === 'regular' ? '20%' :
+                               propertyData.estadoConservacion === 'malo' ? '35%' : '50%'}
                             </div>
-                            <div>
-                              <Label htmlFor="vidaUtil" className="text-sm font-medium">Vida Útil Total (años)</Label>
-                              <Input
-                                id="vidaUtil"
-                                type="number"
-                                value={propertyData.vidaUtil || (propertyData.tipoPropiedad === 'apartamento' ? 80 : 
-                                      propertyData.tipoPropiedad === 'comercial' ? 60 : 100)}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('vidaUtil', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="80"
-                                className="mt-1"
-                              />
-                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Factor aplicado al valor de reposición nuevo
+                            </p>
                           </div>
-                          
-                          <div>
-                            <Label htmlFor="estadoConservacion" className="text-sm font-medium">Estado de Conservación</Label>
-                            <Select value={propertyData.estadoConservacion} onValueChange={(value) => handleInputChange('estadoConservacion', value)}>
-                              <SelectTrigger className="mt-1">
-                                <SelectValue placeholder="Selecciona el estado" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="excelente">Excelente (0%)</SelectItem>
-                                <SelectItem value="muy_bueno">Muy Bueno (5%)</SelectItem>
-                                <SelectItem value="bueno">Bueno (10%)</SelectItem>
-                                <SelectItem value="regular">Regular (20%)</SelectItem>
-                                <SelectItem value="malo">Malo (35%)</SelectItem>
-                                <SelectItem value="muy_malo">Muy Malo (50%)</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label htmlFor="mantenimiento" className="text-sm font-medium">Nivel de Mantenimiento (%)</Label>
-                            <Input
-                              id="mantenimiento"
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={propertyData.mantenimiento || ''}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                handleInputChange('mantenimiento', value === '' ? 0 : parseFloat(value) || 0);
-                              }}
-                              placeholder="85"
-                              className="mt-1"
-                            />
-                            <p className="text-xs text-muted-foreground mt-1">0% = Sin mantenimiento, 100% = Mantenimiento perfecto</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Depreciación por Obsolescencia */}
-                      <Card className="border-orange-200 dark:border-orange-800">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base text-orange-700 dark:text-orange-300">⚙️ Depreciación por Obsolescencia (DO)</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="obsolescenciaFuncional" className="text-sm font-medium">Obsolescencia Funcional (%)</Label>
-                              <Input
-                                id="obsolescenciaFuncional"
-                                type="number"
-                                min="0"
-                                max="50"
-                                value={propertyData.obsolescenciaFuncional || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('obsolescenciaFuncional', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">Diseño inadecuado, distribución obsoleta</p>
-                            </div>
-                            <div>
-                              <Label htmlFor="obsolescenciaTecnologica" className="text-sm font-medium">Obsolescencia Tecnológica (%)</Label>
-                              <Input
-                                id="obsolescenciaTecnologica"
-                                type="number"
-                                min="0"
-                                max="30"
-                                value={propertyData.obsolescenciaTecnologica || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('obsolescenciaTecnologica', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">Sistemas, instalaciones desactualizadas</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Depreciación Económica */}
-                      <Card className="border-blue-200 dark:border-blue-800">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base text-blue-700 dark:text-blue-300">💰 Depreciación Económica (DE)</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <Label htmlFor="factorUbicacion" className="text-sm font-medium">Factor de Ubicación (%)</Label>
-                              <Input
-                                id="factorUbicacion"
-                                type="number"
-                                min="-30"
-                                max="20"
-                                value={propertyData.factorUbicacion || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('factorUbicacion', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">Valorización/desvalorización de la zona</p>
-                            </div>
-                            <div>
-                              <Label htmlFor="factorMercado" className="text-sm font-medium">Factor de Mercado (%)</Label>
-                              <Input
-                                id="factorMercado"
-                                type="number"
-                                min="-25"
-                                max="25"
-                                value={propertyData.factorMercado || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  handleInputChange('factorMercado', value === '' ? 0 : parseFloat(value) || 0);
-                                }}
-                                placeholder="0"
-                                className="mt-1"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">Condiciones del mercado inmobiliario</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Cálculos Ross-Heindecke */}
-                      {(propertyData.antiguedad > 0 || propertyData.estadoConservacion || 
-                        propertyData.obsolescenciaFuncional > 0 || propertyData.obsolescenciaTecnologica > 0 ||
-                        propertyData.factorUbicacion !== 0 || propertyData.factorMercado !== 0) && (
-                        <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-200 dark:border-green-800">
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-base text-green-700 dark:text-green-300">📊 Cálculo Ross-Heindecke</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-3">
-                              {(() => {
-                                // Cálculo de Depreciación Física (DF)
-                                const vidaUtil = propertyData.vidaUtil || (propertyData.tipoPropiedad === 'apartamento' ? 80 : 
-                                               propertyData.tipoPropiedad === 'comercial' ? 60 : 100);
-                                const depreciacionEdad = (propertyData.antiguedad || 0) / vidaUtil;
-                                
-                                const estadoFactores = {
-                                  'excelente': 0,
-                                  'muy_bueno': 0.05,
-                                  'bueno': 0.10,
-                                  'regular': 0.20,
-                                  'malo': 0.35,
-                                  'muy_malo': 0.50
-                                };
-                                const factorEstado = estadoFactores[propertyData.estadoConservacion as keyof typeof estadoFactores] || 0;
-                                const factorMantenimiento = (100 - (propertyData.mantenimiento || 85)) / 100 * 0.3;
-                                const DF = Math.min(0.95, depreciacionEdad + factorEstado + factorMantenimiento);
-
-                                // Cálculo de Depreciación por Obsolescencia (DO)
-                                const DO = ((propertyData.obsolescenciaFuncional || 0) + (propertyData.obsolescenciaTecnologica || 0)) / 100;
-
-                                // Cálculo de Depreciación Económica (DE)
-                                const DE = ((propertyData.factorUbicacion || 0) + (propertyData.factorMercado || 0)) / 100;
-
-                                // Depreciación Total
-                                const depreciacionTotal = Math.max(0, Math.min(0.95, DF + DO + DE));
-                                const factorValor = 1 - depreciacionTotal;
-
-                                return (
-                                  <>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                      <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                                        <div className="font-semibold text-red-700 dark:text-red-300">Depreciación Física (DF)</div>
-                                        <div className="text-xs space-y-1 mt-2">
-                                          <div>Por edad: {(depreciacionEdad * 100).toFixed(1)}%</div>
-                                          <div>Por estado: {(factorEstado * 100).toFixed(1)}%</div>
-                                          <div>Por mantenimiento: {(factorMantenimiento * 100).toFixed(1)}%</div>
-                                        </div>
-                                        <div className="font-bold text-red-600 dark:text-red-400 mt-2">
-                                          DF = {(DF * 100).toFixed(2)}%
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                                        <div className="font-semibold text-orange-700 dark:text-orange-300">Obsolescencia (DO)</div>
-                                        <div className="text-xs space-y-1 mt-2">
-                                          <div>Funcional: {(propertyData.obsolescenciaFuncional || 0).toFixed(1)}%</div>
-                                          <div>Tecnológica: {(propertyData.obsolescenciaTecnologica || 0).toFixed(1)}%</div>
-                                        </div>
-                                        <div className="font-bold text-orange-600 dark:text-orange-400 mt-2">
-                                          DO = {(DO * 100).toFixed(2)}%
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                                        <div className="font-semibold text-blue-700 dark:text-blue-300">Económica (DE)</div>
-                                        <div className="text-xs space-y-1 mt-2">
-                                          <div>Ubicación: {(propertyData.factorUbicacion || 0).toFixed(1)}%</div>
-                                          <div>Mercado: {(propertyData.factorMercado || 0).toFixed(1)}%</div>
-                                        </div>
-                                        <div className="font-bold text-blue-600 dark:text-blue-400 mt-2">
-                                          DE = {(DE * 100).toFixed(2)}%
-                                        </div>
-                                      </div>
-                                    </div>
-                                    
-                                    <div className="border-t pt-4">
-                                      <div className="text-center space-y-2">
-                                        <div className="text-lg font-bold">
-                                          <span className="text-muted-foreground">D = DF + DO + DE = </span>
-                                          <span className="text-destructive">{(depreciacionTotal * 100).toFixed(2)}%</span>
-                                        </div>
-                                        <div className="text-xl font-bold text-green-600 dark:text-green-400">
-                                          Factor de Valor = {factorValor.toFixed(4)}
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">
-                                          VN = VRN × {factorValor.toFixed(4)}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </>
-                                );
-                              })()}
-                            </div>
-                          </CardContent>
-                        </Card>
+                        </div>
                       )}
                     </div>
                   </TabsContent>
