@@ -685,9 +685,9 @@ const PropertyValuation = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Panel Izquierdo - Formulario */}
-          <div className="lg:col-span-1">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Panel Principal - Formulario */}
+          <div>
             <Card className="shadow-lg">
               <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground p-3 sm:p-6">
                 <div className="flex items-center justify-between">
@@ -1205,8 +1205,8 @@ const PropertyValuation = () => {
             </Card>
           </div>
 
-          {/* Panel Derecho - Resultados */}
-          <div className="lg:col-span-1">
+          {/* Panel de Resultados - Ahora abajo del formulario */}
+          <div>
             <Card className="shadow-lg">
               <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
                 <CardTitle className="text-lg sm:text-xl">Resultados de Valuación</CardTitle>
