@@ -974,22 +974,7 @@ const PropertyValuation = () => {
                         <Label htmlFor="estadoConservacion" className="text-base font-semibold">Estado de Conservación</Label>
                         <Select value={propertyData.estadoConservacion} onValueChange={(value) => handleInputChange('estadoConservacion', value)}>
                           <SelectTrigger className="mt-2">
-                            <SelectValue>
-                              {propertyData.estadoConservacion ? (
-                                <span className="font-medium">
-                                  {propertyData.estadoConservacion === 'nuevo' ? '🟢 NUEVO (Factor: 1.0000)' :
-                                   propertyData.estadoConservacion === 'bueno' ? '🔵 BUENO (Factor: 0.9968)' :
-                                   propertyData.estadoConservacion === 'medio' ? '🔷 MEDIO (Factor: 0.9748)' :
-                                   propertyData.estadoConservacion === 'regular' ? '🟡 REGULAR (Factor: 0.9191)' :
-                                   propertyData.estadoConservacion === 'reparaciones_sencillas' ? '🟠 REPARACIONES SENCILLAS (Factor: 0.8190)' :
-                                   propertyData.estadoConservacion === 'reparaciones_medias' ? '🔴 REPARACIONES MEDIAS (Factor: 0.6680)' :
-                                   propertyData.estadoConservacion === 'reparaciones_importantes' ? '🟣 REPARACIONES IMPORTANTES (Factor: 0.4740)' : 
-                                   '⚫ DAÑOS GRAVES (Factor: 0.2480)'}
-                                </span>
-                              ) : (
-                                <span className="text-muted-foreground">Selecciona el estado de conservación</span>
-                              )}
-                            </SelectValue>
+                            <SelectValue placeholder="Selecciona el estado de conservación" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="nuevo">Nuevo (Factor: 1.0000)</SelectItem>
