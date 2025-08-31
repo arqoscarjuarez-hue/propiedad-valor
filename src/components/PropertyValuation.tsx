@@ -928,6 +928,38 @@ const PropertyValuation = () => {
                   <TabsContent value="depreciacion" className="space-y-4 mt-6">
                     <h3 className="text-lg font-semibold text-foreground mb-4">Depreciación por Estado de Conservación</h3>
                     
+                    {/* Indicador del estado seleccionado */}
+                    {propertyData.estadoConservacion && (
+                      <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg border-2 border-primary">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-base font-bold text-primary">✅ Estado Seleccionado</h4>
+                            <p className="text-lg font-semibold text-foreground">
+                              {propertyData.estadoConservacion === 'nuevo' ? '🟢 NUEVO' :
+                               propertyData.estadoConservacion === 'bueno' ? '🔵 BUENO' :
+                               propertyData.estadoConservacion === 'medio' ? '🔷 MEDIO' :
+                               propertyData.estadoConservacion === 'regular' ? '🟡 REGULAR' :
+                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? '🟠 REPARACIONES SENCILLAS' :
+                               propertyData.estadoConservacion === 'reparaciones_medias' ? '🔴 REPARACIONES MEDIAS' :
+                               propertyData.estadoConservacion === 'reparaciones_importantes' ? '🟣 REPARACIONES IMPORTANTES' : '⚫ DAÑOS GRAVES'}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-muted-foreground">Factor</p>
+                            <p className="text-2xl font-bold text-primary">
+                              {propertyData.estadoConservacion === 'nuevo' ? '1.0000' :
+                               propertyData.estadoConservacion === 'bueno' ? '0.9968' :
+                               propertyData.estadoConservacion === 'medio' ? '0.9748' :
+                               propertyData.estadoConservacion === 'regular' ? '0.9191' :
+                               propertyData.estadoConservacion === 'reparaciones_sencillas' ? '0.8190' :
+                               propertyData.estadoConservacion === 'reparaciones_medias' ? '0.6680' :
+                               propertyData.estadoConservacion === 'reparaciones_importantes' ? '0.4740' : '0.2480'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div className="space-y-4">
                       <div className="p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
                         <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200 mb-3">
