@@ -1185,9 +1185,36 @@ const PropertyValuation = () => {
                            </div>
                          )}
                          
-                         <p className="text-muted-foreground mb-4">Dime, ¿tu barrio es rico, normal o pobre?</p>
-                         
-                         {!propertyData.estratoSocial && (
+                          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
+                            <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+                              Ubica exactamente dónde está tu casa/terreno en el mapa. Esto nos ayuda a encontrar propiedades similares cerca.
+                            </p>
+                            <FreeLocationMap
+                              onLocationChange={(lat, lng, address) => {
+                                setPropertyData(prev => ({
+                                  ...prev,
+                                  latitud: lat,
+                                  longitud: lng,
+                                  direccionCompleta: address
+                                }));
+                              }}
+                              initialLat={propertyData.latitud || 13.7942}
+                              initialLng={propertyData.longitud || -88.8965}
+                              initialAddress={propertyData.direccionCompleta}
+                            />
+                            {propertyData.direccionCompleta && (
+                              <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
+                                <p className="text-sm text-green-800">
+                                  <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <p className="text-muted-foreground mb-4">Ahora dime, ¿tu barrio es rico, normal o pobre?</p>
+                          
+                          {!propertyData.estratoSocial && (
                            <div className="space-y-4">
                              <h3 className="font-semibold text-lg">Primero dime, ¿cómo es tu barrio?</h3>
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
