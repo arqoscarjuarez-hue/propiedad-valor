@@ -660,7 +660,7 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep2Complete() ? '✓' : '3'}
                         </div>
-                        🏠 Paso 3: Tipo de Propiedad y Ubicación
+                        🏠 Paso 3: Tipo de Propiedad y Estrato Social
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -704,30 +704,6 @@ const PropertyValuation = () => {
                           )}
                         </div>
 
-                        {/* UBICACIÓN DE LA PROPIEDAD */}
-                        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
-                          <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
-                            Ubica exactamente dónde está tu casa/terreno en el mapa.
-                          </p>
-                          <FreeLocationMap
-                            onLocationChange={(lat, lng, address) => {
-                              handleInputChange('latitud', lat);
-                              handleInputChange('longitud', lng);
-                              handleInputChange('direccionCompleta', address);
-                            }}
-                            initialLat={13.7042}
-                            initialLng={-89.2073}
-                            initialAddress={propertyData.direccionCompleta}
-                          />
-                          {propertyData.direccionCompleta && (
-                            <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
-                              <p className="text-sm text-green-800">
-                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
-                              </p>
-                            </div>
-                          )}
-                        </div>
 
                         {/* ESTRATO SOCIOECONÓMICO */}
                         <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
