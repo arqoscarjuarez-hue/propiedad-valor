@@ -88,7 +88,7 @@ interface Comparable {
 export type EstratoSocial = 
   | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
   | 'medio_bajo' | 'medio_medio' | 'medio_alto' 
-  | 'alto_medio' | 'alto_alto';
+  | 'alto_bajo' | 'alto_medio' | 'alto_alto';
 
 // Clases principales para primer nivel de selección
 export type ClasePrincipal = 'bajo' | 'medio' | 'alto';
@@ -106,6 +106,7 @@ export const estratoSocialLabels: Record<EstratoSocial, string> = {
   'medio_alto': 'Clase Media Alta - Barrios residenciales premium',
   
   // Clase Alta
+  'alto_bajo': 'Clase Alta Baja - Barrios exclusivos entrada',
   'alto_medio': 'Clase Alta Media - Barrios exclusivos con servicios de lujo',
   'alto_alto': 'Clase Alta Alta - Barrios de élite con servicios premium'
 };
@@ -125,6 +126,7 @@ export const estratoToClassMap: Record<EstratoSocial, ClasePrincipal> = {
   'medio_bajo': 'medio',
   'medio_medio': 'medio',
   'medio_alto': 'medio',
+  'alto_bajo': 'alto',
   'alto_medio': 'alto',
   'alto_alto': 'alto'
 };
@@ -133,7 +135,7 @@ export const estratoToClassMap: Record<EstratoSocial, ClasePrincipal> = {
 export const clasePrincipalToEstratos: Record<ClasePrincipal, EstratoSocial[]> = {
   'bajo': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
   'medio': ['medio_bajo', 'medio_medio', 'medio_alto'],
-  'alto': ['alto_medio', 'alto_alto']
+  'alto': ['alto_bajo', 'alto_medio', 'alto_alto']
 };
 
 // Multiplicadores de valor según estrato social - normas internacionales
@@ -148,8 +150,9 @@ export const estratoMultipliers: Record<EstratoSocial, number> = {
   'medio_medio': 1.15,
   'medio_alto': 1.3,
   
-  // Clase Alta (1.5-1.8)
-  'alto_medio': 1.5,
+  // Clase Alta (1.4-1.8)
+  'alto_bajo': 1.4,
+  'alto_medio': 1.6,
   'alto_alto': 1.8
 };
 
