@@ -691,9 +691,9 @@ const PropertyValuation = () => {
       const usedFallback = comparablesData.length === 1 && (comparablesData[0]?.id?.toString()?.includes('fallback'));
       const fewComparables = comparablesData.length > 0 && comparablesData.length < 3;
       if (usedFallback || fewComparables) {
-        const calibrationFactor = 0.55; // -45%
+        const calibrationFactor = 0.85; // -15%
         estimatedValueUSD = estimatedValueUSD * calibrationFactor;
-        console.log(`🧮 Calibración aplicada (-45%): ${calibrationFactor}`);
+        console.log(`🧮 Calibración aplicada (-15%): ${calibrationFactor}`);
       }
 
       // Límite superior: no permitir que el precio por m² supere el precio base del país
