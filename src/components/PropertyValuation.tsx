@@ -271,10 +271,10 @@ const PropertyValuation = () => {
     estratoSocial: '' as any // Inicialmente vacío
   });
 
-  // Estados para idioma y moneda - RESETEADOS
-  const [selectedLanguage, setSelectedLanguage] = useState(''); // Vacío inicialmente
-  const [selectedCountry, setSelectedCountry] = useState(''); // Vacío inicialmente
-  const [selectedCurrency, setSelectedCurrency] = useState(''); // Vacío inicialmente
+  // Estados para idioma y moneda - CON VALORES POR DEFECTO
+  const [selectedLanguage, setSelectedLanguage] = useState('es'); // Español por defecto
+  const [selectedCountry, setSelectedCountry] = useState('usa'); // Estados Unidos por defecto
+  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // Dólar americano por defecto
 
   // Configuración de países y monedas del mundo
   const countriesConfig = {
