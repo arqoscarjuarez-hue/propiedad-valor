@@ -779,12 +779,13 @@ const PropertyValuation = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
-                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏠 ¿Qué tipo de casa tienes?</strong><br />
-                          Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial.
-                        </p>
-                      </div>
+                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                         <p className="text-sm text-blue-800 dark:text-blue-200">
+                           <strong>🏠 ¿Qué tipo de casa tienes?</strong><br />
+                           Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial.
+                           <strong> Esta selección será utilizada para buscar comparables del mismo tipo de propiedad en tu estrato social.</strong>
+                         </p>
+                       </div>
 
                       <div className="space-y-6">
                         {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
