@@ -165,8 +165,8 @@ const countriesConfig = {
     currency: 'MXN', 
     symbol: '$', 
     flag: '🇲🇽',
-    basePricePerM2USD: 600,
-    economicFactor: 1.0,
+    basePricePerM2USD: 450,
+    economicFactor: 0.8,
     exchangeRate: 17.0
   },
   
@@ -203,8 +203,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇸🇻',
-    basePricePerM2USD: 550,
-    economicFactor: 0.9,
+    basePricePerM2USD: 350,
+    economicFactor: 0.7,
     exchangeRate: 1.0
   },
   'nicaragua': { 
@@ -241,8 +241,8 @@ const countriesConfig = {
     currency: 'COP', 
     symbol: '$', 
     flag: '🇨🇴',
-    basePricePerM2USD: 650,
-    economicFactor: 0.9,
+    basePricePerM2USD: 450,
+    economicFactor: 0.7,
     exchangeRate: 4200.0
   },
   'venezuela': { 
@@ -268,8 +268,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇪🇨',
-    basePricePerM2USD: 500,
-    economicFactor: 0.7,
+    basePricePerM2USD: 350,
+    economicFactor: 0.6,
     exchangeRate: 1.0
   },
   'peru': { 
@@ -277,8 +277,8 @@ const countriesConfig = {
     currency: 'PEN', 
     symbol: 'S/', 
     flag: '🇵🇪',
-    basePricePerM2USD: 600,
-    economicFactor: 0.8,
+    basePricePerM2USD: 450,
+    economicFactor: 0.7,
     exchangeRate: 3.7
   },
   'chile': { 
@@ -603,7 +603,7 @@ const PropertyValuation = () => {
         const ta = Math.round((minAreaFallback + maxAreaFallback) / 2);
         // Precio más realista basado en el país seleccionado
         const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
-        const ppsqm = countryConfig?.basePricePerM2USD || 600;
+        const ppsqm = countryConfig?.basePricePerM2USD || 350; // Precio mucho más bajo por defecto
         comparablesData = [
           {
             id: 'fallback-1',
@@ -677,7 +677,7 @@ const PropertyValuation = () => {
       // 3. MÉTODO DE RESPALDO: Precio por m² del país
       if (estimatedValueUSD === 0 || comparablesData.length === 0) {
         console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
-        const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 350; // Precio más bajo por defecto
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
         const economicMultiplier = countryConfig.economicFactor || 1;
         const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
