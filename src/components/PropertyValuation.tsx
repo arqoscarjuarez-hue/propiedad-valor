@@ -668,7 +668,7 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep1Complete() ? '✓' : '2'}
                         </div>
-                        🏘️ Paso 2: Clase Socioeconómica
+                        🏘️ Paso 2: Clase Socioeconómica del Inmueble
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
