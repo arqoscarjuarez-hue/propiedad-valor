@@ -398,8 +398,8 @@ const PropertyValuation = () => {
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
   const isStep2Complete = () => propertyData.estratoSocial;
-  const isStep3Complete = () => propertyData.tipoPropiedad;
-  const isStep4Complete = () => propertyData.area > 0;
+  const isStep3Complete = () => propertyData.area > 0;
+  const isStep4Complete = () => propertyData.tipoPropiedad;
   const isStep5Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
@@ -554,11 +554,11 @@ const PropertyValuation = () => {
                   <TabsTrigger value="estrato" className="text-xs">
                     {isStep2Complete() ? '✅' : '2️⃣'} Estrato
                   </TabsTrigger>
-                  <TabsTrigger value="tipo" className="text-xs">
-                    {isStep3Complete() ? '✅' : '3️⃣'} Tipo
-                  </TabsTrigger>
                   <TabsTrigger value="caracteristicas" className="text-xs">
-                    {isStep4Complete() ? '✅' : '4️⃣'} Área
+                    {isStep3Complete() ? '✅' : '3️⃣'} Área
+                  </TabsTrigger>
+                  <TabsTrigger value="tipo" className="text-xs">
+                    {isStep4Complete() ? '✅' : '4️⃣'} Tipo
                   </TabsTrigger>
                   <TabsTrigger value="valuacion" className="text-xs">
                     {isStep5Complete() ? '✅' : '5️⃣'} Resultado
@@ -717,9 +717,9 @@ const PropertyValuation = () => {
                     <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep2Complete() ? '✓' : '3'}
+                          {isStep4Complete() ? '✓' : '4'}
                         </div>
-                        🏠 Paso 3: Tipo de Propiedad
+                        🏠 Paso 4: Tipo de Propiedad
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -772,9 +772,9 @@ const PropertyValuation = () => {
                     <CardHeader className="bg-gradient-to-r from-orange-500 to-amber-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep3Complete() ? '✓' : '4'}
+                          {isStep3Complete() ? '✓' : '3'}
                         </div>
-                        📏 Paso 4: Características de tu Propiedad
+                        📏 Paso 3: Área y Características
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
