@@ -1256,6 +1256,32 @@ const PropertyValuation = () => {
                              
                              <p className="text-muted-foreground mb-4">Dime, ¿tu barrio es rico, normal o pobre?</p>
                              
+                             {/* INDICACIÓN SI FALTA ESTRATO SOCIAL */}
+                             {!propertyData.estratoSocial && (
+                               <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded mb-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-red-600">⚠️</span>
+                                   <p className="text-red-800 font-medium text-sm">
+                                     <strong>¡FALTA COMPLETAR!</strong> Estrato social: VACÍO
+                                   </p>
+                                 </div>
+                                 <p className="text-red-700 text-xs mt-1">
+                                   Debes seleccionar el nivel socioeconómico de tu barrio para continuar con el avalúo.
+                                 </p>
+                               </div>
+                             )}
+                             
+                             {propertyData.estratoSocial && (
+                               <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded mb-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-green-600">✅</span>
+                                   <p className="text-green-800 font-medium text-sm">
+                                     <strong>COMPLETADO:</strong> Estrato social: {estratoSocialLabels[propertyData.estratoSocial]}
+                                   </p>
+                                 </div>
+                               </div>
+                             )}
+                             
                              {!propertyData.estratoSocial && (
                            <div className="space-y-4">
                              <h3 className="font-semibold text-lg">Primero dime, ¿cómo es tu barrio?</h3>
