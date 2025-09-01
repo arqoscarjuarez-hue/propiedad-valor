@@ -320,6 +320,7 @@ const PropertyValuation = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('es');
   const [selectedCountry, setSelectedCountry] = useState('salvador');
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [currentTab, setCurrentTab] = useState('setup');
   
   // Estados adicionales
   const [isLoading, setIsLoading] = useState(false);
@@ -343,6 +344,19 @@ const PropertyValuation = () => {
       console.log('📊 DATOS COMPLETOS:', updated);
       return updated;
     });
+  };
+
+  // Función para navegar al siguiente paso automáticamente
+  const goToNextStep = () => {
+    if (currentTab === 'setup' && isStep0Complete()) {
+      setCurrentTab('tipo');
+    } else if (currentTab === 'tipo' && isStep3Complete()) {
+      setCurrentTab('ubicacion');
+    } else if (currentTab === 'ubicacion' && isStep1Complete()) {
+      setCurrentTab('caracteristicas');
+    } else if (currentTab === 'caracteristicas' && isStep2Complete()) {
+      setCurrentTab('valuacion');
+    }
   };
 
   // Función de avalúo internacional completa
@@ -477,13 +491,19 @@ const PropertyValuation = () => {
             
             <CardContent className="p-6">
               <div className="mb-6">
-                <p className="text-muted-foreground text-center">
-                  🎯 <strong>¡Bienvenido!</strong> Este formulario es súper fácil de usar.
-                  Te vamos a ayudar a saber cuánto vale tu casa paso a paso.
-                </p>
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <p className="text-sm text-center">
+                    🎯 <strong>¡Progreso del Avalúo!</strong><br />
+                    {isStep0Complete() && <span className="text-green-600">✅ País configurado</span>}
+                    {isStep0Complete() && isStep3Complete() && <span className="text-green-600"> • ✅ Tipo seleccionado</span>}
+                    {isStep1Complete() && <span className="text-green-600"> • ✅ Ubicación marcada</span>}
+                    {isStep2Complete() && <span className="text-green-600"> • ✅ Área ingresada</span>}
+                    {!isStep0Complete() && <span className="text-amber-600">⏳ Selecciona tu país para empezar</span>}
+                  </p>
+                </div>
               </div>
 
-              <Tabs defaultValue="setup" className="w-full">
+              <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-5 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                   <TabsTrigger 
                     value="setup" 
@@ -494,24 +514,28 @@ const PropertyValuation = () => {
                   <TabsTrigger 
                     value="tipo" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep0Complete()}
                   >
                     {isStep3Complete() ? '✅' : '2️⃣'} Tipo
                   </TabsTrigger>
                   <TabsTrigger 
                     value="ubicacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep3Complete()}
                   >
                     {isStep1Complete() ? '✅' : '3️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger 
                     value="caracteristicas" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep1Complete()}
                   >
                     {isStep2Complete() ? '✅' : '4️⃣'} Área
                   </TabsTrigger>
                   <TabsTrigger 
                     value="valuacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-pink-100 dark:hover:bg-pink-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep2Complete()}
                   >
                     {isStep4Complete() ? '✅' : '5️⃣'} Resultado
                   </TabsTrigger>
@@ -546,6 +570,7 @@ const PropertyValuation = () => {
                             onValueChange={(value) => {
                               setSelectedCountry(value);
                               setSelectedCurrency(countriesConfig[value as keyof typeof countriesConfig]?.currency || 'USD');
+                              setTimeout(goToNextStep, 500); // Auto-navegar tras una breve pausa
                             }}
                           >
                             <SelectTrigger className="border-2 focus:border-purple-500 hover:border-purple-400 transition-colors h-12">
@@ -591,15 +616,24 @@ const PropertyValuation = () => {
                         )}
                       </div>
 
-                      {/* Confirmación cuando se complete */}
-                      {isStep0Complete() && (
-                        <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                          <div className="flex items-center gap-2">
-                            <span className="text-green-600">✅</span>
-                            <p className="text-green-800 font-medium text-sm">¡Perfecto! Ya configuramos tu país</p>
+                        {/* Confirmación cuando se complete */}
+                        {isStep0Complete() && (
+                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                <p className="text-green-800 font-medium text-sm">¡Perfecto! Ya configuramos tu país</p>
+                              </div>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                Siguiente Paso →
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -689,7 +723,12 @@ const PropertyValuation = () => {
                             id="area"
                             type="number" 
                             value={propertyData.area || ''}
-                            onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                            onChange={(e) => {
+                              handleInputChange('area', Number(e.target.value));
+                              if (Number(e.target.value) > 0) {
+                                setTimeout(goToNextStep, 500);
+                              }
+                            }}
                             placeholder="Ejemplo: 200"
                             className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
@@ -716,17 +755,26 @@ const PropertyValuation = () => {
                         </div>
                       </div>
 
-                      {/* Confirmación cuando se complete el área */}
-                      {isStep4Complete() && (
-                        <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                          <div className="flex items-center gap-2">
-                            <span className="text-green-600">✅</span>
-                            <p className="text-green-800 font-medium text-sm">
-                              ¡Excelente! Ya sabemos el tamaño: {propertyData.area} m²
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                       {/* Confirmación cuando se complete el área */}
+                       {isStep2Complete() && (
+                         <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
+                           <div className="flex items-center justify-between">
+                             <div className="flex items-center gap-2">
+                               <span className="text-green-600">✅</span>
+                               <p className="text-green-800 font-medium text-sm">
+                                 ¡Excelente! Ya sabemos el área: {propertyData.area} m²
+                               </p>
+                             </div>
+                             <Button 
+                               onClick={goToNextStep}
+                               size="sm"
+                               className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                             >
+                               Siguiente Paso →
+                             </Button>
+                           </div>
+                         </div>
+                       )}
 
                       <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <p className="text-yellow-800 text-xs">
@@ -738,7 +786,7 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Paso 5: Área y Características */}
+                {/* Paso 5: Estado de la Casa */}
                 <TabsContent value="caracteristicas" className="mt-6">
                   <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-yellow-50/50">
                     <CardHeader className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
@@ -764,7 +812,10 @@ const PropertyValuation = () => {
                         </Label>
                         <Select 
                           value={propertyData.estadoConservacion} 
-                          onValueChange={(value) => handleInputChange('estadoConservacion', value)}
+                          onValueChange={(value) => {
+                            handleInputChange('estadoConservacion', value);
+                            setTimeout(goToNextStep, 500);
+                          }}
                         >
                           <SelectTrigger className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12">
                             <SelectValue placeholder="¿Cómo está tu casa?" />
@@ -830,9 +881,9 @@ const PropertyValuation = () => {
                     <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep1Complete() ? '✓' : '2'}
+                          {isStep1Complete() ? '✓' : '3'}
                         </div>
-                        📍 Paso 2: ¿Dónde está tu casa?
+                        📍 Paso 3: ¿Dónde está tu casa?
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -854,16 +905,26 @@ const PropertyValuation = () => {
                             handleInputChange('latitud', lat);
                             handleInputChange('longitud', lng);
                             handleInputChange('direccionCompleta', address);
+                            setTimeout(goToNextStep, 1000);
                           }}
                           initialLat={13.7042}
                           initialLng={-89.2073}
                           initialAddress={propertyData.direccionCompleta}
                         />
                         {propertyData.direccionCompleta && (
-                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
-                            <p className="text-sm text-green-800">
-                              <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
-                            </p>
+                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm text-green-800">
+                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
+                              </p>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                Siguiente Paso →
+                              </Button>
+                            </div>
                           </div>
                         )}
 
@@ -886,7 +947,7 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           📊
                         </div>
-                        💎 Paso 6: ¡Descubre cuánto vale tu casa!
+                        💎 Paso 5: ¡Descubre cuánto vale tu casa!
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
