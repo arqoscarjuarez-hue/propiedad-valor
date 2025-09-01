@@ -772,119 +772,51 @@ const PropertyValuation = () => {
                     <CardHeader className="bg-gradient-to-r from-orange-500 to-amber-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep3Complete() ? '✓' : '3'}
+                          {isStep3Complete() ? '✓' : '4'}
                         </div>
-                        📏 Paso 3: Área y Características
+                        📏 Paso 4: Área
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>📏 ¿Qué tan grande es tu casa?</strong><br />
-                          Ahora necesitamos saber el tamaño y las características de tu propiedad para calcular su valor.
+                          <strong>📏 ¿Qué tan grande es tu terreno y tu casa?</strong><br />
+                          Solo necesitamos dos medidas: el área total del terreno y el área construida de tu casa.
                         </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <Label htmlFor="area" className="text-base font-semibold">
-                            📐 Área Total (metros cuadrados) *
+                            🌱 Área de Terreno (metros cuadrados) *
                           </Label>
                           <Input 
                             id="area"
                             type="number" 
                             value={propertyData.area || ''}
                             onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                            placeholder="Ejemplo: 120"
+                            placeholder="Ejemplo: 200"
                             className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
                           <p className="text-xs text-muted-foreground mt-1">
-                            💡 El área total de la construcción (sin contar el patio)
+                            🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
                           </p>
                         </div>
 
                         <div>
                           <Label htmlFor="construction_area" className="text-base font-semibold">
-                            🏗️ Área de Construcción (m²)
+                            🏠 Área de Construcción (m²) *
                           </Label>
                           <Input 
                             id="construction_area"
                             type="number" 
                             value={propertyData.construction_area || ''}
                             onChange={(e) => handleInputChange('construction_area', Number(e.target.value))}
-                            placeholder="Ejemplo: 100"
+                            placeholder="Ejemplo: 120"
                             className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
                           <p className="text-xs text-muted-foreground mt-1">
-                            🏠 Solo el área techada de la casa
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="habitaciones" className="text-base font-semibold">
-                            🛏️ Número de Habitaciones
-                          </Label>
-                          <Input 
-                            id="habitaciones"
-                            type="number" 
-                            value={propertyData.habitaciones || ''}
-                            onChange={(e) => handleInputChange('habitaciones', Number(e.target.value))}
-                            placeholder="Ejemplo: 3"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            🛌 Cuartos para dormir (sin contar la sala)
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="banos" className="text-base font-semibold">
-                            🚿 Número de Baños
-                          </Label>
-                          <Input 
-                            id="banos"
-                            type="number" 
-                            value={propertyData.banos || ''}
-                            onChange={(e) => handleInputChange('banos', Number(e.target.value))}
-                            placeholder="Ejemplo: 2"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            🚽 Baños completos con inodoro y ducha
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="parqueaderos" className="text-base font-semibold">
-                            🚗 Espacios de Parqueo
-                          </Label>
-                          <Input 
-                            id="parqueaderos"
-                            type="number" 
-                            value={propertyData.parqueaderos || ''}
-                            onChange={(e) => handleInputChange('parqueaderos', Number(e.target.value))}
-                            placeholder="Ejemplo: 1"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            🏠 Garajes o espacios techados para carros
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="antiguedad" className="text-base font-semibold">
-                            ⏰ Años de Construcción
-                          </Label>
-                          <Input 
-                            id="antiguedad"
-                            type="number" 
-                            value={propertyData.antiguedad || ''}
-                            onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                            placeholder="Ejemplo: 5"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            📅 ¿Hace cuántos años se construyó? (0 = nueva)
+                            🏗️ Solo el área techada de la casa (sin patio)
                           </p>
                         </div>
                       </div>
