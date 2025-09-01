@@ -911,7 +911,7 @@ const PropertyValuation = () => {
                       <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <p className="text-yellow-800 text-xs">
                           🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
-                          Una casa más grande vale más dinero. También los baños y habitaciones extras aumentan el precio.
+                          Una casa más grande vale más dinero.
                         </p>
                       </div>
                     </CardContent>
