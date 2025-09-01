@@ -459,30 +459,42 @@ const PropertyValuation = () => {
               .filter((c: any) => c.distance_km !== undefined)
               .sort((a: any, b: any) => (a.distance_km as number) - (b.distance_km as number));
 
-            // Filtrar por cercanía y similitud de área (70% - 130%)
-            const minArea = propertyData.area * 0.7;
-            const maxArea = propertyData.area * 1.3;
-            comparablesData = withDistance
+            const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+            const minArea = propertyAreaToUse * 0.7;
+            const maxArea = propertyAreaToUse * 1.3;
+            const primary = withDistance
               .filter((c: any) => {
                 const pt = String(c.property_type || '').toLowerCase();
                 return c.total_area >= minArea && c.total_area <= maxArea && normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(pt);
               })
-              .slice(0, 5)
-              .map((comp: any) => ({
-                ...comp,
-                address: comp.general_location,
-                price_usd: 150000 + (Math.random() * 100000), // Precio estimado al no tenerlo en este RPC
-                price_per_sqm_usd: (150000 + (Math.random() * 100000)) / comp.total_area,
-                distance: comp.distance_km
-              }));
+              .slice(0, 5);
+
+            // Completar hasta 5 comparables manteniendo el mismo tipo (relajando área si es necesario)
+            let chosenList: any[] = [...primary];
+            if (chosenList.length < 5) {
+              const supplement = withDistance
+                .filter((c: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(c.property_type || '').toLowerCase()))
+                .filter((c: any) => !chosenList.some(x => x.id === c.id))
+                .slice(0, 5 - chosenList.length);
+              chosenList = [...chosenList, ...supplement].slice(0, 5);
+            }
+
+            comparablesData = chosenList.map((comp: any) => ({
+              ...comp,
+              address: comp.general_location,
+              price_usd: 150000 + (Math.random() * 100000), // Precio estimado al no tenerlo en este RPC
+              price_per_sqm_usd: (150000 + (Math.random() * 100000)) / comp.total_area,
+              distance: comp.distance_km
+            }));
           }
         } else if (nearbyComparables && nearbyComparables.length > 0) {
           console.log(`✅ Encontrados ${nearbyComparables.length} comparables usando RPC (progresivo)`);
 
           // Preferir comparables muy cercanos (San Marcos) con filtros de radio 5km -> 10km -> 20km
           const tiers = [5, 10, 20];
-          const minArea = propertyData.area * 0.7;
-          const maxArea = propertyData.area * 1.3;
+          const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+          const minArea = propertyAreaToUse * 0.7;
+          const maxArea = propertyAreaToUse * 1.3;
 
           let selected: any[] = [];
           for (const r of tiers) {
@@ -502,8 +514,18 @@ const PropertyValuation = () => {
               .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
               .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
           }
+          // Completar hasta 5 comparables manteniendo el mismo tipo (relajando área si es necesario)
+          let finalSelected: any[] = [...selected];
+          if (finalSelected.length < 5) {
+            const supplement = (nearbyComparables as any[])
+              .filter((comp: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(comp.property_type || '').toLowerCase()))
+              .filter((comp: any) => !finalSelected.some((x: any) => x.id === comp.id))
+              .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999))
+              .slice(0, 5 - finalSelected.length);
+            finalSelected = [...finalSelected, ...supplement].slice(0, 5);
+          }
 
-          comparablesData = selected.slice(0, 5).map((comp: any) => ({
+          comparablesData = finalSelected.map((comp: any) => ({
             id: comp.id,
             address: comp.address,
             price_usd: comp.price_usd,
@@ -537,7 +559,7 @@ const PropertyValuation = () => {
               address: `Propiedad comparable 2 cerca de ${propertyData.direccionCompleta}`,
               price_usd: 145000,
               price_per_sqm_usd: 1450,
-              total_area: 100,
+              total_area: 95,
               latitude: propertyData.latitud - 0.002,
               longitude: propertyData.longitud + 0.002,
               property_type: propertyData.tipoPropiedad,
@@ -548,14 +570,36 @@ const PropertyValuation = () => {
               address: `Propiedad comparable 3 cerca de ${propertyData.direccionCompleta}`,
               price_usd: 180000,
               price_per_sqm_usd: 1800,
-              total_area: 100,
+              total_area: 110,
               latitude: propertyData.latitud + 0.003,
               longitude: propertyData.longitud - 0.001,
               property_type: propertyData.tipoPropiedad,
               distance: 2.1
+            },
+            {
+              id: 'test-4',
+              address: `Propiedad comparable 4 cerca de ${propertyData.direccionCompleta}`,
+              price_usd: 158000,
+              price_per_sqm_usd: 1580,
+              total_area: 102,
+              latitude: propertyData.latitud - 0.0015,
+              longitude: propertyData.longitud - 0.0015,
+              property_type: propertyData.tipoPropiedad,
+              distance: 1.6
+            },
+            {
+              id: 'test-5',
+              address: `Propiedad comparable 5 cerca de ${propertyData.direccionCompleta}`,
+              price_usd: 172000,
+              price_per_sqm_usd: 1720,
+              total_area: 98,
+              latitude: propertyData.latitud + 0.0025,
+              longitude: propertyData.longitud + 0.0005,
+              property_type: propertyData.tipoPropiedad,
+              distance: 2.8
             }
           ];
-          console.log('✅ Usando 3 comparables de prueba');
+          console.log('✅ Usando 5 comparables de prueba');
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
