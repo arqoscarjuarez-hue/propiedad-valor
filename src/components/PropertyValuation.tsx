@@ -627,14 +627,14 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep1Complete() ? '✓' : '2'}
                         </div>
-                        🏘️ Paso 2: Estrato Social
+                        🏘️ Paso 2: Clase Socioeconómica
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏘️ ¿En qué tipo de barrio está tu casa?</strong><br />
-                          Necesitamos saber el estrato social del barrio donde está tu propiedad para calcular su valor.
+                          <strong>🏘️ ¿Cuál es la clase socioeconómica del barrio?</strong><br />
+                          Según las normas internacionales de Latinoamérica, clasifica el barrio donde está ubicada tu propiedad.
                         </p>
                       </div>
 
