@@ -332,8 +332,8 @@ const PropertyValuation = () => {
 
   // Funciones de validación de pasos
   const isStep0Complete = () => selectedLanguage && selectedCountry;
-  const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep2Complete = () => propertyData.tipoPropiedad;
+  const isStep1Complete = () => propertyData.tipoPropiedad;
+  const isStep2Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
   const isStep3Complete = () => propertyData.area > 0;
   const isStep4Complete = () => propertyData.estadoConservacion;
 
@@ -349,10 +349,10 @@ const PropertyValuation = () => {
   // Función para navegar al siguiente paso automáticamente
   const goToNextStep = () => {
     if (currentTab === 'setup' && isStep0Complete()) {
-      setCurrentTab('ubicacion');
-    } else if (currentTab === 'ubicacion' && isStep1Complete()) {
       setCurrentTab('tipo');
-    } else if (currentTab === 'tipo' && isStep2Complete()) {
+    } else if (currentTab === 'tipo' && isStep1Complete()) {
+      setCurrentTab('ubicacion');
+    } else if (currentTab === 'ubicacion' && isStep2Complete()) {
       setCurrentTab('area');
     } else if (currentTab === 'area' && isStep3Complete()) {
       setCurrentTab('estado');
@@ -590,18 +590,18 @@ const PropertyValuation = () => {
                     {isStep0Complete() ? '✅' : '1️⃣'} Inicio
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="ubicacion" 
-                    className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
-                    disabled={!isStep0Complete()}
-                  >
-                    {isStep1Complete() ? '✅' : '2️⃣'} Ubicación
-                  </TabsTrigger>
-                  <TabsTrigger 
                     value="tipo" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep0Complete()}
+                  >
+                    {isStep1Complete() ? '✅' : '2️⃣'} Tipo
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="ubicacion" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
                     disabled={!isStep1Complete()}
                   >
-                    {isStep2Complete() ? '✅' : '3️⃣'} Tipo
+                    {isStep2Complete() ? '✅' : '3️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger 
                     value="area" 
@@ -788,6 +788,48 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
+                      <div className="space-y-4">
+                        <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Ubica exactamente dónde está tu casa/terreno en el mapa.
+                        </p>
+                        <FreeLocationMap
+                          onLocationChange={(lat, lng, address) => {
+                            handleInputChange('latitud', lat);
+                            handleInputChange('longitud', lng);
+                            handleInputChange('direccionCompleta', address);
+                            setTimeout(goToNextStep, 1000);
+                          }}
+                          initialLat={13.7042}
+                          initialLng={-89.2073}
+                          initialAddress={propertyData.direccionCompleta}
+                        />
+                        {propertyData.direccionCompleta && (
+                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm text-green-800">
+                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
+                              </p>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                Siguiente Paso →
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-yellow-800 text-xs">
+                            🎯 <strong>¿Por qué necesitamos esto?</strong> La ubicación es súper importante para el precio. 
+                            Una casa en el centro de la ciudad vale diferente que una en las afueras. También nos ayuda a encontrar casas similares para comparar.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 {/* Paso 4: Área */}
                 <TabsContent value="area" className="mt-6">
                   <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-amber-50/50">
@@ -807,73 +849,54 @@ const PropertyValuation = () => {
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <Label htmlFor="area" className="text-base font-semibold">
-                            🌱 Área de Terreno (metros cuadrados) *
-                          </Label>
-                          <Input 
-                            id="area"
-                            type="number" 
-                            value={propertyData.area || ''}
-                            onChange={(e) => {
-                              handleInputChange('area', Number(e.target.value));
-                              if (Number(e.target.value) > 0) {
-                                setTimeout(goToNextStep, 500);
-                              }
-                            }}
-                            placeholder="Ejemplo: 200"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
-                          </p>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="construction_area" className="text-base font-semibold">
-                            🏠 Área Total de Construcción (m²) *
-                          </Label>
-                          <Input 
-                            id="construction_area"
-                            type="number" 
-                            value={propertyData.construction_area || ''}
-                            onChange={(e) => handleInputChange('construction_area', Number(e.target.value))}
-                            placeholder="Ejemplo: 120"
-                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground mt-1">
-                            🏗️ Solo el área techada de la casa (sin patio). Si la construcción es de 2 niveles o más, se deberán sumar dichas áreas de construcción por cada nivel
-                          </p>
-                        </div>
-                      </div>
-
-                       {/* Confirmación cuando se complete el área */}
-                       {isStep3Complete() && (
-                         <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
-                           <div className="flex items-center justify-between">
-                             <div className="flex items-center gap-2">
-                               <span className="text-green-600">✅</span>
-                               <p className="text-green-800 font-medium text-sm">
-                                 ¡Excelente! Ya sabemos el área: {propertyData.area} m²
-                               </p>
-                             </div>
-                             <Button 
-                               onClick={goToNextStep}
-                               size="sm"
-                               className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
-                             >
-                               Siguiente Paso →
-                             </Button>
-                           </div>
-                         </div>
-                       )}
-
-                      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-yellow-800 text-xs">
-                          🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
-                          Una casa más grande vale más dinero.
+                      <div className="space-y-4">
+                        <Label htmlFor="area" className="text-base font-semibold">
+                          🌱 Área de Terreno (metros cuadrados) *
+                        </Label>
+                        <Input 
+                          id="area"
+                          type="number" 
+                          value={propertyData.area || ''}
+                          onChange={(e) => {
+                            handleInputChange('area', Number(e.target.value));
+                            if (Number(e.target.value) > 0) {
+                              setTimeout(goToNextStep, 500);
+                            }
+                          }}
+                          placeholder="Ejemplo: 200"
+                          className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
                         </p>
+
+                        {/* Confirmación cuando se complete el área */}
+                        {isStep3Complete() && (
+                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                <p className="text-green-800 font-medium text-sm">
+                                  ¡Excelente! Ya sabemos el área: {propertyData.area} m²
+                                </p>
+                              </div>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                Siguiente Paso →
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-yellow-800 text-xs">
+                            🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
+                            Una casa más grande vale más dinero.
+                          </p>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -982,9 +1005,8 @@ const PropertyValuation = () => {
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>📍 ¿Dónde está exactamente tu casa?</strong><br />
-                          Ubica tu casa en el mapa para que podamos calcular mejor el precio. 
-                          La ubicación es muy importante porque en algunos barrios las casas valen más.
+                          <strong>🏠 ¿Qué tipo de casa, apartamento o terreno tienes?</strong><br />
+                          Esto es súper importante porque cada tipo de propiedad tiene un precio diferente.
                         </p>
                       </div>
 
