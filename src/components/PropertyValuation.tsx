@@ -1040,23 +1040,6 @@ const PropertyValuation = () => {
                                     {propertyData.estadoConservacion === 'DAÑOS GRAVES' ? '✅ DAÑOS GRAVES' : 'DAÑOS GRAVES'}
                                   </td>
                                 </tr>
-                                <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
-                                    propertyData.estadoConservacion === 'EN DESECHO' 
-                                      ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
-                                      : 'hover:bg-red-50'
-                                  }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'EN DESECHO');
-                                    setSelectedConservationState(selectedConservationState === 'EN DESECHO' ? null : 'EN DESECHO');
-                                  }}
-                                >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'EN DESECHO' ? 'font-bold text-red-800' : 'text-red-700'
-                                  }`}>
-                                    {propertyData.estadoConservacion === 'EN DESECHO' ? '✅ EN DESECHO' : 'EN DESECHO'}
-                                  </td>
-                                </tr>
                               </tbody>
                             </table>
                           </div>
