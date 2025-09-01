@@ -623,16 +623,15 @@ const PropertyValuation = () => {
       });
     }
     
-    // Auto-abrir el siguiente paso
+    // Auto-abrir el siguiente paso (solo para selects, no para inputs de texto)
     if (field === 'estratoSocial' && value && isStep2Complete()) {
       setActiveTab('tipo');
     } else if (field === 'tipoPropiedad' && value && isStep3Complete()) {
       setActiveTab('ubicacion');
     } else if ((field === 'latitud' || field === 'direccionCompleta') && value && isStep4Complete()) {
       setActiveTab('caracteristicas');
-    } else if ((field === 'area' || field === 'construction_area') && value && getNextRequiredStep() === 'valuacion') {
-      setActiveTab('valuacion');
     }
+    // Removido el auto-cambio para campos de área para evitar cambios no deseados
   };
 
   const handleLocationChange = (lat: number, lng: number, address: string) => {
