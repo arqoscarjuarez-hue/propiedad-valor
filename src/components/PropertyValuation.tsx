@@ -382,7 +382,7 @@ const PropertyValuation = () => {
 
   // Estados para idioma y moneda con valores por defecto
   const [selectedLanguage, setSelectedLanguage] = useState('es');
-  const [selectedCountry, setSelectedCountry] = useState('usa');
+  const [selectedCountry, setSelectedCountry] = useState('salvador');
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   
   // Estados adicionales
