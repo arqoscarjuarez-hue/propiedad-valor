@@ -961,6 +961,7 @@ const PropertyValuation = () => {
                           initialLat={propertyData.latitud || 13.7042}
                           initialLng={propertyData.longitud || -89.2073}
                           initialAddress={propertyData.direccionCompleta}
+                          fixedAddress={!!propertyData.direccionCompleta} // Fijar dirección si ya existe
                         />
                         
                         {/* Mostrar dirección seleccionada y permitir cambiarla */}
