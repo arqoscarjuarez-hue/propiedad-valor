@@ -31,6 +31,8 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string>('');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   
   const { toast } = useToast();
 
@@ -95,11 +97,22 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     setError(null);
 
     try {
-      // Obtener API key desde Supabase
-      const apiKey = await getGoogleMapsApiKey();
+      let googleApiKey = apiKey;
+      
+      // Si no tenemos API key manual, intentar obtener desde Supabase
+      if (!googleApiKey) {
+        try {
+          googleApiKey = await getGoogleMapsApiKey();
+        } catch (supabaseError) {
+          console.log('Supabase API key not available, showing manual input');
+          setShowApiKeyInput(true);
+          setLoading(false);
+          return;
+        }
+      }
 
       const loader = new Loader({
-        apiKey: apiKey,
+        apiKey: googleApiKey,
         version: 'weekly',
         libraries: ['places', 'geometry']
       });
@@ -281,21 +294,79 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     );
   }
 
+  // Si necesita API key manual
+  if (showApiKeyInput) {
+    return (
+      <Card className="border-orange-200 bg-orange-50 dark:bg-orange-950 dark:border-orange-800">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-200">
+            <Settings className="h-5 w-5" />
+            Configurar Google Maps API Key
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-4 bg-orange-100 dark:bg-orange-900 rounded-lg">
+            <p className="text-sm text-orange-800 dark:text-orange-200 mb-3">
+              Para usar Google Maps, necesitas ingresar tu API key temporalmente.
+            </p>
+            <ol className="text-xs text-orange-700 dark:text-orange-300 space-y-1 list-decimal ml-4">
+              <li>Ve a <a href="https://console.cloud.google.com/apis/credentials" target="_blank" className="underline">Google Cloud Console</a></li>
+              <li>Crea o selecciona un proyecto</li>
+              <li>Activa la Maps JavaScript API y Geocoding API</li>
+              <li>Crea credenciales (API key)</li>
+              <li>Copia el API key aquí abajo</li>
+            </ol>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="api-key">Google Maps API Key</Label>
+            <Input
+              id="api-key"
+              type="password"
+              placeholder="AIza..."
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+            />
+          </div>
+          <Button 
+            onClick={() => {
+              if (apiKey.trim()) {
+                setShowApiKeyInput(false);
+                initializeGoogleMaps();
+              } else {
+                toast({
+                  title: "API Key requerido",
+                  description: "Por favor ingresa un API key válido",
+                  variant: "destructive"
+                });
+              }
+            }}
+            className="w-full"
+            disabled={!apiKey.trim()}
+          >
+            Cargar Mapa
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Info de seguridad */}
-      <Card className="border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
-        <CardContent className="pt-4">
-          <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
-            <Shield className="h-4 w-4" />
-            <span className="text-sm font-medium">Conexión Segura</span>
-            <CheckCircle className="h-4 w-4" />
-          </div>
-          <p className="text-xs text-green-700 dark:text-green-300 mt-1">
-            API key protegido mediante Supabase Edge Functions
-          </p>
-        </CardContent>
-      </Card>
+      {!showApiKeyInput && (
+        <Card className="border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
+              <Shield className="h-4 w-4" />
+              <span className="text-sm font-medium">Conexión Segura</span>
+              <CheckCircle className="h-4 w-4" />
+            </div>
+            <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+              {apiKey ? 'API key temporal configurado' : 'API key protegido mediante Supabase Edge Functions'}
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {isMapReady && (
         <div className="space-y-4">
