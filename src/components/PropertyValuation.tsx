@@ -891,7 +891,7 @@ const PropertyValuation = () => {
                             className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
                           <p className="text-xs text-muted-foreground mt-1">
-                            🏗️ Solo el área techada de la casa (sin patio)
+                            🏗️ Solo el área techada de la casa (sin patio). Si la construcción es de 2 niveles o más, se deberán sumar dichas áreas de construcción por cada nivel
                           </p>
                         </div>
                       </div>
