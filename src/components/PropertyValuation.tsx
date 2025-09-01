@@ -687,7 +687,7 @@ const PropertyValuation = () => {
         return [];
       }
 
-      return data ? (Array.isArray(data) ? data : [data]) : [];
+      return data || [];
     } catch (error) {
       console.error('Error fetching comparables:', error);
       return [];
