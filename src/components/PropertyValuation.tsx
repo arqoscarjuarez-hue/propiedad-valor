@@ -775,8 +775,64 @@ const PropertyValuation = () => {
                   </div>
                 )}
 
-                {/* Contenido de tabs omitido por brevedad pero mantendría el resto igual */}
-                
+                {/* Tab de Inicio - Setup */}
+                <TabsContent value="setup" className="space-y-6">
+                  <div className="text-center space-y-4">
+                    <div className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
+                      <h3 className="text-2xl font-bold text-purple-800 dark:text-purple-200 mb-2">
+                        ¡Bienvenido al Sistema de Avalúos! 🏠
+                      </h3>
+                      <p className="text-purple-600 dark:text-purple-300">
+                        Obten el valor real de tu propiedad de forma profesional y gratuita
+                      </p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div className="text-3xl mb-3">📍</div>
+                        <h4 className="font-semibold text-lg mb-2">Ubicación Precisa</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Selecciona la ubicación exacta de tu propiedad en el mapa
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div className="text-3xl mb-3">🏡</div>
+                        <h4 className="font-semibold text-lg mb-2">Características</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Ingresa las características específicas de tu inmueble
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div className="text-3xl mb-3">📊</div>
+                        <h4 className="font-semibold text-lg mb-2">Análisis de Mercado</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Comparamos con propiedades similares en tu zona
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div className="text-3xl mb-3">💰</div>
+                        <h4 className="font-semibold text-lg mb-2">Valor Final</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Recibe el valor estimado de tu propiedad al instante
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-8">
+                      <Button 
+                        onClick={() => setCurrentTab('tipo')}
+                        className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg font-semibold"
+                      >
+                        Comenzar Avalúo 🚀
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* Resto de tabs - manteniendo la estructura existente */}
               </Tabs>
             </CardContent>
           </Card>
