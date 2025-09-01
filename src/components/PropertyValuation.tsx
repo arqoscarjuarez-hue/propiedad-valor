@@ -494,7 +494,7 @@ const PropertyValuation = () => {
               {/* PESTAÑAS PRINCIPALES - SIEMPRE VISIBLES CON GRADIENTES LLAMATIVOS */}
               <div className="mb-8">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-5 gap-2 h-auto p-2 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-2xl border-2 border-violet-300 shadow-2xl backdrop-blur-sm">
+                  <TabsList className="grid w-full grid-cols-6 gap-2 h-auto p-2 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-2xl border-2 border-violet-300 shadow-2xl backdrop-blur-sm">
                     <TabsTrigger 
                       value="estrato" 
                       className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-violet-600 data-[state=active]:via-purple-600 data-[state=active]:to-fuchsia-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-violet-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-violet-200"
@@ -567,6 +567,22 @@ const PropertyValuation = () => {
                       </div>
                     </TabsTrigger>
                     
+                    
+                    <TabsTrigger 
+                      value="depreciacion"
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-600 data-[state=active]:via-purple-600 data-[state=active]:to-indigo-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-indigo-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-indigo-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          activeTab === 'depreciacion' 
+                            ? 'bg-gradient-to-r from-white to-indigo-50 text-indigo-700 ring-2 ring-indigo-300'
+                            : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          📉
+                        </div>
+                        <span className={activeTab === 'depreciacion' ? 'text-white' : 'text-gray-700'}>📉 Depreciación</span>
+                      </div>
+                    </TabsTrigger>
                     
                     <TabsTrigger
                       value="valuacion" 
@@ -768,9 +784,82 @@ const PropertyValuation = () => {
                        </CardContent>
                     </Card>
                   </TabsContent>
+                  
+                  {/* Paso 5: Depreciación */}
+                  <TabsContent value="depreciacion" className="mt-6">
+                    <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
+                      <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            📉
+                          </div>
+                          📉 Depreciación - Estado de Conservación
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="bg-white rounded-lg p-6 border-2 border-indigo-200 shadow-lg">
+                          <h3 className="text-xl font-bold text-center text-indigo-800 mb-6">ESTADO CONSERVACIÓN</h3>
+                          
+                          <div className="overflow-hidden rounded-lg border-2 border-indigo-300">
+                            <table className="w-full">
+                              <thead className="bg-indigo-100">
+                                <tr>
+                                  <th className="px-6 py-4 text-left font-bold text-indigo-800 text-lg border-r border-indigo-300">CALIFICACIÓN</th>
+                                  <th className="px-6 py-4 text-left font-bold text-indigo-800 text-lg">ESTADO</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-indigo-200">
+                                <tr className="hover:bg-indigo-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">1.0000</td>
+                                  <td className="px-6 py-3 font-medium text-lg">NUEVO</td>
+                                </tr>
+                                <tr className="hover:bg-indigo-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9968</td>
+                                  <td className="px-6 py-3 font-medium text-lg">BUENO</td>
+                                </tr>
+                                <tr className="hover:bg-indigo-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9748</td>
+                                  <td className="px-6 py-3 font-medium text-lg">MEDIO</td>
+                                </tr>
+                                <tr className="hover:bg-indigo-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9191</td>
+                                  <td className="px-6 py-3 font-medium text-lg">REGULAR</td>
+                                </tr>
+                                <tr className="hover:bg-blue-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.8190</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-blue-600">REPARACIONES SENCILLAS</td>
+                                </tr>
+                                <tr className="hover:bg-blue-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.6680</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-blue-600">REPARACIONES MEDIAS</td>
+                                </tr>
+                                <tr className="hover:bg-orange-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.4740</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-orange-600">REPARACIONES IMPORTANTES</td>
+                                </tr>
+                                <tr className="hover:bg-red-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.2480</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-red-600">DAÑOS GRAVES</td>
+                                </tr>
+                                <tr className="hover:bg-red-50">
+                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.1350</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-red-700">EN DESECHO</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          
+                          <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                            <p className="text-sm text-indigo-700 text-center">
+                              💡 Esta tabla muestra los factores de depreciación aplicados según el estado de conservación de la propiedad.
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
 
-                   {/* Paso 5: Depreciación */}
-                  {/* Paso 5: Valuación */}
+                  {/* Paso 6: Valuación */}
                   <TabsContent value="valuacion" className="mt-6">
                     <Card className="border-2 border-pink-200 shadow-xl bg-gradient-to-br from-pink-50/50 to-rose-50/50">
                       <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500 text-white">
