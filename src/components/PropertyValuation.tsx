@@ -1035,28 +1035,30 @@ const PropertyValuation = () => {
                       </div>
 
                       <div className="space-y-6">
-                        {/* Área de Terreno */}
-                        <div className="space-y-3">
-                          <Label htmlFor="area" className="text-base font-semibold">
-                            🌱 Área de Terreno (metros cuadrados) *
-                          </Label>
-                          <Input 
-                            id="area"
-                            type="number" 
-                            value={propertyData.area || ''}
-                            onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                            placeholder="Ejemplo: 200"
-                            className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
-                          </p>
-                        </div>
+                        {/* Área de Terreno - Solo mostrar si NO es apartamento */}
+                        {propertyData.tipoPropiedad !== 'apartamento' && (
+                          <div className="space-y-3">
+                            <Label htmlFor="area" className="text-base font-semibold">
+                              🌱 Área de Terreno (metros cuadrados) *
+                            </Label>
+                            <Input 
+                              id="area"
+                              type="number" 
+                              value={propertyData.area || ''}
+                              onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                              placeholder="Ejemplo: 200"
+                              className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                              🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
+                            </p>
+                          </div>
+                        )}
 
                         {/* Área Total de Construcción */}
                         <div className="space-y-3">
                           <Label htmlFor="construction_area" className="text-base font-semibold">
-                            🏠 Área Total de Construcción (metros cuadrados) *
+                            {propertyData.tipoPropiedad === 'apartamento' ? '🏢 Área del Apartamento (metros cuadrados) *' : '🏠 Área Total de Construcción (metros cuadrados) *'}
                           </Label>
                           <Input 
                             id="construction_area"
@@ -1067,7 +1069,10 @@ const PropertyValuation = () => {
                             className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
                           />
                           <p className="text-xs text-muted-foreground">
-                            🏗️ El área total construida (todas las habitaciones, baños, cocina, etc.)
+                            {propertyData.tipoPropiedad === 'apartamento' 
+                              ? '🏢 El área total del apartamento (todas las habitaciones, baños, cocina, etc.)'
+                              : '🏗️ El área total construida (todas las habitaciones, baños, cocina, etc.)'
+                            }
                           </p>
                         </div>
 
@@ -1078,7 +1083,10 @@ const PropertyValuation = () => {
                               <div className="flex items-center gap-2">
                                 <span className="text-green-600">✅</span>
                                 <p className="text-green-800 font-medium text-sm">
-                                  ¡Excelente! Terreno: {propertyData.area}m² | Construcción: {propertyData.construction_area}m²
+                                  {propertyData.tipoPropiedad === 'apartamento' 
+                                    ? `¡Excelente! Área del apartamento: ${propertyData.construction_area}m²`
+                                    : `¡Excelente! Terreno: ${propertyData.area}m² | Construcción: ${propertyData.construction_area}m²`
+                                  }
                                 </p>
                               </div>
                               <Button 
