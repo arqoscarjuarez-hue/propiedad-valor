@@ -554,11 +554,11 @@ const PropertyValuation = () => {
                   <TabsTrigger value="tipo" className="text-xs">
                     {isStep2Complete() ? '✅' : '3️⃣'} Detalles
                   </TabsTrigger>
-                  <TabsTrigger value="ubicacion" className="text-xs">
-                    {isStep3Complete() ? '✅' : '4️⃣'} Ubicación
-                  </TabsTrigger>
                   <TabsTrigger value="caracteristicas" className="text-xs">
-                    {isStep4Complete() ? '✅' : '5️⃣'} Área
+                    {isStep3Complete() ? '✅' : '4️⃣'} Área
+                  </TabsTrigger>
+                  <TabsTrigger value="ubicacion" className="text-xs">
+                    {isStep4Complete() ? '✅' : '5️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger value="valuacion" className="text-xs">
                     {isStep5Complete() ? '✅' : '6️⃣'} Resultado
@@ -1033,13 +1033,13 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Paso 4: Estado de Conservación */}
-                <TabsContent value="ubicacion" className="mt-6">
+                {/* Paso 4: Área y Características */}
+                <TabsContent value="caracteristicas" className="mt-6">
                   <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-yellow-50/50">
                     <CardHeader className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep5Complete() ? '✓' : '4'}
+                          {isStep3Complete() ? '✓' : '4'}
                         </div>
                         🔧 Paso 4: ¿En qué estado está tu casa?
                       </CardTitle>
@@ -1122,49 +1122,55 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Paso 5: Descripción Adicional */}
-                <TabsContent value="caracteristicas" className="mt-6">
+                {/* Paso 5: Ubicación */}
+                <TabsContent value="ubicacion" className="mt-6">
                   <Card className="border-2 border-teal-200 shadow-xl bg-gradient-to-br from-teal-50/50 to-cyan-50/50">
                     <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          5
+                          {isStep4Complete() ? '✓' : '5'}
                         </div>
-                        ✍️ Paso 5: Cuéntanos más de tu casa (Opcional)
+                        📍 Paso 5: ¿Dónde está tu casa?
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>💬 ¿Tiene algo especial tu casa?</strong><br />
-                          Si tu casa tiene algo especial como piscina, jardín grande, vista bonita, o cualquier cosa que la hace única, 
-                          cuéntanos aquí. ¡Esto puede hacer que valga más!
+                          <strong>📍 ¿Dónde está exactamente tu casa?</strong><br />
+                          Ubica tu casa en el mapa para que podamos calcular mejor el precio. 
+                          La ubicación es muy importante porque en algunos barrios las casas valen más.
                         </p>
                       </div>
 
-                      <div>
-                        <Label htmlFor="descripcion" className="text-base font-semibold mb-3 block">
-                          📝 Descripción Especial (No es obligatorio)
-                        </Label>
-                        <Textarea 
-                          id="descripcion"
-                          value={propertyData.descripcion}
-                          onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                          placeholder="Ejemplo: Tiene una piscina grande, jardín con árboles frutales, vista al mar, cerca del centro comercial..."
-                          rows={6}
-                          className="border-2 focus:border-teal-500 hover:border-teal-400 transition-colors"
+                      <div className="space-y-4">
+                        <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Ubica exactamente dónde está tu casa/terreno en el mapa.
+                        </p>
+                        <FreeLocationMap
+                          onLocationChange={(lat, lng, address) => {
+                            handleInputChange('latitud', lat);
+                            handleInputChange('longitud', lng);
+                            handleInputChange('direccionCompleta', address);
+                          }}
+                          initialLat={13.7042}
+                          initialLng={-89.2073}
+                          initialAddress={propertyData.direccionCompleta}
                         />
-                        <p className="text-xs text-muted-foreground mt-2">
-                          🌟 <strong>Ideas de qué escribir:</strong> Piscina, jardín, vista, ubicación especial, acabados de lujo, 
-                          cercanía a escuelas/centros comerciales, seguridad, etc.
-                        </p>
-                      </div>
+                        {propertyData.direccionCompleta && (
+                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
+                            <p className="text-sm text-green-800">
+                              <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
+                            </p>
+                          </div>
+                        )}
 
-                      <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-green-800 text-xs">
-                          💡 <strong>¡No te preocupes!</strong> Este paso es opcional. Si no tienes nada especial que agregar, 
-                          puedes dejarlo vacío y pasar al siguiente paso para ver el resultado.
-                        </p>
+                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-yellow-800 text-xs">
+                            🎯 <strong>¿Por qué necesitamos esto?</strong> La ubicación es súper importante para el precio. 
+                            Una casa en el centro de la ciudad vale diferente que una en las afueras. También nos ayuda a encontrar casas similares para comparar.
+                          </p>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
