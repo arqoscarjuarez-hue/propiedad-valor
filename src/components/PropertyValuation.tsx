@@ -855,8 +855,7 @@ const PropertyValuation = () => {
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
                           <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio, colonia o residencial?</strong><br />
-                          Según las normas internacionales de Latinoamérica, clasifica el barrio, colonia o residencial donde está ubicada tu propiedad. 
-                          <strong>Esta selección es crucial para encontrar comparables exactos del mismo estrato social.</strong>
+                          Según las normas internacionales de Latinoamérica, clasifica el barrio, colonia o residencial donde está ubicada tu propiedad.
                         </p>
                       </div>
 
