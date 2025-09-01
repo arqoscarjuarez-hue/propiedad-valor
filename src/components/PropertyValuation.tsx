@@ -151,16 +151,29 @@ export const estratoMultipliers: Record<EstratoSocial, number> = {
 
 // Factores de depreciación por estado de conservación (TODOS LOS FACTORES)
 const conservationFactors: Record<string, number> = {
-  'nuevo': 1.0000,
-  'bueno': 0.9968,
-  'medio': 0.9748,
-  'regular': 0.9191,
-  'reparaciones_sencillas': 0.8190,
-  'reparaciones_medias': 0.6680,
-  'reparaciones_importantes': 0.4740,
-  'danos_graves': 0.2480,
-  'en_desecho': 0.1350
+  'NUEVO': 1.0000,
+  'BUENO': 0.9968,
+  'MEDIO': 0.9748,
+  'REGULAR': 0.9191,
+  'REPARACIONES SENCILLAS': 0.8190,
+  'REPARACIONES MEDIAS': 0.6680,
+  'REPARACIONES IMPORTANTES': 0.4740,
+  'DAÑOS GRAVES': 0.2480,
+  'EN DESECHO': 0.1350
 };
+
+// Estados de conservación para el dropdown
+const conservationStates = [
+  { value: 'NUEVO', label: 'NUEVO', factor: 1.0000 },
+  { value: 'BUENO', label: 'BUENO', factor: 0.9968 },
+  { value: 'MEDIO', label: 'MEDIO', factor: 0.9748 },
+  { value: 'REGULAR', label: 'REGULAR', factor: 0.9191 },
+  { value: 'REPARACIONES SENCILLAS', label: 'REPARACIONES SENCILLAS', factor: 0.8190 },
+  { value: 'REPARACIONES MEDIAS', label: 'REPARACIONES MEDIAS', factor: 0.6680 },
+  { value: 'REPARACIONES IMPORTANTES', label: 'REPARACIONES IMPORTANTES', factor: 0.4740 },
+  { value: 'DAÑOS GRAVES', label: 'DAÑOS GRAVES', factor: 0.2480 },
+  { value: 'EN DESECHO', label: 'EN DESECHO', factor: 0.1350 }
+];
 
 // Multiplicadores por clase social
 export const classMultipliers: Record<string, number> = {
@@ -824,17 +837,17 @@ const PropertyValuation = () => {
                                  <SelectTrigger className="border-2 focus:border-indigo-500 bg-white">
                                    <SelectValue placeholder="Selecciona el estado de conservación de la propiedad" />
                                  </SelectTrigger>
-                                 <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50 max-h-60 overflow-y-auto">
-                                   <SelectItem value="nuevo" className="font-medium hover:bg-indigo-50 cursor-pointer">✨ NUEVO</SelectItem>
-                                   <SelectItem value="bueno" className="font-medium hover:bg-indigo-50 cursor-pointer">✅ BUENO</SelectItem>
-                                   <SelectItem value="medio" className="font-medium hover:bg-indigo-50 cursor-pointer">🔵 MEDIO</SelectItem>
-                                   <SelectItem value="regular" className="font-medium hover:bg-indigo-50 cursor-pointer">⚠️ REGULAR</SelectItem>
-                                   <SelectItem value="reparaciones_sencillas" className="font-medium hover:bg-yellow-50 cursor-pointer">🔧 REPARACIONES SENCILLAS</SelectItem>
-                                   <SelectItem value="reparaciones_medias" className="font-medium hover:bg-yellow-50 cursor-pointer">🛠️ REPARACIONES MEDIAS</SelectItem>
-                                   <SelectItem value="reparaciones_importantes" className="font-medium hover:bg-orange-50 cursor-pointer">⚒️ REPARACIONES IMPORTANTES</SelectItem>
-                                   <SelectItem value="danos_graves" className="font-medium hover:bg-red-50 cursor-pointer">💥 DAÑOS GRAVES</SelectItem>
-                                   <SelectItem value="en_desecho" className="font-medium hover:bg-red-50 cursor-pointer">🚫 EN DESECHO</SelectItem>
-                                 </SelectContent>
+                                  <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50 max-h-60 overflow-y-auto">
+                                    {conservationStates.map((state) => (
+                                      <SelectItem 
+                                        key={state.value} 
+                                        value={state.value} 
+                                        className="font-medium hover:bg-indigo-50 cursor-pointer py-3"
+                                      >
+                                        {state.label} ({state.factor.toFixed(4)})
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
                                </Select>
                              </div>
                            </div>
