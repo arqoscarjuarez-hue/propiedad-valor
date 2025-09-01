@@ -1466,42 +1466,61 @@ const PropertyValuation = () => {
                           
                            {/* Panel de explicación detallada - SIEMPRE VISIBLE CUANDO HAY SELECCIÓN */}
                            {selectedConservationState && conservationExplanations[selectedConservationState] && (
-                            <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-300 shadow-md">
-                              <div className="flex items-center justify-between mb-4">
-                                <h4 className="text-xl font-bold text-indigo-800">
-                                  📋 {selectedConservationState}
-                                </h4>
-                                <button 
-                                  onClick={() => setSelectedConservationState(null)}
-                                  className="text-indigo-600 hover:text-indigo-800 text-xl font-bold"
-                                >
-                                  ✕
-                                </button>
-                              </div>
-                              
-                              <p className="text-indigo-700 font-medium text-lg mb-4">
-                                {conservationExplanations[selectedConservationState].description}
-                              </p>
-                              
-                              <div className="space-y-2">
-                                <h5 className="font-semibold text-indigo-800">🔍 Características detalladas:</h5>
-                                <ul className="space-y-2">
-                                  {conservationExplanations[selectedConservationState].details.map((detail, index) => (
-                                    <li key={index} className="flex items-start gap-2 text-indigo-700">
-                                      <span className="text-indigo-500 font-bold">•</span>
-                                      <span>{detail}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          )}
+                             <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-xl border-2 border-blue-300 shadow-xl animate-fade-in">
+                               <div className="flex items-center justify-between mb-6">
+                                 <div className="flex items-center gap-3">
+                                   <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                                     ℹ️
+                                   </div>
+                                   <div>
+                                     <h4 className="text-2xl font-bold text-blue-800">
+                                       {selectedConservationState}
+                                     </h4>
+                                     <p className="text-sm text-blue-600">Estado de conservación seleccionado</p>
+                                   </div>
+                                 </div>
+                                 <button 
+                                   onClick={() => setSelectedConservationState(null)}
+                                   className="text-blue-600 hover:text-blue-800 text-2xl font-bold hover:bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
+                                   title="Cerrar explicación"
+                                 >
+                                   ✕
+                                 </button>
+                               </div>
+                               
+                               <div className="bg-white rounded-lg p-4 mb-4 border border-blue-200 shadow-inner">
+                                 <p className="text-blue-800 font-semibold text-lg leading-relaxed">
+                                   📖 {conservationExplanations[selectedConservationState].description}
+                                 </p>
+                               </div>
+                               
+                               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                                 <h5 className="font-bold text-blue-800 mb-3 text-lg flex items-center gap-2">
+                                   🔍 Características detalladas:
+                                 </h5>
+                                 <ul className="space-y-3">
+                                   {conservationExplanations[selectedConservationState].details.map((detail, index) => (
+                                     <li key={index} className="flex items-start gap-3 text-blue-700">
+                                       <span className="text-blue-500 font-bold text-lg mt-0.5">•</span>
+                                       <span className="font-medium">{detail}</span>
+                                     </li>
+                                   ))}
+                                 </ul>
+                               </div>
+                               
+                               <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                 <p className="text-green-800 text-sm font-semibold text-center">
+                                   📊 Factor de depreciación aplicado: <span className="text-lg">{conservationFactors[selectedConservationState]?.toFixed(4)}</span>
+                                 </p>
+                               </div>
+                             </div>
+                           )}
                           
-                          <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                            <p className="text-sm text-indigo-700 text-center">
-                              💡 Haga clic en cualquier estado para ver su explicación detallada.
-                            </p>
-                          </div>
+                           <div className="mt-6 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-300 shadow-md">
+                             <p className="text-yellow-800 text-center font-semibold">
+                               💡 <strong>Instrucciones:</strong> Haga clic en cualquier estado para seleccionarlo y ver su explicación detallada automáticamente.
+                             </p>
+                           </div>
                         </div>
                       </CardContent>
                     </Card>
