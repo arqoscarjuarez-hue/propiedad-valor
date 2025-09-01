@@ -364,6 +364,24 @@ const PropertyValuation = () => {
     }
   };
 
+  // Normaliza el tipo de propiedad al formato esperado por la BD y define sinónimos
+  const normalizePropertyType = (value: string) => {
+    const v = (value || '').toLowerCase().trim();
+    if (['local comercial','local_comercial','comercial','local'].includes(v)) {
+      return { rpcType: 'local_comercial', matchSet: ['local_comercial','local comercial','comercial','local'] };
+    }
+    if (['apartamento','departamento','depto','apto','apartment'].includes(v)) {
+      return { rpcType: 'apartamento', matchSet: ['apartamento','departamento','depto','apto','apartment'] };
+    }
+    if (['casa','house','vivienda'].includes(v)) {
+      return { rpcType: 'casa', matchSet: ['casa','house','vivienda'] };
+    }
+    if (['terreno','lote','parcela','solar','land'].includes(v)) {
+      return { rpcType: 'terreno', matchSet: ['terreno','lote','parcela','solar','land'] };
+    }
+    return { rpcType: v, matchSet: [v] };
+  };
+
   // Función de avalúo internacional por método comparativo
   const performValuation = async () => {
     setIsCalculating(true);
@@ -395,11 +413,14 @@ const PropertyValuation = () => {
           estratoSocial = 'medio_medio'; // Por defecto, podríamos mejorarlo más adelante
         }
 
+        const normalizedType = normalizePropertyType(propertyData.tipoPropiedad);
+
         console.log('📊 Parámetros de búsqueda:', {
           latitud: propertyData.latitud,
           longitud: propertyData.longitud,
           estrato: estratoSocial,
-          tipoPropiedad: propertyData.tipoPropiedad
+          tipoPropiedadSeleccionada: propertyData.tipoPropiedad,
+          tipoPropiedadRPC: normalizedType.rpcType
         });
 
         // Usar función RPC con radio progresivo para obtener comparables cercanos
@@ -407,7 +428,7 @@ const PropertyValuation = () => {
           target_lat: propertyData.latitud,
           target_lng: propertyData.longitud,
           target_estrato: estratoSocial,
-          target_property_type: propertyData.tipoPropiedad
+          target_property_type: normalizedType.rpcType
         });
 
         if (error) {
@@ -436,7 +457,10 @@ const PropertyValuation = () => {
             const minArea = propertyData.area * 0.7;
             const maxArea = propertyData.area * 1.3;
             comparablesData = withDistance
-              .filter((c: any) => c.total_area >= minArea && c.total_area <= maxArea && (c.property_type === propertyData.tipoPropiedad))
+              .filter((c: any) => {
+                const pt = String(c.property_type || '').toLowerCase();
+                return c.total_area >= minArea && c.total_area <= maxArea && normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(pt);
+              })
               .slice(0, 5)
               .map((comp: any) => ({
                 ...comp,
@@ -461,7 +485,8 @@ const PropertyValuation = () => {
                 ? calculateDistance(propertyData.latitud, propertyData.longitud, comp.latitude, comp.longitude)
                 : undefined);
               const areaOk = comp.total_area >= minArea && comp.total_area <= maxArea;
-              return d !== undefined && d <= r && areaOk && comp.property_type === propertyData.tipoPropiedad;
+              const pt = String(comp.property_type || '').toLowerCase();
+              return d !== undefined && d <= r && areaOk && normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(pt);
             }).sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
             if (selected.length >= 3) break;
           }
