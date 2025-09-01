@@ -165,8 +165,8 @@ const countriesConfig = {
     currency: 'MXN', 
     symbol: '$', 
     flag: '🇲🇽',
-    basePricePerM2USD: 250,
-    economicFactor: 0.6,
+    basePricePerM2USD: 150,
+    economicFactor: 0.4,
     exchangeRate: 17.0
   },
   
@@ -203,8 +203,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇸🇻',
-    basePricePerM2USD: 200,
-    economicFactor: 0.5,
+    basePricePerM2USD: 120,
+    economicFactor: 0.3,
     exchangeRate: 1.0
   },
   'nicaragua': { 
@@ -241,8 +241,8 @@ const countriesConfig = {
     currency: 'COP', 
     symbol: '$', 
     flag: '🇨🇴',
-    basePricePerM2USD: 250,
-    economicFactor: 0.5,
+    basePricePerM2USD: 140,
+    economicFactor: 0.3,
     exchangeRate: 4200.0
   },
   'venezuela': { 
@@ -268,8 +268,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇪🇨',
-    basePricePerM2USD: 180,
-    economicFactor: 0.4,
+    basePricePerM2USD: 100,
+    economicFactor: 0.25,
     exchangeRate: 1.0
   },
   'peru': { 
@@ -277,8 +277,8 @@ const countriesConfig = {
     currency: 'PEN', 
     symbol: 'S/', 
     flag: '🇵🇪',
-    basePricePerM2USD: 220,
-    economicFactor: 0.5,
+    basePricePerM2USD: 130,
+    economicFactor: 0.3,
     exchangeRate: 3.7
   },
   'chile': { 
@@ -603,7 +603,7 @@ const PropertyValuation = () => {
         const ta = Math.round((minAreaFallback + maxAreaFallback) / 2);
         // Precio más realista basado en el país seleccionado
         const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
-        const ppsqm = countryConfig?.basePricePerM2USD || 200; // Precio mucho más bajo por defecto
+        const ppsqm = countryConfig?.basePricePerM2USD || 120; // Precio mucho más bajo por defecto
         comparablesData = [
           {
             id: 'fallback-1',
@@ -640,8 +640,8 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable con 10% de descuento por negociación (más realista)
-            let adjustedPrice = comp.price_usd * 0.90;
+            // Precio base del comparable con 20% de descuento por negociación
+            let adjustedPrice = comp.price_usd * 0.80;
 
             // Ajuste por diferencia de área (más conservador para evitar inflación)
             const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
@@ -678,7 +678,7 @@ const PropertyValuation = () => {
       // 3. MÉTODO DE RESPALDO: Precio por m² del país
       if (estimatedValueUSD === 0 || comparablesData.length === 0) {
         console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
-        const basePricePerM2 = countryConfig.basePricePerM2USD || 200;
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 120;
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
         // NO usar factor económico adicional, ya está incluido en el precio base
         const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
