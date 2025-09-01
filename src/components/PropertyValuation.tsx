@@ -573,9 +573,9 @@ const PropertyValuation = () => {
                   <p className="text-sm text-center">
                     🎯 <strong>¡Progreso del Avalúo!</strong><br />
                     {isStep0Complete() && <span className="text-green-600">✅ País configurado</span>}
-                    {isStep0Complete() && isStep3Complete() && <span className="text-green-600"> • ✅ Tipo seleccionado</span>}
-                    {isStep1Complete() && <span className="text-green-600"> • ✅ Ubicación marcada</span>}
-                    {isStep2Complete() && <span className="text-green-600"> • ✅ Área ingresada</span>}
+                    {isStep0Complete() && isStep1Complete() && <span className="text-green-600"> • ✅ Tipo seleccionado</span>}
+                    {isStep2Complete() && <span className="text-green-600"> • ✅ Ubicación marcada</span>}
+                    {isStep3Complete() && <span className="text-green-600"> • ✅ Área ingresada</span>}
                     {!isStep0Complete() && <span className="text-amber-600">⏳ Selecciona tu país para empezar</span>}
                   </p>
                 </div>
@@ -723,19 +723,25 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-
-                {/* Paso 3: Tipo de Propiedad */}
+                {/* Paso 2: Tipo de Propiedad */}
                 <TabsContent value="tipo" className="mt-6">
-                  <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-green-50/50 to-emerald-50/50">
-                    <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                  <Card className="border-2 border-emerald-200 shadow-xl bg-gradient-to-br from-emerald-50/50 to-green-50/50">
+                    <CardHeader className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep4Complete() ? '✓' : '4'}
+                          {isStep1Complete() ? '✓' : '2'}
                         </div>
-                        🏠 Paso 4: Tipo de Propiedad
+                        🏠 Paso 2: ¿Qué tipo de propiedad tienes?
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>🏠 ¿Qué tipo de casa, apartamento o terreno tienes?</strong><br />
+                          Esto es súper importante porque cada tipo de propiedad tiene un precio diferente.
+                        </p>
+                      </div>
+
                       <div className="space-y-4">
                         <Label className="text-base font-semibold">
                           🏠 ¿Qué tipo de propiedad tienes? *
@@ -759,7 +765,7 @@ const PropertyValuation = () => {
                         </Select>
 
                         {/* Confirmación cuando se complete */}
-                        {isStep2Complete() && (
+                        {isStep1Complete() && (
                           <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
@@ -787,6 +793,26 @@ const PropertyValuation = () => {
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+                {/* Paso 3: Ubicación */}
+                <TabsContent value="ubicacion" className="mt-6">
+                  <Card className="border-2 border-teal-200 shadow-xl bg-gradient-to-br from-teal-50/50 to-cyan-50/50">
+                    <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep2Complete() ? '✓' : '3'}
+                        </div>
+                        📍 Paso 3: ¿Dónde está tu casa?
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>📍 ¿Dónde está exactamente tu casa?</strong><br />
+                          Ubica tu casa en el mapa para que podamos calcular mejor el precio. 
+                          La ubicación es muy importante porque en algunos barrios las casas valen más.
+                        </p>
+                      </div>
 
                       <div className="space-y-4">
                         <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
@@ -830,6 +856,8 @@ const PropertyValuation = () => {
                       </div>
                     </CardContent>
                   </Card>
+                </TabsContent>
+
                 {/* Paso 4: Área */}
                 <TabsContent value="area" className="mt-6">
                   <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-amber-50/50">
@@ -970,12 +998,21 @@ const PropertyValuation = () => {
 
                         {/* Confirmación cuando se complete */}
                         {isStep4Complete() && (
-                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                            <div className="flex items-center gap-2">
-                              <span className="text-green-600">✅</span>
-                              <p className="text-green-800 font-medium text-sm">
-                                ¡Perfecto! Estado: {propertyData.estadoConservacion}
-                              </p>
+                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                <p className="text-green-800 font-medium text-sm">
+                                  ¡Perfecto! Estado: {propertyData.estadoConservacion}
+                                </p>
+                              </div>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                ¡Calcular Valor! →
+                              </Button>
                             </div>
                           </div>
                         )}
@@ -986,69 +1023,6 @@ const PropertyValuation = () => {
                           🎯 <strong>¿Por qué necesitamos esto?</strong> El estado de tu casa cambia mucho el precio. 
                           Una casa nueva vale mucho más que una que necesita arreglos. Es como comparar un carro nuevo vs uno usado.
                         </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Paso 5: Ubicación */}
-                <TabsContent value="ubicacion" className="mt-6">
-                  <Card className="border-2 border-teal-200 shadow-xl bg-gradient-to-br from-teal-50/50 to-cyan-50/50">
-                    <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
-                      <CardTitle className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep1Complete() ? '✓' : '3'}
-                        </div>
-                        📍 Paso 3: ¿Dónde está tu casa?
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏠 ¿Qué tipo de casa, apartamento o terreno tienes?</strong><br />
-                          Esto es súper importante porque cada tipo de propiedad tiene un precio diferente.
-                        </p>
-                      </div>
-
-                      <div className="space-y-4">
-                        <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Ubica exactamente dónde está tu casa/terreno en el mapa.
-                        </p>
-                        <FreeLocationMap
-                          onLocationChange={(lat, lng, address) => {
-                            handleInputChange('latitud', lat);
-                            handleInputChange('longitud', lng);
-                            handleInputChange('direccionCompleta', address);
-                            setTimeout(goToNextStep, 1000);
-                          }}
-                          initialLat={13.7042}
-                          initialLng={-89.2073}
-                          initialAddress={propertyData.direccionCompleta}
-                        />
-                        {propertyData.direccionCompleta && (
-                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded animate-fade-in">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm text-green-800">
-                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
-                              </p>
-                              <Button 
-                                onClick={goToNextStep}
-                                size="sm"
-                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
-                              >
-                                Siguiente Paso →
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                          <p className="text-yellow-800 text-xs">
-                            🎯 <strong>¿Por qué necesitamos esto?</strong> La ubicación es súper importante para el precio. 
-                            Una casa en el centro de la ciudad vale diferente que una en las afueras. También nos ayuda a encontrar casas similares para comparar.
-                          </p>
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
