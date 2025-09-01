@@ -83,68 +83,35 @@ interface Comparable {
   estrato_social: any;
 }
 
-// Tipos de estrato social - todos los que existen en la DB
-export type EstratoSocial = 
-  | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
-  | 'medio_bajo' | 'medio_medio' | 'medio_alto' 
-  | 'alto_medio' | 'alto_alto';
+// Tipos de estrato social - normas internacionales de Latinoamérica
+export type EstratoSocial = 'bajo' | 'medio' | 'alto';
 
 // Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  // Barrios Pobres
-  'bajo_bajo': 'Barrio Muy Pobre - Sin casi servicios',
-  'bajo_medio': 'Barrio Pobre - Pocos servicios',
-  'bajo_alto': 'Barrio Humilde - Servicios básicos',
-  
-  // Barrios Normales
-  'medio_bajo': 'Barrio Trabajador - Buenos servicios',
-  'medio_medio': 'Barrio Clase Media - Muy buenos servicios',
-  'medio_alto': 'Barrio Acomodado - Excelentes servicios',
-  
-  // Barrios Ricos
-  'alto_medio': 'Barrio Rico - Zona exclusiva',
-  'alto_alto': 'Barrio Muy Rico - Zona de lujo'
+  'bajo': 'Clase Socioeconómica Baja - Barrios populares con servicios básicos',
+  'medio': 'Clase Socioeconómica Media - Barrios residenciales con buenos servicios',
+  'alto': 'Clase Socioeconómica Alta - Barrios exclusivos con servicios premium'
 };
 
 // Mapeo de estratos a clases sociales simplificadas
 export const estratoToClassMap: Record<EstratoSocial, string> = {
-  // Clase Popular/Baja
-  'bajo_bajo': 'popular',
-  'bajo_medio': 'popular',
-  'bajo_alto': 'popular',
-  
-  // Clase Media
-  'medio_bajo': 'media',
-  'medio_medio': 'media',
-  'medio_alto': 'media',
-  
-  // Clase Alta
-  'alto_medio': 'alta',
-  'alto_alto': 'alta'
+  'bajo': 'popular',
+  'medio': 'media',
+  'alto': 'alta'
 };
 
 // Mapeo inverso: clases a estratos
 export const classToEstratos: Record<string, EstratoSocial[]> = {
-  'popular': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
-  'media': ['medio_bajo', 'medio_medio', 'medio_alto'],
-  'alta': ['alto_medio', 'alto_alto']
+  'popular': ['bajo'],
+  'media': ['medio'],
+  'alta': ['alto']
 };
 
-// Multiplicadores de valor según estrato social
+// Multiplicadores de valor según estrato social - normas internacionales
 export const estratoMultipliers: Record<EstratoSocial, number> = {
-  // Nivel Bajo (0.6-0.9)
-  'bajo_bajo': 0.6,
-  'bajo_medio': 0.8,
-  'bajo_alto': 0.9,
-  
-  // Nivel Medio (0.95-1.2)
-  'medio_bajo': 0.95,
-  'medio_medio': 1.1,
-  'medio_alto': 1.2,
-  
-  // Nivel Alto (1.6-1.8)
-  'alto_medio': 1.6,
-  'alto_alto': 1.8
+  'bajo': 0.8,   // 80% del valor base
+  'medio': 1.0,  // 100% del valor base
+  'alto': 1.4    // 140% del valor base
 };
 
 // Factores de depreciación por estado de conservación
@@ -674,28 +641,18 @@ const PropertyValuation = () => {
                       <div className="space-y-6">
                         {/* SELECCIÓN DE ESTRATO SOCIAL */}
                         <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏘️ Estrato Social del Barrio</h3>
+                          <h3 className="font-semibold mb-2">🏘️ Clase Socioeconómica del Barrio</h3>
                           <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Dime en qué tipo de barrio está tu casa.
+                            Selecciona la clase socioeconómica según las normas internacionales de Latinoamérica.
                           </p>
                           <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
                             <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="¿En qué tipo de barrio está?" />
+                              <SelectValue placeholder="¿Cuál es la clase socioeconómica del barrio?" />
                             </SelectTrigger>
                             <SelectContent>
-                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground">Barrios Populares</div>
-                              <SelectItem value="bajo_bajo">🏚️ Barrio Muy Pobre</SelectItem>
-                              <SelectItem value="bajo_medio">🏠 Barrio Popular</SelectItem>
-                              <SelectItem value="bajo_alto">🏘️ Barrio Popular Mejorado</SelectItem>
-                              
-                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">Barrios de Clase Media</div>
-                              <SelectItem value="medio_bajo">🏘️ Barrio de Clase Media Baja</SelectItem>
-                              <SelectItem value="medio_medio">🏡 Barrio de Clase Media</SelectItem>
-                              <SelectItem value="medio_alto">🏡 Barrio de Clase Media Alta</SelectItem>
-                              
-                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">Barrios Residenciales</div>
-                              <SelectItem value="alto_medio">🏖️ Barrio Residencial</SelectItem>
-                              <SelectItem value="alto_alto">🏰 Barrio Exclusivo</SelectItem>
+                              <SelectItem value="bajo">🏘️ Clase Baja - Barrios populares con servicios básicos</SelectItem>
+                              <SelectItem value="medio">🏡 Clase Media - Barrios residenciales con buenos servicios</SelectItem>
+                              <SelectItem value="alto">🏰 Clase Alta - Barrios exclusivos con servicios premium</SelectItem>
                             </SelectContent>
                           </Select>
                           {propertyData.estratoSocial && (
