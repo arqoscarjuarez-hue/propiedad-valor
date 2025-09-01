@@ -1241,6 +1241,15 @@ const PropertyValuation = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
+                      {/* Información específica para apartamentos */}
+                      {propertyData.tipoPropiedad === 'apartamento' && (
+                        <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
+                          <p className="text-blue-800 text-sm">
+                            🏢 <strong>Valuación de Apartamento:</strong> Para apartamentos, el cálculo se basa únicamente en el área construida del apartamento ({propertyData.construction_area}m²). No se incluye área de terreno ya que los apartamentos no poseen terreno individual.
+                          </p>
+                        </div>
+                      )}
+
                       <div className="text-center py-6">
                         <div className="mb-4">
                           <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
