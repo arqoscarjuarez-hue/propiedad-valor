@@ -347,16 +347,11 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
         </div>
       </div>
 
-      {/* Información de la ubicación seleccionada */}
-      {currentAddress && (
+      {/* Información de la ubicación seleccionada - solo mostrar si no hay dirección fija */}
+      {currentAddress && !fixedAddress && (
         <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <p className="text-sm font-medium text-emerald-800 mb-1">📍 Ubicación seleccionada:</p>
           <p className="text-sm text-emerald-700">{currentAddress}</p>
-          {fixedAddress && (
-            <p className="text-xs text-emerald-600 mt-1 italic">
-              ✓ Dirección confirmada - solo se actualizan las coordenadas
-            </p>
-          )}
         </div>
       )}
 
