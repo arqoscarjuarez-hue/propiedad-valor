@@ -460,6 +460,7 @@ const PropertyValuation = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
+  const [selectedMainStrata, setSelectedMainStrata] = useState<string>('');
 
   const t = translations[selectedLanguage];
 
@@ -1020,48 +1021,151 @@ const PropertyValuation = () => {
                           🏘️ Paso 1: Estrato Social
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <p className="text-muted-foreground mb-4">¿En qué estrato socioeconómico vives?</p>
-                        <Select 
-                          value={propertyData.estratoSocial} 
-                          onValueChange={(value: EstratoSocial) => handleInputChange('estratoSocial', value)}
-                        >
-                          <SelectTrigger className="border-2 focus:border-violet-500 hover:border-violet-400 transition-colors">
-                            <SelectValue placeholder="Selecciona tu estrato socioeconómico" />
-                          </SelectTrigger>
-                           <SelectContent className="max-h-60 bg-white dark:bg-gray-900 z-50">
-                             {/* Nivel Bajo */}
-                             <SelectItem value="bajo_bajo" className="font-medium text-sm py-3">
-                               🏚️ {estratoSocialLabels['bajo_bajo']}
-                             </SelectItem>
-                             <SelectItem value="bajo_medio" className="font-medium text-sm py-3">
-                               🏡 {estratoSocialLabels['bajo_medio']}
-                             </SelectItem>
-                             <SelectItem value="bajo_alto" className="font-medium text-sm py-3">
-                               🏘️ {estratoSocialLabels['bajo_alto']}
-                             </SelectItem>
-                             
-                             {/* Nivel Medio */}
-                             <SelectItem value="medio_bajo" className="font-medium text-sm py-3">
-                               🏙️ {estratoSocialLabels['medio_bajo']}
-                             </SelectItem>
-                             <SelectItem value="medio_alto" className="font-medium text-sm py-3">
-                               🏰 {estratoSocialLabels['medio_alto']}
-                             </SelectItem>
-                             
-                             {/* Nivel Alto */}
-                             <SelectItem value="alto_medio" className="font-medium text-sm py-3">
-                               🗼 {estratoSocialLabels['alto_medio']}
-                             </SelectItem>
-                             <SelectItem value="alto_alto" className="font-medium text-sm py-3">
-                               🏰 {estratoSocialLabels['alto_alto']}
-                             </SelectItem>
-                           </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground mt-3">
-                          💡 Requerido para encontrar propiedades comparables del mismo nivel
-                        </p>
-                      </CardContent>
+                       <CardContent className="p-6">
+                         <p className="text-muted-foreground mb-4">¿En qué estrato socioeconómico vives?</p>
+                         
+                         {!propertyData.estratoSocial && (
+                           <div className="space-y-4">
+                             <h3 className="font-semibold text-lg">Selecciona el nivel principal:</h3>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                               {/* Estrato Bajo */}
+                               <div 
+                                 className="p-4 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                 onClick={() => setSelectedMainStrata('bajo')}
+                               >
+                                 <div className="text-center">
+                                   <span className="text-3xl">🏚️</span>
+                                   <h4 className="font-bold text-lg mt-2">BAJO</h4>
+                                   <p className="text-sm text-muted-foreground">Estratos 1, 2, 3</p>
+                                 </div>
+                               </div>
+                               
+                               {/* Estrato Medio */}
+                               <div 
+                                 className="p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                 onClick={() => setSelectedMainStrata('medio')}
+                               >
+                                 <div className="text-center">
+                                   <span className="text-3xl">🏙️</span>
+                                   <h4 className="font-bold text-lg mt-2">MEDIO</h4>
+                                   <p className="text-sm text-muted-foreground">Estratos 4, 5, 6</p>
+                                 </div>
+                               </div>
+                               
+                               {/* Estrato Alto */}
+                               <div 
+                                 className="p-4 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                 onClick={() => setSelectedMainStrata('alto')}
+                               >
+                                 <div className="text-center">
+                                   <span className="text-3xl">🗼</span>
+                                   <h4 className="font-bold text-lg mt-2">ALTO</h4>
+                                   <p className="text-sm text-muted-foreground">Estratos 7, 8</p>
+                                 </div>
+                               </div>
+                             </div>
+                           </div>
+                         )}
+                         
+                         {selectedMainStrata && !propertyData.estratoSocial && (
+                           <div className="mt-6 space-y-4">
+                             <h3 className="font-semibold text-lg">Ahora selecciona el nivel específico:</h3>
+                             <div className="grid gap-3">
+                               {selectedMainStrata === 'bajo' && (
+                                 <>
+                                   <div 
+                                     className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'bajo_bajo')}
+                                   >
+                                     <span className="font-medium">🏚️ {estratoSocialLabels['bajo_bajo']}</span>
+                                   </div>
+                                   <div 
+                                     className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'bajo_medio')}
+                                   >
+                                     <span className="font-medium">🏡 {estratoSocialLabels['bajo_medio']}</span>
+                                   </div>
+                                   <div 
+                                     className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'bajo_alto')}
+                                   >
+                                     <span className="font-medium">🏘️ {estratoSocialLabels['bajo_alto']}</span>
+                                   </div>
+                                 </>
+                               )}
+                               
+                               {selectedMainStrata === 'medio' && (
+                                 <>
+                                   <div 
+                                     className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'medio_bajo')}
+                                   >
+                                     <span className="font-medium">🏙️ {estratoSocialLabels['medio_bajo']}</span>
+                                   </div>
+                                   <div 
+                                     className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'medio_medio')}
+                                   >
+                                     <span className="font-medium">🏢 {estratoSocialLabels['medio_medio']}</span>
+                                   </div>
+                                   <div 
+                                     className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'medio_alto')}
+                                   >
+                                     <span className="font-medium">🏰 {estratoSocialLabels['medio_alto']}</span>
+                                   </div>
+                                 </>
+                               )}
+                               
+                               {selectedMainStrata === 'alto' && (
+                                 <>
+                                   <div 
+                                     className="p-3 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'alto_medio')}
+                                   >
+                                     <span className="font-medium">🗼 {estratoSocialLabels['alto_medio']}</span>
+                                   </div>
+                                   <div 
+                                     className="p-3 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                     onClick={() => handleInputChange('estratoSocial', 'alto_alto')}
+                                   >
+                                     <span className="font-medium">💎 {estratoSocialLabels['alto_alto']}</span>
+                                   </div>
+                                 </>
+                               )}
+                             </div>
+                             <Button 
+                               variant="outline" 
+                               onClick={() => setSelectedMainStrata('')}
+                               className="mt-4"
+                             >
+                               ← Volver a seleccionar nivel principal
+                             </Button>
+                           </div>
+                         )}
+                         
+                         {propertyData.estratoSocial && (
+                           <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                             <p className="font-semibold text-green-800">
+                               ✅ Estrato seleccionado: {estratoSocialLabels[propertyData.estratoSocial]}
+                             </p>
+                             <Button 
+                               variant="outline" 
+                               onClick={() => {
+                                 handleInputChange('estratoSocial', '');
+                                 setSelectedMainStrata('');
+                               }}
+                               className="mt-2"
+                             >
+                               Cambiar estrato
+                             </Button>
+                           </div>
+                         )}
+                         
+                         <p className="text-xs text-muted-foreground mt-3">
+                           💡 Requerido para encontrar propiedades comparables del mismo nivel
+                         </p>
+                       </CardContent>
                     </Card>
                   </TabsContent>
 
