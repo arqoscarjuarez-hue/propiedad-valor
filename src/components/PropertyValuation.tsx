@@ -1204,10 +1204,16 @@ const PropertyValuation = () => {
                               </div>
                             </div>
                           )}
-                         
-                         <p className="text-xs text-muted-foreground mt-3">
-                           💡 Requerido para encontrar propiedades comparables del mismo nivel
-                         </p>
+                          
+                          <p className="text-xs text-muted-foreground mt-3">
+                            💡 <strong>¿Por qué necesitamos esto?</strong> Para calcular el precio correcto de tu casa, necesitamos saber qué tan rico o pobre es tu barrio. Las casas en barrios ricos valen más que las casas iguales en barrios pobres.
+                          </p>
+                          
+                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-blue-800 text-xs">
+                              🎯 <strong>Importante para el avalúo:</strong> Esta información nos ayuda a encontrar otras casas similares a la tuya en barrios parecidos para comparar precios y darte un avalúo más exacto.
+                            </p>
+                          </div>
                        </CardContent>
                     </Card>
                   </TabsContent>
@@ -1259,11 +1265,17 @@ const PropertyValuation = () => {
                              <div className="flex items-center gap-2">
                                <span className="text-green-600">✅</span>
                                <p className="text-green-800 font-medium text-sm">
-                                 Tipo de propiedad completado: {propertyData.tipoPropiedad}
+                                 ¡Perfecto! Ya sabemos que tienes: {propertyData.tipoPropiedad}
                                </p>
                              </div>
                            </div>
                          )}
+                         
+                         <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                           <p className="text-blue-800 text-xs">
+                             🎯 <strong>¿Por qué necesitamos esto?</strong> Una casa vale diferente que un apartamento o un terreno. Esto nos ayuda a comparar tu propiedad con otras del mismo tipo para darte el precio correcto.
+                           </p>
+                         </div>
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -1361,9 +1373,12 @@ const PropertyValuation = () => {
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                            <div>
-                             <Label htmlFor="areaTerreno" className="text-base font-semibold mb-2 block">
-                               🌿 Área Total de Terreno (m²) *
-                             </Label>
+                              <Label htmlFor="areaTerreno" className="text-base font-semibold mb-2 block">
+                                🌿 ¿Cuántos metros cuadrados tiene tu terreno? *
+                              </Label>
+                              <p className="text-xs text-gray-600 mb-2">
+                                💡 Esto es todo el espacio de tu lote (incluyendo jardín, patio, etc.)
+                              </p>
                              <Input
                                id="areaTerreno"
                                type="number"
@@ -1376,9 +1391,12 @@ const PropertyValuation = () => {
                              />
                            </div>
                            <div>
-                             <Label htmlFor="areaConstruccion" className="text-base font-semibold mb-2 block">
-                               🏗️ Área Total de Construcción (m²) *
-                             </Label>
+                              <Label htmlFor="areaConstruccion" className="text-base font-semibold mb-2 block">
+                                🏗️ ¿Cuántos metros cuadrados están construidos? *
+                              </Label>
+                              <p className="text-xs text-gray-600 mb-2">
+                                💡 Solo el espacio de la casa (habitaciones, baños, cocina, etc.)
+                              </p>
                              <Input
                                id="areaConstruccion"
                                type="number"
@@ -1391,18 +1409,24 @@ const PropertyValuation = () => {
                              />
                             </div>
                           </div>
-                          
-                          {/* Confirmación cuando se complete */}
-                          {isStep4Complete() && (
-                            <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                              <div className="flex items-center gap-2">
-                                <span className="text-green-600">✅</span>
-                                <p className="text-green-800 font-medium text-sm">
-                                  Características completadas: {propertyData.area} m²
-                                </p>
-                              </div>
-                            </div>
-                          )}
+                           
+                           <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                             <p className="text-blue-800 text-xs">
+                               🎯 <strong>¿Por qué necesitamos estas medidas?</strong> El tamaño de tu casa es súper importante para calcular su precio. Una casa más grande normalmente vale más dinero. Necesitamos saber tanto el terreno total como lo que está construido para comparar con otras casas similares.
+                             </p>
+                           </div>
+                           
+                           {/* Confirmación cuando se complete */}
+                           {isStep4Complete() && (
+                             <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                               <div className="flex items-center gap-2">
+                                 <span className="text-green-600">✅</span>
+                                 <p className="text-green-800 font-medium text-sm">
+                                   ¡Perfecto! Tu casa tiene: {propertyData.area} m² de terreno
+                                 </p>
+                               </div>
+                             </div>
+                           )}
                         </CardContent>
                     </Card>
                   </TabsContent>
