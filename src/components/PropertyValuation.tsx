@@ -377,8 +377,14 @@ const PropertyValuation = () => {
 
       // Aplicar factores de ajuste
       const estratoMultiplier = estratoMultipliers[propertyData.estratoSocial];
-      const conservationMultiplier = conservationFactors[propertyData.estadoConservacion];
+      const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 1;
       const ageMultiplier = Math.max(0.7, 1 - (propertyData.antiguedad * 0.02));
+      
+      console.log('FACTORES DE DEPRECIACIÓN APLICADOS:', {
+        estadoSeleccionado: propertyData.estadoConservacion,
+        conservationMultiplier,
+        todosLosfactores: conservationFactors
+      });
 
       const adjustedPrice = basePrice * estratoMultiplier * conservationMultiplier * ageMultiplier;
       const totalValue = adjustedPrice * propertyData.area;
