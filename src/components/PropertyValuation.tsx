@@ -905,62 +905,182 @@ const PropertyValuation = () => {
                               </thead>
                               <tbody className="divide-y divide-indigo-200">
                                 <tr 
-                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'NUEVO' ? null : 'NUEVO')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'NUEVO' 
+                                      ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-indigo-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'NUEVO');
+                                    setSelectedConservationState(selectedConservationState === 'NUEVO' ? null : 'NUEVO');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center">NUEVO</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'NUEVO' ? 'font-bold text-green-800' : ''
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'NUEVO' ? '✅ NUEVO' : 'NUEVO'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'BUENO' ? null : 'BUENO')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'BUENO' 
+                                      ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-indigo-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'BUENO');
+                                    setSelectedConservationState(selectedConservationState === 'BUENO' ? null : 'BUENO');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center">BUENO</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'BUENO' ? 'font-bold text-green-800' : ''
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'BUENO' ? '✅ BUENO' : 'BUENO'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'MEDIO' ? null : 'MEDIO')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'MEDIO' 
+                                      ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-indigo-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'MEDIO');
+                                    setSelectedConservationState(selectedConservationState === 'MEDIO' ? null : 'MEDIO');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center">MEDIO</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'MEDIO' ? 'font-bold text-blue-800' : ''
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'MEDIO' ? '✅ MEDIO' : 'MEDIO'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REGULAR' ? null : 'REGULAR')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'REGULAR' 
+                                      ? 'bg-yellow-100 border-l-4 border-yellow-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-indigo-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REGULAR');
+                                    setSelectedConservationState(selectedConservationState === 'REGULAR' ? null : 'REGULAR');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center">REGULAR</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'REGULAR' ? 'font-bold text-yellow-800' : ''
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'REGULAR' ? '✅ REGULAR' : 'REGULAR'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-blue-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES SENCILLAS' ? null : 'REPARACIONES SENCILLAS')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' 
+                                      ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-blue-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
+                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES SENCILLAS' ? null : 'REPARACIONES SENCILLAS');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES SENCILLAS</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? 'font-bold text-blue-800' : 'text-blue-600'
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? '✅ REPARACIONES SENCILLAS' : 'REPARACIONES SENCILLAS'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-blue-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES MEDIAS' ? null : 'REPARACIONES MEDIAS')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'REPARACIONES MEDIAS' 
+                                      ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-blue-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
+                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES MEDIAS' ? null : 'REPARACIONES MEDIAS');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES MEDIAS</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? 'font-bold text-blue-800' : 'text-blue-600'
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? '✅ REPARACIONES MEDIAS' : 'REPARACIONES MEDIAS'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-orange-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES IMPORTANTES' ? null : 'REPARACIONES IMPORTANTES')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' 
+                                      ? 'bg-orange-100 border-l-4 border-orange-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-orange-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REPARACIONES IMPORTANTES');
+                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES IMPORTANTES' ? null : 'REPARACIONES IMPORTANTES');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center text-orange-600">REPARACIONES IMPORTANTES</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? 'font-bold text-orange-800' : 'text-orange-600'
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? '✅ REPARACIONES IMPORTANTES' : 'REPARACIONES IMPORTANTES'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-red-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'DAÑOS GRAVES' ? null : 'DAÑOS GRAVES')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'DAÑOS GRAVES' 
+                                      ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-red-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'DAÑOS GRAVES');
+                                    setSelectedConservationState(selectedConservationState === 'DAÑOS GRAVES' ? null : 'DAÑOS GRAVES');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center text-red-600">DAÑOS GRAVES</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'DAÑOS GRAVES' ? 'font-bold text-red-800' : 'text-red-600'
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'DAÑOS GRAVES' ? '✅ DAÑOS GRAVES' : 'DAÑOS GRAVES'}
+                                  </td>
                                 </tr>
                                 <tr 
-                                  className="hover:bg-red-50 cursor-pointer transition-colors"
-                                  onClick={() => setSelectedConservationState(selectedConservationState === 'EN DESECHO' ? null : 'EN DESECHO')}
+                                  className={`cursor-pointer transition-all duration-300 ${
+                                    propertyData.estadoConservacion === 'EN DESECHO' 
+                                      ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
+                                      : 'hover:bg-red-50'
+                                  }`}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'EN DESECHO');
+                                    setSelectedConservationState(selectedConservationState === 'EN DESECHO' ? null : 'EN DESECHO');
+                                  }}
                                 >
-                                  <td className="px-6 py-3 font-medium text-lg text-center text-red-700">EN DESECHO</td>
+                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                    propertyData.estadoConservacion === 'EN DESECHO' ? 'font-bold text-red-800' : 'text-red-700'
+                                  }`}>
+                                    {propertyData.estadoConservacion === 'EN DESECHO' ? '✅ EN DESECHO' : 'EN DESECHO'}
+                                  </td>
                                 </tr>
                               </tbody>
                             </table>
                           </div>
+                          
+                          {/* Panel de confirmación de selección */}
+                          {propertyData.estadoConservacion && (
+                            <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-lg">
+                              <div className="flex items-center justify-center gap-3">
+                                <span className="text-2xl">✅</span>
+                                <div className="text-center">
+                                  <p className="text-green-800 font-bold text-lg">
+                                    Estado seleccionado: {propertyData.estadoConservacion}
+                                  </p>
+                                  <p className="text-green-700 text-sm">
+                                    Factor de depreciación aplicado: <span className="font-bold">{conservationFactors[propertyData.estadoConservacion]?.toFixed(4)}</span>
+                                  </p>
+                                  <p className="text-green-600 text-xs mt-1">
+                                    ✨ Este factor influye directamente en el cálculo del avalúo final
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
                           
                           {/* Panel de explicación detallada */}
                           {selectedConservationState && conservationExplanations[selectedConservationState] && (
