@@ -147,8 +147,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇺🇸',
-    basePricePerM2USD: 2500,
-    economicFactor: 2.8,
+    basePricePerM2USD: 1800,
+    economicFactor: 1.8,
     exchangeRate: 1.0
   },
   'canada': { 
@@ -156,8 +156,8 @@ const countriesConfig = {
     currency: 'CAD', 
     symbol: '$', 
     flag: '🇨🇦',
-    basePricePerM2USD: 2200,
-    economicFactor: 2.5,
+    basePricePerM2USD: 1600,
+    economicFactor: 1.6,
     exchangeRate: 1.35
   },
   'mexico': { 
@@ -165,8 +165,8 @@ const countriesConfig = {
     currency: 'MXN', 
     symbol: '$', 
     flag: '🇲🇽',
-    basePricePerM2USD: 800,
-    economicFactor: 1.2,
+    basePricePerM2USD: 150,
+    economicFactor: 0.4,
     exchangeRate: 17.0
   },
   
@@ -176,8 +176,8 @@ const countriesConfig = {
     currency: 'GTQ', 
     symbol: 'Q', 
     flag: '🇬🇹',
-    basePricePerM2USD: 600,
-    economicFactor: 0.9,
+    basePricePerM2USD: 180,
+    economicFactor: 0.4,
     exchangeRate: 7.8
   },
   'belize': { 
@@ -203,8 +203,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇸🇻',
-    basePricePerM2USD: 750,
-    economicFactor: 1.0,
+    basePricePerM2USD: 120,
+    economicFactor: 0.3,
     exchangeRate: 1.0
   },
   'nicaragua': { 
@@ -212,8 +212,8 @@ const countriesConfig = {
     currency: 'NIO', 
     symbol: 'C$', 
     flag: '🇳🇮',
-    basePricePerM2USD: 500,
-    economicFactor: 0.7,
+    basePricePerM2USD: 150,
+    economicFactor: 0.3,
     exchangeRate: 36.8
   },
   'costarica': { 
@@ -230,8 +230,8 @@ const countriesConfig = {
     currency: 'PAB', 
     symbol: 'B/.', 
     flag: '🇵🇦',
-    basePricePerM2USD: 1200,
-    economicFactor: 1.5,
+    basePricePerM2USD: 900,
+    economicFactor: 1.2,
     exchangeRate: 1.0
   },
   
@@ -241,8 +241,8 @@ const countriesConfig = {
     currency: 'COP', 
     symbol: '$', 
     flag: '🇨🇴',
-    basePricePerM2USD: 900,
-    economicFactor: 1.1,
+    basePricePerM2USD: 140,
+    economicFactor: 0.3,
     exchangeRate: 4200.0
   },
   'venezuela': { 
@@ -250,8 +250,8 @@ const countriesConfig = {
     currency: 'VES', 
     symbol: 'Bs.', 
     flag: '🇻🇪',
-    basePricePerM2USD: 300,
-    economicFactor: 0.4,
+    basePricePerM2USD: 200,
+    economicFactor: 0.3,
     exchangeRate: 4500000.0
   },
   'brazil': { 
@@ -259,8 +259,8 @@ const countriesConfig = {
     currency: 'BRL', 
     symbol: 'R$', 
     flag: '🇧🇷',
-    basePricePerM2USD: 1100,
-    economicFactor: 1.4,
+    basePricePerM2USD: 800,
+    economicFactor: 1.1,
     exchangeRate: 5.2
   },
   'ecuador': { 
@@ -268,8 +268,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇪🇨',
-    basePricePerM2USD: 650,
-    economicFactor: 0.8,
+    basePricePerM2USD: 100,
+    economicFactor: 0.25,
     exchangeRate: 1.0
   },
   'peru': { 
@@ -277,8 +277,8 @@ const countriesConfig = {
     currency: 'PEN', 
     symbol: 'S/', 
     flag: '🇵🇪',
-    basePricePerM2USD: 800,
-    economicFactor: 1.0,
+    basePricePerM2USD: 130,
+    economicFactor: 0.3,
     exchangeRate: 3.7
   },
   'chile': { 
@@ -286,8 +286,8 @@ const countriesConfig = {
     currency: 'CLP', 
     symbol: '$', 
     flag: '🇨🇱',
-    basePricePerM2USD: 1400,
-    economicFactor: 1.8,
+    basePricePerM2USD: 1100,
+    economicFactor: 1.4,
     exchangeRate: 950.0
   },
   'argentina': { 
@@ -295,8 +295,8 @@ const countriesConfig = {
     currency: 'ARS', 
     symbol: '$', 
     flag: '🇦🇷',
-    basePricePerM2USD: 1000,
-    economicFactor: 1.2,
+    basePricePerM2USD: 750,
+    economicFactor: 1.0,
     exchangeRate: 350.0
   }
 };
@@ -601,7 +601,9 @@ const PropertyValuation = () => {
         const minAreaFallback = propertyAreaToUse * 0.7;
         const maxAreaFallback = propertyAreaToUse * 1.3;
         const ta = Math.round((minAreaFallback + maxAreaFallback) / 2);
-        const ppsqm = 1550;
+        // Precio más realista basado en el país seleccionado
+        const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
+        const ppsqm = countryConfig?.basePricePerM2USD || 120; // Precio mucho más bajo por defecto
         comparablesData = [
           {
             id: 'fallback-1',
@@ -638,14 +640,15 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable con 15% de descuento por negociación
-            let adjustedPrice = comp.price_usd * 0.85;
+            // Precio base del comparable con 20% de descuento por negociación
+            let adjustedPrice = comp.price_usd * 0.80;
 
-            // Ajuste por diferencia de área (Factor de escala)
+            // Ajuste por diferencia de área (más conservador para evitar inflación)
             const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
             const areaRatio = propertyAreaToUse / comp.total_area;
             if (areaRatio !== 1) {
-              const areaAdjustment = Math.pow(areaRatio, 0.8); // Factor de economía de escala
+              // Ajuste más conservador: máximo 20% de variación por área
+              const areaAdjustment = Math.min(1.2, Math.max(0.8, Math.pow(areaRatio, 0.95)));
               adjustedPrice *= areaAdjustment;
               console.log(`  ↳ Ajuste por área: ${(areaAdjustment * 100).toFixed(1)}%`);
             }
@@ -675,11 +678,11 @@ const PropertyValuation = () => {
       // 3. MÉTODO DE RESPALDO: Precio por m² del país
       if (estimatedValueUSD === 0 || comparablesData.length === 0) {
         console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
-        const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 120;
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
-        const economicMultiplier = countryConfig.economicFactor || 1;
+        // NO usar factor económico adicional, ya está incluido en el precio base
         const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier * economicMultiplier;
+        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier;
         console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
       }
 
@@ -1187,19 +1190,6 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Botón Realizar Otro Avalúo */}
-                {currentTab === 'estado' && (
-                  <div className="mb-4 text-center">
-                    <Button 
-                      onClick={realizarOtroAvaluo}
-                      variant="outline"
-                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                    >
-                      <Shuffle className="w-4 h-4 mr-2" />
-                      Realizar otro avalúo
-                    </Button>
-                  </div>
-                )}
 
                 {/* Paso 5: Estado de la Casa */}
                 <TabsContent value="estado" className="mt-6">
