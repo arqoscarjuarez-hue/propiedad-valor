@@ -7,6 +7,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { indexTranslations } from '@/translations/indexTranslations';
 
 const Valuation = () => {
+  console.log('Valuation page is loading...');
   const { selectedLanguage } = useLanguage();
   const t = indexTranslations[selectedLanguage];
 

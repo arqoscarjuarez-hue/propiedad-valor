@@ -369,6 +369,7 @@ const countriesConfig = {
 };
 
 const PropertyValuation = () => {
+  console.log('PropertyValuation component is loading...');
   const [propertyData, setPropertyData] = useState<PropertyData>({
     tipoPropiedad: '',
     area: 0,
