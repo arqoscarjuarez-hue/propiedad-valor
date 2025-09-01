@@ -1437,37 +1437,9 @@ const PropertyValuation = () => {
                                     </div>
                                   </td>
                                  </tr>
-                                 <tr 
-                                   className={`cursor-pointer transition-all duration-300 relative group ${
-                                     propertyData.estadoConservacion === 'EN DESECHO' 
-                                       ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
-                                       : 'hover:bg-indigo-50'
-                                   }`}
-                                   onClick={() => {
-                                     handleInputChange('estadoConservacion', 'EN DESECHO');
-                                     setSelectedConservationState('EN DESECHO');
-                                   }}
-                                 >
-                                   <td className={`px-6 py-3 font-medium text-lg text-center relative ${
-                                     propertyData.estadoConservacion === 'EN DESECHO' ? 'font-bold text-red-800' : 'text-gray-700'
-                                   }`}>
-                                     {propertyData.estadoConservacion === 'EN DESECHO' ? '✅ EN DESECHO' : 'EN DESECHO'}
-                                     
-                                     {/* Tooltip explicativo */}
-                                     <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                                       <h5 className="font-bold text-indigo-800 mb-2">💥 EN DESECHO</h5>
-                                       <p className="text-sm text-indigo-700 mb-2">
-                                         {conservationExplanations['EN DESECHO'].description}
-                                       </p>
-                                       <div className="text-xs text-indigo-600">
-                                         <strong>Factor:</strong> {conservationFactors['EN DESECHO']?.toFixed(4)}
-                                       </div>
-                                     </div>
-                                   </td>
-                                 </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                               </tbody>
+                             </table>
+                           </div>
                           
                           {/* Panel de confirmación de selección */}
                           
