@@ -1188,6 +1188,26 @@ const PropertyValuation = () => {
                   
                   {/* Paso 5: Depreciación */}
                   <TabsContent value="depreciacion" className="mt-6">
+                    {/* Panel de confirmación de selección - MOVIDO ARRIBA */}
+                    {propertyData.estadoConservacion && (
+                      <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-lg">
+                        <div className="flex items-center justify-center gap-3">
+                          <span className="text-2xl">✅</span>
+                          <div className="text-center">
+                            <p className="text-green-800 font-bold text-lg">
+                              Estado seleccionado: {propertyData.estadoConservacion}
+                            </p>
+                            <p className="text-green-700 text-sm">
+                              Factor de depreciación aplicado: <span className="font-bold">{conservationFactors[propertyData.estadoConservacion]?.toFixed(4)}</span>
+                            </p>
+                            <p className="text-green-600 text-xs mt-1">
+                              ✨ Este factor influye directamente en el cálculo del avalúo final
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
                     <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
                       <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
                         <CardTitle className="flex items-center gap-3">
@@ -1430,32 +1450,9 @@ const PropertyValuation = () => {
                                  </tr>
                                </tbody>
                              </table>
-                           </div>
+                          </div>
                           
-                          {/* Panel de confirmación de selección */}
-                          
-                          {/* Panel de confirmación de selección */}
-                          {propertyData.estadoConservacion && (
-                            <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-lg">
-                              <div className="flex items-center justify-center gap-3">
-                                <span className="text-2xl">✅</span>
-                                <div className="text-center">
-                                  <p className="text-green-800 font-bold text-lg">
-                                    Estado seleccionado: {propertyData.estadoConservacion}
-                                  </p>
-                                  <p className="text-green-700 text-sm">
-                                    Factor de depreciación aplicado: <span className="font-bold">{conservationFactors[propertyData.estadoConservacion]?.toFixed(4)}</span>
-                                  </p>
-                                  <p className="text-green-600 text-xs mt-1">
-                                    ✨ Este factor influye directamente en el cálculo del avalúo final
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          
-                           
-                           <div className="mt-6 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-300 shadow-md">
+                          <div className="mt-6 p-4 bg-yellow-50 rounded-lg border-2 border-yellow-300 shadow-md">
                              <p className="text-yellow-800 text-center font-semibold">
                                💡 <strong>Instrucciones:</strong> Pase el mouse sobre cualquier estado para ver su explicación antes de seleccionarlo.
                              </p>
