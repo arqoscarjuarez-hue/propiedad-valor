@@ -518,8 +518,8 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable
-            let adjustedPrice = comp.price_usd;
+            // Precio base del comparable con 15% de descuento por negociación
+            let adjustedPrice = comp.price_usd * 0.85;
 
             // Ajuste por diferencia de área (Factor de escala)
             const areaRatio = propertyData.area / comp.total_area;
