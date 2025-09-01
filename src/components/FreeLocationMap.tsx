@@ -53,6 +53,13 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   
   const { toast } = useToast();
 
+  // Efecto para sincronizar la dirección cuando cambia initialAddress o fixedAddress
+  useEffect(() => {
+    if (fixedAddress && initialAddress) {
+      setCurrentAddress(initialAddress);
+    }
+  }, [initialAddress, fixedAddress]);
+
   // Función para geocodificación inversa usando Nominatim (gratuito)
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
