@@ -15,8 +15,15 @@ const Valuation = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-between">
+            <Link to="/">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Volver al inicio
+              </Button>
+            </Link>
             <h1 className="text-xl font-semibold">{t.heroButtonMain}</h1>
+            <div className="w-24"></div>
           </div>
         </div>
       </header>
