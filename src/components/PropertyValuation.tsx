@@ -147,8 +147,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇺🇸',
-    basePricePerM2USD: 1800,
-    economicFactor: 1.8,
+    basePricePerM2USD: 2500,
+    economicFactor: 2.8,
     exchangeRate: 1.0
   },
   'canada': { 
@@ -156,8 +156,8 @@ const countriesConfig = {
     currency: 'CAD', 
     symbol: '$', 
     flag: '🇨🇦',
-    basePricePerM2USD: 1600,
-    economicFactor: 1.6,
+    basePricePerM2USD: 2200,
+    economicFactor: 2.5,
     exchangeRate: 1.35
   },
   'mexico': { 
@@ -165,8 +165,8 @@ const countriesConfig = {
     currency: 'MXN', 
     symbol: '$', 
     flag: '🇲🇽',
-    basePricePerM2USD: 450,
-    economicFactor: 0.8,
+    basePricePerM2USD: 800,
+    economicFactor: 1.2,
     exchangeRate: 17.0
   },
   
@@ -176,8 +176,8 @@ const countriesConfig = {
     currency: 'GTQ', 
     symbol: 'Q', 
     flag: '🇬🇹',
-    basePricePerM2USD: 450,
-    economicFactor: 0.8,
+    basePricePerM2USD: 600,
+    economicFactor: 0.9,
     exchangeRate: 7.8
   },
   'belize': { 
@@ -203,8 +203,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇸🇻',
-    basePricePerM2USD: 350,
-    economicFactor: 0.7,
+    basePricePerM2USD: 750,
+    economicFactor: 1.0,
     exchangeRate: 1.0
   },
   'nicaragua': { 
@@ -230,8 +230,8 @@ const countriesConfig = {
     currency: 'PAB', 
     symbol: 'B/.', 
     flag: '🇵🇦',
-    basePricePerM2USD: 900,
-    economicFactor: 1.2,
+    basePricePerM2USD: 1200,
+    economicFactor: 1.5,
     exchangeRate: 1.0
   },
   
@@ -241,8 +241,8 @@ const countriesConfig = {
     currency: 'COP', 
     symbol: '$', 
     flag: '🇨🇴',
-    basePricePerM2USD: 450,
-    economicFactor: 0.7,
+    basePricePerM2USD: 900,
+    economicFactor: 1.1,
     exchangeRate: 4200.0
   },
   'venezuela': { 
@@ -250,8 +250,8 @@ const countriesConfig = {
     currency: 'VES', 
     symbol: 'Bs.', 
     flag: '🇻🇪',
-    basePricePerM2USD: 200,
-    economicFactor: 0.3,
+    basePricePerM2USD: 300,
+    economicFactor: 0.4,
     exchangeRate: 4500000.0
   },
   'brazil': { 
@@ -259,8 +259,8 @@ const countriesConfig = {
     currency: 'BRL', 
     symbol: 'R$', 
     flag: '🇧🇷',
-    basePricePerM2USD: 800,
-    economicFactor: 1.1,
+    basePricePerM2USD: 1100,
+    economicFactor: 1.4,
     exchangeRate: 5.2
   },
   'ecuador': { 
@@ -268,8 +268,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇪🇨',
-    basePricePerM2USD: 350,
-    economicFactor: 0.6,
+    basePricePerM2USD: 650,
+    economicFactor: 0.8,
     exchangeRate: 1.0
   },
   'peru': { 
@@ -277,8 +277,8 @@ const countriesConfig = {
     currency: 'PEN', 
     symbol: 'S/', 
     flag: '🇵🇪',
-    basePricePerM2USD: 450,
-    economicFactor: 0.7,
+    basePricePerM2USD: 800,
+    economicFactor: 1.0,
     exchangeRate: 3.7
   },
   'chile': { 
@@ -286,8 +286,8 @@ const countriesConfig = {
     currency: 'CLP', 
     symbol: '$', 
     flag: '🇨🇱',
-    basePricePerM2USD: 1100,
-    economicFactor: 1.4,
+    basePricePerM2USD: 1400,
+    economicFactor: 1.8,
     exchangeRate: 950.0
   },
   'argentina': { 
@@ -295,8 +295,8 @@ const countriesConfig = {
     currency: 'ARS', 
     symbol: '$', 
     flag: '🇦🇷',
-    basePricePerM2USD: 750,
-    economicFactor: 1.0,
+    basePricePerM2USD: 1000,
+    economicFactor: 1.2,
     exchangeRate: 350.0
   }
 };
@@ -337,12 +337,7 @@ const PropertyValuation = () => {
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.tipoPropiedad;
   const isStep2Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep3Complete = () => {
-    if (propertyData.tipoPropiedad === 'apartamento') {
-      return propertyData.construction_area > 0;
-    }
-    return propertyData.area > 0 && propertyData.construction_area > 0;
-  };
+  const isStep3Complete = () => propertyData.area > 0 && propertyData.construction_area > 0;
   const isStep4Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
@@ -352,32 +347,6 @@ const PropertyValuation = () => {
       console.log('📊 DATOS COMPLETOS:', updated);
       return updated;
     });
-  };
-
-  // Función para realizar otro avalúo (reset)
-  const realizarOtroAvaluo = () => {
-    setPropertyData({
-      tipoPropiedad: '',
-      area: 0,
-      construction_area: 0,
-      habitaciones: 0,
-      banos: 0,
-      parqueaderos: 0,
-      antiguedad: 0,
-      estadoConservacion: '',
-      latitud: 0,
-      longitud: 0,
-      direccionCompleta: '',
-      barrio: '',
-      descripcion: ''
-    });
-    setSelectedLanguage('');
-    setSelectedCountry('');
-    setCurrentTab('setup');
-    setValuationResult(null);
-    setComparables([]);
-    setIsCalculating(false);
-    toast.success('✨ Listo para nuevo avalúo');
   };
 
   // Función para navegar al siguiente paso automáticamente
@@ -395,24 +364,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Normaliza el tipo de propiedad al formato esperado por la BD y define sinónimos
-  const normalizePropertyType = (value: string) => {
-    const v = (value || '').toLowerCase().trim();
-    if (['local comercial','local_comercial','comercial','local'].includes(v)) {
-      return { rpcType: 'local_comercial', matchSet: ['local_comercial','local comercial','comercial','local'] };
-    }
-    if (['apartamento','departamento','depto','apto','apartment'].includes(v)) {
-      return { rpcType: 'apartamento', matchSet: ['apartamento','departamento','depto','apto','apartment'] };
-    }
-    if (['casa','house','vivienda'].includes(v)) {
-      return { rpcType: 'casa', matchSet: ['casa','house','vivienda'] };
-    }
-    if (['terreno','lote','parcela','solar','land'].includes(v)) {
-      return { rpcType: 'terreno', matchSet: ['terreno','lote','parcela','solar','land'] };
-    }
-    return { rpcType: v, matchSet: [v] };
-  };
-
   // Función de avalúo internacional por método comparativo
   const performValuation = async () => {
     setIsCalculating(true);
@@ -420,8 +371,7 @@ const PropertyValuation = () => {
       console.log('🔥 INICIANDO AVALÚO COMPARATIVO INTERNACIONAL...');
       
       // Validar datos requeridos
-      const areaToValidate = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-      if (!areaToValidate || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) {
+      if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) {
         toast.error('❌ Faltan datos requeridos para el avalúo');
         return;
       }
@@ -445,172 +395,100 @@ const PropertyValuation = () => {
           estratoSocial = 'medio_medio'; // Por defecto, podríamos mejorarlo más adelante
         }
 
-        const normalizedType = normalizePropertyType(propertyData.tipoPropiedad);
-
         console.log('📊 Parámetros de búsqueda:', {
           latitud: propertyData.latitud,
           longitud: propertyData.longitud,
           estrato: estratoSocial,
-          tipoPropiedadSeleccionada: propertyData.tipoPropiedad,
-          tipoPropiedadRPC: normalizedType.rpcType
+          tipoPropiedad: propertyData.tipoPropiedad
         });
 
-        // Usar función RPC con radio progresivo para obtener comparables cercanos
-        const { data: nearbyComparables, error } = await supabase.rpc('find_comparables_progressive_radius', {
+        // Usar la función RPC find_comparables_public
+        const { data: nearbyComparables, error } = await supabase.rpc('find_comparables_public', {
           target_lat: propertyData.latitud,
           target_lng: propertyData.longitud,
           target_estrato: estratoSocial,
-          target_property_type: normalizedType.rpcType
+          target_property_type: propertyData.tipoPropiedad
         });
 
         if (error) {
           console.error('Error al buscar comparables con RPC:', error);
-          // Fallback: Buscar sin filtro específico (tomando los más cercanos por lat/lon aproximada)
+          // Fallback: Buscar sin filtro específico
           const { data: generalComparables, error: generalError } = await supabase.rpc('get_property_comparables_public', {
-            limit_rows: 50,
+            limit_rows: 10,
             offset_rows: 0
           });
           
           if (!generalError && generalComparables && generalComparables.length > 0) {
             console.log('📍 Usando comparables generales como respaldo');
-            const withDistance = generalComparables
-              .map((comp: any) => ({
-                ...comp,
-                latitude: comp.approximate_latitude,
-                longitude: comp.approximate_longitude,
-                distance_km: comp.approximate_latitude && comp.approximate_longitude
-                  ? calculateDistance(propertyData.latitud, propertyData.longitud, comp.approximate_latitude, comp.approximate_longitude)
-                  : undefined
-              }))
-              .filter((c: any) => c.distance_km !== undefined)
-              .sort((a: any, b: any) => (a.distance_km as number) - (b.distance_km as number));
-
-            const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-            const minArea = propertyAreaToUse * 0.7;
-            const maxArea = propertyAreaToUse * 1.3;
-            const primary = withDistance
-              .filter((c: any) => {
-                const pt = String(c.property_type || '').toLowerCase();
-                return c.total_area >= minArea && c.total_area <= maxArea && normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(pt);
-              })
-              .slice(0, 5);
-
-            // Completar hasta 5 comparables SIN relajar área (solo dentro del rango definido)
-            let chosenList: any[] = [...primary];
-            if (chosenList.length < 5) {
-              const supplement = withDistance
-                .filter((c: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(c.property_type || '').toLowerCase()))
-                .filter((c: any) => c.total_area >= minArea && c.total_area <= maxArea)
-                .filter((c: any) => !chosenList.some(x => x.id === c.id))
-                .slice(0, 5 - chosenList.length);
-              chosenList = [...chosenList, ...supplement].slice(0, 5);
-            }
-
-            comparablesData = chosenList.map((comp: any) => ({
+            comparablesData = generalComparables.slice(0, 3).map((comp: any) => ({
               ...comp,
-              address: comp.general_location,
-              price_usd: 150000 + (Math.random() * 100000), // Precio estimado al no tenerlo en este RPC
+              price_usd: 150000 + (Math.random() * 100000), // Precio estimado
               price_per_sqm_usd: (150000 + (Math.random() * 100000)) / comp.total_area,
-              distance: comp.distance_km
+              latitude: comp.approximate_latitude,
+              longitude: comp.approximate_longitude,
+              distance: Math.random() * 5 + 1 // Distancia simulada 1-6 km
             }));
           }
         } else if (nearbyComparables && nearbyComparables.length > 0) {
-          console.log(`✅ Encontrados ${nearbyComparables.length} comparables usando RPC (progresivo)`);
-
-          // Preferir comparables muy cercanos (San Marcos) con filtros de radio 5km -> 10km -> 20km
-          const tiers = [5, 10, 20];
-          const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-          const minArea = propertyAreaToUse * 0.7;
-          const maxArea = propertyAreaToUse * 1.3;
-
-          let selected: any[] = [];
-          for (const r of tiers) {
-            selected = nearbyComparables.filter((comp: any) => {
-              const d = comp.distance_km ?? (comp.latitude && comp.longitude
-                ? calculateDistance(propertyData.latitud, propertyData.longitud, comp.latitude, comp.longitude)
-                : undefined);
-              const areaOk = comp.total_area >= minArea && comp.total_area <= maxArea;
-              const pt = String(comp.property_type || '').toLowerCase();
-              return d !== undefined && d <= r && areaOk && normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(pt);
-            }).sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
-            if (selected.length >= 3) break;
-          }
-          if (selected.length === 0) {
-            // Si no hay suficientes en 20km, tomar los más cercanos disponibles con área similar
-            selected = nearbyComparables
-              .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
-              .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
-          }
-          // Completar hasta 5 comparables SIN relajar área (solo dentro del rango definido)
-          let finalSelected: any[] = [...selected];
-          if (finalSelected.length < 5) {
-            const supplement = (nearbyComparables as any[])
-              .filter((comp: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(comp.property_type || '').toLowerCase()))
-              .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
-              .filter((comp: any) => !finalSelected.some((x: any) => x.id === comp.id))
-              .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999))
-              .slice(0, 5 - finalSelected.length);
-            finalSelected = [...finalSelected, ...supplement].slice(0, 5);
-          }
-
-          comparablesData = finalSelected.map((comp: any) => ({
-            id: comp.id,
-            address: comp.address,
-            price_usd: comp.price_usd,
-            price_per_sqm_usd: comp.price_per_sqm_usd,
-            total_area: comp.total_area,
-            latitude: comp.latitude,
-            longitude: comp.longitude,
-            property_type: comp.property_type,
-            distance_km: comp.distance_km,
-            distance: comp.distance_km
+          console.log(`✅ Encontrados ${nearbyComparables.length} comparables usando RPC`);
+          comparablesData = nearbyComparables.map((comp: any) => ({
+            ...comp,
+            price_usd: 120000 + (Math.random() * 150000), // Precio basado en el rango
+            price_per_sqm_usd: (120000 + (Math.random() * 150000)) / comp.total_area,
+            distance_km: comp.distance_km
           }));
         }
 
         // Si no hay comparables reales, usar datos de prueba
         if (comparablesData.length === 0) {
-          console.log('📊 Generando comparables de prueba dentro del rango de área');
-          const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-          const minAreaMock = propertyAreaToUse * 0.7;
-          const maxAreaMock = propertyAreaToUse * 1.3;
-          const rand = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
-          const randFloat = (min: number, max: number) => Number((Math.random() * (max - min) + min).toFixed(4));
-          comparablesData = Array.from({ length: 5 }).map((_, idx) => {
-            const ta = rand(minAreaMock, maxAreaMock);
-            const ppsqm = Math.round(1400 + Math.random() * 400);
-            const price = Math.round(ppsqm * ta);
-            return {
-              id: `test-${idx + 1}`,
-              address: `Propiedad comparable ${idx + 1} cerca de ${propertyData.direccionCompleta}`,
-              price_usd: price,
-              price_per_sqm_usd: ppsqm,
-              total_area: ta,
-              latitude: propertyData.latitud + randFloat(-0.003, 0.003),
-              longitude: propertyData.longitud + randFloat(-0.003, 0.003),
+          console.log('📊 Generando comparables de prueba para demostración');
+          comparablesData = [
+            {
+              id: 'test-1',
+              address: `Propiedad comparable 1 cerca de ${propertyData.direccionCompleta}`,
+              price_usd: 165000,
+              price_per_sqm_usd: 1650,
+              total_area: 100,
+              latitude: propertyData.latitud + 0.001,
+              longitude: propertyData.longitud + 0.001,
               property_type: propertyData.tipoPropiedad,
-              distance: Number(randFloat(0.3, 3.0).toFixed(2))
-            };
-          });
-          console.log('✅ Usando 5 comparables de prueba (dentro del rango)');
-
+              distance: 0.5
+            },
+            {
+              id: 'test-2', 
+              address: `Propiedad comparable 2 cerca de ${propertyData.direccionCompleta}`,
+              price_usd: 145000,
+              price_per_sqm_usd: 1450,
+              total_area: 100,
+              latitude: propertyData.latitud - 0.002,
+              longitude: propertyData.longitud + 0.002,
+              property_type: propertyData.tipoPropiedad,
+              distance: 1.2
+            },
+            {
+              id: 'test-3',
+              address: `Propiedad comparable 3 cerca de ${propertyData.direccionCompleta}`,
+              price_usd: 180000,
+              price_per_sqm_usd: 1800,
+              total_area: 100,
+              latitude: propertyData.latitud + 0.003,
+              longitude: propertyData.longitud - 0.001,
+              property_type: propertyData.tipoPropiedad,
+              distance: 2.1
+            }
+          ];
+          console.log('✅ Usando 3 comparables de prueba');
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
         // Usar datos de prueba como respaldo
-        const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-        const minAreaFallback = propertyAreaToUse * 0.7;
-        const maxAreaFallback = propertyAreaToUse * 1.3;
-        const ta = Math.round((minAreaFallback + maxAreaFallback) / 2);
-        // Precio más realista basado en el país seleccionado
-        const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
-        const ppsqm = countryConfig?.basePricePerM2USD || 350; // Precio mucho más bajo por defecto
         comparablesData = [
           {
             id: 'fallback-1',
             address: `Comparable de respaldo 1`,
-            price_usd: ppsqm * ta,
-            price_per_sqm_usd: ppsqm,
-            total_area: ta,
+            price_usd: 155000,
+            price_per_sqm_usd: 1550,
+            total_area: 100,
             latitude: propertyData.latitud,
             longitude: propertyData.longitud,
             property_type: propertyData.tipoPropiedad,
@@ -640,14 +518,13 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable con 5% de descuento por negociación
-            let adjustedPrice = comp.price_usd * 0.95;
+            // Precio base del comparable
+            let adjustedPrice = comp.price_usd;
 
             // Ajuste por diferencia de área (Factor de escala)
-            const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-            const areaRatio = propertyAreaToUse / comp.total_area;
+            const areaRatio = propertyData.area / comp.total_area;
             if (areaRatio !== 1) {
-              const areaAdjustment = Math.pow(areaRatio, 0.9); // Factor de economía de escala más conservador
+              const areaAdjustment = Math.pow(areaRatio, 0.8); // Factor de economía de escala
               adjustedPrice *= areaAdjustment;
               console.log(`  ↳ Ajuste por área: ${(areaAdjustment * 100).toFixed(1)}%`);
             }
@@ -677,11 +554,11 @@ const PropertyValuation = () => {
       // 3. MÉTODO DE RESPALDO: Precio por m² del país
       if (estimatedValueUSD === 0 || comparablesData.length === 0) {
         console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
-        const basePricePerM2 = countryConfig.basePricePerM2USD || 350; // Precio más bajo por defecto
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
         const economicMultiplier = countryConfig.economicFactor || 1;
-        const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier * economicMultiplier;
+        
+        estimatedValueUSD = propertyData.area * basePricePerM2 * conservationMultiplier * economicMultiplier;
         console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
       }
 
@@ -703,7 +580,7 @@ const PropertyValuation = () => {
         symbol: countryConfig.symbol,
         country: countryConfig.name,
         propertyType: propertyData.tipoPropiedad,
-        area: propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area,
+        area: propertyData.area,
         conservation: propertyData.estadoConservacion,
         methodology: comparablesData.length >= 1 ? 'Método Comparativo Internacional' : 'Método de Costo por País',
         comparablesUsed: comparablesData.length,
@@ -827,20 +704,6 @@ const PropertyValuation = () => {
                     🎯 Resultado
                   </TabsTrigger>
                 </TabsList>
-
-                {/* Botón Realizar Otro Avalúo */}
-                {(currentTab !== 'setup' || isStep0Complete()) && (
-                  <div className="mb-4 text-center">
-                    <Button 
-                      onClick={realizarOtroAvaluo}
-                      variant="outline"
-                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                    >
-                      <Shuffle className="w-4 h-4 mr-2" />
-                      Realizar otro avalúo
-                    </Button>
-                  </div>
-                )}
 
                 {/* Paso 1: Configuración */}
                 <TabsContent value="setup" className="mt-6">
@@ -1037,26 +900,46 @@ const PropertyValuation = () => {
                         </p>
                         <FreeLocationMap
                           onLocationChange={(lat, lng, address) => {
-                            handleInputChange('latitud', lat);
-                            handleInputChange('longitud', lng);
-                            handleInputChange('direccionCompleta', address);
+                            // Solo actualizar si no hay una dirección confirmada previamente
+                            if (!propertyData.direccionCompleta) {
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                              handleInputChange('direccionCompleta', address);
+                            } else {
+                              // Solo actualizar coordenadas, mantener la dirección original
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                            }
                           }}
                           initialLat={propertyData.latitud || 13.7042}
                           initialLng={propertyData.longitud || -89.2073}
                           initialAddress={propertyData.direccionCompleta}
                         />
                         
-                        {/* Mostrar dirección seleccionada */}
+                        {/* Mostrar dirección seleccionada y permitir cambiarla */}
                         {propertyData.direccionCompleta && (
                           <div className="space-y-3">
                             <div className="p-4 bg-green-50 border border-green-200 rounded animate-fade-in">
-                              <div className="mb-3">
-                                <p className="text-sm font-medium text-green-800">
-                                  📍 Dirección seleccionada:
-                                </p>
-                                <p className="text-sm text-green-700 mt-1">
-                                  {propertyData.direccionCompleta}
-                                </p>
+                              <div className="flex items-center justify-between mb-3">
+                                <div>
+                                  <p className="text-sm font-medium text-green-800">
+                                    📍 Dirección confirmada:
+                                  </p>
+                                  <p className="text-sm text-green-700 mt-1">
+                                    {propertyData.direccionCompleta}
+                                  </p>
+                                </div>
+                                <Button 
+                                  onClick={() => {
+                                    // Permitir cambiar la dirección
+                                    handleInputChange('direccionCompleta', '');
+                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  className="border-green-300 text-green-700 hover:bg-green-100"
+                                >
+                                  Cambiar ubicación
+                                </Button>
                               </div>
                               <Button 
                                 onClick={goToNextStep}
@@ -1100,30 +983,28 @@ const PropertyValuation = () => {
                       </div>
 
                       <div className="space-y-6">
-                        {/* Área de Terreno - Solo mostrar si NO es apartamento */}
-                        {propertyData.tipoPropiedad !== 'apartamento' && (
-                          <div className="space-y-3">
-                            <Label htmlFor="area" className="text-base font-semibold">
-                              🌱 Área de Terreno (metros cuadrados) *
-                            </Label>
-                            <Input 
-                              id="area"
-                              type="number" 
-                              value={propertyData.area || ''}
-                              onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                              placeholder="Ejemplo: 200"
-                              className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
-                            />
-                            <p className="text-xs text-muted-foreground">
-                              🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
-                            </p>
-                          </div>
-                        )}
+                        {/* Área de Terreno */}
+                        <div className="space-y-3">
+                          <Label htmlFor="area" className="text-base font-semibold">
+                            🌱 Área de Terreno (metros cuadrados) *
+                          </Label>
+                          <Input 
+                            id="area"
+                            type="number" 
+                            value={propertyData.area || ''}
+                            onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                            placeholder="Ejemplo: 200"
+                            className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
+                          </p>
+                        </div>
 
                         {/* Área Total de Construcción */}
                         <div className="space-y-3">
                           <Label htmlFor="construction_area" className="text-base font-semibold">
-                            {propertyData.tipoPropiedad === 'apartamento' ? '🏢 Área del Apartamento (metros cuadrados) *' : '🏠 Área Total de Construcción (metros cuadrados) *'}
+                            🏠 Área Total de Construcción (metros cuadrados) *
                           </Label>
                           <Input 
                             id="construction_area"
@@ -1134,10 +1015,7 @@ const PropertyValuation = () => {
                             className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
                           />
                           <p className="text-xs text-muted-foreground">
-                            {propertyData.tipoPropiedad === 'apartamento' 
-                              ? '🏢 El área total del apartamento (todas las habitaciones, baños, cocina, etc.)'
-                              : '🏗️ El área total construida (todas las habitaciones, baños, cocina, etc.)'
-                            }
+                            🏗️ El área total construida (todas las habitaciones, baños, cocina, etc.)
                           </p>
                         </div>
 
@@ -1148,10 +1026,7 @@ const PropertyValuation = () => {
                               <div className="flex items-center gap-2">
                                 <span className="text-green-600">✅</span>
                                 <p className="text-green-800 font-medium text-sm">
-                                  {propertyData.tipoPropiedad === 'apartamento' 
-                                    ? `¡Excelente! Área del apartamento: ${propertyData.construction_area}m²`
-                                    : `¡Excelente! Terreno: ${propertyData.area}m² | Construcción: ${propertyData.construction_area}m²`
-                                  }
+                                  ¡Excelente! Terreno: {propertyData.area}m² | Construcción: {propertyData.construction_area}m²
                                 </p>
                               </div>
                               <Button 
@@ -1165,19 +1040,6 @@ const PropertyValuation = () => {
                           </div>
                         )}
 
-                        {/* Botón siguiente paso cuando se complete el área */}
-                        {isStep3Complete() && (
-                          <div className="mt-6 text-center">
-                            <Button 
-                              onClick={goToNextStep}
-                              size="lg"
-                              className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                            >
-                              Continuar al Estado de la Casa →
-                            </Button>
-                          </div>
-                        )}
-
                         <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                           <p className="text-yellow-800 text-xs">
                             🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
@@ -1188,20 +1050,6 @@ const PropertyValuation = () => {
                     </CardContent>
                   </Card>
                 </TabsContent>
-
-                {/* Botón Realizar Otro Avalúo */}
-                {currentTab === 'estado' && (
-                  <div className="mb-4 text-center">
-                    <Button 
-                      onClick={realizarOtroAvaluo}
-                      variant="outline"
-                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                    >
-                      <Shuffle className="w-4 h-4 mr-2" />
-                      Realizar otro avalúo
-                    </Button>
-                  </div>
-                )}
 
                 {/* Paso 5: Estado de la Casa */}
                 <TabsContent value="estado" className="mt-6">
@@ -1318,52 +1166,32 @@ const PropertyValuation = () => {
                           <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
                         </div>
                         <h3 className="text-xl font-bold mb-4">
-                          {(() => {
-                            const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
-                              ? propertyData.construction_area > 0 
-                              : propertyData.area > 0;
-                            return (hasValidArea && propertyData.tipoPropiedad && propertyData.latitud && propertyData.longitud) ? 
-                              '🎉 ¡Listo para calcular!' : 
-                              '⏳ Faltan algunos datos';
-                          })()}
+                          {(propertyData.area > 0 && propertyData.tipoPropiedad && propertyData.latitud && propertyData.longitud) ? 
+                            '🎉 ¡Listo para calcular!' : 
+                            '⏳ Faltan algunos datos'
+                          }
                         </h3>
 
                         {/* Validación de campos requeridos */}
-                        {(() => {
-                          const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
-                            ? propertyData.construction_area > 0 
-                            : propertyData.area > 0;
-                          const missingData = !hasValidArea || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud;
-                          
-                          if (!missingData) return null;
-                          
-                          return (
-                            <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
-                              <p className="text-red-800 font-medium mb-2">
-                                ❌ <strong>Para el método comparativo necesitas:</strong>
-                              </p>
-                              <ul className="text-red-700 text-sm space-y-1">
-                                {!hasValidArea && (
-                                  <li>• {propertyData.tipoPropiedad === 'apartamento' ? 'El área del apartamento (Paso 4)' : 'El área de tu casa (Paso 4)'}</li>
-                                )}
-                                {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
-                                {(!propertyData.latitud || !propertyData.longitud) && <li>• La ubicación exacta en el mapa (Paso 3)</li>}
-                              </ul>
-                              <p className="text-red-600 text-xs mt-2">
-                                📍 <strong>La ubicación es esencial</strong> para encontrar los comparables más cercanos según estándares internacionales.
-                              </p>
-                            </div>
-                          );
-                        })()}
+                        {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) && (
+                          <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
+                            <p className="text-red-800 font-medium mb-2">
+                              ❌ <strong>Para el método comparativo necesitas:</strong>
+                            </p>
+                            <ul className="text-red-700 text-sm space-y-1">
+                              {!propertyData.area && <li>• El área de tu casa (Paso 4)</li>}
+                              {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
+                              {(!propertyData.latitud || !propertyData.longitud) && <li>• La ubicación exacta en el mapa (Paso 3)</li>}
+                            </ul>
+                            <p className="text-red-600 text-xs mt-2">
+                              📍 <strong>La ubicación es esencial</strong> para encontrar los comparables más cercanos según estándares internacionales.
+                            </p>
+                          </div>
+                        )}
 
                         <Button
                           onClick={performValuation}
-                          disabled={(() => {
-                            const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
-                              ? propertyData.construction_area > 0 
-                              : propertyData.area > 0;
-                            return isCalculating || !hasValidArea || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud;
-                          })()}
+                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud}
                           size="lg"
                           className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
@@ -1387,31 +1215,17 @@ const PropertyValuation = () => {
                               🏆 ¡Tu Casa Vale!
                             </h4>
                             
-                            {/* Precio Máximo de Venta (Resultado del Avalúo) */}
-                            <div className="mb-4">
-                              <p className="text-sm font-medium text-green-700 mb-1">Precio Máximo de Venta (Resultado del Avalúo):</p>
-                              <div className="text-3xl font-bold text-green-900">
-                                ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
-                              </div>
-                              {valuationResult.currency !== 'USD' && (
-                                <div className="text-xl font-bold text-green-800 mt-1">
-                                  {valuationResult.symbol}{valuationResult.estimatedValueLocal?.toLocaleString()} {valuationResult.currency}
-                                </div>
-                              )}
+                            {/* Precio en USD */}
+                            <div className="text-3xl font-bold text-green-900 mb-2">
+                              ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
                             </div>
-
-                            {/* Precio Mínimo de Venta (-15%) */}
-                            <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded">
-                              <p className="text-sm font-medium text-green-700 mb-1">Precio Mínimo de Venta:</p>
-                              <div className="text-2xl font-bold text-green-800">
-                                ${Math.round((valuationResult.estimatedValueUSD || 0) * 0.85).toLocaleString()} USD
+                            
+                            {/* Precio en moneda local si es diferente */}
+                            {valuationResult.currency !== 'USD' && (
+                              <div className="text-2xl font-bold text-green-800 mb-4">
+                                {valuationResult.symbol}{valuationResult.estimatedValueLocal?.toLocaleString()} {valuationResult.currency}
                               </div>
-                              {valuationResult.currency !== 'USD' && (
-                                <div className="text-lg font-bold text-green-700 mt-1">
-                                  {valuationResult.symbol}{Math.round((valuationResult.estimatedValueLocal || 0) * 0.85).toLocaleString()} {valuationResult.currency}
-                                </div>
-                              )}
-                            </div>
+                            )}
                             
                              <div className="text-green-700 space-y-1 text-sm">
                                <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
