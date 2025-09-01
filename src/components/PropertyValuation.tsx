@@ -1216,8 +1216,10 @@ const PropertyValuation = () => {
                                       : 'hover:bg-indigo-50'
                                   }`}
                                    onClick={() => {
+                                     console.log('Clicking NUEVO');
                                      handleInputChange('estadoConservacion', 'NUEVO');
                                      setSelectedConservationState('NUEVO');
+                                     console.log('Set selectedConservationState to NUEVO');
                                    }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
@@ -1233,6 +1235,7 @@ const PropertyValuation = () => {
                                       : 'hover:bg-indigo-50'
                                   }`}
                                    onClick={() => {
+                                     console.log('Clicking BUENO');
                                      handleInputChange('estadoConservacion', 'BUENO');
                                      setSelectedConservationState('BUENO');
                                    }}
@@ -1250,6 +1253,7 @@ const PropertyValuation = () => {
                                       : 'hover:bg-indigo-50'
                                   }`}
                                    onClick={() => {
+                                     console.log('Clicking MEDIO');
                                      handleInputChange('estadoConservacion', 'MEDIO');
                                      setSelectedConservationState('MEDIO');
                                    }}
@@ -1389,8 +1393,8 @@ const PropertyValuation = () => {
                           )}
                           
                           
-                          {/* Panel de explicación detallada */}
-                          {selectedConservationState && conservationExplanations[selectedConservationState] && (
+                           {/* Panel de explicación detallada - SIEMPRE VISIBLE CUANDO HAY SELECCIÓN */}
+                           {selectedConservationState && conservationExplanations[selectedConservationState] && (
                             <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-300 shadow-md">
                               <div className="flex items-center justify-between mb-4">
                                 <h4 className="text-xl font-bold text-indigo-800">
