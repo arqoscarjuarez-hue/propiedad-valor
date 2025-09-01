@@ -177,6 +177,26 @@ export type Database = {
           total_area: number
         }[]
       }
+      find_comparables_within_radius: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          prop_type: string
+          radius_km: number
+        }
+        Returns: {
+          address: string
+          distance: number
+          estrato_social: Database["public"]["Enums"]["estrato_social"]
+          id: string
+          latitude: number
+          longitude: number
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          total_area: number
+        }[]
+      }
       get_property_comparables_public: {
         Args: { limit_rows?: number; offset_rows?: number }
         Returns: {

@@ -26,8 +26,9 @@ serve(async (req) => {
       target_property_type
     });
 
-    // Progressive radius search: 1km, 2km, 5km, 10km
-    const radii = [1, 2, 5, 10];
+    // Progressive radius search: 1km, 2km, 5km, 10km, 20km, 50km
+    // Always try to find exactly 5 comparables
+    const radii = [1, 2, 5, 10, 20, 50];
     let comparables: any[] = [];
 
     for (const radius of radii) {
@@ -37,8 +38,8 @@ serve(async (req) => {
         .rpc('find_comparables_within_radius', {
           center_lat: target_lat,
           center_lng: target_lng,
-          radius_km: radius,
-          property_type: target_property_type
+          prop_type: target_property_type,
+          radius_km: radius
         });
 
       if (error) {
@@ -49,7 +50,17 @@ serve(async (req) => {
       if (data && data.length > 0) {
         comparables = data;
         console.log(`Found ${data.length} comparables within ${radius}km`);
-        break; // Stop at first successful radius
+        
+        // If we found 5 or more, we're done
+        if (data.length >= 5) {
+          break;
+        }
+        
+        // If this is the last radius and we still don't have 5, 
+        // take what we found
+        if (radius === 50) {
+          break;
+        }
       }
     }
 
