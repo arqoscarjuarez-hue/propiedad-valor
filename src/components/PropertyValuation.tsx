@@ -651,19 +651,43 @@ const PropertyValuation = () => {
 
   const fetchComparables = async () => {
     try {
+      // 1) Preferimos usar la función SQL para buscar por cercanía + estrato
+      if (propertyData.latitud && propertyData.longitud) {
+        const { data, error } = await supabase.rpc('find_comparables_progressive_radius', {
+          target_lat: propertyData.latitud,
+          target_lng: propertyData.longitud,
+          target_estrato: propertyData.estratoSocial,
+          target_property_type: propertyData.tipoPropiedad || null,
+        });
+
+        if (error) {
+          console.error('Error fetching comparables (rpc):', error);
+        } else if (data) {
+          return data;
+        }
+      }
+
+      // 2) Fallback: filtrar por estrato + países de Latinoamérica
+      const LATAM_COUNTRIES = [
+        'Argentina', 'Bolivia', 'Brasil', 'Brazil', 'Chile', 'Colombia', 'Costa Rica',
+        'Cuba', 'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'México', 'Mexico',
+        'Nicaragua', 'Panamá', 'Panama', 'Paraguay', 'Perú', 'Peru', 'Puerto Rico',
+        'República Dominicana', 'Dominican Republic', 'Uruguay', 'Venezuela'
+      ];
+
       const { data, error } = await supabase
         .from('property_comparables')
         .select('*')
-        .eq('property_type', propertyData.tipoPropiedad)
-        .in('estrato_social', classToEstratos[estratoToClassMap[propertyData.estratoSocial]])
+        .eq('estrato_social', propertyData.estratoSocial)
+        .in('country', LATAM_COUNTRIES)
         .limit(10);
 
       if (error) {
-        console.error('Error fetching comparables:', error);
+        console.error('Error fetching comparables (fallback):', error);
         return [];
       }
 
-      return data || [];
+      return data ? (Array.isArray(data) ? data : [data]) : [];
     } catch (error) {
       console.error('Error fetching comparables:', error);
       return [];
