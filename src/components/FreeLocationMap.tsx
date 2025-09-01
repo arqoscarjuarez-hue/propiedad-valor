@@ -308,9 +308,14 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       {/* Instrucciones */}
       <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
         <p className="text-xs text-blue-700">
-          💡 <strong>Instrucciones:</strong> Haz clic en el mapa o arrastra el marcador para seleccionar una ubicación. 
-          También puedes buscar una dirección o usar tu ubicación actual.
+          💡 <strong>Instrucciones:</strong> 
         </p>
+        <ul className="text-xs text-blue-700 mt-1 ml-4 space-y-1">
+          <li>🖱️ <strong>Haz clic con el cursor en el mapa</strong> para seleccionar una ubicación</li>
+          <li>🔄 Arrastra el marcador para ajustar la posición</li>
+          <li>🔍 Busca una dirección específica en el campo de búsqueda</li>
+          <li>📍 Usa tu ubicación actual con el botón GPS</li>
+        </ul>
       </div>
     </div>
   );
