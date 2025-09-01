@@ -270,8 +270,8 @@ const PropertyValuation = () => {
 
   // Estados para idioma y moneda
   const [selectedLanguage, setSelectedLanguage] = useState('es'); // Español por defecto
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedCurrency, setSelectedCurrency] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('salvador'); // El Salvador por defecto
+  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // USD por defecto (moneda de El Salvador)
 
   // Configuración de países y monedas del mundo
   const countriesConfig = {
