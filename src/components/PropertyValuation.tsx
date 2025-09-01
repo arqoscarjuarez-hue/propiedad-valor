@@ -1346,7 +1346,7 @@ const PropertyValuation = () => {
 
                             {/* Precio Mínimo de Venta (-15%) */}
                             <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded">
-                              <p className="text-sm font-medium text-green-700 mb-1">Precio Mínimo de Venta (-15%):</p>
+                              <p className="text-sm font-medium text-green-700 mb-1">Precio Mínimo de Venta:</p>
                               <div className="text-2xl font-bold text-green-800">
                                 ${Math.round((valuationResult.estimatedValueUSD || 0) * 0.85).toLocaleString()} USD
                               </div>
