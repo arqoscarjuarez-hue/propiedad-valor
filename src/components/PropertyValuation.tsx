@@ -797,95 +797,147 @@ const PropertyValuation = () => {
                   </TabsContent>
 
                    {/* Paso 5: Depreciación */}
-                   {propertyData.tipoPropiedad !== 'terreno' && (
-                     <TabsContent value="depreciacion" className="mt-6">
-                       <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
-                         <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
-                           <CardTitle className="flex items-center gap-3">
-                             <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                               {isStep5Complete() ? '✓' : '5'}
-                             </div>
-                             📉 Paso 5: Depreciación y Detalles
-                           </CardTitle>
-                         </CardHeader>
-                         <CardContent className="p-6">
-                           <div className="space-y-6">
-                             {/* Tabla de Estado de Conservación */}
-                             <div>
-                               <h3 className="text-lg font-bold text-indigo-800 mb-4">ESTADO CONSERVACIÓN</h3>
-                               <div className="bg-white rounded-lg border-2 border-indigo-200 overflow-hidden">
-                                 <table className="w-full">
-                                   <thead className="bg-indigo-100">
-                                     <tr>
-                                       <th className="px-4 py-3 text-left font-bold text-indigo-800">ESTADO</th>
-                                     </tr>
-                                   </thead>
-                                   <tbody className="divide-y divide-indigo-100">
-                                     <tr><td className="px-4 py-2">NUEVO</td></tr>
-                                     <tr><td className="px-4 py-2">BUENO</td></tr>
-                                     <tr><td className="px-4 py-2">MEDIO</td></tr>
-                                     <tr><td className="px-4 py-2">REGULAR</td></tr>
-                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES SENCILLAS</td></tr>
-                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES MEDIAS</td></tr>
-                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES IMPORTANTES</td></tr>
-                                     <tr><td className="px-4 py-2 text-blue-600">DAÑOS GRAVES</td></tr>
-                                     <tr><td className="px-4 py-2 text-blue-600">EN DESECHO</td></tr>
-                                   </tbody>
-                                 </table>
-                               </div>
-                             </div>
-                             
-                             {/* Selector de Estado */}
-                             <div>
-                                <Label className="text-base font-semibold mb-2 block">
-                                  🔨 Seleccione el Estado de Conservación *
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <TabsContent value="depreciacion" className="mt-6">
+                        <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
+                          <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                            <CardTitle className="flex items-center gap-3">
+                              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                {isStep5Complete() ? '✓' : '5'}
+                              </div>
+                              📉 Paso 5: Depreciación y Detalles
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-6">
+                            <div className="space-y-8">
+                              
+                              {/* ANTIGÜEDAD DE LA PROPIEDAD */}
+                              <div className="bg-white rounded-lg p-6 border-2 border-orange-200">
+                                <Label htmlFor="antiguedad" className="text-lg font-bold text-orange-800 mb-4 block">
+                                  🕐 Antigüedad de la Propiedad (años) *
                                 </Label>
-                                <Select 
-                                  value={propertyData.estadoConservacion} 
-                                  onValueChange={(value) => {
-                                    console.log('ESTADO SELECCIONADO:', value);
-                                    handleInputChange('estadoConservacion', value);
-                                  }}
-                                >
-                                  <SelectTrigger className="w-full h-12 text-left border-2 border-gray-300 hover:border-indigo-500 focus:border-indigo-500 bg-white">
-                                    <SelectValue placeholder="Haga clic aquí para seleccionar el estado" />
-                                  </SelectTrigger>
-                                  <SelectContent className="z-[9999] bg-white border-2 border-gray-200 shadow-2xl">
-                                    <SelectItem value="NUEVO" className="cursor-pointer hover:bg-indigo-50 py-3">
-                                      <span className="font-bold text-green-700">✨ NUEVO</span> <span className="text-gray-600">(1.0000)</span>
-                                    </SelectItem>
-                                    <SelectItem value="BUENO" className="cursor-pointer hover:bg-indigo-50 py-3">
-                                      <span className="font-bold text-green-600">✅ BUENO</span> <span className="text-gray-600">(0.9968)</span>
-                                    </SelectItem>
-                                    <SelectItem value="MEDIO" className="cursor-pointer hover:bg-indigo-50 py-3">
-                                      <span className="font-bold text-blue-600">🔵 MEDIO</span> <span className="text-gray-600">(0.9748)</span>
-                                    </SelectItem>
-                                    <SelectItem value="REGULAR" className="cursor-pointer hover:bg-indigo-50 py-3">
-                                      <span className="font-bold text-yellow-600">⚠️ REGULAR</span> <span className="text-gray-600">(0.9191)</span>
-                                    </SelectItem>
-                                    <SelectItem value="REPARACIONES SENCILLAS" className="cursor-pointer hover:bg-yellow-50 py-3">
-                                      <span className="font-bold text-yellow-700">🔧 REPARACIONES SENCILLAS</span> <span className="text-gray-600">(0.8190)</span>
-                                    </SelectItem>
-                                    <SelectItem value="REPARACIONES MEDIAS" className="cursor-pointer hover:bg-yellow-50 py-3">
-                                      <span className="font-bold text-orange-600">🛠️ REPARACIONES MEDIAS</span> <span className="text-gray-600">(0.6680)</span>
-                                    </SelectItem>
-                                    <SelectItem value="REPARACIONES IMPORTANTES" className="cursor-pointer hover:bg-orange-50 py-3">
-                                      <span className="font-bold text-orange-700">⚒️ REPARACIONES IMPORTANTES</span> <span className="text-gray-600">(0.4740)</span>
-                                    </SelectItem>
-                                    <SelectItem value="DAÑOS GRAVES" className="cursor-pointer hover:bg-red-50 py-3">
-                                      <span className="font-bold text-red-600">💥 DAÑOS GRAVES</span> <span className="text-gray-600">(0.2480)</span>
-                                    </SelectItem>
-                                    <SelectItem value="EN DESECHO" className="cursor-pointer hover:bg-red-50 py-3">
-                                      <span className="font-bold text-red-700">🚫 EN DESECHO</span> <span className="text-gray-600">(0.1350)</span>
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                             </div>
-                           </div>
-                         </CardContent>
-                      </Card>
-                    </TabsContent>
-                  )}
+                                <Input
+                                  id="antiguedad"
+                                  type="number"
+                                  min="0"
+                                  max="100"
+                                  value={propertyData.antiguedad || ''}
+                                  onChange={(e) => handleInputChange('antiguedad', parseInt(e.target.value) || 0)}
+                                  placeholder="Ingrese la antigüedad en años (ej: 5)"
+                                  className="w-full h-12 text-lg border-2 border-orange-300 focus:border-orange-500"
+                                />
+                                <p className="text-sm text-orange-600 mt-2">
+                                  💡 La antigüedad afecta el valor: 0 años = nuevo, más de 50 años = depreciación máxima
+                                </p>
+                              </div>
+
+                              {/* ESTADO DE CONSERVACIÓN */}
+                              <div className="bg-white rounded-lg p-6 border-2 border-indigo-200">
+                                <h3 className="text-lg font-bold text-indigo-800 mb-4">🔨 ESTADO DE CONSERVACIÓN *</h3>
+                                
+                                {/* Tabla de referencia */}
+                                <div className="mb-6 bg-indigo-50 rounded-lg border border-indigo-200 overflow-hidden">
+                                  <table className="w-full text-sm">
+                                    <thead className="bg-indigo-100">
+                                      <tr>
+                                        <th className="px-4 py-3 text-left font-bold text-indigo-800">ESTADO</th>
+                                        <th className="px-4 py-3 text-left font-bold text-indigo-800">FACTOR</th>
+                                        <th className="px-4 py-3 text-left font-bold text-indigo-800">DESCRIPCIÓN</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-indigo-100">
+                                      <tr><td className="px-4 py-2 font-medium">NUEVO</td><td className="px-4 py-2">1.0000</td><td className="px-4 py-2 text-xs">Construcción reciente</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium">BUENO</td><td className="px-4 py-2">0.9968</td><td className="px-4 py-2 text-xs">Mantenimiento regular</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium">MEDIO</td><td className="px-4 py-2">0.9748</td><td className="px-4 py-2 text-xs">Desgaste normal</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium">REGULAR</td><td className="px-4 py-2">0.9191</td><td className="px-4 py-2 text-xs">Necesita mantenimiento</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium text-blue-600">REP. SENCILLAS</td><td className="px-4 py-2">0.8190</td><td className="px-4 py-2 text-xs">Pintura, cerrajería</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium text-blue-600">REP. MEDIAS</td><td className="px-4 py-2">0.6680</td><td className="px-4 py-2 text-xs">Pisos, instalaciones</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium text-orange-600">REP. IMPORTANTES</td><td className="px-4 py-2">0.4740</td><td className="px-4 py-2 text-xs">Estructura, techos</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium text-red-600">DAÑOS GRAVES</td><td className="px-4 py-2">0.2480</td><td className="px-4 py-2 text-xs">Fallas estructurales</td></tr>
+                                      <tr><td className="px-4 py-2 font-medium text-red-700">EN DESECHO</td><td className="px-4 py-2">0.1350</td><td className="px-4 py-2 text-xs">Demolición necesaria</td></tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                                {/* Selector de Estado */}
+                                <div>
+                                  <Label className="text-base font-semibold mb-3 block">
+                                    Seleccione el Estado de Conservación:
+                                  </Label>
+                                  <Select 
+                                    value={propertyData.estadoConservacion} 
+                                    onValueChange={(value) => {
+                                      console.log('ESTADO SELECCIONADO:', value);
+                                      console.log('FACTOR APLICADO:', conservationFactors[value]);
+                                      handleInputChange('estadoConservacion', value);
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-full h-14 text-left border-2 border-indigo-300 hover:border-indigo-500 focus:border-indigo-500 bg-white">
+                                      <SelectValue placeholder="👆 Haga clic aquí para seleccionar el estado de conservación" />
+                                    </SelectTrigger>
+                                    <SelectContent className="z-[9999] bg-white border-2 border-indigo-200 shadow-2xl max-h-80 overflow-y-auto">
+                                      <SelectItem value="NUEVO" className="cursor-pointer hover:bg-green-50 py-4">
+                                        <span className="font-bold text-green-700">✨ NUEVO</span> <span className="text-gray-600 ml-2">(Factor: 1.0000)</span>
+                                      </SelectItem>
+                                      <SelectItem value="BUENO" className="cursor-pointer hover:bg-green-50 py-4">
+                                        <span className="font-bold text-green-600">✅ BUENO</span> <span className="text-gray-600 ml-2">(Factor: 0.9968)</span>
+                                      </SelectItem>
+                                      <SelectItem value="MEDIO" className="cursor-pointer hover:bg-blue-50 py-4">
+                                        <span className="font-bold text-blue-600">🔵 MEDIO</span> <span className="text-gray-600 ml-2">(Factor: 0.9748)</span>
+                                      </SelectItem>
+                                      <SelectItem value="REGULAR" className="cursor-pointer hover:bg-yellow-50 py-4">
+                                        <span className="font-bold text-yellow-600">⚠️ REGULAR</span> <span className="text-gray-600 ml-2">(Factor: 0.9191)</span>
+                                      </SelectItem>
+                                      <SelectItem value="REPARACIONES SENCILLAS" className="cursor-pointer hover:bg-yellow-50 py-4">
+                                        <span className="font-bold text-yellow-700">🔧 REPARACIONES SENCILLAS</span> <span className="text-gray-600 ml-2">(Factor: 0.8190)</span>
+                                      </SelectItem>
+                                      <SelectItem value="REPARACIONES MEDIAS" className="cursor-pointer hover:bg-orange-50 py-4">
+                                        <span className="font-bold text-orange-600">🛠️ REPARACIONES MEDIAS</span> <span className="text-gray-600 ml-2">(Factor: 0.6680)</span>
+                                      </SelectItem>
+                                      <SelectItem value="REPARACIONES IMPORTANTES" className="cursor-pointer hover:bg-orange-50 py-4">
+                                        <span className="font-bold text-orange-700">⚒️ REPARACIONES IMPORTANTES</span> <span className="text-gray-600 ml-2">(Factor: 0.4740)</span>
+                                      </SelectItem>
+                                      <SelectItem value="DAÑOS GRAVES" className="cursor-pointer hover:bg-red-50 py-4">
+                                        <span className="font-bold text-red-600">💥 DAÑOS GRAVES</span> <span className="text-gray-600 ml-2">(Factor: 0.2480)</span>
+                                      </SelectItem>
+                                      <SelectItem value="EN DESECHO" className="cursor-pointer hover:bg-red-50 py-4">
+                                        <span className="font-bold text-red-700">🚫 EN DESECHO</span> <span className="text-gray-600 ml-2">(Factor: 0.1350)</span>
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                {/* Mostrar factor seleccionado */}
+                                {propertyData.estadoConservacion && (
+                                  <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <p className="text-green-800 font-semibold">
+                                      ✅ Estado seleccionado: <span className="font-bold">{propertyData.estadoConservacion}</span>
+                                    </p>
+                                    <p className="text-green-700 text-sm">
+                                      Factor de depreciación: <span className="font-bold">{conservationFactors[propertyData.estadoConservacion]?.toFixed(4) || 'N/A'}</span>
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* DESCRIPCIÓN ADICIONAL */}
+                              <div className="bg-white rounded-lg p-6 border-2 border-gray-200">
+                                <Label htmlFor="descripcion" className="text-lg font-bold text-gray-800 mb-4 block">
+                                  📝 Descripción Adicional (Opcional)
+                                </Label>
+                                <Textarea
+                                  id="descripcion"
+                                  value={propertyData.descripcion}
+                                  onChange={(e) => handleInputChange('descripcion', e.target.value)}
+                                  placeholder="Agregue detalles adicionales sobre la propiedad, acabados, reformas, etc."
+                                  className="w-full h-24 border-2 border-gray-300 focus:border-gray-500"
+                                />
+                              </div>
+                            </div>
+                          </CardContent>
+                       </Card>
+                     </TabsContent>
+                   )}
 
                   {/* Paso 6: Valuación */}
                   <TabsContent value="valuacion" className="mt-6">
