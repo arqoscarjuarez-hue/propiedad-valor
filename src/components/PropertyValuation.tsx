@@ -1350,6 +1350,70 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
+                {/* Sección de Comparables Utilizados */}
+                {valuationResult && comparables.length > 0 && (
+                  <div className="mt-6">
+                    <Card className="border-2 border-blue-200 shadow-lg bg-gradient-to-br from-blue-50/50 to-indigo-50/50">
+                      <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            🏘️
+                          </div>
+                          📊 Propiedades Comparables Utilizadas en el Avalúo
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                          <p className="text-blue-800 text-sm">
+                            <strong>📍 Ubicación de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
+                            de tipo <strong>{propertyData.tipoPropiedad}</strong> en un radio cercano a la ubicación seleccionada.
+                          </p>
+                        </div>
+                        
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                          {comparables.map((comparable, index) => (
+                            <div key={comparable.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                              <div className="flex items-start justify-between mb-2">
+                                <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                                  Comparable #{index + 1}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  📍 {comparable.distance ? `${comparable.distance.toFixed(1)} km` : 'Zona local'}
+                                </span>
+                              </div>
+                              
+                              <div className="space-y-2 text-sm">
+                                <div>
+                                  <strong>🏠 Tipo:</strong> {comparable.property_type}
+                                </div>
+                                <div>
+                                  <strong>📐 Área:</strong> {comparable.total_area} m²
+                                </div>
+                                <div>
+                                  <strong>💰 Precio total:</strong> ${comparable.price_usd?.toLocaleString()} USD
+                                </div>
+                                <div>
+                                  <strong>💵 Precio por m²:</strong> ${comparable.price_per_sqm_usd?.toLocaleString()} USD
+                                </div>
+                                <div className="text-xs text-gray-600">
+                                  <strong>📍 Ubicación:</strong> {comparable.address}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-green-800 text-xs">
+                            ✅ <strong>Metodología:</strong> Estos comparables se utilizaron para validar y ajustar 
+                            el precio base por m² en la zona, asegurando que el avalúo refleje el mercado local actual.
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
               </Tabs>
             </CardContent>
           </Card>
