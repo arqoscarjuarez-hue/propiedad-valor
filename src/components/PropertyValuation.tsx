@@ -811,26 +811,6 @@ const PropertyValuation = () => {
                           <CardContent className="p-6">
                             <div className="space-y-8">
                               
-                              {/* ANTIGÜEDAD DE LA PROPIEDAD */}
-                              <div className="bg-white rounded-lg p-6 border-2 border-orange-200">
-                                <Label htmlFor="antiguedad" className="text-lg font-bold text-orange-800 mb-4 block">
-                                  🕐 Antigüedad de la Propiedad (años) *
-                                </Label>
-                                <Input
-                                  id="antiguedad"
-                                  type="number"
-                                  min="0"
-                                  max="100"
-                                  value={propertyData.antiguedad || ''}
-                                  onChange={(e) => handleInputChange('antiguedad', parseInt(e.target.value) || 0)}
-                                  placeholder="Ingrese la antigüedad en años (ej: 5)"
-                                  className="w-full h-12 text-lg border-2 border-orange-300 focus:border-orange-500"
-                                />
-                                <p className="text-sm text-orange-600 mt-2">
-                                  💡 La antigüedad afecta el valor: 0 años = nuevo, más de 50 años = depreciación máxima
-                                </p>
-                              </div>
-
                               {/* ESTADO DE CONSERVACIÓN */}
                               <div className="bg-white rounded-lg p-6 border-2 border-indigo-200">
                                 <h3 className="text-lg font-bold text-indigo-800 mb-4">🔨 ESTADO DE CONSERVACIÓN *</h3>
