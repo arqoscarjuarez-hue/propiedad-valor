@@ -397,7 +397,7 @@ const PropertyValuation = () => {
   // Funciones de validación de pasos
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep2Complete = () => propertyData.tipoPropiedad && propertyData.estratoSocial;
+  const isStep2Complete = () => propertyData.estratoSocial;
   const isStep3Complete = () => propertyData.tipoPropiedad;
   const isStep4Complete = () => propertyData.area > 0;
   const isStep5Complete = () => propertyData.estadoConservacion;
@@ -552,16 +552,16 @@ const PropertyValuation = () => {
                     {isStep1Complete() ? '✅' : '2️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger value="estrato" className="text-xs">
-                    {isStep2Complete() ? '✅' : '3️⃣'} Tipo
+                    {isStep2Complete() ? '✅' : '2️⃣'} Estrato
                   </TabsTrigger>
                   <TabsTrigger value="tipo" className="text-xs">
-                    {isStep3Complete() ? '✅' : '4️⃣'} Detalles
+                    {isStep3Complete() ? '✅' : '3️⃣'} Tipo
                   </TabsTrigger>
                   <TabsTrigger value="caracteristicas" className="text-xs">
-                    {isStep4Complete() ? '✅' : '5️⃣'} Área
+                    {isStep4Complete() ? '✅' : '4️⃣'} Área
                   </TabsTrigger>
                   <TabsTrigger value="valuacion" className="text-xs">
-                    {isStep5Complete() ? '✅' : '6️⃣'} Resultado
+                    {isStep5Complete() ? '✅' : '5️⃣'} Resultado
                   </TabsTrigger>
                 </TabsList>
 
@@ -652,10 +652,69 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Paso 3: Tipo de Propiedad y Estrato Social */}
+                {/* Paso 2: Estrato Social */}
                 <TabsContent value="estrato" className="mt-6">
                   <Card className="border-2 border-violet-200 shadow-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50">
                     <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep1Complete() ? '✓' : '2'}
+                        </div>
+                        🏘️ Paso 2: Estrato Social
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>🏘️ ¿En qué tipo de barrio está tu casa?</strong><br />
+                          Necesitamos saber el estrato social del barrio donde está tu propiedad para calcular su valor.
+                        </p>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* SELECCIÓN DE ESTRATO SOCIAL */}
+                        <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
+                          <h3 className="font-semibold mb-2">🏘️ Estrato Social del Barrio</h3>
+                          <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
+                            Dime en qué tipo de barrio está tu casa.
+                          </p>
+                          <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
+                            <SelectTrigger className="bg-white">
+                              <SelectValue placeholder="¿En qué tipo de barrio está?" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground">Barrios Populares</div>
+                              <SelectItem value="bajo_bajo">🏚️ Barrio Muy Pobre</SelectItem>
+                              <SelectItem value="bajo_medio">🏠 Barrio Popular</SelectItem>
+                              <SelectItem value="bajo_alto">🏘️ Barrio Popular Mejorado</SelectItem>
+                              
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">Barrios de Clase Media</div>
+                              <SelectItem value="medio_bajo">🏘️ Barrio de Clase Media Baja</SelectItem>
+                              <SelectItem value="medio_medio">🏡 Barrio de Clase Media</SelectItem>
+                              <SelectItem value="medio_alto">🏡 Barrio de Clase Media Alta</SelectItem>
+                              
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">Barrios Residenciales</div>
+                              <SelectItem value="alto_medio">🏖️ Barrio Residencial</SelectItem>
+                              <SelectItem value="alto_alto">🏰 Barrio Exclusivo</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {propertyData.estratoSocial && (
+                            <div className="mt-3 p-2 bg-violet-100 border border-violet-300 rounded">
+                              <p className="text-sm text-violet-800">
+                                <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* Paso 3: Tipo de Propiedad */}
+                <TabsContent value="tipo" className="mt-6">
+                  <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-green-50/50 to-emerald-50/50">
+                    <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep2Complete() ? '✓' : '3'}
@@ -676,7 +735,7 @@ const PropertyValuation = () => {
                         <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                           <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
                           <p className="text-sm text-green-800 dark:text-green-200 mb-4">
-                            Primero dime qué tipo de propiedad quieres valuar.
+                            Dime qué tipo de propiedad quieres valuar.
                           </p>
                           <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
                             <SelectTrigger className="bg-white">
@@ -702,22 +761,20 @@ const PropertyValuation = () => {
                             </div>
                           )}
                         </div>
-
-
                       </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
                 {/* Paso 4: Características */}
-                <TabsContent value="tipo" className="mt-6">
-                  <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-green-50/50 to-emerald-50/50">
-                    <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                <TabsContent value="caracteristicas" className="mt-6">
+                  <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-amber-50/50">
+                    <CardHeader className="bg-gradient-to-r from-orange-500 to-amber-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep3Complete() ? '✓' : '4'}
                         </div>
-                        📏 Paso 3: Tipo de Propiedad
+                        📏 Paso 4: Características de tu Propiedad
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
