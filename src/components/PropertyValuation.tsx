@@ -804,46 +804,36 @@ const PropertyValuation = () => {
                             <table className="w-full">
                               <thead className="bg-indigo-100">
                                 <tr>
-                                  <th className="px-6 py-4 text-left font-bold text-indigo-800 text-lg border-r border-indigo-300">CALIFICACIÓN</th>
-                                  <th className="px-6 py-4 text-left font-bold text-indigo-800 text-lg">ESTADO</th>
+                                  <th className="px-6 py-4 text-center font-bold text-indigo-800 text-lg">ESTADO</th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-indigo-200">
                                 <tr className="hover:bg-indigo-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">1.0000</td>
-                                  <td className="px-6 py-3 font-medium text-lg">NUEVO</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center">NUEVO</td>
                                 </tr>
                                 <tr className="hover:bg-indigo-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9968</td>
-                                  <td className="px-6 py-3 font-medium text-lg">BUENO</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center">BUENO</td>
                                 </tr>
                                 <tr className="hover:bg-indigo-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9748</td>
-                                  <td className="px-6 py-3 font-medium text-lg">MEDIO</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center">MEDIO</td>
                                 </tr>
                                 <tr className="hover:bg-indigo-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.9191</td>
-                                  <td className="px-6 py-3 font-medium text-lg">REGULAR</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center">REGULAR</td>
                                 </tr>
                                 <tr className="hover:bg-blue-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.8190</td>
-                                  <td className="px-6 py-3 font-medium text-lg text-blue-600">REPARACIONES SENCILLAS</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES SENCILLAS</td>
                                 </tr>
                                 <tr className="hover:bg-blue-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.6680</td>
-                                  <td className="px-6 py-3 font-medium text-lg text-blue-600">REPARACIONES MEDIAS</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES MEDIAS</td>
                                 </tr>
                                 <tr className="hover:bg-orange-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.4740</td>
-                                  <td className="px-6 py-3 font-medium text-lg text-orange-600">REPARACIONES IMPORTANTES</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center text-orange-600">REPARACIONES IMPORTANTES</td>
                                 </tr>
                                 <tr className="hover:bg-red-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.2480</td>
-                                  <td className="px-6 py-3 font-medium text-lg text-red-600">DAÑOS GRAVES</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center text-red-600">DAÑOS GRAVES</td>
                                 </tr>
                                 <tr className="hover:bg-red-50">
-                                  <td className="px-6 py-3 font-semibold text-lg border-r border-indigo-200">0.1350</td>
-                                  <td className="px-6 py-3 font-medium text-lg text-red-700">EN DESECHO</td>
+                                  <td className="px-6 py-3 font-medium text-lg text-center text-red-700">EN DESECHO</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -851,7 +841,7 @@ const PropertyValuation = () => {
                           
                           <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                             <p className="text-sm text-indigo-700 text-center">
-                              💡 Esta tabla muestra los factores de depreciación aplicados según el estado de conservación de la propiedad.
+                              💡 Esta tabla muestra los diferentes estados de conservación de una propiedad.
                             </p>
                           </div>
                         </div>
