@@ -1,19 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { MapPin, Search, Navigation } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-// Fix for default markers in Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+// Inyectar CSS de Leaflet
+if (typeof document !== 'undefined') {
+  const leafletCSS = document.createElement('link');
+  leafletCSS.rel = 'stylesheet';
+  leafletCSS.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+  document.head.appendChild(leafletCSS);
+}
+
+// Configurar iconos de Leaflet
+const DefaultIcon = L.icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 interface FreeLocationMapProps {
   onLocationChange?: (lat: number, lng: number, address: string) => void;
@@ -177,45 +188,63 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
-    // Crear el mapa
-    map.current = L.map(mapContainer.current).setView([initialLat, initialLng], 15);
+    try {
+      // Crear el mapa
+      map.current = L.map(mapContainer.current, {
+        center: [initialLat, initialLng],
+        zoom: 15,
+        zoomControl: true,
+        attributionControl: true
+      });
 
-    // Agregar capa de OpenStreetMap (gratuito)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-    }).addTo(map.current);
+      // Agregar capa de OpenStreetMap (gratuito)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map.current);
 
-    // Crear marcador arrastrable
-    marker.current = L.marker([initialLat, initialLng], {
-      draggable: true
-    }).addTo(map.current);
+      // Crear marcador arrastrable
+      marker.current = L.marker([initialLat, initialLng], {
+        draggable: true,
+        icon: DefaultIcon
+      }).addTo(map.current);
 
-    // Evento cuando se arrastra el marcador
-    marker.current.on('dragend', () => {
-      if (marker.current) {
-        const position = marker.current.getLatLng();
-        handleLocationUpdate(position.lat, position.lng);
+      // Evento cuando se arrastra el marcador
+      marker.current.on('dragend', () => {
+        if (marker.current) {
+          const position = marker.current.getLatLng();
+          handleLocationUpdate(position.lat, position.lng);
+        }
+      });
+
+      // Evento cuando se hace clic en el mapa
+      map.current.on('click', (e: L.LeafletMouseEvent) => {
+        if (marker.current) {
+          const { lat, lng } = e.latlng;
+          marker.current.setLatLng([lat, lng]);
+          handleLocationUpdate(lat, lng);
+        }
+      });
+
+      // Geocodificar posición inicial
+      if (initialAddress) {
+        geocodeAddress(initialAddress);
+      } else {
+        reverseGeocode(initialLat, initialLng);
       }
-    });
 
-    // Evento cuando se hace clic en el mapa
-    map.current.on('click', (e: L.LeafletMouseEvent) => {
-      if (marker.current) {
-        const { lat, lng } = e.latlng;
-        marker.current.setLatLng([lat, lng]);
-        handleLocationUpdate(lat, lng);
-      }
-    });
+      setIsMapReady(true);
+      
+      // Forzar redibujado del mapa
+      setTimeout(() => {
+        if (map.current) {
+          map.current.invalidateSize();
+        }
+      }, 100);
 
-    // Geocodificar posición inicial
-    if (initialAddress) {
-      geocodeAddress(initialAddress);
-    } else {
-      reverseGeocode(initialLat, initialLng);
+    } catch (error) {
+      console.error('Error inicializando mapa:', error);
     }
-
-    setIsMapReady(true);
 
     // Cleanup
     return () => {
@@ -282,19 +311,24 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       </div>
 
       {/* Contenedor del mapa */}
-      <div 
-        ref={mapContainer} 
-        className="w-full h-96 bg-gray-200 rounded-lg border-2 border-emerald-200"
-        style={{ minHeight: '400px' }}
-      >
-        {!isMapReady && (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-2"></div>
-              <p className="text-emerald-600">Cargando mapa...</p>
+      <div className="relative">
+        <div 
+          ref={mapContainer} 
+          className="w-full h-96 bg-gray-200 rounded-lg border-2 border-emerald-200 z-0"
+          style={{ 
+            minHeight: '400px',
+            position: 'relative'
+          }}
+        >
+          {!isMapReady && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-2"></div>
+                <p className="text-emerald-600">Cargando mapa...</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Información de la ubicación seleccionada */}
