@@ -118,6 +118,37 @@ export const clasePrincipalLabels: Record<ClasePrincipal, string> = {
   'alto': 'Estrato Socioeconómico Alto'
 };
 
+// Factores de valuación por estrato social - Alto-Bajo como base (0%)
+export const estratoValuationFactors: Record<EstratoSocial, number> = {
+  // Estratos Bajos (factores negativos)
+  'bajo_bajo': -0.40,    // -40%
+  'bajo_medio': -0.30,   // -30%
+  'bajo_alto': -0.20,    // -20%
+  
+  // Estratos Medios (factores negativos a neutros)
+  'medio_bajo': -0.15,   // -15%
+  'medio_medio': -0.10,  // -10%
+  'medio_alto': -0.05,   // -5%
+  
+  // Estratos Altos (base y factores positivos)
+  'alto_bajo': 0.00,     // 0% (BASE)
+  'alto_medio': 0.15,    // +15%
+  'alto_alto': 0.30      // +30%
+};
+
+// Labels para mostrar los factores de valuación
+export const estratoValuationLabels: Record<EstratoSocial, string> = {
+  'bajo_bajo': '-40%',
+  'bajo_medio': '-30%',
+  'bajo_alto': '-20%',
+  'medio_bajo': '-15%',
+  'medio_medio': '-10%',
+  'medio_alto': '-5%',
+  'alto_bajo': '0% (BASE)',
+  'alto_medio': '+15%',
+  'alto_alto': '+30%'
+};
+
 // Mapeo de estratos a clases sociales principales
 export const estratoToClassMap: Record<EstratoSocial, ClasePrincipal> = {
   'bajo_bajo': 'bajo',
@@ -759,12 +790,55 @@ const PropertyValuation = () => {
                           </Select>
 
                           {propertyData.estratoSocial && (
-                            <div className="mt-3 p-2 bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-600 rounded">
-                              <p className="text-sm text-green-800 dark:text-green-200">
-                                <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
-                              </p>
+                            <div className="mt-3 space-y-3">
+                              <div className="p-2 bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-600 rounded">
+                                <p className="text-sm text-green-800 dark:text-green-200">
+                                  <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
+                                </p>
+                                <p className="text-sm text-green-800 dark:text-green-200 mt-1">
+                                  <strong>📈 Factor de valuación:</strong> {estratoValuationLabels[propertyData.estratoSocial as EstratoSocial]}
+                                </p>
+                              </div>
                             </div>
                           )}
+
+                          {/* Tabla de Factores de Valuación */}
+                          <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                            <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-3">
+                              📊 Tabla de Factores de Valuación por Estrato
+                            </h4>
+                            <div className="text-xs text-amber-700 dark:text-amber-300 mb-3">
+                              Los factores afectan directamente el precio de valuación. <strong>Alto-Bajo</strong> es la base (0%).
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              {/* Header */}
+                              <div className="font-semibold text-amber-800 dark:text-amber-200 border-b border-amber-300 pb-1">Estrato</div>
+                              <div className="font-semibold text-amber-800 dark:text-amber-200 border-b border-amber-300 pb-1">Factor</div>
+                              <div className="font-semibold text-amber-800 dark:text-amber-200 border-b border-amber-300 pb-1">Impacto</div>
+                              
+                              {/* Datos */}
+                              {(Object.entries(estratoSocialLabels) as [EstratoSocial, string][]).map(([estrato, label]) => (
+                                <React.Fragment key={estrato}>
+                                  <div className={`py-1 ${propertyData.estratoSocial === estrato ? 'font-bold text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                                    {label.split(' - ')[0]}
+                                  </div>
+                                  <div className={`py-1 text-center ${propertyData.estratoSocial === estrato ? 'font-bold text-green-700 dark:text-green-300' : 
+                                    estratoValuationFactors[estrato] > 0 ? 'text-green-600 dark:text-green-400' : 
+                                    estratoValuationFactors[estrato] < 0 ? 'text-red-600 dark:text-red-400' : 
+                                    'text-blue-600 dark:text-blue-400'}`}>
+                                    {estratoValuationLabels[estrato]}
+                                  </div>
+                                  <div className={`py-1 text-center ${propertyData.estratoSocial === estrato ? 'font-bold text-green-700 dark:text-green-300' : 
+                                    estratoValuationFactors[estrato] > 0 ? 'text-green-600 dark:text-green-400' : 
+                                    estratoValuationFactors[estrato] < 0 ? 'text-red-600 dark:text-red-400' : 
+                                    'text-blue-600 dark:text-blue-400'}`}>
+                                    {estratoValuationFactors[estrato] > 0 ? '↗️ Mayor valor' : 
+                                     estratoValuationFactors[estrato] < 0 ? '↘️ Menor valor' : '➡️ Valor base'}
+                                  </div>
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
