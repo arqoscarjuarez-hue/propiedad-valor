@@ -710,7 +710,6 @@ const PropertyValuation = () => {
                             <ul className="text-sm text-emerald-700 space-y-1">
                               <li>• <strong>Use el cursor</strong> para buscar la dirección exacta</li>
                               <li>• Ingrese el <strong>área específica</strong> donde se encuentra</li>
-                              <li>• Indique la <strong>dirección completa</strong> de la propiedad</li>
                               <li>• Especifique el <strong>lugar o zona</strong> que se va a valuar</li>
                             </ul>
                           </div>
