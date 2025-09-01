@@ -149,12 +149,17 @@ export const estratoMultipliers: Record<EstratoSocial, number> = {
   'alto_alto': 1.8
 };
 
-// Factores de conservación
-export const conservationFactors: Record<string, number> = {
-  'excelente': 1.15,
-  'bueno': 1.0,
-  'regular': 0.9,
-  'malo': 0.75
+// Factores de depreciación por estado de conservación (TODOS LOS FACTORES)
+const conservationFactors: Record<string, number> = {
+  'nuevo': 1.0000,
+  'bueno': 0.9968,
+  'medio': 0.9748,
+  'regular': 0.9191,
+  'reparaciones_sencillas': 0.8190,
+  'reparaciones_medias': 0.6680,
+  'reparaciones_importantes': 0.4740,
+  'danos_graves': 0.2480,
+  'en_desecho': 0.1350
 };
 
 // Multiplicadores por clase social
@@ -813,16 +818,16 @@ const PropertyValuation = () => {
                                  <SelectTrigger className="border-2 focus:border-indigo-500 bg-white">
                                    <SelectValue placeholder="Selecciona el estado de conservación de la propiedad" />
                                  </SelectTrigger>
-                                 <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50">
-                                   <SelectItem value="nuevo" className="font-medium hover:bg-indigo-50">✨ NUEVO</SelectItem>
-                                   <SelectItem value="bueno" className="font-medium hover:bg-indigo-50">✅ BUENO</SelectItem>
-                                   <SelectItem value="medio" className="font-medium hover:bg-indigo-50">🔵 MEDIO</SelectItem>
-                                   <SelectItem value="regular" className="font-medium hover:bg-indigo-50">⚠️ REGULAR</SelectItem>
-                                   <SelectItem value="reparaciones_sencillas" className="font-medium hover:bg-yellow-50">🔧 REPARACIONES SENCILLAS</SelectItem>
-                                   <SelectItem value="reparaciones_medias" className="font-medium hover:bg-yellow-50">🛠️ REPARACIONES MEDIAS</SelectItem>
-                                   <SelectItem value="reparaciones_importantes" className="font-medium hover:bg-orange-50">⚒️ REPARACIONES IMPORTANTES</SelectItem>
-                                   <SelectItem value="danos_graves" className="font-medium hover:bg-red-50">💥 DAÑOS GRAVES</SelectItem>
-                                   <SelectItem value="en_desecho" className="font-medium hover:bg-red-50">🚫 EN DESECHO</SelectItem>
+                                 <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50 max-h-60 overflow-y-auto">
+                                   <SelectItem value="nuevo" className="font-medium hover:bg-indigo-50 cursor-pointer">✨ NUEVO</SelectItem>
+                                   <SelectItem value="bueno" className="font-medium hover:bg-indigo-50 cursor-pointer">✅ BUENO</SelectItem>
+                                   <SelectItem value="medio" className="font-medium hover:bg-indigo-50 cursor-pointer">🔵 MEDIO</SelectItem>
+                                   <SelectItem value="regular" className="font-medium hover:bg-indigo-50 cursor-pointer">⚠️ REGULAR</SelectItem>
+                                   <SelectItem value="reparaciones_sencillas" className="font-medium hover:bg-yellow-50 cursor-pointer">🔧 REPARACIONES SENCILLAS</SelectItem>
+                                   <SelectItem value="reparaciones_medias" className="font-medium hover:bg-yellow-50 cursor-pointer">🛠️ REPARACIONES MEDIAS</SelectItem>
+                                   <SelectItem value="reparaciones_importantes" className="font-medium hover:bg-orange-50 cursor-pointer">⚒️ REPARACIONES IMPORTANTES</SelectItem>
+                                   <SelectItem value="danos_graves" className="font-medium hover:bg-red-50 cursor-pointer">💥 DAÑOS GRAVES</SelectItem>
+                                   <SelectItem value="en_desecho" className="font-medium hover:bg-red-50 cursor-pointer">🚫 EN DESECHO</SelectItem>
                                  </SelectContent>
                                </Select>
                              </div>
