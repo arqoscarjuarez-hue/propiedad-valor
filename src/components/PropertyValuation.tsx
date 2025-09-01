@@ -165,8 +165,8 @@ const countriesConfig = {
     currency: 'MXN', 
     symbol: '$', 
     flag: '🇲🇽',
-    basePricePerM2USD: 150,
-    economicFactor: 0.4,
+    basePricePerM2USD: 500,
+    economicFactor: 0.9,
     exchangeRate: 17.0
   },
   
@@ -203,8 +203,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇸🇻',
-    basePricePerM2USD: 120,
-    economicFactor: 0.3,
+    basePricePerM2USD: 400,
+    economicFactor: 0.8,
     exchangeRate: 1.0
   },
   'nicaragua': { 
@@ -241,8 +241,8 @@ const countriesConfig = {
     currency: 'COP', 
     symbol: '$', 
     flag: '🇨🇴',
-    basePricePerM2USD: 140,
-    economicFactor: 0.3,
+    basePricePerM2USD: 450,
+    economicFactor: 0.8,
     exchangeRate: 4200.0
   },
   'venezuela': { 
@@ -268,8 +268,8 @@ const countriesConfig = {
     currency: 'USD', 
     symbol: '$', 
     flag: '🇪🇨',
-    basePricePerM2USD: 100,
-    economicFactor: 0.25,
+    basePricePerM2USD: 350,
+    economicFactor: 0.7,
     exchangeRate: 1.0
   },
   'peru': { 
@@ -277,8 +277,8 @@ const countriesConfig = {
     currency: 'PEN', 
     symbol: 'S/', 
     flag: '🇵🇪',
-    basePricePerM2USD: 130,
-    economicFactor: 0.3,
+    basePricePerM2USD: 420,
+    economicFactor: 0.8,
     exchangeRate: 3.7
   },
   'chile': { 
@@ -640,8 +640,8 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable con 20% de descuento por negociación
-            let adjustedPrice = comp.price_usd * 0.80;
+            // Precio base del comparable con 8% de descuento por negociación
+            let adjustedPrice = comp.price_usd * 0.92;
 
             // Ajuste por diferencia de área (más conservador para evitar inflación)
             const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
@@ -688,19 +688,19 @@ const PropertyValuation = () => {
 
       // 3.5 Calibración de mercado para evitar sobrevaloración (cuando hay pocos comparables)
       const areaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+      // Solo aplicar calibración cuando NO hay comparables reales
       const noComparables = comparablesData.length === 0;
-      const allFallback = comparablesData.length > 0 && comparablesData.every(c => (c.id || '').toString().includes('fallback'));
-      const fewComparables = comparablesData.length < 3; // incluye 0, 1 y 2
-      if (noComparables || allFallback || fewComparables) {
-        const calibrationFactor = 0.85; // -15%
+      const onlyFallback = comparablesData.length === 1 && (comparablesData[0]?.id || '').toString().includes('fallback');
+      if (noComparables || onlyFallback) {
+        const calibrationFactor = 0.90; // -10% solo cuando usamos método de respaldo
         estimatedValueUSD = estimatedValueUSD * calibrationFactor;
-        console.log(`🧮 Calibración aplicada (-15%): ${calibrationFactor}`);
+        console.log(`🧮 Calibración de respaldo aplicada (-10%): ${calibrationFactor}`);
       }
 
-      // Límite superior: no permitir que el precio por m² supere el precio base del país
-      const baseM2 = countryConfig.basePricePerM2USD || 120;
+      // Límite superior más flexible: permitir hasta 1.5x el precio base del país
+      const baseM2 = countryConfig.basePricePerM2USD || 400;
       const unitPrice = areaToUse > 0 ? (estimatedValueUSD / areaToUse) : 0;
-      const unitCap = baseM2 * 1.0; // 100% del baseM2 como tope
+      const unitCap = baseM2 * 1.5; // 150% del baseM2 como tope más flexible
       if (unitPrice > unitCap) {
         estimatedValueUSD = unitCap * areaToUse;
         console.log(`🔒 Tope aplicado por m²: ${unitCap} USD/m²`);
