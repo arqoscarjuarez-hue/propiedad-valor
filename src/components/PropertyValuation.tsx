@@ -66,8 +66,6 @@ interface PropertyData {
   direccionCompleta: string;
   barrio: string;
   descripcion: string;
-  estratoSocial: EstratoSocial | '';
-  clasePrincipal: ClasePrincipal | '';
 }
 
 interface Comparable {
@@ -84,77 +82,6 @@ interface Comparable {
   estrato_social: any;
 }
 
-// Tipos de estrato social - normas internacionales de Latinoamérica
-export type EstratoSocial = 
-  | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
-  | 'medio_bajo' | 'medio_medio' | 'medio_alto' 
-  | 'alto_bajo' | 'alto_medio' | 'alto_alto';
-
-// Clases principales para primer nivel de selección
-export type ClasePrincipal = 'bajo' | 'medio' | 'alto';
-
-// Etiquetas para estratos sociales completos
-export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  // Estrato Bajo
-  'bajo_bajo': 'Estrato Bajo Bajo - Barrios marginales con servicios limitados',
-  'bajo_medio': 'Estrato Bajo Medio - Barrios populares con servicios básicos',
-  'bajo_alto': 'Estrato Bajo Alto - Barrios obreros con servicios mejorados',
-  
-  // Estrato Medio
-  'medio_bajo': 'Estrato Medio Bajo - Barrios residenciales con buenos servicios',
-  'medio_medio': 'Estrato Medio Medio - Barrios de estrato medio consolidado',
-  'medio_alto': 'Estrato Medio Alto - Barrios residenciales premium',
-  
-  // Estrato Alto
-  'alto_bajo': 'Estrato Alto Bajo - Barrios exclusivos entrada',
-  'alto_medio': 'Estrato Alto Medio - Barrios exclusivos con servicios de lujo',
-  'alto_alto': 'Estrato Alto Alto - Barrios de élite con servicios premium'
-};
-
-// Etiquetas para estratos principales
-export const clasePrincipalLabels: Record<ClasePrincipal, string> = {
-  'bajo': 'Estrato Socioeconómico Bajo',
-  'medio': 'Estrato Socioeconómico Medio', 
-  'alto': 'Estrato Socioeconómico Alto'
-};
-
-// Mapeo de estratos a clases sociales principales
-export const estratoToClassMap: Record<EstratoSocial, ClasePrincipal> = {
-  'bajo_bajo': 'bajo',
-  'bajo_medio': 'bajo',
-  'bajo_alto': 'bajo',
-  'medio_bajo': 'medio',
-  'medio_medio': 'medio',
-  'medio_alto': 'medio',
-  'alto_bajo': 'alto',
-  'alto_medio': 'alto',
-  'alto_alto': 'alto'
-};
-
-// Mapeo de clases principales a estratos específicos
-export const clasePrincipalToEstratos: Record<ClasePrincipal, EstratoSocial[]> = {
-  'bajo': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
-  'medio': ['medio_bajo', 'medio_medio', 'medio_alto'],
-  'alto': ['alto_bajo', 'alto_medio', 'alto_alto']
-};
-
-// Multiplicadores de valor según estrato social - normas internacionales
-export const estratoMultipliers: Record<EstratoSocial, number> = {
-  // Estrato Bajo (0.7-0.9)
-  'bajo_bajo': 0.7,
-  'bajo_medio': 0.8,
-  'bajo_alto': 0.9,
-  
-  // Estrato Medio (1.0-1.3)
-  'medio_bajo': 1.0,
-  'medio_medio': 1.15,
-  'medio_alto': 1.3,
-  
-  // Estrato Alto (1.4-1.8)
-  'alto_bajo': 1.4,
-  'alto_medio': 1.6,
-  'alto_alto': 1.8
-};
 
 // Factores de depreciación por estado de conservación
 const conservationFactors: Record<string, number> = {
@@ -386,9 +313,7 @@ const PropertyValuation = () => {
     longitud: 0,
     direccionCompleta: '',
     barrio: '',
-    descripcion: '',
-    estratoSocial: '',
-    clasePrincipal: ''
+    descripcion: ''
   });
 
   // Estados para idioma y moneda con valores por defecto
@@ -397,7 +322,6 @@ const PropertyValuation = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   
   // Estados adicionales
-  const [selectedMainStrata, setSelectedMainStrata] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
   const [valuationResult, setValuationResult] = useState<any>(null);
@@ -408,10 +332,9 @@ const PropertyValuation = () => {
   // Funciones de validación de pasos
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep2Complete = () => propertyData.estratoSocial;
-  const isStep3Complete = () => propertyData.area > 0;
-  const isStep4Complete = () => propertyData.tipoPropiedad;
-  const isStep5Complete = () => propertyData.estadoConservacion;
+  const isStep2Complete = () => propertyData.area > 0;
+  const isStep3Complete = () => propertyData.tipoPropiedad;
+  const isStep4Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
     console.log(`✅ CAMPO ACTUALIZADO: ${field} = ${value}`);
@@ -429,7 +352,7 @@ const PropertyValuation = () => {
       console.log('🔥 INICIANDO AVALÚO INTERNACIONAL...');
       
       // Validar datos requeridos
-      if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) {
+      if (!propertyData.area || !propertyData.tipoPropiedad) {
         toast.error('❌ Faltan datos requeridos para el avalúo');
         return;
       }
@@ -444,20 +367,17 @@ const PropertyValuation = () => {
       // 1. Precio base por país
       const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
       
-      // 2. Factor de estrato social
-      const estratoMultiplier = estratoMultipliers[propertyData.estratoSocial as EstratoSocial] || 1;
-      
-      // 3. Factor de conservación
+      // 2. Factor de conservación
       const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
       
-      // 4. Factor económico del país
+      // 3. Factor económico del país
       const economicMultiplier = countryConfig.economicFactor || 1;
 
-      // 5. Cálculo del precio base
+      // 4. Cálculo del precio base
       const baseValue = propertyData.area * basePricePerM2;
       
-      // 6. Aplicar todos los multiplicadores
-      const adjustedValue = baseValue * estratoMultiplier * conservationMultiplier * economicMultiplier;
+      // 5. Aplicar todos los multiplicadores
+      const adjustedValue = baseValue * conservationMultiplier * economicMultiplier;
       
       // 7. Convertir a moneda local
       const valueInLocalCurrency = adjustedValue * (countryConfig.exchangeRate || 1);
@@ -465,7 +385,6 @@ const PropertyValuation = () => {
       console.log('📊 CÁLCULO DETALLADO:', {
         area: propertyData.area,
         basePricePerM2,
-        estratoMultiplier,
         conservationMultiplier,
         economicMultiplier,
         baseValue,
@@ -473,40 +392,27 @@ const PropertyValuation = () => {
         valueInLocalCurrency
       });
 
-      // 8. Buscar comparables basados en el estrato social seleccionado
+      // 6. Buscar comparables basados en ubicación y tipo de propiedad
       try {
-        if (propertyData.latitud && propertyData.longitud && propertyData.estratoSocial) {
-          // Usar la función de comparables con filtro por estrato social y ubicación
-          const { data: comparablesData } = await supabase
-            .rpc('find_comparables_progressive_radius', {
-              target_lat: propertyData.latitud,
-              target_lng: propertyData.longitud,
-              target_estrato: propertyData.estratoSocial,
-              target_property_type: propertyData.tipoPropiedad
-            });
-
-          setComparables(comparablesData || []);
-          
-          if (comparablesData && comparablesData.length > 0) {
-            console.log(`✅ Encontrados ${comparablesData.length} comparables para estrato ${propertyData.estratoSocial}`);
-          } else {
-            console.log(`⚠️ No se encontraron comparables para el estrato ${propertyData.estratoSocial} en la zona`);
-          }
-        } else if (propertyData.estratoSocial) {
-          // Fallback: búsqueda básica por estrato social sin ubicación específica
+        if (propertyData.latitud && propertyData.longitud) {
+          // Buscar comparables por ubicación y tipo de propiedad
           const { data: comparablesData } = await supabase
             .from('property_comparables')
             .select('*')
             .eq('property_type', propertyData.tipoPropiedad)
-            .eq('estrato_social', propertyData.estratoSocial)
             .gte('total_area', propertyData.area * 0.8)
             .lte('total_area', propertyData.area * 1.2)
-            .limit(5);
+            .limit(10);
 
           setComparables(comparablesData || []);
-          console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables para estrato ${propertyData.estratoSocial}`);
+          
+          if (comparablesData && comparablesData.length > 0) {
+            console.log(`✅ Encontrados ${comparablesData.length} comparables en la zona`);
+          } else {
+            console.log(`⚠️ No se encontraron comparables en la zona`);
+          }
         } else {
-          console.log('⚠️ No se puede buscar comparables: falta seleccionar el estrato social');
+          console.log('⚠️ No se puede buscar comparables: falta ubicación');
           setComparables([]);
         }
       } catch (error) {
@@ -514,7 +420,7 @@ const PropertyValuation = () => {
         setComparables([]);
       }
 
-      // 9. Resultado final
+      // 7. Resultado final
       const result = {
         estimatedValueUSD: adjustedValue,
         estimatedValueLocal: valueInLocalCurrency,
@@ -523,11 +429,9 @@ const PropertyValuation = () => {
         country: countryConfig.name,
         propertyType: propertyData.tipoPropiedad,
         area: propertyData.area,
-        estrato: estratoSocialLabels[propertyData.estratoSocial as EstratoSocial],
         conservation: propertyData.estadoConservacion,
         factors: {
           basePricePerM2,
-          estratoMultiplier,
           conservationMultiplier,
           economicMultiplier
         }
@@ -580,7 +484,7 @@ const PropertyValuation = () => {
               </div>
 
               <Tabs defaultValue="setup" className="w-full">
-                <TabsList className="grid w-full grid-cols-6 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                <TabsList className="grid w-full grid-cols-5 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                   <TabsTrigger 
                     value="setup" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-slate-700 dark:text-slate-300"
@@ -588,34 +492,28 @@ const PropertyValuation = () => {
                     {isStep0Complete() ? '✅' : '1️⃣'} Inicio
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="estrato" 
-                    className="text-xs font-semibold transition-all data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-violet-100 dark:hover:bg-violet-900/50 text-slate-700 dark:text-slate-300"
-                  >
-                    {isStep2Complete() ? '✅' : '2️⃣'} Estrato
-                  </TabsTrigger>
-                  <TabsTrigger 
                     value="tipo" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
                   >
-                    {isStep4Complete() ? '✅' : '3️⃣'} Tipo
+                    {isStep3Complete() ? '✅' : '2️⃣'} Tipo
                   </TabsTrigger>
                   <TabsTrigger 
                     value="ubicacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
                   >
-                    {isStep1Complete() ? '✅' : '4️⃣'} Ubicación
+                    {isStep1Complete() ? '✅' : '3️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger 
                     value="caracteristicas" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-slate-700 dark:text-slate-300"
                   >
-                    {isStep3Complete() ? '✅' : '5️⃣'} Área
+                    {isStep2Complete() ? '✅' : '4️⃣'} Área
                   </TabsTrigger>
                   <TabsTrigger 
                     value="valuacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-pink-100 dark:hover:bg-pink-900/50 text-slate-700 dark:text-slate-300"
                   >
-                    {isStep5Complete() ? '✅' : '6️⃣'} Resultado
+                    {isStep4Complete() ? '✅' : '5️⃣'} Resultado
                   </TabsTrigger>
                 </TabsList>
 
@@ -706,84 +604,6 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Paso 2: Estrato Social */}
-                <TabsContent value="estrato" className="mt-6">
-                  <Card className="border-2 border-violet-200 shadow-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50">
-                    <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-500 text-white">
-                      <CardTitle className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                          {isStep1Complete() ? '✓' : '2'}
-                        </div>
-                        🏘️ Paso 2: Estrato Socioeconómico del Inmueble a Valuar
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio, colonia o residencial?</strong><br />
-                          Según las normas internacionales de Latinoamérica, clasifica el barrio, colonia o residencial donde está ubicada tu propiedad. 
-                          <strong>Esta selección es crucial para encontrar comparables exactos del mismo estrato social.</strong>
-                        </p>
-                      </div>
-
-                      <div className="space-y-6">
-                        {/* SELECCIÓN DE ESTRATO PRINCIPAL */}
-                        <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏘️ Estrato Socioeconómico Principal</h3>
-                          <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Primero selecciona el estrato socioeconómico general del barrio, colonia o residencial:
-                          </p>
-                          <Select 
-                            value={propertyData.clasePrincipal} 
-                            onValueChange={(value) => {
-                              handleInputChange('clasePrincipal', value);
-                              handleInputChange('estratoSocial', ''); // Reset estrato específico
-                            }}
-                          >
-                            <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="Selecciona el estrato socioeconómico principal" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="bajo">🏘️ Estrato Bajo - Barrios, colonias populares y obreras</SelectItem>
-                              <SelectItem value="medio">🏡 Estrato Medio - Barrios, colonias residenciales</SelectItem>
-                              <SelectItem value="alto">🏰 Estrato Alto - Barrios, colonias exclusivos</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        {/* SELECCIÓN DE ESTRATO ESPECÍFICO */}
-                        {propertyData.clasePrincipal && (
-                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                            <h3 className="font-semibold mb-2">🎯 Estrato Específico</h3>
-                            <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
-                              Ahora selecciona el nivel específico dentro de {clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}:
-                            </p>
-                            <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
-                              <SelectTrigger className="bg-white">
-                                <SelectValue placeholder={`Selecciona el nivel específico de ${clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}`} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {clasePrincipalToEstratos[propertyData.clasePrincipal as ClasePrincipal]?.map((estrato) => (
-                                  <SelectItem key={estrato} value={estrato}>
-                                    {estratoSocialLabels[estrato]}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
-
-                        {propertyData.estratoSocial && (
-                          <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
-                            <p className="text-sm text-green-800">
-                              <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
 
                 {/* Paso 3: Tipo de Propiedad */}
                 <TabsContent value="tipo" className="mt-6">
@@ -982,7 +802,7 @@ const PropertyValuation = () => {
                         )}
 
                         {/* Confirmación cuando se complete */}
-                        {isStep5Complete() && (
+                        {isStep4Complete() && (
                           <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
                             <div className="flex items-center gap-2">
                               <span className="text-green-600">✅</span>
@@ -1075,29 +895,28 @@ const PropertyValuation = () => {
                           <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
                         </div>
                         <h3 className="text-xl font-bold mb-4">
-                          {(propertyData.area > 0 && propertyData.tipoPropiedad && propertyData.estratoSocial) ? 
+                          {(propertyData.area > 0 && propertyData.tipoPropiedad) ? 
                             '🎉 ¡Listo para saber el precio!' : 
                             '⏳ Faltan algunos datos'
                           }
                         </h3>
 
                         {/* Validación de campos requeridos */}
-                        {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) && (
+                        {(!propertyData.area || !propertyData.tipoPropiedad) && (
                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
                             <p className="text-red-800 font-medium mb-2">
                               ❌ <strong>Necesitas completar estos datos:</strong>
                             </p>
                             <ul className="text-red-700 text-sm space-y-1">
-                              {!propertyData.area && <li>• El área de tu casa (Paso 3)</li>}
+                              {!propertyData.area && <li>• El área de tu casa (Paso 4)</li>}
                               {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
-                              {!propertyData.estratoSocial && <li>• El estrato social del barrio, colonia o residencial (Paso 2)</li>}
                             </ul>
                           </div>
                         )}
 
                         <Button
                           onClick={performValuation}
-                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial}
+                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad}
                           size="lg"
                           className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
@@ -1133,44 +952,42 @@ const PropertyValuation = () => {
                               </div>
                             )}
                             
-                            <div className="text-green-700 space-y-1 text-sm">
-                              <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
-                              <p><strong>Ubicación:</strong> {valuationResult.country}</p>
-                              <p><strong>Barrio:</strong> {valuationResult.estrato}</p>
-                              <p><strong>Estado:</strong> {valuationResult.conservation}</p>
-                            </div>
+                             <div className="text-green-700 space-y-1 text-sm">
+                               <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
+                               <p><strong>Ubicación:</strong> {valuationResult.country}</p>
+                               <p><strong>Estado:</strong> {valuationResult.conservation}</p>
+                             </div>
 
-                            {/* Detalles del cálculo */}
-                            <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
-                              <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
-                              <div className="text-xs text-green-700 space-y-1">
-                                <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
-                                <p>• Factor por tipo de barrio: {((valuationResult.factors?.estratoMultiplier || 1) * 100).toFixed(0)}%</p>
-                                <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
-                                <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
-                              </div>
-                            </div>
+                             {/* Detalles del cálculo */}
+                             <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
+                               <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
+                               <div className="text-xs text-green-700 space-y-1">
+                                 <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                 <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                 <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                               </div>
+                             </div>
 
-                            {/* Comparables si los hay */}
-                            {comparables.length > 0 && (
-                              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                                <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
-                                <p className="text-xs text-blue-700">
-                                  Encontramos {comparables.length} propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> para comparar en la zona.
-                                </p>
-                              </div>
-                            )}
-                            
-                            {/* Mensaje cuando no hay comparables */}
-                            {comparables.length === 0 && propertyData.estratoSocial && (
-                              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded">
-                                <h5 className="font-semibold text-amber-800 mb-2">🔍 Búsqueda de Comparables</h5>
-                                <p className="text-xs text-amber-700">
-                                  No se encontraron propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> en la zona inmediata. 
-                                  El avalúo se basa en datos generales del mercado para este estrato social.
-                                </p>
-                              </div>
-                            )}
+                             {/* Comparables si los hay */}
+                             {comparables.length > 0 && (
+                               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                                 <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
+                                 <p className="text-xs text-blue-700">
+                                   Encontramos {comparables.length} propiedades similares para comparar en la zona.
+                                 </p>
+                               </div>
+                             )}
+                             
+                             {/* Mensaje cuando no hay comparables */}
+                             {comparables.length === 0 && (
+                               <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded">
+                                 <h5 className="font-semibold text-amber-800 mb-2">🔍 Búsqueda de Comparables</h5>
+                                 <p className="text-xs text-amber-700">
+                                   No se encontraron propiedades similares en la zona inmediata. 
+                                   El avalúo se basa en datos generales del mercado.
+                                 </p>
+                               </div>
+                             )}
 
                             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
                               <p className="text-yellow-800 text-xs">
