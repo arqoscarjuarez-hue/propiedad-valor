@@ -57,6 +57,9 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   useEffect(() => {
     if (fixedAddress && initialAddress) {
       setCurrentAddress(initialAddress);
+    } else if (!fixedAddress && !initialAddress) {
+      // Si no hay dirección fija ni inicial, limpiar la dirección actual
+      setCurrentAddress('');
     }
   }, [initialAddress, fixedAddress]);
 

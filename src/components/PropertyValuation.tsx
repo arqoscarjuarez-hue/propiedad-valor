@@ -979,8 +979,10 @@ const PropertyValuation = () => {
                                 </div>
                                 <Button 
                                   onClick={() => {
-                                    // Permitir cambiar la dirección
+                                    // Permitir cambiar la dirección y reiniciar el estado del mapa
                                     handleInputChange('direccionCompleta', '');
+                                    handleInputChange('latitud', 0);
+                                    handleInputChange('longitud', 0);
                                   }}
                                   variant="outline"
                                   size="sm"
