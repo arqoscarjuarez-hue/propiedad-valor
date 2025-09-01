@@ -587,15 +587,15 @@ const PropertyValuation = () => {
       try {
         if (propertyData.latitud && propertyData.longitud) {
           // Buscar comparables por ubicación y tipo de propiedad únicamente
-          const { data } = await supabase
-            .rpc('find_comparables_progressive_radius', {
+          const { data } = await supabase.functions.invoke('find-comparables-by-location', {
+            body: {
               target_lat: propertyData.latitud,
               target_lng: propertyData.longitud,
               target_property_type: propertyData.tipoPropiedad
-              // Eliminamos el filtro por estrato social
-            });
+            }
+          });
 
-          comparablesData = data || [];
+          comparablesData = data?.data || [];
           
           if (comparablesData && comparablesData.length > 0) {
             console.log(`✅ Encontrados ${comparablesData.length} comparables de tipo ${propertyData.tipoPropiedad} en la zona`);
