@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Calculator, HelpCircle, CheckCircle, Shuffle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import SupabaseGoogleLocationMap from '@/components/SupabaseGoogleLocationMap';
 import { LanguageSelector } from '@/components/LanguageSelector';
@@ -74,121 +74,78 @@ interface PropertyData {
 
 interface Comparable {
   id?: string;
-  tipo_propiedad: string;
-  area: number;
-  precio_m2: number;
-  precio_total: number;
-  habitaciones?: number;
-  banos?: number;
-  direccion: string;
-  fecha_venta: string;
-  distancia?: number;
-  estrato_social: string;
+  property_type: string;
+  total_area: number;
+  price_per_sqm_usd: number;
+  price_usd: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  address: string;
+  sale_date?: string;
+  distance?: number;
+  estrato_social: any; // Usando any para compatibilidad con DB
 }
 
-// Tipos de estrato social completos
+// Tipos de estrato social - solo los que existen en la DB
 export type EstratoSocial = 
-  | 'bajo-bajo' | 'bajo' | 'bajo-medio' | 'bajo-alto'
-  | 'medio-bajo' | 'medio' | 'medio-medio' | 'medio-alto' | 'medio-superior'
-  | 'alto-bajo' | 'alto' | 'alto-medio' | 'alto-alto' | 'alto-superior'
-  | 'premium-bajo' | 'premium' | 'premium-alto' | 'lujo' | 'ultra-lujo';
+  | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
+  | 'medio_bajo' | 'medio_alto' 
+  | 'alto_medio' | 'alto_alto';
 
-// Etiquetas para estratos sociales completos
+// Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
   // Nivel Bajo
-  'bajo-bajo': 'Estrato 1.1 - Bajo-Bajo',
-  'bajo': 'Estrato 1.2 - Bajo',
-  'bajo-medio': 'Estrato 1.3 - Bajo-Medio',
-  'bajo-alto': 'Estrato 1.4 - Bajo-Alto',
+  'bajo_bajo': 'Estrato 1 - Bajo-Bajo',
+  'bajo_medio': 'Estrato 2 - Bajo-Medio',
+  'bajo_alto': 'Estrato 3 - Bajo-Alto',
   
   // Nivel Medio
-  'medio-bajo': 'Estrato 2.1 - Medio-Bajo',
-  'medio': 'Estrato 2.2 - Medio',
-  'medio-medio': 'Estrato 2.3 - Medio-Medio',
-  'medio-alto': 'Estrato 2.4 - Medio-Alto',
-  'medio-superior': 'Estrato 2.5 - Medio-Superior',
+  'medio_bajo': 'Estrato 4 - Medio-Bajo',
+  'medio_alto': 'Estrato 5 - Medio-Alto',
   
   // Nivel Alto
-  'alto-bajo': 'Estrato 3.1 - Alto-Bajo',
-  'alto': 'Estrato 3.2 - Alto',
-  'alto-medio': 'Estrato 3.3 - Alto-Medio',
-  'alto-alto': 'Estrato 3.4 - Alto-Alto',
-  'alto-superior': 'Estrato 3.5 - Alto-Superior',
-  
-  // Nivel Premium/Lujo
-  'premium-bajo': 'Estrato 4.1 - Premium-Bajo',
-  'premium': 'Estrato 4.2 - Premium',
-  'premium-alto': 'Estrato 4.3 - Premium-Alto',
-  'lujo': 'Estrato 4.4 - Lujo',
-  'ultra-lujo': 'Estrato 4.5 - Ultra-Lujo'
+  'alto_medio': 'Estrato 6 - Alto-Medio',
+  'alto_alto': 'Estrato 7 - Alto-Alto'
 };
 
 // Mapeo de estratos a clases sociales simplificadas
 export const estratoToClassMap: Record<EstratoSocial, string> = {
   // Clase Popular/Baja
-  'bajo-bajo': 'popular',
-  'bajo': 'popular',
-  'bajo-medio': 'popular',
-  'bajo-alto': 'popular',
+  'bajo_bajo': 'popular',
+  'bajo_medio': 'popular',
+  'bajo_alto': 'popular',
   
   // Clase Media
-  'medio-bajo': 'media',
-  'medio': 'media',
-  'medio-medio': 'media',
-  'medio-alto': 'media',
-  'medio-superior': 'media',
+  'medio_bajo': 'media',
+  'medio_alto': 'media',
   
   // Clase Alta
-  'alto-bajo': 'alta',
-  'alto': 'alta',
-  'alto-medio': 'alta',
-  'alto-alto': 'alta',
-  'alto-superior': 'alta',
-  
-  // Clase Premium/Lujo
-  'premium-bajo': 'premium',
-  'premium': 'premium',
-  'premium-alto': 'premium',
-  'lujo': 'premium',
-  'ultra-lujo': 'premium'
+  'alto_medio': 'alta',
+  'alto_alto': 'alta'
 };
 
-// Mapeo inverso: clases a estratos
+// Mapeo inverso: clases a estratos (solo los que existen en la DB)
 export const classToEstratos: Record<string, EstratoSocial[]> = {
-  'popular': ['bajo-bajo', 'bajo', 'bajo-medio', 'bajo-alto'],
-  'media': ['medio-bajo', 'medio', 'medio-medio', 'medio-alto', 'medio-superior'],
-  'alta': ['alto-bajo', 'alto', 'alto-medio', 'alto-alto', 'alto-superior'],
-  'premium': ['premium-bajo', 'premium', 'premium-alto', 'lujo', 'ultra-lujo']
+  'popular': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
+  'media': ['medio_bajo', 'medio_alto'],
+  'alta': ['alto_medio', 'alto_alto'],
+  'premium': []
 };
 
-// Multiplicadores de valor según estrato social completo
+// Multiplicadores de valor según estrato social
 export const estratoMultipliers: Record<EstratoSocial, number> = {
   // Nivel Bajo (0.6-0.9)
-  'bajo-bajo': 0.6,
-  'bajo': 0.7,
-  'bajo-medio': 0.8,
-  'bajo-alto': 0.9,
+  'bajo_bajo': 0.6,
+  'bajo_medio': 0.8,
+  'bajo_alto': 0.9,
   
-  // Nivel Medio (0.95-1.3)
-  'medio-bajo': 0.95,
-  'medio': 1.0,
-  'medio-medio': 1.1,
-  'medio-alto': 1.2,
-  'medio-superior': 1.3,
+  // Nivel Medio (0.95-1.2)
+  'medio_bajo': 0.95,
+  'medio_alto': 1.2,
   
-  // Nivel Alto (1.4-2.0)
-  'alto-bajo': 1.4,
-  'alto': 1.5,
-  'alto-medio': 1.6,
-  'alto-alto': 1.8,
-  'alto-superior': 2.0,
-  
-  // Nivel Premium/Lujo (2.2-4.0)
-  'premium-bajo': 2.2,
-  'premium': 2.5,
-  'premium-alto': 3.0,
-  'lujo': 3.5,
-  'ultra-lujo': 4.0
+  // Nivel Alto (1.6-1.8)
+  'alto_medio': 1.6,
+  'alto_alto': 1.8
 };
 
 // Factores de conservación
@@ -299,7 +256,7 @@ const PropertyValuation = () => {
     direccionCompleta: '',
     barrio: '',
     descripcion: '',
-    estratoSocial: 'medio' as EstratoSocial
+      estratoSocial: 'medio_bajo' as EstratoSocial
   });
 
   const [activeTab, setActiveTab] = useState<string>('estrato');
@@ -314,7 +271,7 @@ const PropertyValuation = () => {
 
   // Funciones de validación de pasos
   const isStep1Complete = () => {
-    return propertyData.estratoSocial && propertyData.estratoSocial !== 'medio';
+    return propertyData.estratoSocial && propertyData.estratoSocial !== 'medio_bajo';
   };
 
   const isStep2Complete = () => {
@@ -359,13 +316,13 @@ const PropertyValuation = () => {
     }
   };
 
-  const handleLocationSelect = (location: { lat: number; lng: number; address: string; neighborhood: string }) => {
+  const handleLocationChange = (lat: number, lng: number, address: string) => {
     setPropertyData(prev => ({
       ...prev,
-      latitud: location.lat,
-      longitud: location.lng,
-      direccionCompleta: location.address,
-      barrio: location.neighborhood
+      latitud: lat,
+      longitud: lng,
+      direccionCompleta: address,
+      barrio: '' // El componente no proporciona barrio específicamente
     }));
   };
 
@@ -374,7 +331,7 @@ const PropertyValuation = () => {
       const { data, error } = await supabase
         .from('property_comparables')
         .select('*')
-        .eq('tipo_propiedad', propertyData.tipoPropiedad)
+        .eq('property_type', propertyData.tipoPropiedad)
         .in('estrato_social', classToEstratos[estratoToClassMap[propertyData.estratoSocial]])
         .limit(10);
 
@@ -405,7 +362,7 @@ const PropertyValuation = () => {
       let basePrice = 1500000; // Precio base por m² en pesos colombianos
       
       if (comparablesData.length > 0) {
-        const avgPricePerM2 = comparablesData.reduce((sum, comp) => sum + comp.precio_m2, 0) / comparablesData.length;
+        const avgPricePerM2 = comparablesData.reduce((sum, comp) => sum + comp.price_per_sqm_usd, 0) / comparablesData.length;
         basePrice = avgPricePerM2;
       }
 
@@ -455,7 +412,7 @@ const PropertyValuation = () => {
       direccionCompleta: '',
       barrio: '',
       descripcion: '',
-      estratoSocial: 'medio' as EstratoSocial
+      estratoSocial: 'medio_bajo' as EstratoSocial
     });
     setActiveTab('estrato');
     setValuationResult(null);
@@ -638,72 +595,34 @@ const PropertyValuation = () => {
                           <SelectTrigger className="border-2 focus:border-violet-500 hover:border-violet-400 transition-colors">
                             <SelectValue placeholder="Selecciona tu estrato socioeconómico" />
                           </SelectTrigger>
-                          <SelectContent className="max-h-60 bg-white dark:bg-gray-900 z-50">
-                            {/* Nivel Bajo */}
-                            <SelectItem value="bajo-bajo" className="font-medium text-sm py-3">
-                              🏚️ {estratoSocialLabels['bajo-bajo']}
-                            </SelectItem>
-                            <SelectItem value="bajo" className="font-medium text-sm py-3">
-                              🏠 {estratoSocialLabels['bajo']}
-                            </SelectItem>
-                            <SelectItem value="bajo-medio" className="font-medium text-sm py-3">
-                              🏡 {estratoSocialLabels['bajo-medio']}
-                            </SelectItem>
-                            <SelectItem value="bajo-alto" className="font-medium text-sm py-3">
-                              🏘️ {estratoSocialLabels['bajo-alto']}
-                            </SelectItem>
-                            
-                            {/* Nivel Medio */}
-                            <SelectItem value="medio-bajo" className="font-medium text-sm py-3">
-                              🏙️ {estratoSocialLabels['medio-bajo']}
-                            </SelectItem>
-                            <SelectItem value="medio" className="font-medium text-sm py-3">
-                              🏢 {estratoSocialLabels['medio']}
-                            </SelectItem>
-                            <SelectItem value="medio-medio" className="font-medium text-sm py-3">
-                              🏬 {estratoSocialLabels['medio-medio']}
-                            </SelectItem>
-                            <SelectItem value="medio-alto" className="font-medium text-sm py-3">
-                              🏰 {estratoSocialLabels['medio-alto']}
-                            </SelectItem>
-                            <SelectItem value="medio-superior" className="font-medium text-sm py-3">
-                              🏯 {estratoSocialLabels['medio-superior']}
-                            </SelectItem>
-                            
-                            {/* Nivel Alto */}
-                            <SelectItem value="alto-bajo" className="font-medium text-sm py-3">
-                              🏛️ {estratoSocialLabels['alto-bajo']}
-                            </SelectItem>
-                            <SelectItem value="alto" className="font-medium text-sm py-3">
-                              🏟️ {estratoSocialLabels['alto']}
-                            </SelectItem>
-                            <SelectItem value="alto-medio" className="font-medium text-sm py-3">
-                              🗼 {estratoSocialLabels['alto-medio']}
-                            </SelectItem>
-                            <SelectItem value="alto-alto" className="font-medium text-sm py-3">
-                              🏰 {estratoSocialLabels['alto-alto']}
-                            </SelectItem>
-                            <SelectItem value="alto-superior" className="font-medium text-sm py-3">
-                              🏛️ {estratoSocialLabels['alto-superior']}
-                            </SelectItem>
-                            
-                            {/* Nivel Premium/Lujo */}
-                            <SelectItem value="premium-bajo" className="font-medium text-sm py-3">
-                              💎 {estratoSocialLabels['premium-bajo']}
-                            </SelectItem>
-                            <SelectItem value="premium" className="font-medium text-sm py-3">
-                              💍 {estratoSocialLabels['premium']}
-                            </SelectItem>
-                            <SelectItem value="premium-alto" className="font-medium text-sm py-3">
-                              👑 {estratoSocialLabels['premium-alto']}
-                            </SelectItem>
-                            <SelectItem value="lujo" className="font-medium text-sm py-3">
-                              🏆 {estratoSocialLabels['lujo']}
-                            </SelectItem>
-                            <SelectItem value="ultra-lujo" className="font-medium text-sm py-3">
-                              ⭐ {estratoSocialLabels['ultra-lujo']}
-                            </SelectItem>
-                          </SelectContent>
+                           <SelectContent className="max-h-60 bg-white dark:bg-gray-900 z-50">
+                             {/* Nivel Bajo */}
+                             <SelectItem value="bajo_bajo" className="font-medium text-sm py-3">
+                               🏚️ {estratoSocialLabels['bajo_bajo']}
+                             </SelectItem>
+                             <SelectItem value="bajo_medio" className="font-medium text-sm py-3">
+                               🏡 {estratoSocialLabels['bajo_medio']}
+                             </SelectItem>
+                             <SelectItem value="bajo_alto" className="font-medium text-sm py-3">
+                               🏘️ {estratoSocialLabels['bajo_alto']}
+                             </SelectItem>
+                             
+                             {/* Nivel Medio */}
+                             <SelectItem value="medio_bajo" className="font-medium text-sm py-3">
+                               🏙️ {estratoSocialLabels['medio_bajo']}
+                             </SelectItem>
+                             <SelectItem value="medio_alto" className="font-medium text-sm py-3">
+                               🏰 {estratoSocialLabels['medio_alto']}
+                             </SelectItem>
+                             
+                             {/* Nivel Alto */}
+                             <SelectItem value="alto_medio" className="font-medium text-sm py-3">
+                               🗼 {estratoSocialLabels['alto_medio']}
+                             </SelectItem>
+                             <SelectItem value="alto_alto" className="font-medium text-sm py-3">
+                               🏰 {estratoSocialLabels['alto_alto']}
+                             </SelectItem>
+                           </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground mt-3">
                           💡 Requerido para encontrar propiedades comparables del mismo nivel
@@ -775,7 +694,12 @@ const PropertyValuation = () => {
                               🗺️ Seleccione la ubicación en el mapa
                             </Label>
                             <div className="border-2 border-emerald-200 rounded-lg overflow-hidden shadow-md">
-                              <SupabaseGoogleLocationMap />
+                              <SupabaseGoogleLocationMap 
+                                onLocationChange={handleLocationChange}
+                                initialLat={propertyData.latitud || 19.4326}
+                                initialLng={propertyData.longitud || -99.1332}
+                                initialAddress={propertyData.direccionCompleta}
+                              />
                             </div>
                           </div>
                         </div>
