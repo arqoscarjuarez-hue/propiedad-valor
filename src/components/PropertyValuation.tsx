@@ -727,59 +727,45 @@ const PropertyValuation = () => {
                       </div>
 
                       <div className="space-y-6">
-                        {/* SELECCIÓN DE ESTRATO PRINCIPAL */}
+                        {/* SELECCIÓN DE ESTRATO SOCIOECONÓMICO */}
                         <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏘️ Estrato Socioeconómico Principal</h3>
+                          <h3 className="font-semibold mb-2">🏘️ Estrato Socioeconómico</h3>
                           <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Primero selecciona el estrato socioeconómico general del barrio, colonia o residencial:
+                            Selecciona el estrato socioeconómico del barrio, colonia o residencial:
                           </p>
                           <Select 
-                            value={propertyData.clasePrincipal} 
+                            value={propertyData.estratoSocial} 
                             onValueChange={(value) => {
-                              handleInputChange('clasePrincipal', value);
-                              handleInputChange('estratoSocial', ''); // Reset estrato específico
+                              handleInputChange('estratoSocial', value);
+                              // Auto-set clasePrincipal based on estrato selection
+                              const clasePrincipal = estratoToClassMap[value as EstratoSocial];
+                              handleInputChange('clasePrincipal', clasePrincipal);
                             }}
                           >
-                            <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="Selecciona el estrato socioeconómico principal" />
+                            <SelectTrigger className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600">
+                              <SelectValue placeholder="Selecciona el estrato socioeconómico" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="bajo">🏘️ Estrato Bajo - Barrios, colonias populares y obreras</SelectItem>
-                              <SelectItem value="medio">🏡 Estrato Medio - Barrios, colonias residenciales</SelectItem>
-                              <SelectItem value="alto">🏰 Estrato Alto - Barrios, colonias exclusivos</SelectItem>
+                            <SelectContent className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 z-50">
+                              <SelectItem value="bajo_bajo">🏘️ Bajo-Bajo - Barrios marginales con servicios limitados</SelectItem>
+                              <SelectItem value="bajo_medio">🏘️ Bajo-Medio - Barrios populares con servicios básicos</SelectItem>
+                              <SelectItem value="bajo_alto">🏘️ Bajo-Alto - Barrios obreros con servicios mejorados</SelectItem>
+                              <SelectItem value="medio_bajo">🏡 Medio-Bajo - Barrios residenciales con buenos servicios</SelectItem>
+                              <SelectItem value="medio_medio">🏡 Medio-Medio - Barrios de estrato medio consolidado</SelectItem>
+                              <SelectItem value="medio_alto">🏡 Medio-Alto - Barrios residenciales premium</SelectItem>
+                              <SelectItem value="alto_bajo">🏰 Alto-Bajo - Barrios exclusivos entrada</SelectItem>
+                              <SelectItem value="alto_medio">🏰 Alto-Medio - Barrios exclusivos con servicios de lujo</SelectItem>
+                              <SelectItem value="alto_alto">🏰 Alto-Alto - Barrios de élite con servicios premium</SelectItem>
                             </SelectContent>
                           </Select>
+
+                          {propertyData.estratoSocial && (
+                            <div className="mt-3 p-2 bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-600 rounded">
+                              <p className="text-sm text-green-800 dark:text-green-200">
+                                <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
+                              </p>
+                            </div>
+                          )}
                         </div>
-
-                        {/* SELECCIÓN DE ESTRATO ESPECÍFICO */}
-                        {propertyData.clasePrincipal && (
-                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                            <h3 className="font-semibold mb-2">🎯 Estrato Específico</h3>
-                            <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
-                              Ahora selecciona el nivel específico dentro de {clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}:
-                            </p>
-                            <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
-                              <SelectTrigger className="bg-white">
-                                <SelectValue placeholder={`Selecciona el nivel específico de ${clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}`} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {clasePrincipalToEstratos[propertyData.clasePrincipal as ClasePrincipal]?.map((estrato) => (
-                                  <SelectItem key={estrato} value={estrato}>
-                                    {estratoSocialLabels[estrato]}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
-
-                        {propertyData.estratoSocial && (
-                          <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
-                            <p className="text-sm text-green-800">
-                              <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
-                            </p>
-                          </div>
-                        )}
                       </div>
                     </CardContent>
                   </Card>
