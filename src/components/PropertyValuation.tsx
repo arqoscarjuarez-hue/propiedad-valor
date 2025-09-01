@@ -582,41 +582,38 @@ const PropertyValuation = () => {
         comparativeValue
       });
 
-      // 6. Buscar comparables basados en el estrato social seleccionado
+      // 6. Buscar comparables basados en tipo de propiedad y ubicación (SIN estrato social)
       let comparablesData: any[] = [];
       try {
-        if (propertyData.latitud && propertyData.longitud && propertyData.estratoSocial) {
-          // Usar la función de comparables con filtro por estrato social y ubicación
+        if (propertyData.latitud && propertyData.longitud) {
+          // Buscar comparables por ubicación y tipo de propiedad únicamente
           const { data } = await supabase
             .rpc('find_comparables_progressive_radius', {
               target_lat: propertyData.latitud,
               target_lng: propertyData.longitud,
-              target_estrato: propertyData.estratoSocial,
               target_property_type: propertyData.tipoPropiedad
+              // Eliminamos el filtro por estrato social
             });
 
           comparablesData = data || [];
           
           if (comparablesData && comparablesData.length > 0) {
-            console.log(`✅ Encontrados ${comparablesData.length} comparables para estrato ${propertyData.estratoSocial}`);
+            console.log(`✅ Encontrados ${comparablesData.length} comparables de tipo ${propertyData.tipoPropiedad} en la zona`);
           } else {
-            console.log(`⚠️ No se encontraron comparables para el estrato ${propertyData.estratoSocial} en la zona`);
+            console.log(`⚠️ No se encontraron comparables de tipo ${propertyData.tipoPropiedad} en la zona`);
           }
-        } else if (propertyData.estratoSocial) {
-          // Fallback: búsqueda básica por estrato social sin ubicación específica
+        } else {
+          // Fallback: búsqueda básica por tipo de propiedad sin ubicación específica
           const { data } = await supabase
             .from('property_comparables')
             .select('*')
             .eq('property_type', propertyData.tipoPropiedad)
-            .eq('estrato_social', propertyData.estratoSocial)
             .gte('total_area', propertyData.area * 0.8)
             .lte('total_area', propertyData.area * 1.2)
             .limit(5);
 
           comparablesData = data || [];
-          console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables para estrato ${propertyData.estratoSocial}`);
-        } else {
-          console.log('⚠️ No se puede buscar comparables: falta seleccionar el estrato social');
+          console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables de tipo ${propertyData.tipoPropiedad}`);
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
