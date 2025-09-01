@@ -279,7 +279,7 @@ const PropertyValuation = () => {
   };
 
   const isStep3Complete = () => {
-    return propertyData.latitud !== 0 && propertyData.longitud !== 0 && propertyData.direccionCompleta !== '';
+    return propertyData.direccionCompleta !== '' && propertyData.barrio !== '';
   };
 
   const isStep4Complete = () => {
@@ -678,29 +678,41 @@ const PropertyValuation = () => {
                         <div className="space-y-6">
                           <div>
                             <Label htmlFor="direccion" className="text-base font-semibold mb-2 block">
-                              📍 Dirección Completa
+                              📍 Dirección Completa de la Propiedad
                             </Label>
                             <Input
                               id="direccion"
                               value={propertyData.direccionCompleta}
                               onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                              placeholder="Ingrese la dirección completa"
+                              placeholder="Ingrese la dirección completa donde se encuentra la propiedad"
                               className="border-2 focus:border-emerald-500"
                               disabled={!isStep2Complete()}
                             />
                           </div>
+                          
                           <div>
-                            <Label className="text-base font-semibold mb-3 block">
-                              🗺️ Seleccione la ubicación en el mapa
+                            <Label htmlFor="barrio" className="text-base font-semibold mb-2 block">
+                              🏘️ Barrio o Zona
                             </Label>
-                            <div className="border-2 border-emerald-200 rounded-lg overflow-hidden shadow-md">
-                              <SimpleMap 
-                                onLocationChange={handleLocationChange}
-                                initialLat={propertyData.latitud || 19.4326}
-                                initialLng={propertyData.longitud || -99.1332}
-                                initialAddress={propertyData.direccionCompleta}
-                              />
-                            </div>
+                            <Input
+                              id="barrio"
+                              value={propertyData.barrio}
+                              onChange={(e) => handleInputChange('barrio', e.target.value)}
+                              placeholder="Ingrese el barrio, colonia o zona donde está ubicada"
+                              className="border-2 focus:border-emerald-500"
+                              disabled={!isStep2Complete()}
+                            />
+                          </div>
+
+                          {/* Instrucciones de ubicación */}
+                          <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                            <h4 className="text-base font-semibold text-emerald-800 mb-2">🔍 Cómo buscar la ubicación:</h4>
+                            <ul className="text-sm text-emerald-700 space-y-1">
+                              <li>• <strong>Use el cursor</strong> para buscar la dirección exacta</li>
+                              <li>• Ingrese el <strong>área específica</strong> donde se encuentra</li>
+                              <li>• Indique la <strong>dirección completa</strong> de la propiedad</li>
+                              <li>• Especifique el <strong>lugar o zona</strong> que se va a valuar</li>
+                            </ul>
                           </div>
                         </div>
                       </CardContent>
