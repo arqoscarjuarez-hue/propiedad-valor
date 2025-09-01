@@ -162,18 +162,7 @@ const conservationFactors: Record<string, number> = {
   'EN DESECHO': 0.1350
 };
 
-// Estados de conservación para el dropdown
-const conservationStates = [
-  { value: 'NUEVO', label: 'NUEVO', factor: 1.0000 },
-  { value: 'BUENO', label: 'BUENO', factor: 0.9968 },
-  { value: 'MEDIO', label: 'MEDIO', factor: 0.9748 },
-  { value: 'REGULAR', label: 'REGULAR', factor: 0.9191 },
-  { value: 'REPARACIONES SENCILLAS', label: 'REPARACIONES SENCILLAS', factor: 0.8190 },
-  { value: 'REPARACIONES MEDIAS', label: 'REPARACIONES MEDIAS', factor: 0.6680 },
-  { value: 'REPARACIONES IMPORTANTES', label: 'REPARACIONES IMPORTANTES', factor: 0.4740 },
-  { value: 'DAÑOS GRAVES', label: 'DAÑOS GRAVES', factor: 0.2480 },
-  { value: 'EN DESECHO', label: 'EN DESECHO', factor: 0.1350 }
-];
+// Estados de conservación para el dropdown - MOVIDO DENTRO DEL COMPONENTE
 
 // Multiplicadores por clase social
 export const classMultipliers: Record<string, number> = {
@@ -288,6 +277,19 @@ const PropertyValuation = () => {
   const [selectedLanguage] = useState('es');
 
   const t = translations[selectedLanguage];
+
+  // Estados de conservación para el dropdown con factores exactos
+  const conservationStates = [
+    { value: 'NUEVO', label: 'NUEVO', factor: 1.0000 },
+    { value: 'BUENO', label: 'BUENO', factor: 0.9968 },
+    { value: 'MEDIO', label: 'MEDIO', factor: 0.9748 },
+    { value: 'REGULAR', label: 'REGULAR', factor: 0.9191 },
+    { value: 'REPARACIONES SENCILLAS', label: 'REPARACIONES SENCILLAS', factor: 0.8190 },
+    { value: 'REPARACIONES MEDIAS', label: 'REPARACIONES MEDIAS', factor: 0.6680 },
+    { value: 'REPARACIONES IMPORTANTES', label: 'REPARACIONES IMPORTANTES', factor: 0.4740 },
+    { value: 'DAÑOS GRAVES', label: 'DAÑOS GRAVES', factor: 0.2480 },
+    { value: 'EN DESECHO', label: 'EN DESECHO', factor: 0.1350 }
+  ];
 
   // Funciones de validación de pasos
   const isStep1Complete = () => {
