@@ -132,8 +132,8 @@ export const estratoValuationFactors: Record<EstratoSocial, number> = {
   
   // Estratos Altos (base y factores positivos)
   'alto_bajo': 0.00,     // 0% (BASE)
-  'alto_medio': 0.15,    // +15%
-  'alto_alto': 0.30      // +30%
+  'alto_medio': 0.05,    // +5%
+  'alto_alto': 0.07      // +7%
 };
 
 // Labels para mostrar los factores de valuación
@@ -145,8 +145,8 @@ export const estratoValuationLabels: Record<EstratoSocial, string> = {
   'medio_medio': '-10%',
   'medio_alto': '-5%',
   'alto_bajo': '0% (BASE)',
-  'alto_medio': '+15%',
-  'alto_alto': '+30%'
+  'alto_medio': '+5%',
+  'alto_alto': '+7%'
 };
 
 // Mapeo de estratos a clases sociales principales
