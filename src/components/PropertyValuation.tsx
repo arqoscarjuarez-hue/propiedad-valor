@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calculator, HelpCircle, CheckCircle, Shuffle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import SimpleMap from '@/components/SimpleMap';
+import FreeLocationMap from '@/components/FreeLocationMap';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
 
@@ -279,7 +279,7 @@ const PropertyValuation = () => {
   };
 
   const isStep3Complete = () => {
-    return propertyData.direccionCompleta !== '';
+    return propertyData.latitud !== 0 && propertyData.longitud !== 0 && propertyData.direccionCompleta !== '';
   };
 
   const isStep4Complete = () => {
@@ -690,14 +690,18 @@ const PropertyValuation = () => {
                             />
                           </div>
                           
-                          {/* Instrucciones de ubicación */}
-                          <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                            <h4 className="text-base font-semibold text-emerald-800 mb-2">🔍 Cómo buscar la ubicación:</h4>
-                            <ul className="text-sm text-emerald-700 space-y-1">
-                              <li>• <strong>Use el cursor</strong> para buscar la dirección exacta</li>
-                              <li>• Ingrese el <strong>área específica</strong> donde se encuentra</li>
-                              <li>• Especifique el <strong>lugar o zona</strong> que se va a valuar</li>
-                            </ul>
+                          <div>
+                            <Label className="text-base font-semibold mb-3 block">
+                              🗺️ Seleccione la ubicación en el mapa
+                            </Label>
+                            <div className="border-2 border-emerald-200 rounded-lg overflow-hidden shadow-md">
+                              <FreeLocationMap 
+                                onLocationChange={handleLocationChange}
+                                initialLat={propertyData.latitud || 19.4326}
+                                initialLng={propertyData.longitud || -99.1332}
+                                initialAddress={propertyData.direccionCompleta}
+                              />
+                            </div>
                           </div>
                         </div>
                       </CardContent>
