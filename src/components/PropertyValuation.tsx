@@ -389,7 +389,8 @@ const PropertyValuation = () => {
       console.log('🔥 INICIANDO AVALÚO COMPARATIVO INTERNACIONAL...');
       
       // Validar datos requeridos
-      if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) {
+      const areaToValidate = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+      if (!areaToValidate || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) {
         toast.error('❌ Faltan datos requeridos para el avalúo');
         return;
       }
@@ -594,7 +595,8 @@ const PropertyValuation = () => {
             let adjustedPrice = comp.price_usd * 0.85;
 
             // Ajuste por diferencia de área (Factor de escala)
-            const areaRatio = propertyData.area / comp.total_area;
+            const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+            const areaRatio = propertyAreaToUse / comp.total_area;
             if (areaRatio !== 1) {
               const areaAdjustment = Math.pow(areaRatio, 0.8); // Factor de economía de escala
               adjustedPrice *= areaAdjustment;
@@ -629,8 +631,8 @@ const PropertyValuation = () => {
         const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
         const economicMultiplier = countryConfig.economicFactor || 1;
-        
-        estimatedValueUSD = propertyData.area * basePricePerM2 * conservationMultiplier * economicMultiplier;
+        const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier * economicMultiplier;
         console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
       }
 
