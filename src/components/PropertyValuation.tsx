@@ -354,6 +354,32 @@ const PropertyValuation = () => {
     });
   };
 
+  // Función para realizar otro avalúo (reset)
+  const realizarOtroAvaluo = () => {
+    setPropertyData({
+      tipoPropiedad: '',
+      area: 0,
+      construction_area: 0,
+      habitaciones: 0,
+      banos: 0,
+      parqueaderos: 0,
+      antiguedad: 0,
+      estadoConservacion: '',
+      latitud: 0,
+      longitud: 0,
+      direccionCompleta: '',
+      barrio: '',
+      descripcion: ''
+    });
+    setSelectedLanguage('');
+    setSelectedCountry('');
+    setCurrentTab('setup');
+    setValuationResult(null);
+    setComparables([]);
+    setIsCalculating(false);
+    toast.success('✨ Listo para nuevo avalúo');
+  };
+
   // Función para navegar al siguiente paso automáticamente
   const goToNextStep = () => {
     if (currentTab === 'setup' && isStep0Complete()) {
@@ -800,6 +826,20 @@ const PropertyValuation = () => {
                   </TabsTrigger>
                 </TabsList>
 
+                {/* Botón Realizar Otro Avalúo */}
+                {(currentTab !== 'setup' || isStep0Complete()) && (
+                  <div className="mb-4 text-center">
+                    <Button 
+                      onClick={realizarOtroAvaluo}
+                      variant="outline"
+                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                    >
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      Realizar otro avalúo
+                    </Button>
+                  </div>
+                )}
+
                 {/* Paso 1: Configuración */}
                 <TabsContent value="setup" className="mt-6">
                   <Card className="border-2 border-purple-200 shadow-xl bg-gradient-to-br from-purple-50/50 to-pink-50/50">
@@ -1146,6 +1186,20 @@ const PropertyValuation = () => {
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+                {/* Botón Realizar Otro Avalúo */}
+                {currentTab === 'estado' && (
+                  <div className="mb-4 text-center">
+                    <Button 
+                      onClick={realizarOtroAvaluo}
+                      variant="outline"
+                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                    >
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      Realizar otro avalúo
+                    </Button>
+                  </div>
+                )}
 
                 {/* Paso 5: Estado de la Casa */}
                 <TabsContent value="estado" className="mt-6">
