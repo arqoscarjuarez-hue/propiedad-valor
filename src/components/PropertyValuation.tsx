@@ -279,7 +279,7 @@ const PropertyValuation = () => {
   };
 
   const isStep3Complete = () => {
-    return propertyData.direccionCompleta !== '' && propertyData.barrio !== '';
+    return propertyData.direccionCompleta !== '';
   };
 
   const isStep4Complete = () => {
@@ -690,20 +690,6 @@ const PropertyValuation = () => {
                             />
                           </div>
                           
-                          <div>
-                            <Label htmlFor="barrio" className="text-base font-semibold mb-2 block">
-                              🏘️ Barrio o Zona
-                            </Label>
-                            <Input
-                              id="barrio"
-                              value={propertyData.barrio}
-                              onChange={(e) => handleInputChange('barrio', e.target.value)}
-                              placeholder="Ingrese el barrio, colonia o zona donde está ubicada"
-                              className="border-2 focus:border-emerald-500"
-                              disabled={!isStep2Complete()}
-                            />
-                          </div>
-
                           {/* Instrucciones de ubicación */}
                           <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
                             <h4 className="text-base font-semibold text-emerald-800 mb-2">🔍 Cómo buscar la ubicación:</h4>
