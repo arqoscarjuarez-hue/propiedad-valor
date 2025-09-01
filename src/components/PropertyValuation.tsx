@@ -1173,19 +1173,35 @@ const PropertyValuation = () => {
                         </CardTitle>
                       </CardHeader>
                         <CardContent className="p-6">
-                          {/* Validación si paso anterior no está completo */}
+                          {/* VALIDACIÓN ESTRICTA - PASO ANTERIOR OBLIGATORIO */}
                           {!isStep0Complete() && (
-                            <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
-                              <div className="flex items-center gap-2">
-                                <span className="text-red-600">⚠️</span>
-                                <p className="text-red-800 font-medium text-sm">
-                                  <strong>Recomendación:</strong> Es mejor elegir primero el idioma y país en el paso anterior
+                            <div className="p-6 bg-red-50 border-2 border-red-400 rounded-lg text-center">
+                              <div className="flex items-center justify-center gap-2 mb-3">
+                                <span className="text-red-600 text-2xl">🚫</span>
+                                <p className="text-red-800 font-bold text-lg">
+                                  PASO BLOQUEADO
                                 </p>
                               </div>
+                              <p className="text-red-700 font-medium mb-2">
+                                Debes completar el PASO 1 primero
+                              </p>
+                              <p className="text-red-600 text-sm">
+                                Ve al Paso 1 y selecciona: <strong>Idioma y País</strong>
+                              </p>
                             </div>
                           )}
                           
-                          {/* SELECCIÓN DE TIPO DE PROPIEDAD - SIEMPRE VISIBLE */}
+                          {/* CONTENIDO DEL PASO 2 - SOLO SI PASO 1 ESTÁ COMPLETO */}
+                          {isStep0Complete() && (
+                            <>
+                              {/* INDICADOR DE PROGRESO */}
+                              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p className="text-blue-800 font-medium text-center">
+                                  ✅ Paso 1 completado → Ahora completa el Paso 2
+                                </p>
+                              </div>
+
+                              {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
                           <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                             <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
                             <p className="text-sm text-green-800 dark:text-green-200 mb-4">
@@ -1421,9 +1437,11 @@ const PropertyValuation = () => {
                              <p className="text-blue-800 text-xs">
                                🎯 <strong>Importante para el avalúo:</strong> Esta información nos ayuda a encontrar otras casas similares a la tuya en barrios parecidos para comparar precios y darte un avalúo más exacto.
                              </p>
-                           </div>
-                         </div> {/* Cierre del div estrato socioeconómico */}
-                       </CardContent>
+                            </div>
+                          </div> {/* Cierre del div estrato socioeconómico */}
+                              </>
+                            )} {/* Cierre del conditional isStep0Complete */}
+                        </CardContent>
                     </Card>
                   </TabsContent>
 
@@ -1438,20 +1456,34 @@ const PropertyValuation = () => {
                           🏠 Paso 3: ¿Qué tipo de casa tienes?
                         </CardTitle>
                       </CardHeader>
-                       <CardContent className="p-6">
-                         {/* Validación si paso anterior no está completo */}
-                         {!isStep1Complete() && (
-                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
-                             <div className="flex items-center gap-2">
-                               <span className="text-red-600">🚫</span>
-                               <p className="text-red-800 font-medium text-sm">
-                                 <strong>¡Espera!</strong> Primero dime qué tan rico es tu barrio
-                               </p>
-                             </div>
-                           </div>
-                         )}
-                         
-                         <p className="text-muted-foreground mb-4">¿Tu casa es una casa normal, un apartamento, un terreno vacío o un local comercial?</p>
+                        <CardContent className="p-6">
+                          {/* VALIDACIÓN ESTRICTA - PASOS ANTERIORES OBLIGATORIOS */}
+                          {(!isStep0Complete() || !isStep1Complete()) && (
+                            <div className="p-6 bg-red-50 border-2 border-red-400 rounded-lg text-center">
+                              <div className="flex items-center justify-center gap-2 mb-3">
+                                <span className="text-red-600 text-2xl">🚫</span>
+                                <p className="text-red-800 font-bold text-lg">
+                                  PASO BLOQUEADO
+                                </p>
+                              </div>
+                              <p className="text-red-700 font-medium mb-2">
+                                Debes completar los pasos anteriores primero
+                              </p>
+                              <div className="text-red-600 text-sm space-y-1">
+                                {!isStep0Complete() && <p>❌ <strong>Paso 1:</strong> Idioma y País</p>}
+                                {!isStep1Complete() && <p>❌ <strong>Paso 2:</strong> Tipo de Propiedad y Estrato Social</p>}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* CONTENIDO DEL PASO 3 - SOLO SI PASOS ANTERIORES ESTÁN COMPLETOS */}
+                          {isStep0Complete() && isStep1Complete() && (
+                            <>
+                              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <p className="text-green-800 font-medium text-center">
+                                  ✅ Pasos 1 y 2 completados → Ahora completa el Paso 3
+                                </p>
+                              </div>
                         <Select 
                           value={propertyData.tipoPropiedad} 
                           onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
@@ -1480,12 +1512,14 @@ const PropertyValuation = () => {
                            </div>
                          )}
                          
-                         <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                           <p className="text-blue-800 text-xs">
-                             🎯 <strong>¿Por qué necesitamos esto?</strong> Una casa vale diferente que un apartamento o un terreno. Esto nos ayuda a comparar tu propiedad con otras del mismo tipo para darte el precio correcto.
-                           </p>
-                         </div>
-                      </CardContent>
+                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-blue-800 text-xs">
+                              🎯 <strong>¿Por qué necesitamos esto?</strong> Una casa vale diferente que un apartamento o un terreno. Esto nos ayuda a comparar tu propiedad con otras del mismo tipo para darte el precio correcto.
+                            </p>
+                          </div>
+                              </>
+                            )} {/* Cierre del conditional pasos anteriores completos */}
+                       </CardContent>
                     </Card>
                   </TabsContent>
 
