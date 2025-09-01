@@ -261,7 +261,7 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       <div className="space-y-3">
         {/* Campo de búsqueda */}
         <div className="space-y-2">
-          <Label className="text-base font-semibold">🔍 Buscar dirección</Label>
+          <Label className="text-base font-semibold">🔍 Buscar dirección (o haga clic en el mapa para seleccionar ubicación)</Label>
           <div className="flex gap-2">
             <div className="flex-1">
               <Input
