@@ -1102,6 +1102,19 @@ const PropertyValuation = () => {
                           </div>
                         )}
 
+                        {/* Botón siguiente paso cuando se complete el área */}
+                        {isStep3Complete() && (
+                          <div className="mt-6 text-center">
+                            <Button 
+                              onClick={goToNextStep}
+                              size="lg"
+                              className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            >
+                              Continuar al Estado de la Casa →
+                            </Button>
+                          </div>
+                        )}
+
                         <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                           <p className="text-yellow-800 text-xs">
                             🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
