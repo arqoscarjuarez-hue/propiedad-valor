@@ -821,27 +821,53 @@ const PropertyValuation = () => {
                         </p>
                         <FreeLocationMap
                           onLocationChange={(lat, lng, address) => {
-                            handleInputChange('latitud', lat);
-                            handleInputChange('longitud', lng);
-                            handleInputChange('direccionCompleta', address);
-                            setTimeout(goToNextStep, 1000);
+                            // Solo actualizar si no hay una dirección confirmada previamente
+                            if (!propertyData.direccionCompleta) {
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                              handleInputChange('direccionCompleta', address);
+                            } else {
+                              // Solo actualizar coordenadas, mantener la dirección original
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                            }
                           }}
-                          initialLat={13.7042}
-                          initialLng={-89.2073}
+                          initialLat={propertyData.latitud || 13.7042}
+                          initialLng={propertyData.longitud || -89.2073}
                           initialAddress={propertyData.direccionCompleta}
                         />
+                        
+                        {/* Mostrar dirección seleccionada y permitir cambiarla */}
                         {propertyData.direccionCompleta && (
-                          <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded animate-fade-in">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm text-green-800">
-                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
-                              </p>
+                          <div className="space-y-3">
+                            <div className="p-4 bg-green-50 border border-green-200 rounded animate-fade-in">
+                              <div className="flex items-center justify-between mb-3">
+                                <div>
+                                  <p className="text-sm font-medium text-green-800">
+                                    📍 Dirección confirmada:
+                                  </p>
+                                  <p className="text-sm text-green-700 mt-1">
+                                    {propertyData.direccionCompleta}
+                                  </p>
+                                </div>
+                                <Button 
+                                  onClick={() => {
+                                    // Permitir cambiar la dirección
+                                    handleInputChange('direccionCompleta', '');
+                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  className="border-green-300 text-green-700 hover:bg-green-100"
+                                >
+                                  Cambiar ubicación
+                                </Button>
+                              </div>
                               <Button 
                                 onClick={goToNextStep}
                                 size="sm"
-                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in w-full"
                               >
-                                Siguiente Paso →
+                                Confirmar y Continuar →
                               </Button>
                             </div>
                           </div>
