@@ -226,10 +226,19 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
         }
       });
 
-      // Geocodificar posición inicial
-      if (initialAddress) {
+      // Geocodificar posición inicial solo si no hay coordenadas válidas guardadas
+      if (initialAddress && (!initialLat || !initialLng || (initialLat === 19.4326 && initialLng === -99.1332))) {
         geocodeAddress(initialAddress);
+      } else if (initialLat && initialLng && (initialLat !== 19.4326 || initialLng !== -99.1332)) {
+        // Si tenemos coordenadas válidas guardadas, usarlas y obtener la dirección si no la tenemos
+        if (!initialAddress) {
+          reverseGeocode(initialLat, initialLng);
+        } else {
+          setCurrentAddress(initialAddress);
+          onLocationChange?.(initialLat, initialLng, initialAddress);
+        }
       } else {
+        // Solo hacer reverse geocoding si no tenemos nada guardado
         reverseGeocode(initialLat, initialLng);
       }
 

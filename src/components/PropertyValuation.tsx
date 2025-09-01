@@ -1095,8 +1095,8 @@ const PropertyValuation = () => {
                             handleInputChange('longitud', lng);
                             handleInputChange('direccionCompleta', address);
                           }}
-                          initialLat={13.7042}
-                          initialLng={-89.2073}
+                          initialLat={propertyData.latitud || 13.7042}
+                          initialLng={propertyData.longitud || -89.2073}
                           initialAddress={propertyData.direccionCompleta}
                         />
                         {propertyData.direccionCompleta && (
