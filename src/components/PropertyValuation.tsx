@@ -59,6 +59,7 @@ interface Translations {
 interface PropertyData {
   tipoPropiedad: string;
   area: number;
+  construction_area: number;
   habitaciones: number;
   banos: number;
   parqueaderos: number;
@@ -246,6 +247,7 @@ const PropertyValuation = () => {
   const [propertyData, setPropertyData] = useState<PropertyData>({
     tipoPropiedad: '',
     area: 0,
+    construction_area: 0,
     habitaciones: 0,
     banos: 0,
     parqueaderos: 0,
@@ -283,7 +285,7 @@ const PropertyValuation = () => {
   };
 
   const isStep4Complete = () => {
-    return propertyData.area > 0 && propertyData.estadoConservacion !== '';
+    return propertyData.area > 0;
   };
 
   const isStep5Complete = () => {
@@ -402,6 +404,7 @@ const PropertyValuation = () => {
     setPropertyData({
       tipoPropiedad: '',
       area: 0,
+      construction_area: 0,
       habitaciones: 0,
       banos: 0,
       parqueaderos: 0,
@@ -719,60 +722,40 @@ const PropertyValuation = () => {
                           📐 Paso 4: Características Básicas
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <Label htmlFor="area" className="text-base font-semibold mb-2 block">
-                              📐 Área Total (m²) *
-                            </Label>
-                            <Input
-                              id="area"
-                              type="number"
-                              value={propertyData.area || ''}
-                              onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                              placeholder="Ej: 120"
-                              className="border-2 focus:border-orange-500"
-                              min="1"
-                              disabled={!isStep3Complete()}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="antiguedad" className="text-base font-semibold mb-2 block">
-                              🗓️ Antigüedad (años)
-                            </Label>
-                            <Input
-                              id="antiguedad"
-                              type="number"
-                              value={propertyData.antiguedad || ''}
-                              onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                              placeholder="Ej: 5"
-                              className="border-2 focus:border-orange-500"
-                              min="0"
-                              disabled={!isStep3Complete()}
-                            />
-                          </div>
-                        </div>
-                        <div className="mt-6">
-                          <Label htmlFor="estadoConservacion" className="text-base font-semibold mb-2 block">
-                            🔨 Estado de Conservación *
-                          </Label>
-                          <Select 
-                            value={propertyData.estadoConservacion} 
-                            onValueChange={(value) => handleInputChange('estadoConservacion', value)}
-                            disabled={!isStep3Complete()}
-                          >
-                            <SelectTrigger className="border-2 focus:border-orange-500">
-                              <SelectValue placeholder="Selecciona el estado de conservación" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
-                              <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
-                              <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
-                              <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </CardContent>
+                       <CardContent className="p-6">
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div>
+                             <Label htmlFor="areaTerreno" className="text-base font-semibold mb-2 block">
+                               🌿 Área Total de Terreno (m²) *
+                             </Label>
+                             <Input
+                               id="areaTerreno"
+                               type="number"
+                               value={propertyData.area || ''}
+                               onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                               placeholder="Ej: 200"
+                               className="border-2 focus:border-orange-500"
+                               min="1"
+                               disabled={!isStep3Complete()}
+                             />
+                           </div>
+                           <div>
+                             <Label htmlFor="areaConstruccion" className="text-base font-semibold mb-2 block">
+                               🏗️ Área Total de Construcción (m²) *
+                             </Label>
+                             <Input
+                               id="areaConstruccion"
+                               type="number"
+                               value={propertyData.construction_area || ''}
+                               onChange={(e) => handleInputChange('construction_area', Number(e.target.value))}
+                               placeholder="Ej: 120"
+                               className="border-2 focus:border-orange-500"
+                               min="0"
+                               disabled={!isStep3Complete()}
+                             />
+                           </div>
+                         </div>
+                       </CardContent>
                     </Card>
                   </TabsContent>
 
