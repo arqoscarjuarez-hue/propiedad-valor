@@ -67,6 +67,7 @@ interface PropertyData {
   barrio: string;
   descripcion: string;
   estratoSocial: EstratoSocial | '';
+  clasePrincipal: ClasePrincipal | '';
 }
 
 interface Comparable {
@@ -84,34 +85,72 @@ interface Comparable {
 }
 
 // Tipos de estrato social - normas internacionales de Latinoamérica
-export type EstratoSocial = 'bajo' | 'medio' | 'alto';
+export type EstratoSocial = 
+  | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
+  | 'medio_bajo' | 'medio_medio' | 'medio_alto' 
+  | 'alto_medio' | 'alto_alto';
 
-// Etiquetas para estratos sociales
+// Clases principales para primer nivel de selección
+export type ClasePrincipal = 'bajo' | 'medio' | 'alto';
+
+// Etiquetas para estratos sociales completos
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  'bajo': 'Clase Socioeconómica Baja - Barrios populares con servicios básicos',
-  'medio': 'Clase Socioeconómica Media - Barrios residenciales con buenos servicios',
-  'alto': 'Clase Socioeconómica Alta - Barrios exclusivos con servicios premium'
+  // Clase Baja
+  'bajo_bajo': 'Clase Baja Baja - Barrios marginales con servicios limitados',
+  'bajo_medio': 'Clase Baja Media - Barrios populares con servicios básicos',
+  'bajo_alto': 'Clase Baja Alta - Barrios obreros con servicios mejorados',
+  
+  // Clase Media
+  'medio_bajo': 'Clase Media Baja - Barrios residenciales con buenos servicios',
+  'medio_medio': 'Clase Media Media - Barrios de clase media consolidada',
+  'medio_alto': 'Clase Media Alta - Barrios residenciales premium',
+  
+  // Clase Alta
+  'alto_medio': 'Clase Alta Media - Barrios exclusivos con servicios de lujo',
+  'alto_alto': 'Clase Alta Alta - Barrios de élite con servicios premium'
 };
 
-// Mapeo de estratos a clases sociales simplificadas
-export const estratoToClassMap: Record<EstratoSocial, string> = {
-  'bajo': 'popular',
-  'medio': 'media',
-  'alto': 'alta'
+// Etiquetas para clases principales
+export const clasePrincipalLabels: Record<ClasePrincipal, string> = {
+  'bajo': 'Clase Socioeconómica Baja',
+  'medio': 'Clase Socioeconómica Media', 
+  'alto': 'Clase Socioeconómica Alta'
 };
 
-// Mapeo inverso: clases a estratos
-export const classToEstratos: Record<string, EstratoSocial[]> = {
-  'popular': ['bajo'],
-  'media': ['medio'],
-  'alta': ['alto']
+// Mapeo de estratos a clases sociales principales
+export const estratoToClassMap: Record<EstratoSocial, ClasePrincipal> = {
+  'bajo_bajo': 'bajo',
+  'bajo_medio': 'bajo',
+  'bajo_alto': 'bajo',
+  'medio_bajo': 'medio',
+  'medio_medio': 'medio',
+  'medio_alto': 'medio',
+  'alto_medio': 'alto',
+  'alto_alto': 'alto'
+};
+
+// Mapeo de clases principales a estratos específicos
+export const clasePrincipalToEstratos: Record<ClasePrincipal, EstratoSocial[]> = {
+  'bajo': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
+  'medio': ['medio_bajo', 'medio_medio', 'medio_alto'],
+  'alto': ['alto_medio', 'alto_alto']
 };
 
 // Multiplicadores de valor según estrato social - normas internacionales
 export const estratoMultipliers: Record<EstratoSocial, number> = {
-  'bajo': 0.8,   // 80% del valor base
-  'medio': 1.0,  // 100% del valor base
-  'alto': 1.4    // 140% del valor base
+  // Clase Baja (0.7-0.9)
+  'bajo_bajo': 0.7,
+  'bajo_medio': 0.8,
+  'bajo_alto': 0.9,
+  
+  // Clase Media (1.0-1.3)
+  'medio_bajo': 1.0,
+  'medio_medio': 1.15,
+  'medio_alto': 1.3,
+  
+  // Clase Alta (1.5-1.8)
+  'alto_medio': 1.5,
+  'alto_alto': 1.8
 };
 
 // Factores de depreciación por estado de conservación
@@ -344,7 +383,8 @@ const PropertyValuation = () => {
     direccionCompleta: '',
     barrio: '',
     descripcion: '',
-    estratoSocial: ''
+    estratoSocial: '',
+    clasePrincipal: ''
   });
 
   // Estados para idioma y moneda con valores por defecto
@@ -639,30 +679,59 @@ const PropertyValuation = () => {
                       </div>
 
                       <div className="space-y-6">
-                        {/* SELECCIÓN DE ESTRATO SOCIAL */}
+                        {/* SELECCIÓN DE CLASE PRINCIPAL */}
                         <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏘️ Clase Socioeconómica del Barrio</h3>
+                          <h3 className="font-semibold mb-2">🏘️ Clase Socioeconómica Principal</h3>
                           <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Selecciona la clase socioeconómica según las normas internacionales de Latinoamérica.
+                            Primero selecciona la clase socioeconómica general del barrio:
                           </p>
-                          <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
+                          <Select 
+                            value={propertyData.clasePrincipal} 
+                            onValueChange={(value) => {
+                              handleInputChange('clasePrincipal', value);
+                              handleInputChange('estratoSocial', ''); // Reset estrato específico
+                            }}
+                          >
                             <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="¿Cuál es la clase socioeconómica del barrio?" />
+                              <SelectValue placeholder="Selecciona la clase socioeconómica principal" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="bajo">🏘️ Clase Baja - Barrios populares con servicios básicos</SelectItem>
-                              <SelectItem value="medio">🏡 Clase Media - Barrios residenciales con buenos servicios</SelectItem>
-                              <SelectItem value="alto">🏰 Clase Alta - Barrios exclusivos con servicios premium</SelectItem>
+                              <SelectItem value="bajo">🏘️ Clase Baja - Barrios populares y obreros</SelectItem>
+                              <SelectItem value="medio">🏡 Clase Media - Barrios residenciales</SelectItem>
+                              <SelectItem value="alto">🏰 Clase Alta - Barrios exclusivos</SelectItem>
                             </SelectContent>
                           </Select>
-                          {propertyData.estratoSocial && (
-                            <div className="mt-3 p-2 bg-violet-100 border border-violet-300 rounded">
-                              <p className="text-sm text-violet-800">
-                                <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
-                              </p>
-                            </div>
-                          )}
                         </div>
+
+                        {/* SELECCIÓN DE ESTRATO ESPECÍFICO */}
+                        {propertyData.clasePrincipal && (
+                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <h3 className="font-semibold mb-2">🎯 Estrato Específico</h3>
+                            <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+                              Ahora selecciona el nivel específico dentro de {clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}:
+                            </p>
+                            <Select value={propertyData.estratoSocial} onValueChange={(value) => handleInputChange('estratoSocial', value)}>
+                              <SelectTrigger className="bg-white">
+                                <SelectValue placeholder={`Selecciona el nivel específico de ${clasePrincipalLabels[propertyData.clasePrincipal as ClasePrincipal]}`} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {clasePrincipalToEstratos[propertyData.clasePrincipal as ClasePrincipal]?.map((estrato) => (
+                                  <SelectItem key={estrato} value={estrato}>
+                                    {estratoSocialLabels[estrato]}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+
+                        {propertyData.estratoSocial && (
+                          <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
+                            <p className="text-sm text-green-800">
+                              <strong>✅ Estrato seleccionado:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
