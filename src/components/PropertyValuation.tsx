@@ -1517,47 +1517,93 @@ const PropertyValuation = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-200">
-                  <h3 className="text-lg font-bold text-indigo-800 mb-2">🏠 Inmueble Valuado</h3>
-                  <p className="text-indigo-700 font-medium">📍 {valuationResult.direccion}</p>
-                  <p className="text-sm text-indigo-600 mt-1">💱 Valuación realizada en dólares estadounidenses (USD)</p>
-                </div>
+                {/* Información básica del inmueble - Solo si completó configuración */}
+                {isStep0Complete() && (
+                  <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-200">
+                    <h3 className="text-lg font-bold text-indigo-800 mb-2">🏠 Inmueble Valuado</h3>
+                    <p className="text-indigo-700 font-medium">📍 {valuationResult.direccion}</p>
+                    <p className="text-sm text-indigo-600 mt-1">💱 Valuación realizada en dólares estadounidenses (USD)</p>
+                  </div>
+                )}
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
-                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total</h3>
-                    <p className="text-4xl font-bold text-green-600 dark:text-green-400">
-                      ${valuationResult.valorTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </p>
-                    <p className="text-lg font-semibold text-green-700 dark:text-green-300 mt-1">USD</p>
-                  </div>
-                  <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border border-blue-200 dark:border-blue-800">
-                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m²</h3>
-                    <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-                      ${valuationResult.valorPorM2?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </p>
-                    <p className="text-lg font-semibold text-blue-700 dark:text-blue-300 mt-1">USD/m²</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border">
-                    <h4 className="font-semibold text-foreground mb-2">📊 Factores de Ajuste Aplicados</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Estrato Social:</span>
-                        <span className="font-semibold ml-2">{(valuationResult.factores?.estrato * 100).toFixed(0)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Conservación:</span>
-                        <span className="font-semibold ml-2">{(valuationResult.factores?.conservacion * 100).toFixed(0)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Antigüedad:</span>
-                        <span className="font-semibold ml-2">{(valuationResult.factores?.antiguedad * 100).toFixed(0)}%</span>
-                      </div>
+                {/* Valores finales - Solo mostrar cuando todo esté completo */}
+                {getNextRequiredStep() === 'valuacion' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
+                      <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total</h3>
+                      <p className="text-4xl font-bold text-green-600 dark:text-green-400">
+                        ${valuationResult.valorTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </p>
+                      <p className="text-lg font-semibold text-green-700 dark:text-green-300 mt-1">USD</p>
+                    </div>
+                    <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border border-blue-200 dark:border-blue-800">
+                      <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m²</h3>
+                      <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+                        ${valuationResult.valorPorM2?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </p>
+                      <p className="text-lg font-semibold text-blue-700 dark:text-blue-300 mt-1">USD/m²</p>
                     </div>
                   </div>
+                )}
+
+                <div className="space-y-4">
+                  {/* Mostrar información paso a paso */}
+                  
+                  {/* Paso 1: Estrato Social */}
+                  {isStep1Complete() && (
+                    <div className="p-4 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">🏘️ Paso 1: Estrato Social</h4>
+                      <div className="text-sm">
+                        <p><span className="text-muted-foreground">Estrato seleccionado:</span> <span className="font-medium">{propertyData.estratoSocial}</span></p>
+                        <p><span className="text-muted-foreground">Factor aplicado:</span> <span className="font-medium">{(valuationResult.factores?.estrato * 100).toFixed(0)}%</span></p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Paso 2: Tipo de Propiedad */}
+                  {isStep2Complete() && (
+                    <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">🏠 Paso 2: Tipo de Propiedad</h4>
+                      <div className="text-sm">
+                        <p><span className="text-muted-foreground">Tipo:</span> <span className="font-medium">{propertyData.tipoPropiedad}</span></p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Paso 3: Ubicación */}
+                  {isStep3Complete() && (
+                    <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🌍 Paso 3: Ubicación</h4>
+                      <div className="text-sm">
+                        <p><span className="text-muted-foreground">Dirección:</span> <span className="font-medium">{propertyData.direccionCompleta}</span></p>
+                        <p><span className="text-muted-foreground">Barrio:</span> <span className="font-medium">{propertyData.barrio}</span></p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Paso 4: Características */}
+                  {isStep4Complete() && (
+                    <div className="p-4 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800">
+                      <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">📐 Paso 4: Características</h4>
+                      <div className="text-sm grid grid-cols-2 gap-2">
+                        <p><span className="text-muted-foreground">Área construida:</span> <span className="font-medium">{propertyData.construction_area} m²</span></p>
+                        <p><span className="text-muted-foreground">Área total:</span> <span className="font-medium">{propertyData.area} m²</span></p>
+                        <p><span className="text-muted-foreground">Habitaciones:</span> <span className="font-medium">{propertyData.habitaciones}</span></p>
+                        <p><span className="text-muted-foreground">Baños:</span> <span className="font-medium">{propertyData.banos}</span></p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Paso 5: Depreciación */}
+                  {propertyData.estadoConservacion && (
+                    <div className="p-4 bg-indigo-50 dark:bg-indigo-950 rounded-lg border border-indigo-200 dark:border-indigo-800">
+                      <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">📉 Paso 5: Estado de Conservación</h4>
+                      <div className="text-sm">
+                        <p><span className="text-muted-foreground">Estado:</span> <span className="font-medium">{propertyData.estadoConservacion}</span></p>
+                        <p><span className="text-muted-foreground">Factor aplicado:</span> <span className="font-medium">{(valuationResult.factores?.conservacion * 100).toFixed(0)}%</span></p>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="p-4 bg-gray-50 dark:bg-gray-950 rounded-lg border">
                     <h4 className="font-semibold text-foreground mb-2">📋 Detalles de la Valuación</h4>
