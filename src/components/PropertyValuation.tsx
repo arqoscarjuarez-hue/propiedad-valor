@@ -269,7 +269,7 @@ const PropertyValuation = () => {
   });
 
   // Estados para idioma y moneda
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('es'); // Español por defecto
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState('');
 
