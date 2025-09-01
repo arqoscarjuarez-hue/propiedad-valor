@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/hooks/useLanguage";
+import Index from "./pages/Index";
 import Valuation from "./pages/Valuation";
 import NotFound from "./pages/NotFound";
 
@@ -17,7 +18,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Valuation />} />
+            <Route path="/" element={<Index />} />
             <Route path="/avaluos" element={<Valuation />} />
             <Route path="/valuation" element={<Valuation />} />
             <Route path="*" element={<NotFound />} />
