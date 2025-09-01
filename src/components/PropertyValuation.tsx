@@ -290,7 +290,7 @@ const PropertyValuation = () => {
 
   const isStep5Complete = () => {
     if (propertyData.tipoPropiedad === 'terreno') return true;
-    return propertyData.habitaciones > 0 && propertyData.banos > 0 && propertyData.antiguedad >= 0 && propertyData.estadoConservacion !== '';
+    return propertyData.estadoConservacion !== '';
   };
 
   // Función para obtener el siguiente paso requerido
@@ -315,7 +315,7 @@ const PropertyValuation = () => {
       setActiveTab('caracteristicas');
     } else if (field === 'area' && value && isStep5Complete()) {
       setActiveTab('depreciacion');
-    } else if ((field === 'habitaciones' || field === 'antiguedad' || field === 'estadoConservacion') && getNextRequiredStep() === 'valuacion') {
+    } else if ((field === 'estadoConservacion') && getNextRequiredStep() === 'valuacion') {
       setActiveTab('valuacion');
     }
   };
@@ -774,25 +774,37 @@ const PropertyValuation = () => {
                            </CardTitle>
                          </CardHeader>
                          <CardContent className="p-6">
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                           <div className="space-y-6">
+                             {/* Tabla de Estado de Conservación */}
                              <div>
-                               <Label htmlFor="antiguedad" className="text-base font-semibold mb-2 block">
-                                 🗓️ Antigüedad (años) *
-                               </Label>
-                               <Input
-                                 id="antiguedad"
-                                 type="number"
-                                 value={propertyData.antiguedad || ''}
-                                 onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                                 placeholder="Ej: 5"
-                                 className="border-2 focus:border-indigo-500"
-                                 min="0"
-                                 disabled={!isStep4Complete()}
-                               />
+                               <h3 className="text-lg font-bold text-indigo-800 mb-4">ESTADO CONSERVACIÓN</h3>
+                               <div className="bg-white rounded-lg border-2 border-indigo-200 overflow-hidden">
+                                 <table className="w-full">
+                                   <thead className="bg-indigo-100">
+                                     <tr>
+                                       <th className="px-4 py-3 text-left font-bold text-indigo-800">CALIFICACIÓN</th>
+                                       <th className="px-4 py-3 text-left font-bold text-indigo-800">ESTADO</th>
+                                     </tr>
+                                   </thead>
+                                   <tbody className="divide-y divide-indigo-100">
+                                     <tr><td className="px-4 py-2 font-mono">1.0000</td><td className="px-4 py-2">NUEVO</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.9968</td><td className="px-4 py-2">BUENO</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.9748</td><td className="px-4 py-2">MEDIO</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.9191</td><td className="px-4 py-2">REGULAR</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.8190</td><td className="px-4 py-2 text-blue-600">REPARACIONES SENCILLAS</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.6680</td><td className="px-4 py-2 text-blue-600">REPARACIONES MEDIAS</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.4740</td><td className="px-4 py-2 text-blue-600">REPARACIONES IMPORTANTES</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.2480</td><td className="px-4 py-2 text-blue-600">DAÑOS GRAVES</td></tr>
+                                     <tr><td className="px-4 py-2 font-mono">0.1350</td><td className="px-4 py-2 text-blue-600">EN DESECHO</td></tr>
+                                   </tbody>
+                                 </table>
+                               </div>
                              </div>
+                             
+                             {/* Selector de Estado */}
                              <div>
                                <Label htmlFor="estadoConservacion" className="text-base font-semibold mb-2 block">
-                                 🔨 Estado de Conservación *
+                                 🔨 Seleccione el Estado de Conservación *
                                </Label>
                                <Select 
                                  value={propertyData.estadoConservacion} 
@@ -803,75 +815,20 @@ const PropertyValuation = () => {
                                    <SelectValue placeholder="Selecciona el estado de conservación" />
                                  </SelectTrigger>
                                  <SelectContent>
-                                   <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
-                                   <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
-                                   <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
-                                   <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
+                                   <SelectItem value="nuevo" className="font-medium">1.0000 - NUEVO</SelectItem>
+                                   <SelectItem value="bueno" className="font-medium">0.9968 - BUENO</SelectItem>
+                                   <SelectItem value="medio" className="font-medium">0.9748 - MEDIO</SelectItem>
+                                   <SelectItem value="regular" className="font-medium">0.9191 - REGULAR</SelectItem>
+                                   <SelectItem value="reparaciones_sencillas" className="font-medium">0.8190 - REPARACIONES SENCILLAS</SelectItem>
+                                   <SelectItem value="reparaciones_medias" className="font-medium">0.6680 - REPARACIONES MEDIAS</SelectItem>
+                                   <SelectItem value="reparaciones_importantes" className="font-medium">0.4740 - REPARACIONES IMPORTANTES</SelectItem>
+                                   <SelectItem value="danos_graves" className="font-medium">0.2480 - DAÑOS GRAVES</SelectItem>
+                                   <SelectItem value="en_desecho" className="font-medium">0.1350 - EN DESECHO</SelectItem>
                                  </SelectContent>
                                </Select>
                              </div>
                            </div>
-                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                              <Label htmlFor="habitaciones" className="text-base font-semibold mb-2 block">
-                                🛏️ Habitaciones *
-                              </Label>
-                              <Input
-                                id="habitaciones"
-                                type="number"
-                                value={propertyData.habitaciones || ''}
-                                onChange={(e) => handleInputChange('habitaciones', Number(e.target.value))}
-                                placeholder="Ej: 3"
-                                className="border-2 focus:border-indigo-500"
-                                min="0"
-                                disabled={!isStep4Complete()}
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="banos" className="text-base font-semibold mb-2 block">
-                                🚿 Baños *
-                              </Label>
-                              <Input
-                                id="banos"
-                                type="number"
-                                value={propertyData.banos || ''}
-                                onChange={(e) => handleInputChange('banos', Number(e.target.value))}
-                                placeholder="Ej: 2"
-                                className="border-2 focus:border-indigo-500"
-                                min="0"
-                                disabled={!isStep4Complete()}
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="parqueaderos" className="text-base font-semibold mb-2 block">
-                                🚗 Parqueaderos
-                              </Label>
-                              <Input
-                                id="parqueaderos"
-                                type="number"
-                                value={propertyData.parqueaderos || ''}
-                                onChange={(e) => handleInputChange('parqueaderos', Number(e.target.value))}
-                                placeholder="Ej: 1"
-                                className="border-2 focus:border-indigo-500"
-                                min="0"
-                                disabled={!isStep4Complete()}
-                              />
-                            </div>
-                          </div>
-                          <div className="mt-6">
-                            <Label htmlFor="descripcion" className="text-base font-semibold mb-2 block">
-                              📝 Descripción Adicional
-                            </Label>
-                            <Textarea
-                              id="descripcion"
-                              value={propertyData.descripcion}
-                              onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                              placeholder="Describe características especiales de la propiedad..."
-                              className="border-2 focus:border-indigo-500 min-h-[100px]"
-                              disabled={!isStep4Complete()}
-                            />
-                          </div>
-                        </CardContent>
+                         </CardContent>
                       </Card>
                     </TabsContent>
                   )}
