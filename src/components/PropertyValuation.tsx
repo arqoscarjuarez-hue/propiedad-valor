@@ -1033,13 +1033,15 @@ const PropertyValuation = () => {
                           </div>
                         )}
 
-                        {/* Instrucciones */}
+                        {/* Instrucciones si no está completo */}
                         {!isStep0Complete() && (
-                          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-blue-800 text-sm">
-                              💡 <strong>Importante:</strong> Seleccione el idioma y el país donde se encuentra el inmueble a valuar. 
-                              La valuación se realizará en la moneda local del país seleccionado.
-                            </p>
+                          <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                            <div className="flex items-center gap-2">
+                              <span className="text-yellow-600">⚠️</span>
+                              <p className="text-yellow-800 font-medium text-sm">
+                                <strong>Paso requerido:</strong> Debe seleccionar idioma y país para continuar
+                              </p>
+                            </div>
                           </div>
                         )}
                       </CardContent>
@@ -1058,6 +1060,18 @@ const PropertyValuation = () => {
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
+                         {/* Validación si paso anterior no está completo */}
+                         {!isStep0Complete() && (
+                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                             <div className="flex items-center gap-2">
+                               <span className="text-red-600">🚫</span>
+                               <p className="text-red-800 font-medium text-sm">
+                                 <strong>Complete primero:</strong> Vaya al paso de Configuración para seleccionar idioma y país
+                               </p>
+                             </div>
+                           </div>
+                         )}
+                         
                          <p className="text-muted-foreground mb-4">¿En qué estrato socioeconómico vives?</p>
                          
                          {!propertyData.estratoSocial && (
@@ -1209,8 +1223,20 @@ const PropertyValuation = () => {
                           🏠 Paso 2: Tipo de Propiedad
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <p className="text-muted-foreground mb-4">Selecciona el tipo de propiedad a valuar</p>
+                       <CardContent className="p-6">
+                         {/* Validación si paso anterior no está completo */}
+                         {!isStep1Complete() && (
+                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                             <div className="flex items-center gap-2">
+                               <span className="text-red-600">🚫</span>
+                               <p className="text-red-800 font-medium text-sm">
+                                 <strong>Complete primero:</strong> Seleccione el estrato social en el paso anterior
+                               </p>
+                             </div>
+                           </div>
+                         )}
+                         
+                         <p className="text-muted-foreground mb-4">Selecciona el tipo de propiedad a valuar</p>
                         <Select 
                           value={propertyData.tipoPropiedad} 
                           onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
@@ -1253,8 +1279,20 @@ const PropertyValuation = () => {
                           🌍 Paso 3: Ubicación de la Propiedad
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="space-y-6">
+                       <CardContent className="p-6">
+                         {/* Validación si paso anterior no está completo */}
+                         {!isStep2Complete() && (
+                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                             <div className="flex items-center gap-2">
+                               <span className="text-red-600">🚫</span>
+                               <p className="text-red-800 font-medium text-sm">
+                                 <strong>Complete primero:</strong> Seleccione el tipo de propiedad en el paso anterior
+                               </p>
+                             </div>
+                           </div>
+                         )}
+                         
+                         <div className="space-y-6">
                           <div>
                             <Label htmlFor="direccion" className="text-base font-semibold mb-2 block">
                               📍 Dirección Completa de la Propiedad
@@ -1308,8 +1346,20 @@ const PropertyValuation = () => {
                           📐 Paso 4: Características Básicas
                         </CardTitle>
                       </CardHeader>
-                       <CardContent className="p-6">
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <CardContent className="p-6">
+                          {/* Validación si paso anterior no está completo */}
+                          {!isStep3Complete() && (
+                            <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                              <div className="flex items-center gap-2">
+                                <span className="text-red-600">🚫</span>
+                                <p className="text-red-800 font-medium text-sm">
+                                  <strong>Complete primero:</strong> Ingrese la ubicación de la propiedad en el paso anterior
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                            <div>
                              <Label htmlFor="areaTerreno" className="text-base font-semibold mb-2 block">
                                🌿 Área Total de Terreno (m²) *
@@ -1358,8 +1408,20 @@ const PropertyValuation = () => {
                   </TabsContent>
                   
                   {/* Paso 5: Depreciación */}
-                  <TabsContent value="depreciacion" className="mt-6">
-                    {/* Panel de confirmación de selección - MOVIDO ARRIBA */}
+                   <TabsContent value="depreciacion" className="mt-6">
+                     {/* Validación si paso anterior no está completo */}
+                     {!isStep4Complete() && (
+                       <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                         <div className="flex items-center gap-2">
+                           <span className="text-red-600">🚫</span>
+                           <p className="text-red-800 font-medium text-sm">
+                             <strong>Complete primero:</strong> Ingrese las características de la propiedad en el paso anterior
+                           </p>
+                         </div>
+                       </div>
+                     )}
+                     
+                     {/* Panel de confirmación de selección - MOVIDO ARRIBA */}
                      {propertyData.estadoConservacion && (
                        <div className="mb-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
                          <div className="flex items-center gap-2">
@@ -1636,12 +1698,36 @@ const PropertyValuation = () => {
                           💎 Realizar Valuación
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="text-center py-6">
-                          <div className="mb-4">
-                            <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
-                          </div>
-                          <h3 className="text-xl font-bold mb-4">🎉 ¡Listo para la valuación!</h3>
+                       <CardContent className="p-6">
+                         {/* Validación si no todos los pasos están completos */}
+                         {getNextRequiredStep() !== 'valuacion' && (
+                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                             <div className="flex items-center gap-2">
+                               <span className="text-red-600">🚫</span>
+                               <div>
+                                 <p className="text-red-800 font-medium text-sm mb-2">
+                                   <strong>Complete todos los pasos anteriores:</strong>
+                                 </p>
+                                 <ul className="text-red-700 text-xs space-y-1">
+                                   {!isStep0Complete() && <li>• Configuración (idioma y país)</li>}
+                                   {!isStep1Complete() && <li>• Estrato social</li>}
+                                   {!isStep2Complete() && <li>• Tipo de propiedad</li>}
+                                   {!isStep3Complete() && <li>• Ubicación</li>}
+                                   {!isStep4Complete() && <li>• Características (área)</li>}
+                                   {!isStep5Complete() && <li>• Depreciación (estado de conservación)</li>}
+                                 </ul>
+                               </div>
+                             </div>
+                           </div>
+                         )}
+                         
+                         <div className="text-center py-6">
+                           <div className="mb-4">
+                             <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
+                           </div>
+                           <h3 className="text-xl font-bold mb-4">
+                             {getNextRequiredStep() === 'valuacion' ? '🎉 ¡Listo para la valuación!' : '⏳ Complete todos los pasos'}
+                           </h3>
                           <Button
                             onClick={performValuation}
                             disabled={isCalculating}
