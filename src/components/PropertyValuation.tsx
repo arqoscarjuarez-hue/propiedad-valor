@@ -547,54 +547,47 @@ const PropertyValuation = () => {
       
       // Validar datos requeridos
       if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) {
-        toast.error('❌ Faltan datos requeridos para el avalúo');
+        toast('❌ Faltan datos requeridos para el avalúo');
         return;
       }
 
       // Obtener configuración del país
       const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
       if (!countryConfig) {
-        toast.error('❌ País no configurado');
+        toast('❌ País no configurado');
         return;
       }
 
       // 1. Precio base por país
       const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
       
-      // 2. Factor de estrato social
-      const estratoMultiplier = estratoMultipliers[propertyData.estratoSocial as EstratoSocial] || 1;
-      
-      // 3. Factor de conservación
+      // 2. Factor de conservación
       const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
       
-      // 4. Factor económico del país
+      // 3. Factor económico del país
       const economicMultiplier = countryConfig.economicFactor || 1;
 
-      // 5. Cálculo del precio base
+      // 4. Cálculo del precio base sin estrato (método comparativo base)
       const baseValue = propertyData.area * basePricePerM2;
       
-      // 6. Aplicar todos los multiplicadores
-      const adjustedValue = baseValue * estratoMultiplier * conservationMultiplier * economicMultiplier;
-      
-      // 7. Convertir a moneda local
-      const valueInLocalCurrency = adjustedValue * (countryConfig.exchangeRate || 1);
+      // 5. Aplicar multiplicadores base (sin estrato)
+      const comparativeValue = baseValue * conservationMultiplier * economicMultiplier;
 
-      console.log('📊 CÁLCULO DETALLADO:', {
+      console.log('📊 MÉTODO COMPARATIVO BASE:', {
         area: propertyData.area,
         basePricePerM2,
-        estratoMultiplier,
         conservationMultiplier,
         economicMultiplier,
         baseValue,
-        adjustedValue,
-        valueInLocalCurrency
+        comparativeValue
       });
 
-      // 8. Buscar comparables basados en el estrato social seleccionado
+      // 6. Buscar comparables basados en el estrato social seleccionado
+      let comparablesData: any[] = [];
       try {
         if (propertyData.latitud && propertyData.longitud && propertyData.estratoSocial) {
           // Usar la función de comparables con filtro por estrato social y ubicación
-          const { data: comparablesData } = await supabase
+          const { data } = await supabase
             .rpc('find_comparables_progressive_radius', {
               target_lat: propertyData.latitud,
               target_lng: propertyData.longitud,
@@ -602,7 +595,7 @@ const PropertyValuation = () => {
               target_property_type: propertyData.tipoPropiedad
             });
 
-          setComparables(comparablesData || []);
+          comparablesData = data || [];
           
           if (comparablesData && comparablesData.length > 0) {
             console.log(`✅ Encontrados ${comparablesData.length} comparables para estrato ${propertyData.estratoSocial}`);
@@ -611,7 +604,7 @@ const PropertyValuation = () => {
           }
         } else if (propertyData.estratoSocial) {
           // Fallback: búsqueda básica por estrato social sin ubicación específica
-          const { data: comparablesData } = await supabase
+          const { data } = await supabase
             .from('property_comparables')
             .select('*')
             .eq('property_type', propertyData.tipoPropiedad)
@@ -620,21 +613,38 @@ const PropertyValuation = () => {
             .lte('total_area', propertyData.area * 1.2)
             .limit(5);
 
-          setComparables(comparablesData || []);
+          comparablesData = data || [];
           console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables para estrato ${propertyData.estratoSocial}`);
         } else {
           console.log('⚠️ No se puede buscar comparables: falta seleccionar el estrato social');
-          setComparables([]);
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
-        setComparables([]);
       }
+
+      setComparables(comparablesData);
+
+      // 7. SEGUNDO AJUSTE: Aplicar factor de estrato social después del método comparativo
+      const estratoAdjustmentFactor = 1 + (estratoValuationFactors[propertyData.estratoSocial as EstratoSocial] || 0);
+      const finalValueWithEstratoAdjustment = comparativeValue * estratoAdjustmentFactor;
+      
+      // 8. Convertir a moneda local
+      const valueInLocalCurrency = finalValueWithEstratoAdjustment * (countryConfig.exchangeRate || 1);
+
+      console.log('📊 CÁLCULO COMPLETO CON SEGUNDO AJUSTE:', {
+        comparativeValue,
+        estratoSelected: propertyData.estratoSocial,
+        estratoAdjustmentFactor,
+        estratoPercentage: (estratoValuationFactors[propertyData.estratoSocial as EstratoSocial] * 100).toFixed(1) + '%',
+        finalValueWithEstratoAdjustment,
+        valueInLocalCurrency
+      });
 
       // 9. Resultado final
       const result = {
-        estimatedValueUSD: adjustedValue,
+        estimatedValueUSD: finalValueWithEstratoAdjustment,
         estimatedValueLocal: valueInLocalCurrency,
+        comparativeValueUSD: comparativeValue, // Valor del método comparativo antes del ajuste
         currency: countryConfig.currency,
         symbol: countryConfig.symbol,
         country: countryConfig.name,
@@ -644,18 +654,19 @@ const PropertyValuation = () => {
         conservation: propertyData.estadoConservacion,
         factors: {
           basePricePerM2,
-          estratoMultiplier,
           conservationMultiplier,
-          economicMultiplier
+          economicMultiplier,
+          estratoAdjustmentFactor,
+          estratoPercentage: estratoValuationLabels[propertyData.estratoSocial as EstratoSocial]
         }
       };
 
       setValuationResult(result);
-      toast.success('🎉 ¡Valuación completada exitosamente!');
+      toast('🎉 ¡Valuación completada exitosamente!');
       
     } catch (error) {
       console.error('❌ Error en valuación:', error);
-      toast.error('❌ Error al calcular la valuación');
+      toast('❌ Error al calcular la valuación');
     } finally {
       setIsCalculating(false);
     }
@@ -1295,14 +1306,33 @@ const PropertyValuation = () => {
                               <p><strong>Estado:</strong> {valuationResult.conservation}</p>
                             </div>
 
-                            {/* Detalles del cálculo */}
+                            {/* Detalles del cálculo con dos fases */}
                             <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
                               <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
-                              <div className="text-xs text-green-700 space-y-1">
-                                <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
-                                <p>• Factor por tipo de barrio: {((valuationResult.factors?.estratoMultiplier || 1) * 100).toFixed(0)}%</p>
-                                <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
-                                <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                              
+                              {/* Método Comparativo */}
+                              <div className="mb-3 p-2 bg-blue-50 rounded">
+                                <h6 className="font-semibold text-blue-800 text-xs mb-1">1️⃣ MÉTODO COMPARATIVO BASE</h6>
+                                <div className="text-xs text-blue-700 space-y-1">
+                                  <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                  <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                  <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                                  <p className="font-semibold border-t pt-1">
+                                    = Valor comparativo: ${valuationResult.comparativeValueUSD?.toLocaleString()} USD
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Segundo Ajuste por Estrato */}
+                              <div className="p-2 bg-purple-50 rounded">
+                                <h6 className="font-semibold text-purple-800 text-xs mb-1">2️⃣ SEGUNDO AJUSTE POR ESTRATO SOCIAL</h6>
+                                <div className="text-xs text-purple-700 space-y-1">
+                                  <p>• Estrato seleccionado: {valuationResult.estrato}</p>
+                                  <p>• Factor de ajuste: {valuationResult.factors?.estratoPercentage}</p>
+                                  <p className="font-semibold border-t pt-1 text-green-700">
+                                    = Valor final: ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
+                                  </p>
+                                </div>
                               </div>
                             </div>
 
