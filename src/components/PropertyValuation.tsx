@@ -469,11 +469,12 @@ const PropertyValuation = () => {
               })
               .slice(0, 5);
 
-            // Completar hasta 5 comparables manteniendo el mismo tipo (relajando área si es necesario)
+            // Completar hasta 5 comparables SIN relajar área (solo dentro del rango definido)
             let chosenList: any[] = [...primary];
             if (chosenList.length < 5) {
               const supplement = withDistance
                 .filter((c: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(c.property_type || '').toLowerCase()))
+                .filter((c: any) => c.total_area >= minArea && c.total_area <= maxArea)
                 .filter((c: any) => !chosenList.some(x => x.id === c.id))
                 .slice(0, 5 - chosenList.length);
               chosenList = [...chosenList, ...supplement].slice(0, 5);
@@ -514,11 +515,12 @@ const PropertyValuation = () => {
               .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
               .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
           }
-          // Completar hasta 5 comparables manteniendo el mismo tipo (relajando área si es necesario)
+          // Completar hasta 5 comparables SIN relajar área (solo dentro del rango definido)
           let finalSelected: any[] = [...selected];
           if (finalSelected.length < 5) {
             const supplement = (nearbyComparables as any[])
               .filter((comp: any) => normalizePropertyType(propertyData.tipoPropiedad).matchSet.includes(String(comp.property_type || '').toLowerCase()))
+              .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
               .filter((comp: any) => !finalSelected.some((x: any) => x.id === comp.id))
               .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999))
               .slice(0, 5 - finalSelected.length);
@@ -541,76 +543,46 @@ const PropertyValuation = () => {
 
         // Si no hay comparables reales, usar datos de prueba
         if (comparablesData.length === 0) {
-          console.log('📊 Generando comparables de prueba para demostración');
-          comparablesData = [
-            {
-              id: 'test-1',
-              address: `Propiedad comparable 1 cerca de ${propertyData.direccionCompleta}`,
-              price_usd: 165000,
-              price_per_sqm_usd: 1650,
-              total_area: 100,
-              latitude: propertyData.latitud + 0.001,
-              longitude: propertyData.longitud + 0.001,
+          console.log('📊 Generando comparables de prueba dentro del rango de área');
+          const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+          const minAreaMock = propertyAreaToUse * 0.7;
+          const maxAreaMock = propertyAreaToUse * 1.3;
+          const rand = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
+          const randFloat = (min: number, max: number) => Number((Math.random() * (max - min) + min).toFixed(4));
+          comparablesData = Array.from({ length: 5 }).map((_, idx) => {
+            const ta = rand(minAreaMock, maxAreaMock);
+            const ppsqm = Math.round(1400 + Math.random() * 400);
+            const price = Math.round(ppsqm * ta);
+            return {
+              id: `test-${idx + 1}`,
+              address: `Propiedad comparable ${idx + 1} cerca de ${propertyData.direccionCompleta}`,
+              price_usd: price,
+              price_per_sqm_usd: ppsqm,
+              total_area: ta,
+              latitude: propertyData.latitud + randFloat(-0.003, 0.003),
+              longitude: propertyData.longitud + randFloat(-0.003, 0.003),
               property_type: propertyData.tipoPropiedad,
-              distance: 0.5
-            },
-            {
-              id: 'test-2', 
-              address: `Propiedad comparable 2 cerca de ${propertyData.direccionCompleta}`,
-              price_usd: 145000,
-              price_per_sqm_usd: 1450,
-              total_area: 95,
-              latitude: propertyData.latitud - 0.002,
-              longitude: propertyData.longitud + 0.002,
-              property_type: propertyData.tipoPropiedad,
-              distance: 1.2
-            },
-            {
-              id: 'test-3',
-              address: `Propiedad comparable 3 cerca de ${propertyData.direccionCompleta}`,
-              price_usd: 180000,
-              price_per_sqm_usd: 1800,
-              total_area: 110,
-              latitude: propertyData.latitud + 0.003,
-              longitude: propertyData.longitud - 0.001,
-              property_type: propertyData.tipoPropiedad,
-              distance: 2.1
-            },
-            {
-              id: 'test-4',
-              address: `Propiedad comparable 4 cerca de ${propertyData.direccionCompleta}`,
-              price_usd: 158000,
-              price_per_sqm_usd: 1580,
-              total_area: 102,
-              latitude: propertyData.latitud - 0.0015,
-              longitude: propertyData.longitud - 0.0015,
-              property_type: propertyData.tipoPropiedad,
-              distance: 1.6
-            },
-            {
-              id: 'test-5',
-              address: `Propiedad comparable 5 cerca de ${propertyData.direccionCompleta}`,
-              price_usd: 172000,
-              price_per_sqm_usd: 1720,
-              total_area: 98,
-              latitude: propertyData.latitud + 0.0025,
-              longitude: propertyData.longitud + 0.0005,
-              property_type: propertyData.tipoPropiedad,
-              distance: 2.8
-            }
-          ];
-          console.log('✅ Usando 5 comparables de prueba');
+              distance: Number(randFloat(0.3, 3.0).toFixed(2))
+            };
+          });
+          console.log('✅ Usando 5 comparables de prueba (dentro del rango)');
+
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
         // Usar datos de prueba como respaldo
+        const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+        const minAreaFallback = propertyAreaToUse * 0.7;
+        const maxAreaFallback = propertyAreaToUse * 1.3;
+        const ta = Math.round((minAreaFallback + maxAreaFallback) / 2);
+        const ppsqm = 1550;
         comparablesData = [
           {
             id: 'fallback-1',
             address: `Comparable de respaldo 1`,
-            price_usd: 155000,
-            price_per_sqm_usd: 1550,
-            total_area: 100,
+            price_usd: ppsqm * ta,
+            price_per_sqm_usd: ppsqm,
+            total_area: ta,
             latitude: propertyData.latitud,
             longitude: propertyData.longitud,
             property_type: propertyData.tipoPropiedad,
