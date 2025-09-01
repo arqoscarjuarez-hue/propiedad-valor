@@ -1173,35 +1173,7 @@ const PropertyValuation = () => {
                         </CardTitle>
                       </CardHeader>
                         <CardContent className="p-6">
-                          {/* VALIDACIÓN ESTRICTA - PASO ANTERIOR OBLIGATORIO */}
-                          {!isStep0Complete() && (
-                            <div className="p-6 bg-red-50 border-2 border-red-400 rounded-lg text-center">
-                              <div className="flex items-center justify-center gap-2 mb-3">
-                                <span className="text-red-600 text-2xl">🚫</span>
-                                <p className="text-red-800 font-bold text-lg">
-                                  PASO BLOQUEADO
-                                </p>
-                              </div>
-                              <p className="text-red-700 font-medium mb-2">
-                                Debes completar el PASO 1 primero
-                              </p>
-                              <p className="text-red-600 text-sm">
-                                Ve al Paso 1 y selecciona: <strong>Idioma y País</strong>
-                              </p>
-                            </div>
-                          )}
-                          
-                          {/* CONTENIDO DEL PASO 2 - SOLO SI PASO 1 ESTÁ COMPLETO */}
-                          {isStep0Complete() && (
-                            <>
-                              {/* INDICADOR DE PROGRESO */}
-                              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                <p className="text-blue-800 font-medium text-center">
-                                  ✅ Paso 1 completado → Ahora completa el Paso 2
-                                </p>
-                              </div>
-
-                              {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
+                          {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
                           <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                             <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
                             <p className="text-sm text-green-800 dark:text-green-200 mb-4">
@@ -1439,8 +1411,6 @@ const PropertyValuation = () => {
                              </p>
                             </div>
                           </div> {/* Cierre del div estrato socioeconómico */}
-                              </>
-                            )} {/* Cierre del conditional isStep0Complete */}
                         </CardContent>
                     </Card>
                   </TabsContent>
@@ -1517,8 +1487,6 @@ const PropertyValuation = () => {
                               🎯 <strong>¿Por qué necesitamos esto?</strong> Una casa vale diferente que un apartamento o un terreno. Esto nos ayuda a comparar tu propiedad con otras del mismo tipo para darte el precio correcto.
                             </p>
                           </div>
-                              </>
-                            )} {/* Cierre del conditional pasos anteriores completos */}
                        </CardContent>
                     </Card>
                   </TabsContent>
