@@ -95,19 +95,19 @@ export type EstratoSocial =
 
 // Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  // Nivel Bajo
-  'bajo_bajo': 'Estrato 1 - Bajo-Bajo',
-  'bajo_medio': 'Estrato 2 - Bajo-Medio',
-  'bajo_alto': 'Estrato 3 - Bajo-Alto',
+  // Barrios Pobres
+  'bajo_bajo': 'Barrio Muy Pobre - Sin casi servicios',
+  'bajo_medio': 'Barrio Pobre - Pocos servicios',
+  'bajo_alto': 'Barrio Humilde - Servicios básicos',
   
-  // Nivel Medio
-  'medio_bajo': 'Estrato 4 - Medio-Bajo',
-  'medio_medio': 'Estrato 5 - Medio-Medio',
-  'medio_alto': 'Estrato 6 - Medio-Alto',
+  // Barrios Normales
+  'medio_bajo': 'Barrio Trabajador - Buenos servicios',
+  'medio_medio': 'Barrio Clase Media - Muy buenos servicios',
+  'medio_alto': 'Barrio Acomodado - Excelentes servicios',
   
-  // Nivel Alto
-  'alto_medio': 'Estrato 7 - Alto-Medio',
-  'alto_alto': 'Estrato 8 - Alto-Alto'
+  // Barrios Ricos
+  'alto_medio': 'Barrio Rico - Zona exclusiva',
+  'alto_alto': 'Barrio Muy Rico - Zona de lujo'
 };
 
 // Mapeo de estratos a clases sociales simplificadas
@@ -956,7 +956,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep0Complete() ? '✓' : '0'}
                           </div>
-                          🌍 Paso 0: Configuración - Idioma y Moneda
+                          🌍 Paso 1: Idioma y País
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6">
@@ -966,14 +966,14 @@ const PropertyValuation = () => {
                           <div className="space-y-4">
                             <div>
                               <Label className="text-base font-semibold mb-3 block">
-                                🗣️ Seleccione el Idioma *
+                                🗣️ ¿En qué idioma quieres que te hablemos? *
                               </Label>
                               <Select 
                                 value={selectedLanguage} 
                                 onValueChange={(value) => handleInputChange('language', value)}
                               >
                                 <SelectTrigger className="border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors h-12">
-                                  <SelectValue placeholder="Seleccione su idioma preferido" />
+                                  <SelectValue placeholder="Elige tu idioma favorito" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white dark:bg-gray-900 z-50">
                                   <SelectItem value="es" className="font-medium py-3">🇪🇸 Español</SelectItem>
@@ -989,7 +989,7 @@ const PropertyValuation = () => {
                           <div className="space-y-4">
                             <div>
                               <Label className="text-base font-semibold mb-3 block">
-                                💰 En qué país se realizará el avalúo *
+                                🌍 ¿En qué país está tu casa? *
                               </Label>
                               <Select 
                                 value={selectedCountry} 
@@ -997,7 +997,7 @@ const PropertyValuation = () => {
                                 disabled={!selectedLanguage}
                               >
                                 <SelectTrigger className="border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors h-12">
-                                  <SelectValue placeholder="Seleccione el país donde se realizará la valuación" />
+                                  <SelectValue placeholder="Elige el país donde está tu casa" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white dark:bg-gray-900 z-50 max-h-60 overflow-y-auto">
                                   {Object.entries(countriesConfig).map(([key, config]) => (
@@ -1028,7 +1028,7 @@ const PropertyValuation = () => {
                           <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
                             <div className="flex items-center gap-2">
                               <span className="text-green-600">✅</span>
-                              <p className="text-green-800 font-medium text-sm">Configuración completada</p>
+                              <p className="text-green-800 font-medium text-sm">¡Perfecto! Ya elegiste idioma y país</p>
                             </div>
                           </div>
                         )}
@@ -1036,12 +1036,12 @@ const PropertyValuation = () => {
                         {/* Instrucciones si no está completo */}
                         {!isStep0Complete() && (
                           <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                            <div className="flex items-center gap-2">
-                              <span className="text-yellow-600">⚠️</span>
-                              <p className="text-yellow-800 font-medium text-sm">
-                                <strong>Paso requerido:</strong> Debe seleccionar idioma y país para continuar
-                              </p>
-                            </div>
+                             <div className="flex items-center gap-2">
+                               <span className="text-yellow-600">⚠️</span>
+                               <p className="text-yellow-800 font-medium text-sm">
+                                 <strong>¡Espera!</strong> Primero elige tu idioma y en qué país está tu casa
+                               </p>
+                             </div>
                           </div>
                         )}
                       </CardContent>
@@ -1056,7 +1056,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep1Complete() ? '✓' : '1'}
                           </div>
-                          🏘️ Paso 1: Estrato Social
+                          🏘️ Paso 2: ¿Qué tan rico es tu barrio?
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
@@ -1066,51 +1066,51 @@ const PropertyValuation = () => {
                              <div className="flex items-center gap-2">
                                <span className="text-red-600">🚫</span>
                                <p className="text-red-800 font-medium text-sm">
-                                 <strong>Complete primero:</strong> Vaya al paso de Configuración para seleccionar idioma y país
+                                 <strong>¡Alto!</strong> Primero debes elegir el idioma y país en el paso anterior
                                </p>
                              </div>
                            </div>
                          )}
                          
-                         <p className="text-muted-foreground mb-4">¿En qué estrato socioeconómico vives?</p>
+                         <p className="text-muted-foreground mb-4">Dime, ¿tu barrio es rico, normal o pobre?</p>
                          
                          {!propertyData.estratoSocial && (
                            <div className="space-y-4">
-                             <h3 className="font-semibold text-lg">Selecciona el nivel principal:</h3>
+                             <h3 className="font-semibold text-lg">Primero dime, ¿cómo es tu barrio?</h3>
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                               {/* Estrato Bajo */}
+                               {/* Barrio Pobre */}
                                <div 
                                  className="p-4 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
                                  onClick={() => setSelectedMainStrata('bajo')}
                                >
                                  <div className="text-center">
                                    <span className="text-3xl">🏚️</span>
-                                   <h4 className="font-bold text-lg mt-2">BAJO</h4>
-                                   <p className="text-sm text-muted-foreground">Estratos 1, 2, 3</p>
+                                   <h4 className="font-bold text-lg mt-2">BARRIO POBRE</h4>
+                                   <p className="text-sm text-muted-foreground">Casas sencillas, pocos servicios</p>
                                  </div>
                                </div>
                                
-                               {/* Estrato Medio */}
+                               {/* Barrio Normal */}
                                <div 
                                  className="p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
                                  onClick={() => setSelectedMainStrata('medio')}
                                >
                                  <div className="text-center">
                                    <span className="text-3xl">🏙️</span>
-                                   <h4 className="font-bold text-lg mt-2">MEDIO</h4>
-                                   <p className="text-sm text-muted-foreground">Estratos 4, 5, 6</p>
+                                   <h4 className="font-bold text-lg mt-2">BARRIO NORMAL</h4>
+                                   <p className="text-sm text-muted-foreground">Casas normales, buenos servicios</p>
                                  </div>
                                </div>
                                
-                               {/* Estrato Alto */}
+                               {/* Barrio Rico */}
                                <div 
                                  className="p-4 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
                                  onClick={() => setSelectedMainStrata('alto')}
                                >
                                  <div className="text-center">
-                                   <span className="text-3xl">🗼</span>
-                                   <h4 className="font-bold text-lg mt-2">ALTO</h4>
-                                   <p className="text-sm text-muted-foreground">Estratos 7, 8</p>
+                                   <span className="text-3xl">🏰</span>
+                                   <h4 className="font-bold text-lg mt-2">BARRIO RICO</h4>
+                                   <p className="text-sm text-muted-foreground">Casas lujosas, zona exclusiva</p>
                                  </div>
                                </div>
                              </div>
@@ -1119,7 +1119,7 @@ const PropertyValuation = () => {
                          
                          {selectedMainStrata && !propertyData.estratoSocial && (
                            <div className="mt-6 space-y-4">
-                             <h3 className="font-semibold text-lg">Ahora selecciona el nivel específico:</h3>
+                             <h3 className="font-semibold text-lg">Ahora dime exactamente qué tan rico o pobre es:</h3>
                              <div className="grid gap-3">
                                {selectedMainStrata === 'bajo' && (
                                  <>
@@ -1220,7 +1220,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep2Complete() ? '✓' : '2'}
                           </div>
-                          🏠 Paso 2: Tipo de Propiedad
+                          🏠 Paso 3: ¿Qué tipo de casa tienes?
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
@@ -1230,13 +1230,13 @@ const PropertyValuation = () => {
                              <div className="flex items-center gap-2">
                                <span className="text-red-600">🚫</span>
                                <p className="text-red-800 font-medium text-sm">
-                                 <strong>Complete primero:</strong> Seleccione el estrato social en el paso anterior
+                                 <strong>¡Espera!</strong> Primero dime qué tan rico es tu barrio
                                </p>
                              </div>
                            </div>
                          )}
                          
-                         <p className="text-muted-foreground mb-4">Selecciona el tipo de propiedad a valuar</p>
+                         <p className="text-muted-foreground mb-4">¿Tu casa es una casa normal, un apartamento, un terreno vacío o un local comercial?</p>
                         <Select 
                           value={propertyData.tipoPropiedad} 
                           onValueChange={(value) => handleInputChange('tipoPropiedad', value)}
@@ -1276,7 +1276,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep3Complete() ? '✓' : '3'}
                           </div>
-                          🌍 Paso 3: Ubicación de la Propiedad
+                          🌍 Paso 4: ¿Dónde está tu casa?
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
@@ -1343,7 +1343,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep4Complete() ? '✓' : '4'}
                           </div>
-                          📐 Paso 4: Características Básicas
+                          📐 Paso 5: ¿Qué tan grande es tu casa?
                         </CardTitle>
                       </CardHeader>
                         <CardContent className="p-6">
@@ -1695,7 +1695,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             📊
                           </div>
-                          💎 Realizar Valuación
+                          💎 Paso 6: ¡Calcular el precio de tu casa!
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
