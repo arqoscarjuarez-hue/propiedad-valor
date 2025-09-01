@@ -1215,10 +1215,10 @@ const PropertyValuation = () => {
                                       ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'NUEVO');
-                                    setSelectedConservationState(selectedConservationState === 'NUEVO' ? null : 'NUEVO');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'NUEVO');
+                                     setSelectedConservationState('NUEVO');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'NUEVO' ? 'font-bold text-green-800' : 'text-gray-700'
@@ -1232,10 +1232,10 @@ const PropertyValuation = () => {
                                       ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'BUENO');
-                                    setSelectedConservationState(selectedConservationState === 'BUENO' ? null : 'BUENO');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'BUENO');
+                                     setSelectedConservationState('BUENO');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'BUENO' ? 'font-bold text-green-800' : 'text-gray-700'
@@ -1249,10 +1249,10 @@ const PropertyValuation = () => {
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'MEDIO');
-                                    setSelectedConservationState(selectedConservationState === 'MEDIO' ? null : 'MEDIO');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'MEDIO');
+                                     setSelectedConservationState('MEDIO');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'MEDIO' ? 'font-bold text-blue-800' : 'text-gray-700'
@@ -1266,10 +1266,10 @@ const PropertyValuation = () => {
                                       ? 'bg-yellow-100 border-l-4 border-yellow-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'REGULAR');
-                                    setSelectedConservationState(selectedConservationState === 'REGULAR' ? null : 'REGULAR');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'REGULAR');
+                                     setSelectedConservationState('REGULAR');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'REGULAR' ? 'font-bold text-yellow-800' : 'text-gray-700'
@@ -1283,10 +1283,10 @@ const PropertyValuation = () => {
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
-                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES SENCILLAS' ? null : 'REPARACIONES SENCILLAS');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
+                                     setSelectedConservationState('REPARACIONES SENCILLAS');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? 'font-bold text-blue-800' : 'text-gray-700'
@@ -1300,10 +1300,10 @@ const PropertyValuation = () => {
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
-                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES MEDIAS' ? null : 'REPARACIONES MEDIAS');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
+                                     setSelectedConservationState('REPARACIONES MEDIAS');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? 'font-bold text-blue-800' : 'text-gray-700'
@@ -1317,10 +1317,10 @@ const PropertyValuation = () => {
                                       ? 'bg-orange-100 border-l-4 border-orange-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'REPARACIONES IMPORTANTES');
-                                    setSelectedConservationState(selectedConservationState === 'REPARACIONES IMPORTANTES' ? null : 'REPARACIONES IMPORTANTES');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'REPARACIONES IMPORTANTES');
+                                     setSelectedConservationState('REPARACIONES IMPORTANTES');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? 'font-bold text-orange-800' : 'text-gray-700'
@@ -1334,10 +1334,10 @@ const PropertyValuation = () => {
                                       ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                  onClick={() => {
-                                    handleInputChange('estadoConservacion', 'DAÑOS GRAVES');
-                                    setSelectedConservationState(selectedConservationState === 'DAÑOS GRAVES' ? null : 'DAÑOS GRAVES');
-                                  }}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'DAÑOS GRAVES');
+                                     setSelectedConservationState('DAÑOS GRAVES');
+                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
                                     propertyData.estadoConservacion === 'DAÑOS GRAVES' ? 'font-bold text-red-800' : 'text-gray-700'
