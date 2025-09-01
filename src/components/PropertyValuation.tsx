@@ -1508,8 +1508,8 @@ const PropertyValuation = () => {
             </CardContent>
           </Card>
 
-          {/* Resultados de la Valuación */}
-          {valuationResult && (
+          {/* Resultados de la Valuación - Solo mostrar cuando TODOS los pasos estén completos */}
+          {valuationResult && getNextRequiredStep() === 'valuacion' && (
             <Card className="shadow-xl border-2 border-green-300 dark:border-green-700">
               <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
                 <CardTitle className="text-2xl font-bold flex items-center gap-3">
