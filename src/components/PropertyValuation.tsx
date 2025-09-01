@@ -359,14 +359,14 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función de avalúo internacional completa
+  // Función de avalúo internacional por método comparativo
   const performValuation = async () => {
     setIsCalculating(true);
     try {
-      console.log('🔥 INICIANDO AVALÚO INTERNACIONAL...');
+      console.log('🔥 INICIANDO AVALÚO COMPARATIVO INTERNACIONAL...');
       
       // Validar datos requeridos
-      if (!propertyData.area || !propertyData.tipoPropiedad) {
+      if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) {
         toast.error('❌ Faltan datos requeridos para el avalúo');
         return;
       }
@@ -378,65 +378,122 @@ const PropertyValuation = () => {
         return;
       }
 
-      // 1. Precio base por país
-      const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
+      // 1. BUSCAR COMPARABLES MÁS CERCANOS (Método Comparativo Internacional)
+      console.log('🔍 Buscando comparables más cercanos...');
+      let comparablesData: Comparable[] = [];
       
-      // 2. Factor de conservación
-      const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
-      
-      // 3. Factor económico del país
-      const economicMultiplier = countryConfig.economicFactor || 1;
-
-      // 4. Cálculo del precio base
-      const baseValue = propertyData.area * basePricePerM2;
-      
-      // 5. Aplicar todos los multiplicadores
-      const adjustedValue = baseValue * conservationMultiplier * economicMultiplier;
-      
-      // 7. Convertir a moneda local
-      const valueInLocalCurrency = adjustedValue * (countryConfig.exchangeRate || 1);
-
-      console.log('📊 CÁLCULO DETALLADO:', {
-        area: propertyData.area,
-        basePricePerM2,
-        conservationMultiplier,
-        economicMultiplier,
-        baseValue,
-        adjustedValue,
-        valueInLocalCurrency
-      });
-
-      // 6. Buscar comparables basados en ubicación y tipo de propiedad
       try {
-        if (propertyData.latitud && propertyData.longitud) {
-          // Buscar comparables por ubicación y tipo de propiedad
-          const { data: comparablesData } = await supabase
-            .from('property_comparables')
-            .select('*')
-            .eq('property_type', propertyData.tipoPropiedad)
-            .gte('total_area', propertyData.area * 0.8)
-            .lte('total_area', propertyData.area * 1.2)
-            .limit(10);
+        // Buscar comparables por ubicación, área similar y tipo de propiedad
+        const { data: nearbyComparables, error } = await supabase
+          .from('property_comparables')
+          .select('*')
+          .eq('property_type', propertyData.tipoPropiedad)
+          .gte('total_area', propertyData.area * 0.7) // ±30% del área
+          .lte('total_area', propertyData.area * 1.3)
+          .not('latitude', 'is', null)
+          .not('longitude', 'is', null)
+          .limit(20); // Obtener más para calcular distancias
 
-          setComparables(comparablesData || []);
-          
-          if (comparablesData && comparablesData.length > 0) {
-            console.log(`✅ Encontrados ${comparablesData.length} comparables en la zona`);
-          } else {
-            console.log(`⚠️ No se encontraron comparables en la zona`);
-          }
-        } else {
-          console.log('⚠️ No se puede buscar comparables: falta ubicación');
-          setComparables([]);
+        if (error) {
+          console.error('Error al buscar comparables:', error);
+        } else if (nearbyComparables && nearbyComparables.length > 0) {
+          // Calcular distancias y ordenar por proximidad
+          const comparablesWithDistance = nearbyComparables.map(comp => {
+            const distance = calculateDistance(
+              propertyData.latitud, 
+              propertyData.longitud, 
+              comp.latitude, 
+              comp.longitude
+            );
+            return { ...comp, distance };
+          }).sort((a, b) => a.distance - b.distance);
+
+          // Tomar los 3 más cercanos
+          comparablesData = comparablesWithDistance.slice(0, 3);
+          console.log(`✅ Encontrados ${comparablesData.length} comparables cercanos`);
         }
       } catch (error) {
         console.log('⚠️ Error al buscar comparables:', error);
-        setComparables([]);
       }
 
-      // 7. Resultado final
+      setComparables(comparablesData);
+
+      // 2. MÉTODO COMPARATIVO INTERNACIONAL
+      let estimatedValueUSD = 0;
+      
+      if (comparablesData.length >= 1) {
+        // MÉTODO COMPARATIVO: Promedio ajustado de comparables
+        console.log('📊 APLICANDO MÉTODO COMPARATIVO INTERNACIONAL');
+        
+        let totalAdjustedValue = 0;
+        let validComparables = 0;
+
+        comparablesData.forEach((comp, index) => {
+          if (comp.price_usd && comp.total_area) {
+            console.log(`📍 Comparable ${index + 1}:`, {
+              precio: comp.price_usd,
+              area: comp.total_area,
+              precio_m2: comp.price_per_sqm_usd,
+              distancia: comp.distance?.toFixed(2) + ' km'
+            });
+
+            // Precio base del comparable
+            let adjustedPrice = comp.price_usd;
+
+            // Ajuste por diferencia de área (Factor de escala)
+            const areaRatio = propertyData.area / comp.total_area;
+            if (areaRatio !== 1) {
+              const areaAdjustment = Math.pow(areaRatio, 0.8); // Factor de economía de escala
+              adjustedPrice *= areaAdjustment;
+              console.log(`  ↳ Ajuste por área: ${(areaAdjustment * 100).toFixed(1)}%`);
+            }
+
+            // Ajuste por estado de conservación
+            const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
+            adjustedPrice *= conservationMultiplier;
+            console.log(`  ↳ Ajuste por estado: ${(conservationMultiplier * 100).toFixed(1)}%`);
+
+            // Ajuste por distancia (mayor peso a comparables más cercanos)
+            const distanceWeight = comp.distance ? Math.max(0.5, 1 - (comp.distance / 10)) : 1;
+            const weightedPrice = adjustedPrice * distanceWeight;
+            console.log(`  ↳ Peso por distancia: ${(distanceWeight * 100).toFixed(1)}%`);
+            console.log(`  ↳ Valor ajustado: $${weightedPrice.toLocaleString()}`);
+
+            totalAdjustedValue += weightedPrice;
+            validComparables++;
+          }
+        });
+
+        if (validComparables > 0) {
+          estimatedValueUSD = totalAdjustedValue / validComparables;
+          console.log('✅ VALOR POR MÉTODO COMPARATIVO:', estimatedValueUSD);
+        }
+      }
+
+      // 3. MÉTODO DE RESPALDO: Precio por m² del país
+      if (estimatedValueUSD === 0 || comparablesData.length === 0) {
+        console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
+        const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
+        const economicMultiplier = countryConfig.economicFactor || 1;
+        
+        estimatedValueUSD = propertyData.area * basePricePerM2 * conservationMultiplier * economicMultiplier;
+        console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
+      }
+
+      // 4. Convertir a moneda local
+      const valueInLocalCurrency = estimatedValueUSD * (countryConfig.exchangeRate || 1);
+
+      console.log('📊 RESULTADO FINAL:', {
+        valorUSD: estimatedValueUSD,
+        valorLocal: valueInLocalCurrency,
+        moneda: countryConfig.currency,
+        comparables: comparablesData.length
+      });
+
+      // 5. Resultado final
       const result = {
-        estimatedValueUSD: adjustedValue,
+        estimatedValueUSD: estimatedValueUSD,
         estimatedValueLocal: valueInLocalCurrency,
         currency: countryConfig.currency,
         symbol: countryConfig.symbol,
@@ -444,15 +501,17 @@ const PropertyValuation = () => {
         propertyType: propertyData.tipoPropiedad,
         area: propertyData.area,
         conservation: propertyData.estadoConservacion,
+        methodology: comparablesData.length >= 1 ? 'Método Comparativo Internacional' : 'Método de Costo por País',
+        comparablesUsed: comparablesData.length,
         factors: {
-          basePricePerM2,
-          conservationMultiplier,
-          economicMultiplier
+          basePricePerM2: countryConfig.basePricePerM2USD,
+          conservationMultiplier: conservationFactors[propertyData.estadoConservacion] || 0.9,
+          economicMultiplier: countryConfig.economicFactor || 1
         }
       };
 
       setValuationResult(result);
-      toast.success('🎉 ¡Valuación completada exitosamente!');
+      toast.success('🎉 ¡Valuación comparativa completada exitosamente!');
       
     } catch (error) {
       console.error('❌ Error en valuación:', error);
@@ -460,6 +519,23 @@ const PropertyValuation = () => {
     } finally {
       setIsCalculating(false);
     }
+  };
+
+  // Función para calcular distancia entre dos puntos (Fórmula de Haversine)
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  const toRad = (value: number): number => {
+    return value * Math.PI / 180;
   };
 
   return (
@@ -956,28 +1032,32 @@ const PropertyValuation = () => {
                           <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
                         </div>
                         <h3 className="text-xl font-bold mb-4">
-                          {(propertyData.area > 0 && propertyData.tipoPropiedad) ? 
-                            '🎉 ¡Listo para saber el precio!' : 
+                          {(propertyData.area > 0 && propertyData.tipoPropiedad && propertyData.latitud && propertyData.longitud) ? 
+                            '🎉 ¡Listo para calcular!' : 
                             '⏳ Faltan algunos datos'
                           }
                         </h3>
 
                         {/* Validación de campos requeridos */}
-                        {(!propertyData.area || !propertyData.tipoPropiedad) && (
+                        {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) && (
                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
                             <p className="text-red-800 font-medium mb-2">
-                              ❌ <strong>Necesitas completar estos datos:</strong>
+                              ❌ <strong>Para el método comparativo necesitas:</strong>
                             </p>
                             <ul className="text-red-700 text-sm space-y-1">
                               {!propertyData.area && <li>• El área de tu casa (Paso 4)</li>}
                               {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
+                              {(!propertyData.latitud || !propertyData.longitud) && <li>• La ubicación exacta en el mapa (Paso 3)</li>}
                             </ul>
+                            <p className="text-red-600 text-xs mt-2">
+                              📍 <strong>La ubicación es esencial</strong> para encontrar los comparables más cercanos según estándares internacionales.
+                            </p>
                           </div>
                         )}
 
                         <Button
                           onClick={performValuation}
-                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad}
+                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud}
                           size="lg"
                           className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
@@ -989,7 +1069,7 @@ const PropertyValuation = () => {
                           ) : (
                             <>
                               <Calculator className="w-5 h-5 mr-2" />
-                              💎 ¡Calcular el Valor de mi Casa!
+                              💎 ¡Valuar por Método Comparativo Internacional!
                             </>
                           )}
                         </Button>
@@ -1017,25 +1097,49 @@ const PropertyValuation = () => {
                                <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
                                <p><strong>Ubicación:</strong> {valuationResult.country}</p>
                                <p><strong>Estado:</strong> {valuationResult.conservation}</p>
+                               <p><strong>Método:</strong> {valuationResult.methodology}</p>
+                               {valuationResult.comparablesUsed > 0 && (
+                                 <p><strong>Comparables utilizados:</strong> {valuationResult.comparablesUsed}</p>
+                               )}
                              </div>
 
                              {/* Detalles del cálculo */}
                              <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
                                <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
                                <div className="text-xs text-green-700 space-y-1">
-                                 <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
-                                 <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
-                                 <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                                 {valuationResult.methodology === 'Método Comparativo Internacional' ? (
+                                   <>
+                                     <p>• <strong>Método Comparativo Internacional</strong> - Estándar mundial</p>
+                                     <p>• Promedio de {comparables.length} propiedades similares cercanas</p>
+                                     <p>• Ajustes por diferencias de área, estado y proximidad</p>
+                                     <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                   </>
+                                 ) : (
+                                   <>
+                                     <p>• <strong>Método de Costo por País</strong> (respaldo por falta de comparables)</p>
+                                     <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                     <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                     <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                                   </>
+                                 )}
                                </div>
                              </div>
 
                              {/* Comparables si los hay */}
                              {comparables.length > 0 && (
                                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                                 <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
-                                 <p className="text-xs text-blue-700">
-                                   Encontramos {comparables.length} propiedades similares para comparar en la zona.
-                                 </p>
+                                 <h5 className="font-semibold text-blue-800 mb-2">🏘️ Comparables Utilizados (Método Internacional)</h5>
+                                 <div className="space-y-2">
+                                   {comparables.map((comp, index) => (
+                                     <div key={comp.id || index} className="text-xs text-blue-700 bg-white p-2 rounded border">
+                                       <p><strong>Comparable {index + 1}:</strong></p>
+                                       <p>• Precio: ${comp.price_usd?.toLocaleString()} USD ({comp.total_area} m²)</p>
+                                       <p>• Precio/m²: ${comp.price_per_sqm_usd?.toLocaleString()} USD</p>
+                                       <p>• Distancia: {comp.distance?.toFixed(2)} km</p>
+                                       <p>• Dirección: {comp.address}</p>
+                                     </div>
+                                   ))}
+                                 </div>
                                </div>
                              )}
                              
@@ -1045,17 +1149,17 @@ const PropertyValuation = () => {
                                  <h5 className="font-semibold text-amber-800 mb-2">🔍 Búsqueda de Comparables</h5>
                                  <p className="text-xs text-amber-700">
                                    No se encontraron propiedades similares en la zona inmediata. 
-                                   El avalúo se basa en datos generales del mercado.
+                                   Se utilizó el método de costo por país como respaldo, siguiendo estándares internacionales.
                                  </p>
                                </div>
                              )}
 
-                            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                              <p className="text-yellow-800 text-xs">
-                                ⚠️ <strong>Importante:</strong> Este es un estimado basado en datos del mercado. 
-                                Para un avalúo oficial, consulta con un profesional certificado.
-                              </p>
-                            </div>
+                             <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                               <p className="text-yellow-800 text-xs">
+                                 ⚠️ <strong>Importante:</strong> Este es un estimado basado en el método comparativo internacional y datos del mercado. 
+                                 Para un avalúo oficial, consulta con un profesional certificado.
+                               </p>
+                             </div>
                           </div>
                         )}
                       </div>
