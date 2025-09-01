@@ -688,9 +688,10 @@ const PropertyValuation = () => {
 
       // 3.5 Calibración de mercado para evitar sobrevaloración (cuando hay pocos comparables)
       const areaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-      const usedFallback = comparablesData.length === 1 && (comparablesData[0]?.id?.toString()?.includes('fallback'));
-      const fewComparables = comparablesData.length > 0 && comparablesData.length < 3;
-      if (usedFallback || fewComparables) {
+      const noComparables = comparablesData.length === 0;
+      const allFallback = comparablesData.length > 0 && comparablesData.every(c => (c.id || '').toString().includes('fallback'));
+      const fewComparables = comparablesData.length < 3; // incluye 0, 1 y 2
+      if (noComparables || allFallback || fewComparables) {
         const calibrationFactor = 0.85; // -15%
         estimatedValueUSD = estimatedValueUSD * calibrationFactor;
         console.log(`🧮 Calibración aplicada (-15%): ${calibrationFactor}`);
