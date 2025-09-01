@@ -1189,19 +1189,6 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Botón Realizar Otro Avalúo */}
-                {currentTab === 'estado' && (
-                  <div className="mb-4 text-center">
-                    <Button 
-                      onClick={realizarOtroAvaluo}
-                      variant="outline"
-                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                    >
-                      <Shuffle className="w-4 h-4 mr-2" />
-                      Realizar otro avalúo
-                    </Button>
-                  </div>
-                )}
 
                 {/* Paso 5: Estado de la Casa */}
                 <TabsContent value="estado" className="mt-6">
