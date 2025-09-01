@@ -279,21 +279,109 @@ const PropertyValuation = () => {
   // Configuración de países y monedas del mundo
   const countriesConfig = {
     // América del Norte
-    'usa': { name: 'Estados Unidos', currency: 'USD', symbol: '$', flag: '🇺🇸' },
-    'canada': { name: 'Canadá', currency: 'CAD', symbol: '$', flag: '🇨🇦' },
-    'mexico': { name: 'México', currency: 'MXN', symbol: '$', flag: '🇲🇽' },
+    'usa': { 
+      name: 'Estados Unidos', 
+      currency: 'USD', 
+      symbol: '$', 
+      flag: '🇺🇸',
+      basePricePerM2USD: 2500,
+      economicFactor: 2.8,
+      exchangeRate: 1.0
+    },
+    'canada': { 
+      name: 'Canadá', 
+      currency: 'CAD', 
+      symbol: '$', 
+      flag: '🇨🇦',
+      basePricePerM2USD: 2200,
+      economicFactor: 2.5,
+      exchangeRate: 1.35
+    },
+    'mexico': { 
+      name: 'México', 
+      currency: 'MXN', 
+      symbol: '$', 
+      flag: '🇲🇽',
+      basePricePerM2USD: 800,
+      economicFactor: 1.2,
+      exchangeRate: 17.0
+    },
     
     // América Central
-    'guatemala': { name: 'Guatemala', currency: 'GTQ', symbol: 'Q', flag: '🇬🇹' },
-    'belize': { name: 'Belice', currency: 'BZD', symbol: '$', flag: '🇧🇿' },
-    'honduras': { name: 'Honduras', currency: 'HNL', symbol: 'L', flag: '🇭🇳' },
-    'salvador': { name: 'El Salvador', currency: 'USD', symbol: '$', flag: '🇸🇻' },
-    'nicaragua': { name: 'Nicaragua', currency: 'NIO', symbol: 'C$', flag: '🇳🇮' },
-    'costarica': { name: 'Costa Rica', currency: 'CRC', symbol: '₡', flag: '🇨🇷' },
-    'panama': { name: 'Panamá', currency: 'PAB', symbol: 'B/.', flag: '🇵🇦' },
+    'guatemala': { 
+      name: 'Guatemala', 
+      currency: 'GTQ', 
+      symbol: 'Q', 
+      flag: '🇬🇹',
+      basePricePerM2USD: 600,
+      economicFactor: 0.9,
+      exchangeRate: 7.8
+    },
+    'belize': { 
+      name: 'Belice', 
+      currency: 'BZD', 
+      symbol: '$', 
+      flag: '🇧🇿',
+      basePricePerM2USD: 850,
+      economicFactor: 1.1,
+      exchangeRate: 2.0
+    },
+    'honduras': { 
+      name: 'Honduras', 
+      currency: 'HNL', 
+      symbol: 'L', 
+      flag: '🇭🇳',
+      basePricePerM2USD: 550,
+      economicFactor: 0.8,
+      exchangeRate: 24.7
+    },
+    'salvador': { 
+      name: 'El Salvador', 
+      currency: 'USD', 
+      symbol: '$', 
+      flag: '🇸🇻',
+      basePricePerM2USD: 750,
+      economicFactor: 1.0,
+      exchangeRate: 1.0
+    },
+    'nicaragua': { 
+      name: 'Nicaragua', 
+      currency: 'NIO', 
+      symbol: 'C$', 
+      flag: '🇳🇮',
+      basePricePerM2USD: 500,
+      economicFactor: 0.7,
+      exchangeRate: 36.8
+    },
+    'costarica': { 
+      name: 'Costa Rica', 
+      currency: 'CRC', 
+      symbol: '₡', 
+      flag: '🇨🇷',
+      basePricePerM2USD: 950,
+      economicFactor: 1.3,
+      exchangeRate: 510.0
+    },
+    'panama': { 
+      name: 'Panamá', 
+      currency: 'PAB', 
+      symbol: 'B/.', 
+      flag: '🇵🇦',
+      basePricePerM2USD: 1200,
+      economicFactor: 1.5,
+      exchangeRate: 1.0
+    },
     
     // América del Sur
-    'colombia': { name: 'Colombia', currency: 'COP', symbol: '$', flag: '🇨🇴' },
+    'colombia': { 
+      name: 'Colombia', 
+      currency: 'COP', 
+      symbol: '$', 
+      flag: '🇨🇴',
+      basePricePerM2USD: 900,
+      economicFactor: 1.1,
+      exchangeRate: 4200.0
+    },
     'venezuela': { name: 'Venezuela', currency: 'VES', symbol: 'Bs.', flag: '🇻🇪' },
     'guyana': { name: 'Guyana', currency: 'GYD', symbol: '$', flag: '🇬🇾' },
     'suriname': { name: 'Suriname', currency: 'SRD', symbol: '$', flag: '🇸🇷' },
@@ -706,12 +794,22 @@ const PropertyValuation = () => {
       const comparablesData = await fetchComparables();
       setComparables(comparablesData);
 
-      // Precio base por m² directamente en USD (sin conversión)
-      let basePriceUSD = 350; // Precio base por m² en dólares estadounidenses
+      // Obtener configuración del país seleccionado
+      const countryConfig = countriesConfig[selectedCountry];
+      const basePriceUSD = countryConfig?.basePricePerM2USD || 350;
+      const economicFactor = countryConfig?.economicFactor || 1.0;
+      const exchangeRate = countryConfig?.exchangeRate || 1.0;
+      const currency = countryConfig?.currency || 'USD';
+      const currencySymbol = countryConfig?.symbol || '$';
+
+      // Precio base ajustado por país y economía local
+      let adjustedBasePriceUSD = basePriceUSD;
       
+      // Si tenemos comparables, usar el promedio ponderado con el precio base del país
       if (comparablesData.length > 0) {
         const avgPricePerM2USD = comparablesData.reduce((sum, comp) => sum + comp.price_per_sqm_usd, 0) / comparablesData.length;
-        basePriceUSD = avgPricePerM2USD;
+        // Combinar precio base del país (60%) con comparables (40%)
+        adjustedBasePriceUSD = (basePriceUSD * 0.6) + (avgPricePerM2USD * 0.4);
       }
 
       // Aplicar factores de ajuste
@@ -719,33 +817,48 @@ const PropertyValuation = () => {
       const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 1;
       const ageMultiplier = Math.max(0.7, 1 - (propertyData.antiguedad * 0.02));
       
-      console.log('FACTORES DE DEPRECIACIÓN APLICADOS:', {
+      console.log('FACTORES INTERNACIONALES APLICADOS:', {
+        pais: selectedCountry,
+        precioBasePais: basePriceUSD,
+        factorEconomico: economicFactor,
+        tipoCambio: exchangeRate,
+        moneda: currency,
         estadoSeleccionado: propertyData.estadoConservacion,
         conservationMultiplier,
-        todosLosfactores: conservationFactors
+        estratoMultiplier
       });
 
-      // Cálculo directo en USD
-      const adjustedPriceUSD = basePriceUSD * estratoMultiplier * conservationMultiplier * ageMultiplier;
-      const totalValueUSD = adjustedPriceUSD * propertyData.area;
+      // Cálculo con factores internacionales
+      const finalPriceUSD = adjustedBasePriceUSD * estratoMultiplier * conservationMultiplier * ageMultiplier * economicFactor;
+      const totalValueUSD = finalPriceUSD * propertyData.area;
+      
+      // Convertir a moneda local
+      const totalValueLocal = totalValueUSD * exchangeRate;
+      const pricePerM2Local = finalPriceUSD * exchangeRate;
 
       const result = {
-        valorTotal: totalValueUSD, // Valor total en USD
-        valorPorM2: adjustedPriceUSD, // Precio por m² en USD
-        direccion: propertyData.direccionCompleta, // Dirección del inmueble
+        valorTotal: totalValueUSD, // Valor total en USD para referencia
+        valorTotalLocal: totalValueLocal, // Valor en moneda local
+        valorPorM2: finalPriceUSD, // Precio por m² en USD
+        valorPorM2Local: pricePerM2Local, // Precio por m² en moneda local
+        direccion: propertyData.direccionCompleta,
         factores: {
           estrato: estratoMultiplier,
           conservacion: conservationMultiplier,
-          antiguedad: ageMultiplier
+          antiguedad: ageMultiplier,
+          economico: economicFactor
         },
-        metodologia: "Método de Comparación de Mercado según normas UPAV e IVSC - Valuación en USD",
+        pais: countryConfig?.name || selectedCountry,
+        moneda: currency,
+        simbolo: currencySymbol,
+        tipoCambio: exchangeRate,
+        metodologia: `Método de Comparación de Mercado Internacional según normas UPAV e IVSC - Valuación en ${currency}`,
         fecha: new Date().toLocaleDateString(),
-        comparables: comparablesData.length,
-        moneda: "USD"
+        comparables: comparablesData.length
       };
 
       setValuationResult(result);
-      toast.success("¡Valuación completada exitosamente en dólares estadounidenses!");
+      toast.success(`¡Valuación completada exitosamente en ${currency}!`);
       
     } catch (error) {
       console.error('Error performing valuation:', error);
