@@ -841,10 +841,7 @@ const PropertyValuation = () => {
                                 
                                 {/* Selector de Estado */}
                                 <div>
-                                  <Label className="text-base font-semibold mb-3 block">
-                                    Seleccione el Estado de Conservación:
-                                  </Label>
-                                  <Select 
+                                  <Select
                                     value={propertyData.estadoConservacion} 
                                     onValueChange={(value) => {
                                       console.log('ESTADO SELECCIONADO:', value);
