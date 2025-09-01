@@ -652,7 +652,7 @@ const PropertyValuation = () => {
         symbol: countryConfig.symbol,
         country: countryConfig.name,
         propertyType: propertyData.tipoPropiedad,
-        area: propertyData.area,
+        area: propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area,
         conservation: propertyData.estadoConservacion,
         methodology: comparablesData.length >= 1 ? 'Método Comparativo Internacional' : 'Método de Costo por País',
         comparablesUsed: comparablesData.length,
