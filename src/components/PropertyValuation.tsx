@@ -880,7 +880,7 @@ const PropertyValuation = () => {
 
                         <div>
                           <Label htmlFor="construction_area" className="text-base font-semibold">
-                            🏠 Área de Construcción (m²) *
+                            🏠 Área Total de Construcción (m²) *
                           </Label>
                           <Input 
                             id="construction_area"
