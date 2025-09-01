@@ -268,13 +268,13 @@ const PropertyValuation = () => {
     direccionCompleta: '',
     barrio: '',
     descripcion: '',
-    estratoSocial: 'medio_bajo' as EstratoSocial
+    estratoSocial: '' as any // Inicialmente vacío
   });
 
-  // Estados para idioma y moneda
-  const [selectedLanguage, setSelectedLanguage] = useState('es'); // Español por defecto
-  const [selectedCountry, setSelectedCountry] = useState('salvador'); // El Salvador por defecto
-  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // USD por defecto (moneda de El Salvador)
+  // Estados para idioma y moneda - RESETEADOS
+  const [selectedLanguage, setSelectedLanguage] = useState(''); // Vacío inicialmente
+  const [selectedCountry, setSelectedCountry] = useState(''); // Vacío inicialmente
+  const [selectedCurrency, setSelectedCurrency] = useState(''); // Vacío inicialmente
 
   // Configuración de países y monedas del mundo
   const countriesConfig = {
