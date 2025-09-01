@@ -14,6 +14,44 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
 
 // Interfaces y tipos
+interface Translation {
+  propertyType: string;
+  area: string;
+  bedrooms: string;
+  bathrooms: string;
+  parkingSpaces: string;
+  age: string;
+  conservationState: string;
+  location: string;
+  neighborhood: string;
+  address: string;
+  description: string;
+  calculate: string;
+  result: string;
+  estimatedValue: string;
+  comparables: string;
+  noComparables: string;
+  loading: string;
+  errors: {
+    fillRequired: string;
+    selectPropertyType: string;
+    enterArea: string;
+    enterLocation: string;
+  };
+  propertyTypes: {
+    casa: string;
+    apartamento: string;
+    terreno: string;
+    comercial: string;
+  };
+  conservationStates: {
+    excelente: string;
+    bueno: string;
+    regular: string;
+    malo: string;
+  };
+}
+
 interface PropertyData {
   tipoPropiedad: string;
   area: number;
@@ -31,7 +69,21 @@ interface PropertyData {
   estratoSocial: EstratoSocial | '';
 }
 
-// Tipos de estrato social
+interface Comparable {
+  id?: string;
+  property_type: string;
+  total_area: number;
+  price_per_sqm_usd: number;
+  price_usd: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  address: string;
+  sale_date?: string;
+  distance?: number;
+  estrato_social: any;
+}
+
+// Tipos de estrato social - todos los que existen en la DB
 export type EstratoSocial = 
   | 'bajo_bajo' | 'bajo_medio' | 'bajo_alto'
   | 'medio_bajo' | 'medio_medio' | 'medio_alto' 
@@ -39,40 +91,275 @@ export type EstratoSocial =
 
 // Etiquetas para estratos sociales
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
+  // Barrios Pobres
   'bajo_bajo': 'Barrio Muy Pobre - Sin casi servicios',
   'bajo_medio': 'Barrio Pobre - Pocos servicios',
   'bajo_alto': 'Barrio Humilde - Servicios básicos',
+  
+  // Barrios Normales
   'medio_bajo': 'Barrio Trabajador - Buenos servicios',
   'medio_medio': 'Barrio Clase Media - Muy buenos servicios',
   'medio_alto': 'Barrio Acomodado - Excelentes servicios',
+  
+  // Barrios Ricos
   'alto_medio': 'Barrio Rico - Zona exclusiva',
   'alto_alto': 'Barrio Muy Rico - Zona de lujo'
 };
 
+// Mapeo de estratos a clases sociales simplificadas
+export const estratoToClassMap: Record<EstratoSocial, string> = {
+  // Clase Popular/Baja
+  'bajo_bajo': 'popular',
+  'bajo_medio': 'popular',
+  'bajo_alto': 'popular',
+  
+  // Clase Media
+  'medio_bajo': 'media',
+  'medio_medio': 'media',
+  'medio_alto': 'media',
+  
+  // Clase Alta
+  'alto_medio': 'alta',
+  'alto_alto': 'alta'
+};
+
+// Mapeo inverso: clases a estratos
+export const classToEstratos: Record<string, EstratoSocial[]> = {
+  'popular': ['bajo_bajo', 'bajo_medio', 'bajo_alto'],
+  'media': ['medio_bajo', 'medio_medio', 'medio_alto'],
+  'alta': ['alto_medio', 'alto_alto']
+};
+
 // Multiplicadores de valor según estrato social
 export const estratoMultipliers: Record<EstratoSocial, number> = {
+  // Nivel Bajo (0.6-0.9)
   'bajo_bajo': 0.6,
   'bajo_medio': 0.8,
   'bajo_alto': 0.9,
+  
+  // Nivel Medio (0.95-1.2)
   'medio_bajo': 0.95,
   'medio_medio': 1.1,
   'medio_alto': 1.2,
+  
+  // Nivel Alto (1.6-1.8)
   'alto_medio': 1.6,
   'alto_alto': 1.8
 };
 
-// Configuración de países
+// Factores de depreciación por estado de conservación
+const conservationFactors: Record<string, number> = {
+  'NUEVO': 1.0000,
+  'BUENO': 0.9968,
+  'MEDIO': 0.9748,
+  'REGULAR': 0.9191,
+  'REPARACIONES SENCILLAS': 0.8190,
+  'REPARACIONES MEDIAS': 0.6680,
+  'REPARACIONES IMPORTANTES': 0.4740,
+  'DAÑOS GRAVES': 0.2480,
+  'EN DESECHO': 0.1350
+};
+
+// Explicaciones detalladas para cada estado
+const conservationExplanations: Record<string, any> = {
+  'NUEVO': {
+    description: 'Casa recién construida o como nueva. Acabados perfectos, sin desgaste visible.',
+    examples: ['Menos de 2 años de construcción', 'Pintura fresca', 'Instalaciones nuevas']
+  },
+  'BUENO': {
+    description: 'Casa en excelente estado con mantenimiento regular. Mínimo desgaste.',
+    examples: ['Pintura en buen estado', 'Pisos sin daños', 'Instalaciones funcionando']
+  },
+  'MEDIO': {
+    description: 'Casa con desgaste normal por el uso pero bien mantenida.',
+    examples: ['Pintura con pequeñas marcas', 'Pisos con uso normal', 'Todo funciona bien']
+  },
+  'REGULAR': {
+    description: 'Casa que necesita mantenimiento básico pero es habitable.',
+    examples: ['Necesita pintura', 'Algunos desperfectos menores', 'Reparaciones pequeñas']
+  },
+  'REPARACIONES SENCILLAS': {
+    description: 'Casa que necesita reparaciones menores para estar en buen estado.',
+    examples: ['Pintura completa', 'Arreglos de plomería menores', 'Cambio de llaves']
+  },
+  'REPARACIONES MEDIAS': {
+    description: 'Casa que requiere inversión moderada en reparaciones.',
+    examples: ['Cambio de pisos', 'Reparación de techos', 'Actualización eléctrica']
+  },
+  'REPARACIONES IMPORTANTES': {
+    description: 'Casa que necesita inversión considerable en reparaciones.',
+    examples: ['Reparación estructural menor', 'Cambio de instalaciones', 'Remodelación parcial']
+  },
+  'DAÑOS GRAVES': {
+    description: 'Casa con problemas serios que requieren reparación inmediata.',
+    examples: ['Problemas estructurales', 'Daños por agua', 'Sistemas no funcionan']
+  },
+  'EN DESECHO': {
+    description: 'Casa que requiere demolición o reconstrucción completa.',
+    examples: ['Estructura comprometida', 'Inhabitable', 'Solo vale el terreno']
+  }
+};
+
+// Configuración completa de países del mundo con factores económicos
 const countriesConfig = {
-  'usa': { name: 'Estados Unidos', currency: 'USD', symbol: '$', flag: '🇺🇸' },
-  'canada': { name: 'Canadá', currency: 'CAD', symbol: '$', flag: '🇨🇦' },
-  'mexico': { name: 'México', currency: 'MXN', symbol: '$', flag: '🇲🇽' },
-  'guatemala': { name: 'Guatemala', currency: 'GTQ', symbol: 'Q', flag: '🇬🇹' },
-  'salvador': { name: 'El Salvador', currency: 'USD', symbol: '$', flag: '🇸🇻' },
-  'honduras': { name: 'Honduras', currency: 'HNL', symbol: 'L', flag: '🇭🇳' },
-  'nicaragua': { name: 'Nicaragua', currency: 'NIO', symbol: 'C$', flag: '🇳🇮' },
-  'costarica': { name: 'Costa Rica', currency: 'CRC', symbol: '₡', flag: '🇨🇷' },
-  'panama': { name: 'Panamá', currency: 'PAB', symbol: 'B/.', flag: '🇵🇦' },
-  'colombia': { name: 'Colombia', currency: 'COP', symbol: '$', flag: '🇨🇴' },
+  // América del Norte
+  'usa': { 
+    name: 'Estados Unidos', 
+    currency: 'USD', 
+    symbol: '$', 
+    flag: '🇺🇸',
+    basePricePerM2USD: 2500,
+    economicFactor: 2.8,
+    exchangeRate: 1.0
+  },
+  'canada': { 
+    name: 'Canadá', 
+    currency: 'CAD', 
+    symbol: '$', 
+    flag: '🇨🇦',
+    basePricePerM2USD: 2200,
+    economicFactor: 2.5,
+    exchangeRate: 1.35
+  },
+  'mexico': { 
+    name: 'México', 
+    currency: 'MXN', 
+    symbol: '$', 
+    flag: '🇲🇽',
+    basePricePerM2USD: 800,
+    economicFactor: 1.2,
+    exchangeRate: 17.0
+  },
+  
+  // América Central
+  'guatemala': { 
+    name: 'Guatemala', 
+    currency: 'GTQ', 
+    symbol: 'Q', 
+    flag: '🇬🇹',
+    basePricePerM2USD: 600,
+    economicFactor: 0.9,
+    exchangeRate: 7.8
+  },
+  'belize': { 
+    name: 'Belice', 
+    currency: 'BZD', 
+    symbol: '$', 
+    flag: '🇧🇿',
+    basePricePerM2USD: 850,
+    economicFactor: 1.1,
+    exchangeRate: 2.0
+  },
+  'honduras': { 
+    name: 'Honduras', 
+    currency: 'HNL', 
+    symbol: 'L', 
+    flag: '🇭🇳',
+    basePricePerM2USD: 550,
+    economicFactor: 0.8,
+    exchangeRate: 24.7
+  },
+  'salvador': { 
+    name: 'El Salvador', 
+    currency: 'USD', 
+    symbol: '$', 
+    flag: '🇸🇻',
+    basePricePerM2USD: 750,
+    economicFactor: 1.0,
+    exchangeRate: 1.0
+  },
+  'nicaragua': { 
+    name: 'Nicaragua', 
+    currency: 'NIO', 
+    symbol: 'C$', 
+    flag: '🇳🇮',
+    basePricePerM2USD: 500,
+    economicFactor: 0.7,
+    exchangeRate: 36.8
+  },
+  'costarica': { 
+    name: 'Costa Rica', 
+    currency: 'CRC', 
+    symbol: '₡', 
+    flag: '🇨🇷',
+    basePricePerM2USD: 950,
+    economicFactor: 1.3,
+    exchangeRate: 510.0
+  },
+  'panama': { 
+    name: 'Panamá', 
+    currency: 'PAB', 
+    symbol: 'B/.', 
+    flag: '🇵🇦',
+    basePricePerM2USD: 1200,
+    economicFactor: 1.5,
+    exchangeRate: 1.0
+  },
+  
+  // América del Sur
+  'colombia': { 
+    name: 'Colombia', 
+    currency: 'COP', 
+    symbol: '$', 
+    flag: '🇨🇴',
+    basePricePerM2USD: 900,
+    economicFactor: 1.1,
+    exchangeRate: 4200.0
+  },
+  'venezuela': { 
+    name: 'Venezuela', 
+    currency: 'VES', 
+    symbol: 'Bs.', 
+    flag: '🇻🇪',
+    basePricePerM2USD: 300,
+    economicFactor: 0.4,
+    exchangeRate: 4500000.0
+  },
+  'brazil': { 
+    name: 'Brasil', 
+    currency: 'BRL', 
+    symbol: 'R$', 
+    flag: '🇧🇷',
+    basePricePerM2USD: 1100,
+    economicFactor: 1.4,
+    exchangeRate: 5.2
+  },
+  'ecuador': { 
+    name: 'Ecuador', 
+    currency: 'USD', 
+    symbol: '$', 
+    flag: '🇪🇨',
+    basePricePerM2USD: 650,
+    economicFactor: 0.8,
+    exchangeRate: 1.0
+  },
+  'peru': { 
+    name: 'Perú', 
+    currency: 'PEN', 
+    symbol: 'S/', 
+    flag: '🇵🇪',
+    basePricePerM2USD: 800,
+    economicFactor: 1.0,
+    exchangeRate: 3.7
+  },
+  'chile': { 
+    name: 'Chile', 
+    currency: 'CLP', 
+    symbol: '$', 
+    flag: '🇨🇱',
+    basePricePerM2USD: 1400,
+    economicFactor: 1.8,
+    exchangeRate: 950.0
+  },
+  'argentina': { 
+    name: 'Argentina', 
+    currency: 'ARS', 
+    symbol: '$', 
+    flag: '🇦🇷',
+    basePricePerM2USD: 1000,
+    economicFactor: 1.2,
+    exchangeRate: 350.0
+  }
 };
 
 const PropertyValuation = () => {
@@ -93,14 +380,27 @@ const PropertyValuation = () => {
     estratoSocial: ''
   });
 
+  // Estados para idioma y moneda con valores por defecto
   const [selectedLanguage, setSelectedLanguage] = useState('es');
   const [selectedCountry, setSelectedCountry] = useState('usa');
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  
+  // Estados adicionales
   const [selectedMainStrata, setSelectedMainStrata] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [valuationResult, setValuationResult] = useState<any>(null);
+  const [comparables, setComparables] = useState<Comparable[]>([]);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
+
+  // Funciones de validación de pasos
+  const isStep0Complete = () => selectedLanguage && selectedCountry;
+  const isStep1Complete = () => propertyData.tipoPropiedad && propertyData.estratoSocial && propertyData.direccionCompleta;
+  const isStep2Complete = () => propertyData.tipoPropiedad;
+  const isStep3Complete = () => propertyData.latitud && propertyData.longitud;
+  const isStep4Complete = () => propertyData.area > 0;
+  const isStep5Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
     console.log(`✅ CAMPO ACTUALIZADO: ${field} = ${value}`);
@@ -111,26 +411,100 @@ const PropertyValuation = () => {
     });
   };
 
+  // Función de avalúo internacional completa
   const performValuation = async () => {
-    setIsLoading(true);
+    setIsCalculating(true);
     try {
-      // Simulación de cálculo
-      const basePrice = propertyData.area * 1500;
-      const estratoMultiplier = propertyData.estratoSocial ? estratoMultipliers[propertyData.estratoSocial as EstratoSocial] : 1;
-      const finalPrice = basePrice * estratoMultiplier;
+      console.log('🔥 INICIANDO AVALÚO INTERNACIONAL...');
       
-      setValuationResult({
-        estimatedValue: finalPrice,
-        currency: selectedCurrency,
-        propertyType: propertyData.tipoPropiedad,
-        area: propertyData.area
+      // Validar datos requeridos
+      if (!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) {
+        toast.error('❌ Faltan datos requeridos para el avalúo');
+        return;
+      }
+
+      // Obtener configuración del país
+      const countryConfig = countriesConfig[selectedCountry as keyof typeof countriesConfig];
+      if (!countryConfig) {
+        toast.error('❌ País no configurado');
+        return;
+      }
+
+      // 1. Precio base por país
+      const basePricePerM2 = countryConfig.basePricePerM2USD || 1000;
+      
+      // 2. Factor de estrato social
+      const estratoMultiplier = estratoMultipliers[propertyData.estratoSocial as EstratoSocial] || 1;
+      
+      // 3. Factor de conservación
+      const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
+      
+      // 4. Factor económico del país
+      const economicMultiplier = countryConfig.economicFactor || 1;
+
+      // 5. Cálculo del precio base
+      const baseValue = propertyData.area * basePricePerM2;
+      
+      // 6. Aplicar todos los multiplicadores
+      const adjustedValue = baseValue * estratoMultiplier * conservationMultiplier * economicMultiplier;
+      
+      // 7. Convertir a moneda local
+      const valueInLocalCurrency = adjustedValue * (countryConfig.exchangeRate || 1);
+
+      console.log('📊 CÁLCULO DETALLADO:', {
+        area: propertyData.area,
+        basePricePerM2,
+        estratoMultiplier,
+        conservationMultiplier,
+        economicMultiplier,
+        baseValue,
+        adjustedValue,
+        valueInLocalCurrency
       });
+
+      // 8. Buscar comparables (simulado)
+      try {
+        const { data: comparablesData } = await supabase
+          .from('property_comparables')
+          .select('*')
+          .eq('property_type', propertyData.tipoPropiedad)
+          .gte('total_area', propertyData.area * 0.8)
+          .lte('total_area', propertyData.area * 1.2)
+          .limit(5);
+
+        setComparables(comparablesData || []);
+      } catch (error) {
+        console.log('⚠️ No se pudieron obtener comparables');
+        setComparables([]);
+      }
+
+      // 9. Resultado final
+      const result = {
+        estimatedValueUSD: adjustedValue,
+        estimatedValueLocal: valueInLocalCurrency,
+        currency: countryConfig.currency,
+        symbol: countryConfig.symbol,
+        country: countryConfig.name,
+        propertyType: propertyData.tipoPropiedad,
+        area: propertyData.area,
+        estrato: estratoSocialLabels[propertyData.estratoSocial as EstratoSocial],
+        conservation: propertyData.estadoConservacion,
+        factors: {
+          basePricePerM2,
+          estratoMultiplier,
+          conservationMultiplier,
+          economicMultiplier
+        }
+      };
+
+      setValuationResult(result);
+      toast.success('🎉 ¡Valuación completada exitosamente!');
       
-      toast.success('¡Valuación completada exitosamente!');
     } catch (error) {
-      toast.error('Error al calcular la valuación');
+      console.error('❌ Error en valuación:', error);
+      toast.error('❌ Error al calcular la valuación');
     } finally {
-      setIsLoading(false);
+      setIsCalculating(false);
     }
   };
 
@@ -139,298 +513,658 @@ const PropertyValuation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6">
           
+          {/* Panel Principal - Formulario */}
           <Card className="shadow-lg border-2 border-primary/20">
             <CardHeader className="bg-gradient-to-r from-primary via-primary/90 to-secondary text-primary-foreground p-6">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl font-bold">💎 Valuador Latinoamericano</CardTitle>
-                <div className="text-sm bg-white/20 px-3 py-1 rounded-lg">
-                  {countriesConfig[selectedCountry as keyof typeof countriesConfig]?.flag} {selectedLanguage.toUpperCase()}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowWalkthrough(true)}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  >
+                    <HelpCircle className="w-4 h-4 mr-2" />
+                    Ayuda
+                  </Button>
+                  <div className="text-sm bg-white/20 px-3 py-1 rounded-lg">
+                    {countriesConfig[selectedCountry as keyof typeof countriesConfig]?.flag} {selectedLanguage.toUpperCase()}
+                  </div>
                 </div>
               </div>
             </CardHeader>
             
             <CardContent className="p-6">
+              <div className="mb-6">
+                <p className="text-muted-foreground text-center">
+                  🎯 <strong>¡Bienvenido!</strong> Este formulario está hecho para niños de 12 años. Es súper fácil de usar.
+                  Te vamos a ayudar a saber cuánto vale tu casa paso a paso.
+                </p>
+              </div>
+
               <Tabs defaultValue="setup" className="w-full">
                 <TabsList className="grid w-full grid-cols-6">
-                  <TabsTrigger value="setup">Paso 1</TabsTrigger>
-                  <TabsTrigger value="estrato">Paso 2</TabsTrigger>
-                  <TabsTrigger value="tipo">Paso 3</TabsTrigger>
-                  <TabsTrigger value="ubicacion">Paso 4</TabsTrigger>
-                  <TabsTrigger value="caracteristicas">Paso 5</TabsTrigger>
-                  <TabsTrigger value="valuacion">Paso 6</TabsTrigger>
+                  <TabsTrigger value="setup" className="text-xs">
+                    {isStep0Complete() ? '✅' : '1️⃣'} Inicio
+                  </TabsTrigger>
+                  <TabsTrigger value="estrato" className="text-xs">
+                    {isStep1Complete() ? '✅' : '2️⃣'} Tipo
+                  </TabsTrigger>
+                  <TabsTrigger value="tipo" className="text-xs">
+                    {isStep2Complete() ? '✅' : '3️⃣'} Detalles
+                  </TabsTrigger>
+                  <TabsTrigger value="ubicacion" className="text-xs">
+                    {isStep3Complete() ? '✅' : '4️⃣'} Ubicación
+                  </TabsTrigger>
+                  <TabsTrigger value="caracteristicas" className="text-xs">
+                    {isStep4Complete() ? '✅' : '5️⃣'} Área
+                  </TabsTrigger>
+                  <TabsTrigger value="valuacion" className="text-xs">
+                    {isStep5Complete() ? '✅' : '6️⃣'} Resultado
+                  </TabsTrigger>
                 </TabsList>
 
                 {/* Paso 1: Configuración */}
                 <TabsContent value="setup" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>🌍 Configuración Inicial</CardTitle>
+                  <Card className="border-2 border-purple-200 shadow-xl bg-gradient-to-br from-purple-50/50 to-pink-50/50">
+                    <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep0Complete() ? '✓' : '1'}
+                        </div>
+                        🌍 Paso 1: ¿De dónde eres?
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label>País</Label>
-                        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona el país" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(countriesConfig).map(([key, config]) => (
-                              <SelectItem key={key} value={key}>
-                                {config.flag} {config.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>🌟 ¡Hola! Empezamos aquí</strong><br />
+                          Primero necesitamos saber en qué país está tu casa para usar la moneda correcta y hacer el cálculo perfecto.
+                        </p>
                       </div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <Label className="text-base font-semibold mb-3 block">
+                            🌍 ¿En qué país está tu casa? *
+                          </Label>
+                          <Select 
+                            value={selectedCountry} 
+                            onValueChange={(value) => {
+                              setSelectedCountry(value);
+                              setSelectedCurrency(countriesConfig[value as keyof typeof countriesConfig]?.currency || 'USD');
+                            }}
+                          >
+                            <SelectTrigger className="border-2 focus:border-purple-500 hover:border-purple-400 transition-colors h-12">
+                              <SelectValue placeholder="Elige el país donde está tu casa" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white dark:bg-gray-900 z-50 max-h-60 overflow-y-auto">
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground">América del Norte</div>
+                              <SelectItem value="usa">{countriesConfig.usa.flag} {countriesConfig.usa.name}</SelectItem>
+                              <SelectItem value="canada">{countriesConfig.canada.flag} {countriesConfig.canada.name}</SelectItem>
+                              <SelectItem value="mexico">{countriesConfig.mexico.flag} {countriesConfig.mexico.name}</SelectItem>
+                              
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">América Central</div>
+                              <SelectItem value="guatemala">{countriesConfig.guatemala.flag} {countriesConfig.guatemala.name}</SelectItem>
+                              <SelectItem value="belize">{countriesConfig.belize.flag} {countriesConfig.belize.name}</SelectItem>
+                              <SelectItem value="salvador">{countriesConfig.salvador.flag} {countriesConfig.salvador.name}</SelectItem>
+                              <SelectItem value="honduras">{countriesConfig.honduras.flag} {countriesConfig.honduras.name}</SelectItem>
+                              <SelectItem value="nicaragua">{countriesConfig.nicaragua.flag} {countriesConfig.nicaragua.name}</SelectItem>
+                              <SelectItem value="costarica">{countriesConfig.costarica.flag} {countriesConfig.costarica.name}</SelectItem>
+                              <SelectItem value="panama">{countriesConfig.panama.flag} {countriesConfig.panama.name}</SelectItem>
+                              
+                              <div className="px-3 py-2 text-sm font-medium text-muted-foreground border-t mt-2 pt-2">América del Sur</div>
+                              <SelectItem value="colombia">{countriesConfig.colombia.flag} {countriesConfig.colombia.name}</SelectItem>
+                              <SelectItem value="venezuela">{countriesConfig.venezuela.flag} {countriesConfig.venezuela.name}</SelectItem>
+                              <SelectItem value="brazil">{countriesConfig.brazil.flag} {countriesConfig.brazil.name}</SelectItem>
+                              <SelectItem value="ecuador">{countriesConfig.ecuador.flag} {countriesConfig.ecuador.name}</SelectItem>
+                              <SelectItem value="peru">{countriesConfig.peru.flag} {countriesConfig.peru.name}</SelectItem>
+                              <SelectItem value="chile">{countriesConfig.chile.flag} {countriesConfig.chile.name}</SelectItem>
+                              <SelectItem value="argentina">{countriesConfig.argentina.flag} {countriesConfig.argentina.name}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Mostrar moneda seleccionada */}
+                        {selectedCountry && (
+                          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <p className="text-green-800 font-semibold text-sm">
+                              ✅ País: {countriesConfig[selectedCountry as keyof typeof countriesConfig]?.name}
+                            </p>
+                            <p className="text-green-700 text-sm">
+                              Moneda: {countriesConfig[selectedCountry as keyof typeof countriesConfig]?.currency} ({countriesConfig[selectedCountry as keyof typeof countriesConfig]?.symbol})
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Confirmación cuando se complete */}
+                      {isStep0Complete() && (
+                        <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-600">✅</span>
+                            <p className="text-green-800 font-medium text-sm">¡Perfecto! Ya configuramos tu país</p>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>
 
-                {/* Paso 2: Tipo y Ubicación */}
+                {/* Paso 2: Tipo de Propiedad y Estrato Social */}
                 <TabsContent value="estrato" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>🏠 Tipo de Propiedad y Ubicación</CardTitle>
+                  <Card className="border-2 border-violet-200 shadow-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50">
+                    <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep1Complete() ? '✓' : '2'}
+                        </div>
+                        🏠 Paso 2: Tipo de Propiedad y Ubicación
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      
-                      {/* Tipo de Propiedad */}
-                      <div>
-                        <Label>Tipo de Propiedad</Label>
-                        <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona el tipo" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="casa">🏠 Casa</SelectItem>
-                            <SelectItem value="apartamento">🏢 Apartamento</SelectItem>
-                            <SelectItem value="terreno">🌳 Terreno</SelectItem>
-                            <SelectItem value="comercial">🏪 Comercial</SelectItem>
-                          </SelectContent>
-                        </Select>
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>🏠 ¿Qué tipo de casa tienes?</strong><br />
+                          Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial. 
+                          También necesitamos saber en qué tipo de barrio está.
+                        </p>
                       </div>
 
-                      {/* Mapa de Ubicación */}
-                      <div>
-                        <Label>Ubicación en el Mapa</Label>
-                        <FreeLocationMap
-                          onLocationChange={(lat, lng, address) => {
-                            handleInputChange('latitud', lat);
-                            handleInputChange('longitud', lng);
-                            handleInputChange('direccionCompleta', address);
-                          }}
-                          initialLat={13.7042}
-                          initialLng={-89.2073}
-                        />
-                      </div>
+                      <div className="space-y-6">
+                        {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
+                        <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                          <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
+                          <p className="text-sm text-green-800 dark:text-green-200 mb-4">
+                            Primero dime qué tipo de propiedad quieres valuar.
+                          </p>
+                          <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
+                            <SelectTrigger className="bg-white">
+                              <SelectValue placeholder="¿Qué tipo de propiedad es?" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="casa">🏠 Casa - Vivienda independiente</SelectItem>
+                              <SelectItem value="apartamento">🏢 Apartamento - Vivienda en edificio</SelectItem>
+                              <SelectItem value="terreno">🌳 Terreno - Lote sin construcción</SelectItem>
+                              <SelectItem value="comercial">🏪 Comercial - Local de negocio</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {propertyData.tipoPropiedad && (
+                            <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
+                              <p className="text-sm text-green-800">
+                                <strong>✅ Tipo seleccionado:</strong> {
+                                  propertyData.tipoPropiedad === 'casa' ? '🏠 Casa' :
+                                  propertyData.tipoPropiedad === 'apartamento' ? '🏢 Apartamento' :
+                                  propertyData.tipoPropiedad === 'terreno' ? '🌳 Terreno' :
+                                  propertyData.tipoPropiedad === 'comercial' ? '🏪 Comercial' : ''
+                                }
+                              </p>
+                            </div>
+                          )}
+                        </div>
 
-                      {/* Estrato Social */}
-                      <div>
-                        <Label>Estrato Social del Barrio</Label>
-                        {!propertyData.estratoSocial && (
-                          <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded mb-4">
-                            <p className="text-red-800 font-medium">
-                              ⚠️ <strong>FALTA COMPLETAR:</strong> Estrato social VACÍO
+                        {/* UBICACIÓN DE LA PROPIEDAD */}
+                        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                          <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
+                          <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
+                            Ubica exactamente dónde está tu casa/terreno en el mapa.
+                          </p>
+                          <FreeLocationMap
+                            onLocationChange={(lat, lng, address) => {
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                              handleInputChange('direccionCompleta', address);
+                            }}
+                            initialLat={13.7042}
+                            initialLng={-89.2073}
+                            initialAddress={propertyData.direccionCompleta}
+                          />
+                          {propertyData.direccionCompleta && (
+                            <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded">
+                              <p className="text-sm text-green-800">
+                                <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* ESTRATO SOCIOECONÓMICO */}
+                        <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                          <h3 className="font-semibold mb-2">🏘️ Zona Socioeconómica del Barrio</h3>
+                          <p className="text-sm text-purple-800 dark:text-purple-200 mb-4">
+                            El nivel socioeconómico del barrio donde está tu propiedad es muy importante para el valor.
+                          </p>
+                          
+                          {/* INDICACIÓN SI FALTA ESTRATO SOCIAL */}
+                          {!propertyData.estratoSocial && (
+                            <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded mb-4">
+                              <div className="flex items-center gap-2">
+                                <span className="text-red-600">⚠️</span>
+                                <p className="text-red-800 font-medium text-sm">
+                                  <strong>¡FALTA COMPLETAR!</strong> Estrato social: VACÍO
+                                </p>
+                              </div>
+                              <p className="text-red-700 text-xs mt-1">
+                                Debes seleccionar el nivel socioeconómico de tu barrio para continuar.
+                              </p>
+                            </div>
+                          )}
+                          
+                          {propertyData.estratoSocial && (
+                            <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded mb-4">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                <p className="text-green-800 font-medium text-sm">
+                                  <strong>COMPLETADO:</strong> Estrato social: {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {!propertyData.estratoSocial && (
+                            <div className="space-y-4">
+                              <h3 className="font-semibold text-lg">Primero dime, ¿cómo es tu barrio?</h3>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Barrio Pobre */}
+                                <div 
+                                  className="p-4 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                  onClick={() => setSelectedMainStrata('bajo')}
+                                >
+                                  <div className="text-center">
+                                    <span className="text-3xl">🏚️</span>
+                                    <h4 className="font-bold text-lg mt-2">BARRIO POBRE</h4>
+                                    <p className="text-sm text-muted-foreground">Casas sencillas, pocos servicios</p>
+                                  </div>
+                                </div>
+                                
+                                {/* Barrio Normal */}
+                                <div 
+                                  className="p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                  onClick={() => setSelectedMainStrata('medio')}
+                                >
+                                  <div className="text-center">
+                                    <span className="text-3xl">🏙️</span>
+                                    <h4 className="font-bold text-lg mt-2">BARRIO NORMAL</h4>
+                                    <p className="text-sm text-muted-foreground">Casas normales, buenos servicios</p>
+                                  </div>
+                                </div>
+                                
+                                {/* Barrio Rico */}
+                                <div 
+                                  className="p-4 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                  onClick={() => setSelectedMainStrata('alto')}
+                                >
+                                  <div className="text-center">
+                                    <span className="text-3xl">🏰</span>
+                                    <h4 className="font-bold text-lg mt-2">BARRIO RICO</h4>
+                                    <p className="text-sm text-muted-foreground">Casas lujosas, zona exclusiva</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {selectedMainStrata && !propertyData.estratoSocial && (
+                            <div className="mt-6 space-y-4">
+                              <h3 className="font-semibold text-lg">Ahora dime exactamente qué tan rico o pobre es:</h3>
+                              <div className="grid gap-3">
+                                {selectedMainStrata === 'bajo' && (
+                                  <>
+                                    <div 
+                                      className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'bajo_bajo')}
+                                    >
+                                      <span className="font-medium">🏚️ {estratoSocialLabels['bajo_bajo']}</span>
+                                    </div>
+                                    <div 
+                                      className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'bajo_medio')}
+                                    >
+                                      <span className="font-medium">🏡 {estratoSocialLabels['bajo_medio']}</span>
+                                    </div>
+                                    <div 
+                                      className="p-3 border-2 border-red-200 rounded-lg cursor-pointer hover:bg-red-50 hover:border-red-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'bajo_alto')}
+                                    >
+                                      <span className="font-medium">🏘️ {estratoSocialLabels['bajo_alto']}</span>
+                                    </div>
+                                  </>
+                                )}
+                                
+                                {selectedMainStrata === 'medio' && (
+                                  <>
+                                    <div 
+                                      className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'medio_bajo')}
+                                    >
+                                      <span className="font-medium">🏙️ {estratoSocialLabels['medio_bajo']}</span>
+                                    </div>
+                                    <div 
+                                      className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'medio_medio')}
+                                    >
+                                      <span className="font-medium">🏢 {estratoSocialLabels['medio_medio']}</span>
+                                    </div>
+                                    <div 
+                                      className="p-3 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'medio_alto')}
+                                    >
+                                      <span className="font-medium">🏰 {estratoSocialLabels['medio_alto']}</span>
+                                    </div>
+                                  </>
+                                )}
+                                
+                                {selectedMainStrata === 'alto' && (
+                                  <>
+                                    <div 
+                                      className="p-3 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'alto_medio')}
+                                    >
+                                      <span className="font-medium">🗼 {estratoSocialLabels['alto_medio']}</span>
+                                    </div>
+                                    <div 
+                                      className="p-3 border-2 border-green-200 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-400 transition-all"
+                                      onClick={() => handleInputChange('estratoSocial', 'alto_alto')}
+                                    >
+                                      <span className="font-medium">💎 {estratoSocialLabels['alto_alto']}</span>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Información educativa */}
+                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-blue-800 text-xs">
+                              🎯 <strong>¿Por qué necesitamos esto?</strong> El barrio donde está tu casa es súper importante para saber cuánto vale. 
+                              Una casa igual en un barrio rico vale mucho más que en un barrio pobre.
                             </p>
                           </div>
-                        )}
-                        
-                        {!selectedMainStrata && (
-                          <div className="grid grid-cols-3 gap-4 mt-4">
-                            <button 
-                              className="p-4 border-2 border-red-200 rounded-lg hover:bg-red-50"
-                              onClick={() => setSelectedMainStrata('bajo')}
-                            >
-                              <div className="text-center">
-                                <span className="text-3xl">🏚️</span>
-                                <h4 className="font-bold">BARRIO POBRE</h4>
-                              </div>
-                            </button>
-                            <button 
-                              className="p-4 border-2 border-blue-200 rounded-lg hover:bg-blue-50"
-                              onClick={() => setSelectedMainStrata('medio')}
-                            >
-                              <div className="text-center">
-                                <span className="text-3xl">🏙️</span>
-                                <h4 className="font-bold">BARRIO NORMAL</h4>
-                              </div>
-                            </button>
-                            <button 
-                              className="p-4 border-2 border-green-200 rounded-lg hover:bg-green-50"
-                              onClick={() => setSelectedMainStrata('alto')}
-                            >
-                              <div className="text-center">
-                                <span className="text-3xl">🏰</span>
-                                <h4 className="font-bold">BARRIO RICO</h4>
-                              </div>
-                            </button>
-                          </div>
-                        )}
-
-                        {selectedMainStrata && !propertyData.estratoSocial && (
-                          <div className="mt-4 space-y-2">
-                            {selectedMainStrata === 'bajo' && (
-                              <>
-                                <button 
-                                  className="w-full p-3 border-2 border-red-200 rounded-lg hover:bg-red-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'bajo_bajo')}
-                                >
-                                  🏚️ {estratoSocialLabels['bajo_bajo']}
-                                </button>
-                                <button 
-                                  className="w-full p-3 border-2 border-red-200 rounded-lg hover:bg-red-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'bajo_medio')}
-                                >
-                                  🏡 {estratoSocialLabels['bajo_medio']}
-                                </button>
-                                <button 
-                                  className="w-full p-3 border-2 border-red-200 rounded-lg hover:bg-red-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'bajo_alto')}
-                                >
-                                  🏘️ {estratoSocialLabels['bajo_alto']}
-                                </button>
-                              </>
-                            )}
-                            {selectedMainStrata === 'medio' && (
-                              <>
-                                <button 
-                                  className="w-full p-3 border-2 border-blue-200 rounded-lg hover:bg-blue-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'medio_bajo')}
-                                >
-                                  🏙️ {estratoSocialLabels['medio_bajo']}
-                                </button>
-                                <button 
-                                  className="w-full p-3 border-2 border-blue-200 rounded-lg hover:bg-blue-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'medio_medio')}
-                                >
-                                  🏢 {estratoSocialLabels['medio_medio']}
-                                </button>
-                                <button 
-                                  className="w-full p-3 border-2 border-blue-200 rounded-lg hover:bg-blue-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'medio_alto')}
-                                >
-                                  🏰 {estratoSocialLabels['medio_alto']}
-                                </button>
-                              </>
-                            )}
-                            {selectedMainStrata === 'alto' && (
-                              <>
-                                <button 
-                                  className="w-full p-3 border-2 border-green-200 rounded-lg hover:bg-green-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'alto_medio')}
-                                >
-                                  🗼 {estratoSocialLabels['alto_medio']}
-                                </button>
-                                <button 
-                                  className="w-full p-3 border-2 border-green-200 rounded-lg hover:bg-green-50 text-left"
-                                  onClick={() => handleInputChange('estratoSocial', 'alto_alto')}
-                                >
-                                  💎 {estratoSocialLabels['alto_alto']}
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        )}
-
-                        {propertyData.estratoSocial && (
-                          <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded">
-                            <p className="text-green-800 font-medium">
-                              ✅ <strong>COMPLETADO:</strong> {estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}
-                            </p>
-                          </div>
-                        )}
+                        </div>
                       </div>
-
                     </CardContent>
                   </Card>
                 </TabsContent>
 
                 {/* Paso 3: Características */}
                 <TabsContent value="tipo" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>📏 Características de la Propiedad</CardTitle>
+                  <Card className="border-2 border-green-200 shadow-xl bg-gradient-to-br from-green-50/50 to-emerald-50/50">
+                    <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep4Complete() ? '✓' : '3'}
+                        </div>
+                        📏 Paso 3: Características de tu Propiedad
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>📏 ¿Qué tan grande es tu casa?</strong><br />
+                          Ahora necesitamos saber el tamaño y las características de tu propiedad para calcular su valor.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <Label>Área Total (m²)</Label>
+                          <Label htmlFor="area" className="text-base font-semibold">
+                            📐 Área Total (metros cuadrados) *
+                          </Label>
                           <Input 
+                            id="area"
                             type="number" 
                             value={propertyData.area || ''}
                             onChange={(e) => handleInputChange('area', Number(e.target.value))}
-                            placeholder="Ingresa el área"
+                            placeholder="Ejemplo: 120"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            💡 El área total de la construcción (sin contar el patio)
+                          </p>
                         </div>
+
                         <div>
-                          <Label>Habitaciones</Label>
+                          <Label htmlFor="construction_area" className="text-base font-semibold">
+                            🏗️ Área de Construcción (m²)
+                          </Label>
                           <Input 
+                            id="construction_area"
+                            type="number" 
+                            value={propertyData.construction_area || ''}
+                            onChange={(e) => handleInputChange('construction_area', Number(e.target.value))}
+                            placeholder="Ejemplo: 100"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🏠 Solo el área techada de la casa
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="habitaciones" className="text-base font-semibold">
+                            🛏️ Número de Habitaciones
+                          </Label>
+                          <Input 
+                            id="habitaciones"
                             type="number" 
                             value={propertyData.habitaciones || ''}
                             onChange={(e) => handleInputChange('habitaciones', Number(e.target.value))}
-                            placeholder="Número de habitaciones"
+                            placeholder="Ejemplo: 3"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🛌 Cuartos para dormir (sin contar la sala)
+                          </p>
                         </div>
+
                         <div>
-                          <Label>Baños</Label>
+                          <Label htmlFor="banos" className="text-base font-semibold">
+                            🚿 Número de Baños
+                          </Label>
                           <Input 
+                            id="banos"
                             type="number" 
                             value={propertyData.banos || ''}
                             onChange={(e) => handleInputChange('banos', Number(e.target.value))}
-                            placeholder="Número de baños"
+                            placeholder="Ejemplo: 2"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🚽 Baños completos con inodoro y ducha
+                          </p>
                         </div>
+
                         <div>
-                          <Label>Antigüedad (años)</Label>
+                          <Label htmlFor="parqueaderos" className="text-base font-semibold">
+                            🚗 Espacios de Parqueo
+                          </Label>
                           <Input 
+                            id="parqueaderos"
+                            type="number" 
+                            value={propertyData.parqueaderos || ''}
+                            onChange={(e) => handleInputChange('parqueaderos', Number(e.target.value))}
+                            placeholder="Ejemplo: 1"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            🏠 Garajes o espacios techados para carros
+                          </p>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="antiguedad" className="text-base font-semibold">
+                            ⏰ Años de Construcción
+                          </Label>
+                          <Input 
+                            id="antiguedad"
                             type="number" 
                             value={propertyData.antiguedad || ''}
                             onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
-                            placeholder="Años de construcción"
+                            placeholder="Ejemplo: 5"
+                            className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
                           />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            📅 ¿Hace cuántos años se construyó? (0 = nueva)
+                          </p>
                         </div>
+                      </div>
+
+                      {/* Confirmación cuando se complete el área */}
+                      {isStep4Complete() && (
+                        <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-600">✅</span>
+                            <p className="text-green-800 font-medium text-sm">
+                              ¡Excelente! Ya sabemos el tamaño: {propertyData.area} m²
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-yellow-800 text-xs">
+                          🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
+                          Una casa más grande vale más dinero. También los baños y habitaciones extras aumentan el precio.
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
-                {/* Paso 4: Estado */}
+                {/* Paso 4: Estado de Conservación */}
                 <TabsContent value="ubicacion" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>🔧 Estado de Conservación</CardTitle>
+                  <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-yellow-50/50">
+                    <CardHeader className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          {isStep5Complete() ? '✓' : '4'}
+                        </div>
+                        🔧 Paso 4: ¿En qué estado está tu casa?
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <Select value={propertyData.estadoConservacion} onValueChange={(value) => handleInputChange('estadoConservacion', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecciona el estado" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="NUEVO">🆕 Nuevo</SelectItem>
-                          <SelectItem value="BUENO">👍 Bueno</SelectItem>
-                          <SelectItem value="REGULAR">⚠️ Regular</SelectItem>
-                          <SelectItem value="MALO">❌ Malo</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>🔍 ¿Tu casa está nueva o necesita arreglos?</strong><br />
+                          Es súper importante saber si tu casa está en buen estado o necesita reparaciones. 
+                          Una casa nueva vale más que una que necesita muchos arreglos.
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label className="text-base font-semibold">
+                          🏠 Estado de tu Casa *
+                        </Label>
+                        <Select 
+                          value={propertyData.estadoConservacion} 
+                          onValueChange={(value) => handleInputChange('estadoConservacion', value)}
+                        >
+                          <SelectTrigger className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12">
+                            <SelectValue placeholder="¿Cómo está tu casa?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="NUEVO">🆕 Nueva - Como recién construida</SelectItem>
+                            <SelectItem value="BUENO">👍 Buena - Se ve muy bien</SelectItem>
+                            <SelectItem value="MEDIO">😊 Normal - Se ve bien pero con uso</SelectItem>
+                            <SelectItem value="REGULAR">⚠️ Regular - Necesita algunos arreglos</SelectItem>
+                            <SelectItem value="REPARACIONES SENCILLAS">🔨 Necesita arreglos fáciles</SelectItem>
+                            <SelectItem value="REPARACIONES MEDIAS">🏗️ Necesita arreglos importantes</SelectItem>
+                            <SelectItem value="REPARACIONES IMPORTANTES">⚒️ Necesita muchos arreglos</SelectItem>
+                            <SelectItem value="DAÑOS GRAVES">❌ Tiene problemas serios</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {/* Mostrar explicación del estado seleccionado */}
+                        {propertyData.estadoConservacion && conservationExplanations[propertyData.estadoConservacion] && (
+                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h4 className="font-semibold text-blue-800 mb-2">
+                              📝 {propertyData.estadoConservacion}
+                            </h4>
+                            <p className="text-sm text-blue-700 mb-3">
+                              {conservationExplanations[propertyData.estadoConservacion].description}
+                            </p>
+                            <div className="text-xs text-blue-600">
+                              <strong>Ejemplos:</strong>
+                              <ul className="list-disc pl-4 mt-1">
+                                {conservationExplanations[propertyData.estadoConservacion].examples?.map((example: string, index: number) => (
+                                  <li key={index}>{example}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="mt-2 text-xs text-blue-600">
+                              <strong>Factor de precio:</strong> {(conservationFactors[propertyData.estadoConservacion] * 100).toFixed(1)}%
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Confirmación cuando se complete */}
+                        {isStep5Complete() && (
+                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+                            <div className="flex items-center gap-2">
+                              <span className="text-green-600">✅</span>
+                              <p className="text-green-800 font-medium text-sm">
+                                ¡Perfecto! Estado: {propertyData.estadoConservacion}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-yellow-800 text-xs">
+                          🎯 <strong>¿Por qué necesitamos esto?</strong> El estado de tu casa cambia mucho el precio. 
+                          Una casa nueva vale mucho más que una que necesita arreglos. Es como comparar un carro nuevo vs uno usado.
+                        </p>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
-                {/* Paso 5: Características Adicionales */}
+                {/* Paso 5: Descripción Adicional */}
                 <TabsContent value="caracteristicas" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>🏗️ Características Adicionales</CardTitle>
+                  <Card className="border-2 border-teal-200 shadow-xl bg-gradient-to-br from-teal-50/50 to-cyan-50/50">
+                    <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          5
+                        </div>
+                        ✍️ Paso 5: Cuéntanos más de tu casa (Opcional)
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="p-6">
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-sm text-blue-800 dark:text-blue-200">
+                          <strong>💬 ¿Tiene algo especial tu casa?</strong><br />
+                          Si tu casa tiene algo especial como piscina, jardín grande, vista bonita, o cualquier cosa que la hace única, 
+                          cuéntanos aquí. ¡Esto puede hacer que valga más!
+                        </p>
+                      </div>
+
                       <div>
-                        <Label>Descripción Adicional</Label>
+                        <Label htmlFor="descripcion" className="text-base font-semibold mb-3 block">
+                          📝 Descripción Especial (No es obligatorio)
+                        </Label>
                         <Textarea 
+                          id="descripcion"
                           value={propertyData.descripcion}
                           onChange={(e) => handleInputChange('descripcion', e.target.value)}
-                          placeholder="Describe características especiales de tu propiedad..."
-                          rows={4}
+                          placeholder="Ejemplo: Tiene una piscina grande, jardín con árboles frutales, vista al mar, cerca del centro comercial..."
+                          rows={6}
+                          className="border-2 focus:border-teal-500 hover:border-teal-400 transition-colors"
                         />
+                        <p className="text-xs text-muted-foreground mt-2">
+                          🌟 <strong>Ideas de qué escribir:</strong> Piscina, jardín, vista, ubicación especial, acabados de lujo, 
+                          cercanía a escuelas/centros comerciales, seguridad, etc.
+                        </p>
+                      </div>
+
+                      <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-green-800 text-xs">
+                          💡 <strong>¡No te preocupes!</strong> Este paso es opcional. Si no tienes nada especial que agregar, 
+                          puedes dejarlo vacío y pasar al siguiente paso para ver el resultado.
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -438,67 +1172,116 @@ const PropertyValuation = () => {
 
                 {/* Paso 6: Valuación */}
                 <TabsContent value="valuacion" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>💎 Calcular Valuación</CardTitle>
+                  <Card className="border-2 border-pink-200 shadow-xl bg-gradient-to-br from-pink-50/50 to-rose-50/50">
+                    <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500 text-white">
+                      <CardTitle className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                          📊
+                        </div>
+                        💎 Paso 6: ¡Descubre cuánto vale tu casa!
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="text-center space-y-6">
-                      <div>
-                        <Calculator className="w-16 h-16 text-primary mx-auto mb-4" />
+                    <CardContent className="p-6">
+                      <div className="text-center py-6">
+                        <div className="mb-4">
+                          <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
+                        </div>
                         <h3 className="text-xl font-bold mb-4">
-                          {propertyData.area && propertyData.tipoPropiedad && propertyData.estratoSocial ? 
-                            '🎉 ¡Listo para la valuación!' : 
-                            '⏳ Complete todos los campos'
+                          {(propertyData.area > 0 && propertyData.tipoPropiedad && propertyData.estratoSocial) ? 
+                            '🎉 ¡Listo para saber el precio!' : 
+                            '⏳ Faltan algunos datos'
                           }
                         </h3>
-                      </div>
 
-                      <Button
-                        onClick={performValuation}
-                        disabled={isLoading || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial}
-                        size="lg"
-                        className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white font-bold py-4 px-8 rounded-xl shadow-lg"
-                      >
-                        {isLoading ? (
-                          <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                            Calculando...
-                          </>
-                        ) : (
-                          <>
-                            <Calculator className="w-5 h-5 mr-2" />
-                            💎 Calcular Valuación
-                          </>
-                        )}
-                      </Button>
-
-                      {valuationResult && (
-                        <div className="mt-8 p-6 bg-green-50 border-2 border-green-300 rounded-lg">
-                          <h4 className="text-2xl font-bold text-green-800 mb-4">
-                            🏆 Resultado de la Valuación
-                          </h4>
-                          <div className="text-3xl font-bold text-green-900">
-                            {countriesConfig[selectedCountry as keyof typeof countriesConfig]?.symbol}
-                            {valuationResult.estimatedValue?.toLocaleString()} {valuationResult.currency}
+                        {/* Validación de campos requeridos */}
+                        {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) && (
+                          <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
+                            <p className="text-red-800 font-medium mb-2">
+                              ❌ <strong>Necesitas completar estos datos:</strong>
+                            </p>
+                            <ul className="text-red-700 text-sm space-y-1">
+                              {!propertyData.area && <li>• El área de tu casa (Paso 3)</li>}
+                              {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
+                              {!propertyData.estratoSocial && <li>• El estrato social del barrio (Paso 2)</li>}
+                            </ul>
                           </div>
-                          <p className="text-green-700 mt-2">
-                            Propiedad: {valuationResult.propertyType} de {valuationResult.area} m²
-                          </p>
-                        </div>
-                      )}
+                        )}
 
-                      {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial) && (
-                        <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded">
-                          <p className="text-red-800 font-medium">
-                            ❌ <strong>Campos requeridos:</strong>
-                          </p>
-                          <ul className="text-red-700 text-sm mt-2 space-y-1">
-                            {!propertyData.area && <li>• Área de la propiedad</li>}
-                            {!propertyData.tipoPropiedad && <li>• Tipo de propiedad</li>}
-                            {!propertyData.estratoSocial && <li>• Estrato social del barrio</li>}
-                          </ul>
-                        </div>
-                      )}
+                        <Button
+                          onClick={performValuation}
+                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.estratoSocial}
+                          size="lg"
+                          className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          {isCalculating ? (
+                            <>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                              Calculando el precio...
+                            </>
+                          ) : (
+                            <>
+                              <Calculator className="w-5 h-5 mr-2" />
+                              💎 ¡Calcular el Valor de mi Casa!
+                            </>
+                          )}
+                        </Button>
+
+                        {/* Resultado de la valuación */}
+                        {valuationResult && (
+                          <div className="mt-8 p-6 bg-green-50 border-2 border-green-300 rounded-lg">
+                            <h4 className="text-2xl font-bold text-green-800 mb-4">
+                              🏆 ¡Tu Casa Vale!
+                            </h4>
+                            
+                            {/* Precio en USD */}
+                            <div className="text-3xl font-bold text-green-900 mb-2">
+                              ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
+                            </div>
+                            
+                            {/* Precio en moneda local si es diferente */}
+                            {valuationResult.currency !== 'USD' && (
+                              <div className="text-2xl font-bold text-green-800 mb-4">
+                                {valuationResult.symbol}{valuationResult.estimatedValueLocal?.toLocaleString()} {valuationResult.currency}
+                              </div>
+                            )}
+                            
+                            <div className="text-green-700 space-y-1 text-sm">
+                              <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
+                              <p><strong>Ubicación:</strong> {valuationResult.country}</p>
+                              <p><strong>Barrio:</strong> {valuationResult.estrato}</p>
+                              <p><strong>Estado:</strong> {valuationResult.conservation}</p>
+                            </div>
+
+                            {/* Detalles del cálculo */}
+                            <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
+                              <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
+                              <div className="text-xs text-green-700 space-y-1">
+                                <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                <p>• Factor por tipo de barrio: {((valuationResult.factors?.estratoMultiplier || 1) * 100).toFixed(0)}%</p>
+                                <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                              </div>
+                            </div>
+
+                            {/* Comparables si los hay */}
+                            {comparables.length > 0 && (
+                              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                                <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
+                                <p className="text-xs text-blue-700">
+                                  Encontramos {comparables.length} propiedades similares en la base de datos para comparar.
+                                </p>
+                              </div>
+                            )}
+
+                            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                              <p className="text-yellow-800 text-xs">
+                                ⚠️ <strong>Importante:</strong> Este es un estimado basado en datos del mercado. 
+                                Para un avalúo oficial, consulta con un profesional certificado.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -510,6 +1293,7 @@ const PropertyValuation = () => {
         </div>
       </div>
 
+      {/* Tutorial paso a paso */}
       <ValuationWalkthrough
         isOpen={showWalkthrough}
         onClose={() => setShowWalkthrough(false)}
