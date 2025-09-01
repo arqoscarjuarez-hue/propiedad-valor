@@ -337,7 +337,12 @@ const PropertyValuation = () => {
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.tipoPropiedad;
   const isStep2Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep3Complete = () => propertyData.area > 0 && propertyData.construction_area > 0;
+  const isStep3Complete = () => {
+    if (propertyData.tipoPropiedad === 'apartamento') {
+      return propertyData.construction_area > 0;
+    }
+    return propertyData.area > 0 && propertyData.construction_area > 0;
+  };
   const isStep4Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
