@@ -718,7 +718,7 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep3Complete() ? '✓' : '4'}
                         </div>
-                        📏 Paso 4: Características de tu Propiedad
+                        📏 Paso 3: Tipo de Propiedad
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
