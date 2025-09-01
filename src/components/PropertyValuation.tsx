@@ -322,7 +322,12 @@ const PropertyValuation = () => {
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setPropertyData(prev => ({ ...prev, [field]: value }));
+    console.log('INPUT CHANGE:', field, value);
+    setPropertyData(prev => {
+      const updated = { ...prev, [field]: value };
+      console.log('PROPERTY DATA UPDATED:', updated);
+      return updated;
+    });
     
     // Auto-abrir el siguiente paso
     if (field === 'estratoSocial' && value && isStep2Complete()) {
@@ -333,8 +338,12 @@ const PropertyValuation = () => {
       setActiveTab('caracteristicas');
     } else if (field === 'area' && value && isStep5Complete()) {
       setActiveTab('depreciacion');
-    } else if ((field === 'estadoConservacion') && getNextRequiredStep() === 'valuacion') {
-      setActiveTab('valuacion');
+    } else if (field === 'estadoConservacion' && value) {
+      console.log('ESTADO DE CONSERVACIÓN SELECCIONADO:', value);
+      console.log('FACTOR APLICADO:', conservationFactors[value]);
+      if (getNextRequiredStep() === 'valuacion') {
+        setActiveTab('valuacion');
+      }
     }
   };
 
