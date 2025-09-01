@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calculator, HelpCircle, CheckCircle, Shuffle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import FreeLocationMap from '@/components/FreeLocationMap';
+import SimpleMap from '@/components/SimpleMap';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
 
@@ -694,7 +694,7 @@ const PropertyValuation = () => {
                               🗺️ Seleccione la ubicación en el mapa
                             </Label>
                             <div className="border-2 border-emerald-200 rounded-lg overflow-hidden shadow-md">
-                              <FreeLocationMap 
+                              <SimpleMap 
                                 onLocationChange={handleLocationChange}
                                 initialLat={propertyData.latitud || 19.4326}
                                 initialLng={propertyData.longitud || -99.1332}
