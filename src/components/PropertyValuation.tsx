@@ -468,20 +468,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para obtener la tasa de cambio COP a USD
-  const getExchangeRate = async () => {
-    try {
-      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-      const data = await response.json();
-      const copRate = data.rates.COP; // Pesos colombianos por dólar
-      return copRate;
-    } catch (error) {
-      console.error('Error obteniendo tasa de cambio:', error);
-      // Tasa de cambio aproximada como fallback
-      return 4100; // Aproximadamente 4100 COP por USD
-    }
-  };
-
   const performValuation = async () => {
     if (getNextRequiredStep() !== 'valuacion') {
       toast.error("Debe completar todos los pasos antes de realizar la valuación");
@@ -491,18 +477,15 @@ const PropertyValuation = () => {
     setIsCalculating(true);
     
     try {
-      // Obtener tasa de cambio actual
-      const exchangeRate = await getExchangeRate();
-      console.log('Tasa de cambio USD/COP:', exchangeRate);
-
       const comparablesData = await fetchComparables();
       setComparables(comparablesData);
 
-      let basePrice = 1500000; // Precio base por m² en pesos colombianos
+      // Precio base por m² directamente en USD (sin conversión)
+      let basePriceUSD = 350; // Precio base por m² en dólares estadounidenses
       
       if (comparablesData.length > 0) {
-        const avgPricePerM2 = comparablesData.reduce((sum, comp) => sum + comp.price_per_sqm_usd, 0) / comparablesData.length;
-        basePrice = avgPricePerM2;
+        const avgPricePerM2USD = comparablesData.reduce((sum, comp) => sum + comp.price_per_sqm_usd, 0) / comparablesData.length;
+        basePriceUSD = avgPricePerM2USD;
       }
 
       // Aplicar factores de ajuste
@@ -516,31 +499,27 @@ const PropertyValuation = () => {
         todosLosfactores: conservationFactors
       });
 
-      const adjustedPrice = basePrice * estratoMultiplier * conservationMultiplier * ageMultiplier;
-      const totalValueCOP = adjustedPrice * propertyData.area;
-      
-      // Conversión a dólares estadounidenses
-      const totalValueUSD = totalValueCOP / exchangeRate;
-      const pricePerM2USD = adjustedPrice / exchangeRate;
+      // Cálculo directo en USD
+      const adjustedPriceUSD = basePriceUSD * estratoMultiplier * conservationMultiplier * ageMultiplier;
+      const totalValueUSD = adjustedPriceUSD * propertyData.area;
 
       const result = {
-        valorTotal: totalValueUSD, // Valor en USD
-        valorTotalCOP: totalValueCOP, // Valor en COP para referencia
-        valorPorM2: pricePerM2USD, // Precio por m² en USD
-        valorPorM2COP: adjustedPrice, // Precio por m² en COP para referencia
-        tasaCambio: exchangeRate,
+        valorTotal: totalValueUSD, // Valor total en USD
+        valorPorM2: adjustedPriceUSD, // Precio por m² en USD
+        direccion: propertyData.direccionCompleta, // Dirección del inmueble
         factores: {
           estrato: estratoMultiplier,
           conservacion: conservationMultiplier,
           antiguedad: ageMultiplier
         },
-        metodologia: "Método de Comparación de Mercado según normas UPAV e IVSC",
+        metodologia: "Método de Comparación de Mercado según normas UPAV e IVSC - Valuación en USD",
         fecha: new Date().toLocaleDateString(),
-        comparables: comparablesData.length
+        comparables: comparablesData.length,
+        moneda: "USD"
       };
 
       setValuationResult(result);
-      toast.success("¡Valuación completada exitosamente en USD!");
+      toast.success("¡Valuación completada exitosamente en dólares estadounidenses!");
       
     } catch (error) {
       console.error('Error performing valuation:', error);
@@ -1190,27 +1169,26 @@ const PropertyValuation = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
+                <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-200">
+                  <h3 className="text-lg font-bold text-indigo-800 mb-2">🏠 Inmueble Valuado</h3>
+                  <p className="text-indigo-700 font-medium">📍 {valuationResult.direccion}</p>
+                  <p className="text-sm text-indigo-600 mt-1">💱 Valuación realizada en dólares estadounidenses (USD)</p>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
-                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total (USD)</h3>
-                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                      ${valuationResult.valorTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total</h3>
+                    <p className="text-4xl font-bold text-green-600 dark:text-green-400">
+                      ${valuationResult.valorTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
-                    <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-                      Equivalente: ${valuationResult.valorTotalCOP?.toLocaleString('es-CO')} COP
-                    </p>
-                    <p className="text-xs text-green-500 dark:text-green-500 mt-1">
-                      Tasa: $1 USD = ${valuationResult.tasaCambio?.toLocaleString('es-CO')} COP
-                    </p>
+                    <p className="text-lg font-semibold text-green-700 dark:text-green-300 mt-1">USD</p>
                   </div>
                   <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border border-blue-200 dark:border-blue-800">
-                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m² (USD)</h3>
-                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                      ${valuationResult.valorPorM2?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD/m²
+                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m²</h3>
+                    <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+                      ${valuationResult.valorPorM2?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
-                    <p className="text-sm text-blue-600 dark:text-blue-400 mt-2">
-                      Equivalente: ${valuationResult.valorPorM2COP?.toLocaleString('es-CO')} COP/m²
-                    </p>
+                    <p className="text-lg font-semibold text-blue-700 dark:text-blue-300 mt-1">USD/m²</p>
                   </div>
                 </div>
 
