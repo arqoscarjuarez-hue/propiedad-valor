@@ -468,6 +468,20 @@ const PropertyValuation = () => {
     }
   };
 
+  // Función para obtener la tasa de cambio COP a USD
+  const getExchangeRate = async () => {
+    try {
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const data = await response.json();
+      const copRate = data.rates.COP; // Pesos colombianos por dólar
+      return copRate;
+    } catch (error) {
+      console.error('Error obteniendo tasa de cambio:', error);
+      // Tasa de cambio aproximada como fallback
+      return 4100; // Aproximadamente 4100 COP por USD
+    }
+  };
+
   const performValuation = async () => {
     if (getNextRequiredStep() !== 'valuacion') {
       toast.error("Debe completar todos los pasos antes de realizar la valuación");
@@ -477,6 +491,10 @@ const PropertyValuation = () => {
     setIsCalculating(true);
     
     try {
+      // Obtener tasa de cambio actual
+      const exchangeRate = await getExchangeRate();
+      console.log('Tasa de cambio USD/COP:', exchangeRate);
+
       const comparablesData = await fetchComparables();
       setComparables(comparablesData);
 
@@ -499,11 +517,18 @@ const PropertyValuation = () => {
       });
 
       const adjustedPrice = basePrice * estratoMultiplier * conservationMultiplier * ageMultiplier;
-      const totalValue = adjustedPrice * propertyData.area;
+      const totalValueCOP = adjustedPrice * propertyData.area;
+      
+      // Conversión a dólares estadounidenses
+      const totalValueUSD = totalValueCOP / exchangeRate;
+      const pricePerM2USD = adjustedPrice / exchangeRate;
 
       const result = {
-        valorTotal: totalValue,
-        valorPorM2: adjustedPrice,
+        valorTotal: totalValueUSD, // Valor en USD
+        valorTotalCOP: totalValueCOP, // Valor en COP para referencia
+        valorPorM2: pricePerM2USD, // Precio por m² en USD
+        valorPorM2COP: adjustedPrice, // Precio por m² en COP para referencia
+        tasaCambio: exchangeRate,
         factores: {
           estrato: estratoMultiplier,
           conservacion: conservationMultiplier,
@@ -515,7 +540,7 @@ const PropertyValuation = () => {
       };
 
       setValuationResult(result);
-      toast.success("¡Valuación completada exitosamente!");
+      toast.success("¡Valuación completada exitosamente en USD!");
       
     } catch (error) {
       console.error('Error performing valuation:', error);
@@ -1167,15 +1192,24 @@ const PropertyValuation = () => {
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 rounded-xl border border-green-200 dark:border-green-800">
-                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total</h3>
+                    <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-2">💰 Valor Total (USD)</h3>
                     <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                      ${valuationResult.valorTotal?.toLocaleString('es-CO')} COP
+                      ${valuationResult.valorTotal?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+                    </p>
+                    <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                      Equivalente: ${valuationResult.valorTotalCOP?.toLocaleString('es-CO')} COP
+                    </p>
+                    <p className="text-xs text-green-500 dark:text-green-500 mt-1">
+                      Tasa: $1 USD = ${valuationResult.tasaCambio?.toLocaleString('es-CO')} COP
                     </p>
                   </div>
                   <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 rounded-xl border border-blue-200 dark:border-blue-800">
-                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m²</h3>
+                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-2">📐 Valor por m² (USD)</h3>
                     <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                      ${valuationResult.valorPorM2?.toLocaleString('es-CO')} COP
+                      ${valuationResult.valorPorM2?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD/m²
+                    </p>
+                    <p className="text-sm text-blue-600 dark:text-blue-400 mt-2">
+                      Equivalente: ${valuationResult.valorPorM2COP?.toLocaleString('es-CO')} COP/m²
                     </p>
                   </div>
                 </div>
