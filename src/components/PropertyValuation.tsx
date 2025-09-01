@@ -268,13 +268,30 @@ const PropertyValuation = () => {
     estratoSocial: 'medio_bajo' as EstratoSocial
   });
 
-  const [activeTab, setActiveTab] = useState<string>('estrato');
+  // Estados para idioma y moneda
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCurrency, setSelectedCurrency] = useState('');
+
+  // Configuración de países y monedas
+  const countriesConfig = {
+    'colombia': { name: 'Colombia', currency: 'COP', symbol: '$', flag: '🇨🇴' },
+    'mexico': { name: 'México', currency: 'MXN', symbol: '$', flag: '🇲🇽' },
+    'argentina': { name: 'Argentina', currency: 'ARS', symbol: '$', flag: '🇦🇷' },
+    'chile': { name: 'Chile', currency: 'CLP', symbol: '$', flag: '🇨🇱' },
+    'peru': { name: 'Perú', currency: 'PEN', symbol: 'S/', flag: '🇵🇪' },
+    'ecuador': { name: 'Ecuador', currency: 'USD', symbol: '$', flag: '🇪🇨' },
+    'venezuela': { name: 'Venezuela', currency: 'VES', symbol: 'Bs.', flag: '🇻🇪' },
+    'usa': { name: 'Estados Unidos', currency: 'USD', symbol: '$', flag: '🇺🇸' },
+    'spain': { name: 'España', currency: 'EUR', symbol: '€', flag: '🇪🇸' }
+  };
+
+  const [activeTab, setActiveTab] = useState<string>('configuracion');
   const [valuationResult, setValuationResult] = useState<any>(null);
   const [comparables, setComparables] = useState<Comparable[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
-  const [selectedLanguage] = useState('es');
 
   const t = translations[selectedLanguage];
 
@@ -388,6 +405,10 @@ const PropertyValuation = () => {
   const [selectedConservationState, setSelectedConservationState] = useState<string | null>(null);
 
   // Funciones de validación de pasos
+  const isStep0Complete = () => {
+    return selectedLanguage !== '' && selectedCountry !== '';
+  };
+
   const isStep1Complete = () => {
     return !!propertyData.estratoSocial;
   };
@@ -410,6 +431,7 @@ const PropertyValuation = () => {
 
   // Función para obtener el siguiente paso requerido
   const getNextRequiredStep = () => {
+    if (!isStep0Complete()) return 0;
     if (!isStep1Complete()) return 1;
     if (!isStep2Complete()) return 2;
     if (!isStep3Complete()) return 3;
@@ -419,11 +441,22 @@ const PropertyValuation = () => {
 
   const handleInputChange = (field: string, value: any) => {
     console.log('INPUT CHANGE:', field, value);
-    setPropertyData(prev => {
-      const updated = { ...prev, [field]: value };
-      console.log('PROPERTY DATA UPDATED:', updated);
-      return updated;
-    });
+    
+    if (field === 'language') {
+      setSelectedLanguage(value);
+    } else if (field === 'country') {
+      setSelectedCountry(value);
+      setSelectedCurrency(countriesConfig[value]?.currency || '');
+      if (selectedLanguage && value) {
+        setActiveTab('estrato');
+      }
+    } else {
+      setPropertyData(prev => {
+        const updated = { ...prev, [field]: value };
+        console.log('PROPERTY DATA UPDATED:', updated);
+        return updated;
+      });
+    }
     
     // Auto-abrir el siguiente paso
     if (field === 'estratoSocial' && value && isStep2Complete()) {
@@ -594,8 +627,26 @@ const PropertyValuation = () => {
               {/* PESTAÑAS PRINCIPALES - SIEMPRE VISIBLES CON GRADIENTES LLAMATIVOS */}
               <div className="mb-8">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-6 gap-2 h-auto p-2 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-2xl border-2 border-violet-300 shadow-2xl backdrop-blur-sm">
+                  <TabsList className="grid w-full grid-cols-7 gap-2 h-auto p-2 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 rounded-2xl border-2 border-violet-300 shadow-2xl backdrop-blur-sm">
                     <TabsTrigger 
+                      value="configuracion" 
+                      className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-600 data-[state=active]:via-green-600 data-[state=active]:to-emerald-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-emerald-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-emerald-200"
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
+                          isStep0Complete() 
+                            ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
+                            : activeTab === 'configuracion' 
+                              ? 'bg-gradient-to-r from-white to-emerald-50 text-emerald-700 ring-2 ring-emerald-300' 
+                              : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
+                        }`}>
+                          {isStep0Complete() ? '✓' : '0'}
+                        </div>
+                        <span className={activeTab === 'configuracion' ? 'text-white' : 'text-gray-700'}>🌍 Config</span>
+                      </div>
+                    </TabsTrigger>
+                    
+                    <TabsTrigger
                       value="estrato" 
                       className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-violet-600 data-[state=active]:via-purple-600 data-[state=active]:to-fuchsia-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-violet-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-violet-200"
                     >
@@ -704,6 +755,92 @@ const PropertyValuation = () => {
 
                   {/* CONTENIDO DE LAS PESTAÑAS */}
                   
+                  {/* Paso 0: Configuración - Idioma y Moneda */}
+                  <TabsContent value="configuracion" className="mt-6">
+                    <Card className="border-2 border-emerald-200 shadow-xl bg-gradient-to-br from-emerald-50/50 to-green-50/50">
+                      <CardHeader className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
+                        <CardTitle className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                            {isStep0Complete() ? '✓' : '0'}
+                          </div>
+                          🌍 Paso 0: Configuración - Idioma y Moneda
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          
+                          {/* Selección de Idioma */}
+                          <div className="space-y-4">
+                            <div>
+                              <Label className="text-base font-semibold mb-3 block">
+                                🗣️ Seleccione el Idioma *
+                              </Label>
+                              <Select 
+                                value={selectedLanguage} 
+                                onValueChange={(value) => handleInputChange('language', value)}
+                              >
+                                <SelectTrigger className="border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors h-12">
+                                  <SelectValue placeholder="Seleccione su idioma preferido" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white dark:bg-gray-900 z-50">
+                                  <SelectItem value="es" className="font-medium py-3">🇪🇸 Español</SelectItem>
+                                  <SelectItem value="en" className="font-medium py-3">🇺🇸 English</SelectItem>
+                                  <SelectItem value="pt" className="font-medium py-3">🇧🇷 Português</SelectItem>
+                                  <SelectItem value="fr" className="font-medium py-3">🇫🇷 Français</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          {/* Selección de País/Moneda */}
+                          <div className="space-y-4">
+                            <div>
+                              <Label className="text-base font-semibold mb-3 block">
+                                💰 Seleccione el País/Moneda *
+                              </Label>
+                              <Select 
+                                value={selectedCountry} 
+                                onValueChange={(value) => handleInputChange('country', value)}
+                                disabled={!selectedLanguage}
+                              >
+                                <SelectTrigger className="border-2 focus:border-emerald-500 hover:border-emerald-400 transition-colors h-12">
+                                  <SelectValue placeholder="Seleccione el país donde se realizará la valuación" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white dark:bg-gray-900 z-50 max-h-60 overflow-y-auto">
+                                  {Object.entries(countriesConfig).map(([key, config]) => (
+                                    <SelectItem key={key} value={key} className="font-medium py-3">
+                                      {config.flag} {config.name} ({config.currency})
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            {/* Mostrar moneda seleccionada */}
+                            {selectedCountry && (
+                              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                <p className="text-emerald-800 font-semibold text-sm">
+                                  ✅ País: {countriesConfig[selectedCountry]?.name}
+                                </p>
+                                <p className="text-emerald-700 text-sm">
+                                  Moneda: {countriesConfig[selectedCountry]?.currency} ({countriesConfig[selectedCountry]?.symbol})
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Instrucciones */}
+                        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                          <p className="text-blue-800 text-sm">
+                            💡 <strong>Importante:</strong> Seleccione el idioma y el país donde se encuentra el inmueble a valuar. 
+                            La valuación se realizará en la moneda local del país seleccionado.
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
                   {/* Paso 1: Estrato Social */}
                   <TabsContent value="estrato" className="mt-6">
                     <Card className="border-2 border-violet-200 shadow-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50">
