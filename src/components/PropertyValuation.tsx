@@ -1023,13 +1023,36 @@ const PropertyValuation = () => {
                           </div>
                         </div>
 
+                        {/* Confirmación cuando se complete */}
+                        {isStep0Complete() && (
+                          <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <span className="text-2xl">✅</span>
+                                <div>
+                                  <p className="text-green-800 font-bold">¡Configuración completada!</p>
+                                  <p className="text-green-700 text-sm">Idioma y país seleccionados correctamente</p>
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => setActiveTab('estrato')}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                              >
+                                Siguiente: Estrato Social →
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
                         {/* Instrucciones */}
-                        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                          <p className="text-blue-800 text-sm">
-                            💡 <strong>Importante:</strong> Seleccione el idioma y el país donde se encuentra el inmueble a valuar. 
-                            La valuación se realizará en la moneda local del país seleccionado.
-                          </p>
-                        </div>
+                        {!isStep0Complete() && (
+                          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-blue-800 text-sm">
+                              💡 <strong>Importante:</strong> Seleccione el idioma y el país donde se encuentra el inmueble a valuar. 
+                              La valuación se realizará en la moneda local del país seleccionado.
+                            </p>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -1168,23 +1191,37 @@ const PropertyValuation = () => {
                            </div>
                          )}
                          
-                         {propertyData.estratoSocial && (
-                           <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
-                             <p className="font-semibold text-green-800">
-                               ✅ Estrato seleccionado: {estratoSocialLabels[propertyData.estratoSocial]}
-                             </p>
-                             <Button 
-                               variant="outline" 
-                               onClick={() => {
-                                 handleInputChange('estratoSocial', '');
-                                 setSelectedMainStrata('');
-                               }}
-                               className="mt-2"
-                             >
-                               Cambiar estrato
-                             </Button>
-                           </div>
-                         )}
+                          {propertyData.estratoSocial && (
+                            <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl">✅</span>
+                                  <div>
+                                    <p className="text-green-800 font-bold">¡Estrato social completado!</p>
+                                    <p className="text-green-700 text-sm">Estrato: {estratoSocialLabels[propertyData.estratoSocial]}</p>
+                                  </div>
+                                </div>
+                                <div className="flex gap-2">
+                                  <Button 
+                                    variant="outline" 
+                                    onClick={() => {
+                                      handleInputChange('estratoSocial', '');
+                                      setSelectedMainStrata('');
+                                    }}
+                                    size="sm"
+                                  >
+                                    Cambiar
+                                  </Button>
+                                  <Button
+                                    onClick={() => setActiveTab('tipo')}
+                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                  >
+                                    Siguiente: Tipo de Propiedad →
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                          
                          <p className="text-xs text-muted-foreground mt-3">
                            💡 Requerido para encontrar propiedades comparables del mismo nivel
@@ -1220,7 +1257,28 @@ const PropertyValuation = () => {
                             <SelectItem value="terreno" className="font-medium">🌳 Terreno</SelectItem>
                             <SelectItem value="comercial" className="font-medium">🏪 Comercial</SelectItem>
                           </SelectContent>
-                        </Select>
+                         </Select>
+                         
+                         {/* Confirmación cuando se complete */}
+                         {isStep2Complete() && (
+                           <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                             <div className="flex items-center justify-between">
+                               <div className="flex items-center gap-3">
+                                 <span className="text-2xl">✅</span>
+                                 <div>
+                                   <p className="text-green-800 font-bold">¡Tipo de propiedad completado!</p>
+                                   <p className="text-green-700 text-sm">Tipo: {propertyData.tipoPropiedad}</p>
+                                 </div>
+                               </div>
+                               <Button
+                                 onClick={() => setActiveTab('ubicacion')}
+                                 className="bg-green-600 hover:bg-green-700 text-white"
+                               >
+                                 Siguiente: Ubicación →
+                               </Button>
+                             </div>
+                           </div>
+                         )}
                       </CardContent>
                     </Card>
                   </TabsContent>
@@ -1264,9 +1322,30 @@ const PropertyValuation = () => {
                                 initialAddress={propertyData.direccionCompleta}
                               />
                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
+                           </div>
+                         </div>
+                         
+                         {/* Confirmación cuando se complete */}
+                         {isStep3Complete() && (
+                           <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                             <div className="flex items-center justify-between">
+                               <div className="flex items-center gap-3">
+                                 <span className="text-2xl">✅</span>
+                                 <div>
+                                   <p className="text-green-800 font-bold">¡Ubicación completada!</p>
+                                   <p className="text-green-700 text-sm">Dirección registrada correctamente</p>
+                                 </div>
+                               </div>
+                               <Button
+                                 onClick={() => setActiveTab('caracteristicas')}
+                                 className="bg-green-600 hover:bg-green-700 text-white"
+                               >
+                                 Siguiente: Características →
+                               </Button>
+                             </div>
+                           </div>
+                         )}
+                       </CardContent>
                     </Card>
                   </TabsContent>
 
@@ -1312,32 +1391,61 @@ const PropertyValuation = () => {
                                min="0"
                                disabled={!isStep3Complete()}
                              />
-                           </div>
-                         </div>
-                       </CardContent>
+                            </div>
+                          </div>
+                          
+                          {/* Confirmación cuando se complete */}
+                          {isStep4Complete() && (
+                            <div className="mt-6 p-4 bg-green-50 border-2 border-green-300 rounded-lg">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-2xl">✅</span>
+                                  <div>
+                                    <p className="text-green-800 font-bold">¡Características completadas!</p>
+                                    <p className="text-green-700 text-sm">Área registrada: {propertyData.area} m²</p>
+                                  </div>
+                                </div>
+                                <Button
+                                  onClick={() => setActiveTab('depreciacion')}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                  Siguiente: Depreciación →
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
                     </Card>
                   </TabsContent>
                   
                   {/* Paso 5: Depreciación */}
                   <TabsContent value="depreciacion" className="mt-6">
                     {/* Panel de confirmación de selección - MOVIDO ARRIBA */}
-                    {propertyData.estadoConservacion && (
-                      <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-lg">
-                        <div className="flex items-center justify-center gap-3">
-                          <span className="text-2xl">✅</span>
-                          <div className="text-center">
-                            <p className="text-green-800 font-bold text-lg">
-                              Estado seleccionado: {propertyData.estadoConservacion}
-                            </p>
-                            <p className="text-green-700 text-sm">
-                              Factor de depreciación aplicado
-                            </p>
-                            <p className="text-green-600 text-xs mt-1">
-                              ✨ Este factor influye directamente en el cálculo del avalúo final
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+                     {propertyData.estadoConservacion && (
+                       <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-lg">
+                         <div className="flex items-center justify-between">
+                           <div className="flex items-center gap-3">
+                             <span className="text-2xl">✅</span>
+                             <div>
+                               <p className="text-green-800 font-bold text-lg">
+                                 ¡Depreciación completada!
+                               </p>
+                               <p className="text-green-700 text-sm">
+                                 Estado: {propertyData.estadoConservacion}
+                               </p>
+                               <p className="text-green-600 text-xs mt-1">
+                                 ✨ Factor aplicado correctamente
+                               </p>
+                             </div>
+                           </div>
+                           <Button
+                             onClick={() => setActiveTab('valuacion')}
+                             className="bg-green-600 hover:bg-green-700 text-white"
+                           >
+                             Siguiente: Realizar Valuación →
+                           </Button>
+                         </div>
+                       </div>
                     )}
                     
                     <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
