@@ -1199,8 +1199,8 @@ const PropertyValuation = () => {
                                   direccionCompleta: address
                                 }));
                               }}
-                              initialLat={propertyData.latitud || 13.7942}
-                              initialLng={propertyData.longitud || -88.8965}
+                              initialLat={propertyData.latitud || 13.7042}
+                              initialLng={propertyData.longitud || -89.2073}
                               initialAddress={propertyData.direccionCompleta}
                             />
                             {propertyData.direccionCompleta && (
