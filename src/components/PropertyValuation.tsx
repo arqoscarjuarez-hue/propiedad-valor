@@ -538,7 +538,7 @@ const PropertyValuation = () => {
             <CardContent className="p-6">
               <div className="mb-6">
                 <p className="text-muted-foreground text-center">
-                  🎯 <strong>¡Bienvenido!</strong> Este formulario está hecho para niños de 12 años. Es súper fácil de usar.
+                  🎯 <strong>¡Bienvenido!</strong> Este formulario es súper fácil de usar.
                   Te vamos a ayudar a saber cuánto vale tu casa paso a paso.
                 </p>
               </div>
