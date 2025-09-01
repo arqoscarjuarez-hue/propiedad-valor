@@ -1169,7 +1169,7 @@ const PropertyValuation = () => {
                           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                             {isStep1Complete() ? '✓' : '1'}
                           </div>
-                          🏘️ Paso 2: ¿Qué tan rico es tu barrio?
+                          🏠 Paso 2: Tipo de Propiedad y Ubicación
                         </CardTitle>
                       </CardHeader>
                        <CardContent className="p-6">
@@ -1185,6 +1185,41 @@ const PropertyValuation = () => {
                            </div>
                          )}
                          
+                          {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
+                          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                            <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
+                            <p className="text-sm text-green-800 dark:text-green-200 mb-4">
+                              Primero dime qué tipo de propiedad quieres valuar. Cada tipo tiene características diferentes.
+                            </p>
+                            <Select value={propertyData.tipoPropiedad} onValueChange={(value) => {
+                              console.log('Tipo seleccionado:', value);
+                              setPropertyData(prev => ({...prev, tipoPropiedad: value}));
+                            }}>
+                              <SelectTrigger className="bg-white">
+                                <SelectValue placeholder="¿Qué tipo de propiedad es?" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="casa">🏠 Casa - Vivienda independiente</SelectItem>
+                                <SelectItem value="apartamento">🏢 Apartamento - Vivienda en edificio</SelectItem>
+                                <SelectItem value="terreno">🌳 Terreno - Lote sin construcción</SelectItem>
+                                <SelectItem value="comercial">🏪 Comercial - Local de negocio</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {propertyData.tipoPropiedad && (
+                              <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
+                                <p className="text-sm text-green-800">
+                                  <strong>✅ Tipo seleccionado:</strong> {
+                                    propertyData.tipoPropiedad === 'casa' ? '🏠 Casa' :
+                                    propertyData.tipoPropiedad === 'apartamento' ? '🏢 Apartamento' :
+                                    propertyData.tipoPropiedad === 'terreno' ? '🌳 Terreno' :
+                                    propertyData.tipoPropiedad === 'comercial' ? '🏪 Comercial' : ''
+                                  }
+                                </p>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* UBICACIÓN DE LA PROPIEDAD */}
                           <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                             <h3 className="font-semibold mb-2">📍 Ubicación exacta de tu propiedad</h3>
                             <p className="text-sm text-blue-800 dark:text-blue-200 mb-4">
@@ -1211,10 +1246,17 @@ const PropertyValuation = () => {
                               </div>
                             )}
                           </div>
-                          
-                          <p className="text-muted-foreground mb-4">Ahora dime, ¿tu barrio es rico, normal o pobre?</p>
-                          
-                          {!propertyData.estratoSocial && (
+
+                           {/* ESTRATO SOCIOECONÓMICO */}
+                           <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                             <h3 className="font-semibold mb-2">🏘️ Zona Socioeconómica del Barrio</h3>
+                             <p className="text-sm text-purple-800 dark:text-purple-200 mb-4">
+                               El nivel socioeconómico del barrio donde está tu propiedad es muy importante para el valor.
+                             </p>
+                             
+                             <p className="text-muted-foreground mb-4">Dime, ¿tu barrio es rico, normal o pobre?</p>
+                             
+                             {!propertyData.estratoSocial && (
                            <div className="space-y-4">
                              <h3 className="font-semibold text-lg">Primero dime, ¿cómo es tu barrio?</h3>
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1345,15 +1387,16 @@ const PropertyValuation = () => {
                             </div>
                           )}
                           
-                          <p className="text-xs text-muted-foreground mt-3">
-                            💡 <strong>¿Por qué necesitamos esto?</strong> Para calcular el precio correcto de tu casa, necesitamos saber qué tan rico o pobre es tu barrio. Las casas en barrios ricos valen más que las casas iguales en barrios pobres.
-                          </p>
-                          
-                          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-blue-800 text-xs">
-                              🎯 <strong>Importante para el avalúo:</strong> Esta información nos ayuda a encontrar otras casas similares a la tuya en barrios parecidos para comparar precios y darte un avalúo más exacto.
-                            </p>
-                          </div>
+                           <p className="text-xs text-muted-foreground mt-3">
+                             💡 <strong>¿Por qué necesitamos esto?</strong> Para calcular el precio correcto de tu casa, necesitamos saber qué tan rico o pobre es tu barrio. Las casas en barrios ricos valen más que las casas iguales en barrios pobres.
+                           </p>
+                           
+                           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                             <p className="text-blue-800 text-xs">
+                               🎯 <strong>Importante para el avalúo:</strong> Esta información nos ayuda a encontrar otras casas similares a la tuya en barrios parecidos para comparar precios y darte un avalúo más exacto.
+                             </p>
+                           </div>
+                         </div> {/* Cierre del div estrato socioeconómico */}
                        </CardContent>
                     </Card>
                   </TabsContent>
