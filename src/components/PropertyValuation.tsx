@@ -1255,32 +1255,52 @@ const PropertyValuation = () => {
                           <Calculator className="w-16 h-16 text-pink-500 mx-auto" />
                         </div>
                         <h3 className="text-xl font-bold mb-4">
-                          {(propertyData.area > 0 && propertyData.tipoPropiedad && propertyData.latitud && propertyData.longitud) ? 
-                            '🎉 ¡Listo para calcular!' : 
-                            '⏳ Faltan algunos datos'
-                          }
+                          {(() => {
+                            const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
+                              ? propertyData.construction_area > 0 
+                              : propertyData.area > 0;
+                            return (hasValidArea && propertyData.tipoPropiedad && propertyData.latitud && propertyData.longitud) ? 
+                              '🎉 ¡Listo para calcular!' : 
+                              '⏳ Faltan algunos datos';
+                          })()}
                         </h3>
 
                         {/* Validación de campos requeridos */}
-                        {(!propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud) && (
-                          <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
-                            <p className="text-red-800 font-medium mb-2">
-                              ❌ <strong>Para el método comparativo necesitas:</strong>
-                            </p>
-                            <ul className="text-red-700 text-sm space-y-1">
-                              {!propertyData.area && <li>• El área de tu casa (Paso 4)</li>}
-                              {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
-                              {(!propertyData.latitud || !propertyData.longitud) && <li>• La ubicación exacta en el mapa (Paso 3)</li>}
-                            </ul>
-                            <p className="text-red-600 text-xs mt-2">
-                              📍 <strong>La ubicación es esencial</strong> para encontrar los comparables más cercanos según estándares internacionales.
-                            </p>
-                          </div>
-                        )}
+                        {(() => {
+                          const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
+                            ? propertyData.construction_area > 0 
+                            : propertyData.area > 0;
+                          const missingData = !hasValidArea || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud;
+                          
+                          if (!missingData) return null;
+                          
+                          return (
+                            <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-6">
+                              <p className="text-red-800 font-medium mb-2">
+                                ❌ <strong>Para el método comparativo necesitas:</strong>
+                              </p>
+                              <ul className="text-red-700 text-sm space-y-1">
+                                {!hasValidArea && (
+                                  <li>• {propertyData.tipoPropiedad === 'apartamento' ? 'El área del apartamento (Paso 4)' : 'El área de tu casa (Paso 4)'}</li>
+                                )}
+                                {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
+                                {(!propertyData.latitud || !propertyData.longitud) && <li>• La ubicación exacta en el mapa (Paso 3)</li>}
+                              </ul>
+                              <p className="text-red-600 text-xs mt-2">
+                                📍 <strong>La ubicación es esencial</strong> para encontrar los comparables más cercanos según estándares internacionales.
+                              </p>
+                            </div>
+                          );
+                        })()}
 
                         <Button
                           onClick={performValuation}
-                          disabled={isCalculating || !propertyData.area || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud}
+                          disabled={(() => {
+                            const hasValidArea = propertyData.tipoPropiedad === 'apartamento' 
+                              ? propertyData.construction_area > 0 
+                              : propertyData.area > 0;
+                            return isCalculating || !hasValidArea || !propertyData.tipoPropiedad || !propertyData.latitud || !propertyData.longitud;
+                          })()}
                           size="lg"
                           className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
