@@ -473,19 +473,44 @@ const PropertyValuation = () => {
         valueInLocalCurrency
       });
 
-      // 8. Buscar comparables (simulado)
+      // 8. Buscar comparables basados en el estrato social seleccionado
       try {
-        const { data: comparablesData } = await supabase
-          .from('property_comparables')
-          .select('*')
-          .eq('property_type', propertyData.tipoPropiedad)
-          .gte('total_area', propertyData.area * 0.8)
-          .lte('total_area', propertyData.area * 1.2)
-          .limit(5);
+        if (propertyData.latitud && propertyData.longitud && propertyData.estratoSocial) {
+          // Usar la función de comparables con filtro por estrato social y ubicación
+          const { data: comparablesData } = await supabase
+            .rpc('find_comparables_progressive_radius', {
+              target_lat: propertyData.latitud,
+              target_lng: propertyData.longitud,
+              target_estrato: propertyData.estratoSocial,
+              target_property_type: propertyData.tipoPropiedad
+            });
 
-        setComparables(comparablesData || []);
+          setComparables(comparablesData || []);
+          
+          if (comparablesData && comparablesData.length > 0) {
+            console.log(`✅ Encontrados ${comparablesData.length} comparables para estrato ${propertyData.estratoSocial}`);
+          } else {
+            console.log(`⚠️ No se encontraron comparables para el estrato ${propertyData.estratoSocial} en la zona`);
+          }
+        } else if (propertyData.estratoSocial) {
+          // Fallback: búsqueda básica por estrato social sin ubicación específica
+          const { data: comparablesData } = await supabase
+            .from('property_comparables')
+            .select('*')
+            .eq('property_type', propertyData.tipoPropiedad)
+            .eq('estrato_social', propertyData.estratoSocial)
+            .gte('total_area', propertyData.area * 0.8)
+            .lte('total_area', propertyData.area * 1.2)
+            .limit(5);
+
+          setComparables(comparablesData || []);
+          console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables para estrato ${propertyData.estratoSocial}`);
+        } else {
+          console.log('⚠️ No se puede buscar comparables: falta seleccionar el estrato social');
+          setComparables([]);
+        }
       } catch (error) {
-        console.log('⚠️ No se pudieron obtener comparables');
+        console.log('⚠️ Error al buscar comparables:', error);
         setComparables([]);
       }
 
@@ -678,7 +703,8 @@ const PropertyValuation = () => {
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
                           <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio?</strong><br />
-                          Según las normas internacionales de Latinoamérica, clasifica el barrio donde está ubicada tu propiedad.
+                          Según las normas internacionales de Latinoamérica, clasifica el barrio donde está ubicada tu propiedad. 
+                          <strong>Esta selección es crucial para encontrar comparables exactos del mismo estrato social.</strong>
                         </p>
                       </div>
 
@@ -1114,7 +1140,18 @@ const PropertyValuation = () => {
                               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
                                 <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
                                 <p className="text-xs text-blue-700">
-                                  Encontramos {comparables.length} propiedades similares en la base de datos para comparar.
+                                  Encontramos {comparables.length} propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> para comparar en la zona.
+                                </p>
+                              </div>
+                            )}
+                            
+                            {/* Mensaje cuando no hay comparables */}
+                            {comparables.length === 0 && propertyData.estratoSocial && (
+                              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded">
+                                <h5 className="font-semibold text-amber-800 mb-2">🔍 Búsqueda de Comparables</h5>
+                                <p className="text-xs text-amber-700">
+                                  No se encontraron propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> en la zona inmediata. 
+                                  El avalúo se basa en datos generales del mercado para este estrato social.
                                 </p>
                               </div>
                             )}
