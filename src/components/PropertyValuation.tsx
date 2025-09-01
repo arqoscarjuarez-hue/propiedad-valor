@@ -702,8 +702,8 @@ const PropertyValuation = () => {
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio?</strong><br />
-                          Según las normas internacionales de Latinoamérica, clasifica el barrio donde está ubicada tu propiedad. 
+                          <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio, colonia o residencial?</strong><br />
+                          Según las normas internacionales de Latinoamérica, clasifica el barrio, colonia o residencial donde está ubicada tu propiedad. 
                           <strong>Esta selección es crucial para encontrar comparables exactos del mismo estrato social.</strong>
                         </p>
                       </div>
@@ -713,7 +713,7 @@ const PropertyValuation = () => {
                         <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
                           <h3 className="font-semibold mb-2">🏘️ Estrato Socioeconómico Principal</h3>
                           <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Primero selecciona el estrato socioeconómico general del barrio:
+                            Primero selecciona el estrato socioeconómico general del barrio, colonia o residencial:
                           </p>
                           <Select 
                             value={propertyData.clasePrincipal} 
@@ -726,9 +726,9 @@ const PropertyValuation = () => {
                               <SelectValue placeholder="Selecciona el estrato socioeconómico principal" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="bajo">🏘️ Estrato Bajo - Barrios populares y obreros</SelectItem>
-                              <SelectItem value="medio">🏡 Estrato Medio - Barrios residenciales</SelectItem>
-                              <SelectItem value="alto">🏰 Estrato Alto - Barrios exclusivos</SelectItem>
+                              <SelectItem value="bajo">🏘️ Estrato Bajo - Barrios, colonias populares y obreras</SelectItem>
+                              <SelectItem value="medio">🏡 Estrato Medio - Barrios, colonias residenciales</SelectItem>
+                              <SelectItem value="alto">🏰 Estrato Alto - Barrios, colonias exclusivos</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -1074,7 +1074,7 @@ const PropertyValuation = () => {
                             <ul className="text-red-700 text-sm space-y-1">
                               {!propertyData.area && <li>• El área de tu casa (Paso 3)</li>}
                               {!propertyData.tipoPropiedad && <li>• El tipo de propiedad (Paso 2)</li>}
-                              {!propertyData.estratoSocial && <li>• El estrato social del barrio (Paso 2)</li>}
+                              {!propertyData.estratoSocial && <li>• El estrato social del barrio, colonia o residencial (Paso 2)</li>}
                             </ul>
                           </div>
                         )}
