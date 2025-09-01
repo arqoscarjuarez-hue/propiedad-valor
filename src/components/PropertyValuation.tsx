@@ -686,6 +686,25 @@ const PropertyValuation = () => {
         console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
       }
 
+      // 3.5 Calibración de mercado para evitar sobrevaloración (cuando hay pocos comparables)
+      const areaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
+      const usedFallback = comparablesData.length === 1 && (comparablesData[0]?.id?.toString()?.includes('fallback'));
+      const fewComparables = comparablesData.length > 0 && comparablesData.length < 3;
+      if (usedFallback || fewComparables) {
+        const calibrationFactor = 0.55; // -45%
+        estimatedValueUSD = estimatedValueUSD * calibrationFactor;
+        console.log(`🧮 Calibración aplicada (-45%): ${calibrationFactor}`);
+      }
+
+      // Límite superior: no permitir que el precio por m² supere el precio base del país
+      const baseM2 = countryConfig.basePricePerM2USD || 120;
+      const unitPrice = areaToUse > 0 ? (estimatedValueUSD / areaToUse) : 0;
+      const unitCap = baseM2 * 1.0; // 100% del baseM2 como tope
+      if (unitPrice > unitCap) {
+        estimatedValueUSD = unitCap * areaToUse;
+        console.log(`🔒 Tope aplicado por m²: ${unitCap} USD/m²`);
+      }
+
       // 4. Convertir a moneda local
       const valueInLocalCurrency = estimatedValueUSD * (countryConfig.exchangeRate || 1);
 
