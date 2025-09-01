@@ -399,7 +399,7 @@ const PropertyValuation = () => {
   const normalizePropertyType = (value: string) => {
     const v = (value || '').toLowerCase().trim();
     if (['local comercial','local_comercial','comercial','local'].includes(v)) {
-      return { rpcType: 'local_comercial', matchSet: ['local_comercial','local comercial','comercial','local'] };
+      return { rpcType: 'comercial', matchSet: ['comercial','local_comercial','local comercial','local'] };
     }
     if (['apartamento','departamento','depto','apto','apartment'].includes(v)) {
       return { rpcType: 'apartamento', matchSet: ['apartamento','departamento','depto','apto','apartment'] };
@@ -465,13 +465,50 @@ const PropertyValuation = () => {
 
         if (error) {
           console.error('Error al buscar comparables con RPC:', error);
-          // Fallback: Buscar sin filtro específico (tomando los más cercanos por lat/lon aproximada)
-          const { data: generalComparables, error: generalError } = await supabase.rpc('get_property_comparables_public', {
-            limit_rows: 50,
-            offset_rows: 0
-          });
+        }
+
+        console.log('📊 Comparables encontrados cerca:', nearbyComparables?.length || 0);
+        
+        let finalComparables = nearbyComparables || [];
+        
+        // Si no hay comparables cerca, buscar por tipo de propiedad sin restricción geográfica
+        if (finalComparables.length === 0) {
+          console.log('⚠️ No hay comparables cerca. Buscando por tipo de propiedad...');
+          const { data: typeComparables, error: typeError } = await supabase
+            .from('property_comparables')
+            .select('*')
+            .eq('property_type', normalizedType.rpcType)
+            .limit(10);
           
-          if (!generalError && generalComparables && generalComparables.length > 0) {
+          if (!typeError && typeComparables && typeComparables.length > 0) {
+            // Calcular distancia y usar como comparables
+            const withDistance = typeComparables.map((comp: any) => ({
+              ...comp,
+              distance_km: comp.latitude && comp.longitude ? 
+                calculateDistance(propertyData.latitud, propertyData.longitud, comp.latitude, comp.longitude) : 
+                999
+            })).sort((a: any, b: any) => a.distance_km - b.distance_km);
+            
+            finalComparables = withDistance.slice(0, 5);
+            console.log('✅ Usando comparables por tipo:', finalComparables.length);
+          }
+        }
+
+        if (finalComparables && finalComparables.length > 0) {
+          // Procesar los comparables encontrados
+          comparablesData = finalComparables.map((comp: any) => ({
+            id: comp.id,
+            property_type: comp.property_type,
+            total_area: comp.total_area,
+            price_per_sqm_usd: comp.price_per_sqm_usd,
+            price_usd: comp.price_usd,
+            address: comp.address,
+            latitude: comp.latitude,
+            longitude: comp.longitude,
+            distance: comp.distance_km
+          }));
+          console.log('✅ Comparables procesados:', comparablesData.length);
+        } else {
             console.log('📍 Usando comparables generales como respaldo');
             const withDistance = generalComparables
               .map((comp: any) => ({
