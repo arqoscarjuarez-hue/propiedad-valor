@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { MapPin, Search } from 'lucide-react';
+import { MapPin, Search, Navigation } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 // Fix for default markers in Leaflet
@@ -36,6 +36,7 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [searchAddress, setSearchAddress] = useState('');
   const [loading, setLoading] = useState(false);
+  const [gettingLocation, setGettingLocation] = useState(false);
   
   const { toast } = useToast();
 
@@ -88,6 +89,68 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       setLoading(false);
     }
     return null;
+  };
+
+  // Función para obtener ubicación actual
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Error",
+        description: "Tu navegador no soporta geolocalización",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setGettingLocation(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        
+        if (map.current && marker.current) {
+          // Actualizar mapa y marcador
+          map.current.setView([latitude, longitude], 16);
+          marker.current.setLatLng([latitude, longitude]);
+          
+          // Obtener dirección de la ubicación actual
+          handleLocationUpdate(latitude, longitude);
+          
+          toast({
+            title: "Ubicación encontrada",
+            description: "Se ha actualizado tu ubicación en el mapa",
+          });
+        }
+        setGettingLocation(false);
+      },
+      (error) => {
+        let errorMessage = "No se pudo obtener tu ubicación";
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Permiso de ubicación denegado. Por favor, permite el acceso a la ubicación en tu navegador.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Información de ubicación no disponible";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Se agotó el tiempo para obtener la ubicación";
+            break;
+        }
+        
+        toast({
+          title: "Error de ubicación",
+          description: errorMessage,
+          variant: "destructive"
+        });
+        setGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
   };
 
   // Función para actualizar ubicación
@@ -165,28 +228,54 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
 
   return (
     <div className="w-full space-y-4">
-      {/* Campo de búsqueda */}
-      <div className="space-y-2">
-        <Label className="text-base font-semibold">🔍 Buscar dirección</Label>
-        <div className="flex gap-2">
-          <div className="flex-1">
-            <Input
-              value={searchAddress}
-              onChange={(e) => setSearchAddress(e.target.value)}
-              placeholder="Ingresa una dirección para buscar..."
-              onKeyPress={(e) => e.key === 'Enter' && handleSearchAddress()}
-              disabled={loading}
-            />
+      {/* Controles de ubicación */}
+      <div className="space-y-3">
+        {/* Campo de búsqueda */}
+        <div className="space-y-2">
+          <Label className="text-base font-semibold">🔍 Buscar dirección</Label>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Input
+                value={searchAddress}
+                onChange={(e) => setSearchAddress(e.target.value)}
+                placeholder="Ingresa una dirección para buscar..."
+                onKeyPress={(e) => e.key === 'Enter' && handleSearchAddress()}
+                disabled={loading}
+              />
+            </div>
+            <Button 
+              onClick={handleSearchAddress} 
+              size="sm"
+              disabled={loading || !searchAddress.trim()}
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              ) : (
+                <Search className="w-4 h-4" />
+              )}
+            </Button>
           </div>
+        </div>
+
+        {/* Botón de ubicación actual */}
+        <div className="space-y-2">
+          <Label className="text-base font-semibold">📍 Tu ubicación</Label>
           <Button 
-            onClick={handleSearchAddress} 
-            size="sm"
-            disabled={loading || !searchAddress.trim()}
+            onClick={getCurrentLocation}
+            variant="outline"
+            disabled={gettingLocation}
+            className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50"
           >
-            {loading ? (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            {gettingLocation ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600 mr-2"></div>
+                Obteniendo ubicación...
+              </>
             ) : (
-              <Search className="w-4 h-4" />
+              <>
+                <Navigation className="w-4 h-4 mr-2" />
+                Usar mi ubicación actual
+              </>
             )}
           </Button>
         </div>
@@ -220,7 +309,7 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
         <p className="text-xs text-blue-700">
           💡 <strong>Instrucciones:</strong> Haz clic en el mapa o arrastra el marcador para seleccionar una ubicación. 
-          También puedes buscar una dirección usando el campo de búsqueda.
+          También puedes buscar una dirección o usar tu ubicación actual.
         </p>
       </div>
     </div>
