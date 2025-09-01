@@ -333,8 +333,8 @@ const PropertyValuation = () => {
   // Funciones de validación de pasos
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep2Complete = () => propertyData.area > 0;
-  const isStep3Complete = () => propertyData.tipoPropiedad;
+  const isStep2Complete = () => propertyData.tipoPropiedad;
+  const isStep3Complete = () => propertyData.area > 0;
   const isStep4Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
@@ -349,12 +349,14 @@ const PropertyValuation = () => {
   // Función para navegar al siguiente paso automáticamente
   const goToNextStep = () => {
     if (currentTab === 'setup' && isStep0Complete()) {
-      setCurrentTab('tipo');
-    } else if (currentTab === 'tipo' && isStep3Complete()) {
       setCurrentTab('ubicacion');
     } else if (currentTab === 'ubicacion' && isStep1Complete()) {
-      setCurrentTab('caracteristicas');
-    } else if (currentTab === 'caracteristicas' && isStep2Complete()) {
+      setCurrentTab('tipo');
+    } else if (currentTab === 'tipo' && isStep2Complete()) {
+      setCurrentTab('area');
+    } else if (currentTab === 'area' && isStep3Complete()) {
+      setCurrentTab('estado');
+    } else if (currentTab === 'estado' && isStep4Complete()) {
       setCurrentTab('valuacion');
     }
   };
@@ -580,7 +582,7 @@ const PropertyValuation = () => {
               </div>
 
               <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-5 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                <TabsList className="grid w-full grid-cols-6 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                   <TabsTrigger 
                     value="setup" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-slate-700 dark:text-slate-300"
@@ -588,32 +590,39 @@ const PropertyValuation = () => {
                     {isStep0Complete() ? '✅' : '1️⃣'} Inicio
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="tipo" 
-                    className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
-                    disabled={!isStep0Complete()}
-                  >
-                    {isStep3Complete() ? '✅' : '2️⃣'} Tipo
-                  </TabsTrigger>
-                  <TabsTrigger 
                     value="ubicacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
-                    disabled={!isStep3Complete()}
+                    disabled={!isStep0Complete()}
                   >
-                    {isStep1Complete() ? '✅' : '3️⃣'} Ubicación
+                    {isStep1Complete() ? '✅' : '2️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="caracteristicas" 
-                    className="text-xs font-semibold transition-all data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-slate-700 dark:text-slate-300"
+                    value="tipo" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
                     disabled={!isStep1Complete()}
                   >
-                    {isStep2Complete() ? '✅' : '4️⃣'} Área
+                    {isStep2Complete() ? '✅' : '3️⃣'} Tipo
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="area" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep2Complete()}
+                  >
+                    {isStep3Complete() ? '✅' : '4️⃣'} Área
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="estado" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-yellow-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-yellow-100 dark:hover:bg-yellow-900/50 text-slate-700 dark:text-slate-300"
+                    disabled={!isStep3Complete()}
+                  >
+                    {isStep4Complete() ? '✅' : '5️⃣'} Estado
                   </TabsTrigger>
                   <TabsTrigger 
                     value="valuacion" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-pink-100 dark:hover:bg-pink-900/50 text-slate-700 dark:text-slate-300"
-                    disabled={!isStep2Complete()}
+                    disabled={!isStep4Complete()}
                   >
-                    {isStep4Complete() ? '✅' : '5️⃣'} Resultado
+                    🎯 Resultado
                   </TabsTrigger>
                 </TabsList>
 
@@ -727,66 +736,74 @@ const PropertyValuation = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
-                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                           <strong>🏠 ¿Qué tipo de casa tienes?</strong><br />
-                           Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial.
-                           <strong> Esta selección será utilizada para buscar comparables del mismo tipo de propiedad en tu estrato social.</strong>
-                         </p>
-                       </div>
+                      <div className="space-y-4">
+                        <Label className="text-base font-semibold">
+                          🏠 ¿Qué tipo de propiedad tienes? *
+                        </Label>
+                        <Select 
+                          value={propertyData.tipoPropiedad} 
+                          onValueChange={(value) => {
+                            handleInputChange('tipoPropiedad', value);
+                            setTimeout(goToNextStep, 500);
+                          }}
+                        >
+                          <SelectTrigger className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12">
+                            <SelectValue placeholder="Elige tu tipo de propiedad" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="casa">🏠 Casa</SelectItem>
+                            <SelectItem value="apartamento">🏢 Apartamento</SelectItem>
+                            <SelectItem value="terreno">🌱 Terreno</SelectItem>
+                            <SelectItem value="comercial">🏪 Local Comercial</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-                      <div className="space-y-6">
-                        {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
-                        <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
-                          <p className="text-sm text-green-800 dark:text-green-200 mb-4">
-                            Dime qué tipo de propiedad quieres valuar.
-                          </p>
-                          <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
-                            <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="¿Qué tipo de propiedad es?" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="casa">🏠 Casa - Vivienda independiente</SelectItem>
-                              <SelectItem value="apartamento">🏢 Apartamento - Vivienda en edificio</SelectItem>
-                              <SelectItem value="terreno">🌳 Terreno - Lote sin construcción</SelectItem>
-                              <SelectItem value="comercial">🏪 Comercial - Local de negocio</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {propertyData.tipoPropiedad && (
-                            <div className="mt-3 p-2 bg-green-100 border border-green-300 rounded">
-                              <p className="text-sm text-green-800">
-                                <strong>✅ Tipo seleccionado:</strong> {
-                                  propertyData.tipoPropiedad === 'casa' ? '🏠 Casa' :
-                                  propertyData.tipoPropiedad === 'apartamento' ? '🏢 Apartamento' :
-                                  propertyData.tipoPropiedad === 'terreno' ? '🌳 Terreno' :
-                                  propertyData.tipoPropiedad === 'comercial' ? '🏪 Comercial' : ''
-                                }
-                              </p>
+                        {/* Confirmación cuando se complete */}
+                        {isStep2Complete() && (
+                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                <p className="text-green-800 font-medium text-sm">¡Perfecto! Tipo: {propertyData.tipoPropiedad}</p>
+                              </div>
+                              <Button 
+                                onClick={goToNextStep}
+                                size="sm"
+                                className="bg-green-600 hover:bg-green-700 text-white animate-scale-in"
+                              >
+                                Siguiente Paso →
+                              </Button>
                             </div>
-                          )}
+                          </div>
+                        )}
+
+                        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-yellow-800 text-xs">
+                            🎯 <strong>¿Por qué necesitamos esto?</strong> Cada tipo de propiedad se vende a precios muy diferentes. 
+                            Una casa vale distinto que un apartamento del mismo tamaño.
+                          </p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
-                {/* Paso 4: Características */}
-                <TabsContent value="caracteristicas" className="mt-6">
+                {/* Paso 4: Área */}
+                <TabsContent value="area" className="mt-6">
                   <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-amber-50/50">
                     <CardHeader className="bg-gradient-to-r from-orange-500 to-amber-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep3Complete() ? '✓' : '4'}
                         </div>
-                        📏 Paso 4: Área
+                        📏 Paso 4: ¿Cuántos metros cuadrados tiene tu casa?
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>📏 ¿Qué tan grande es tu terreno y tu casa?</strong><br />
-                          Solo necesitamos dos medidas: el área total del terreno y el área construida de tu casa.
+                          <strong>📐 ¿Cuántos metros cuadrados tiene tu casa?</strong><br />
+                          Necesitamos saber el área total para calcular el precio correcto.
                         </p>
                       </div>
 
@@ -832,7 +849,7 @@ const PropertyValuation = () => {
                       </div>
 
                        {/* Confirmación cuando se complete el área */}
-                       {isStep2Complete() && (
+                       {isStep3Complete() && (
                          <div className="mt-6 p-3 bg-green-50 border-l-4 border-green-500 rounded animate-fade-in">
                            <div className="flex items-center justify-between">
                              <div className="flex items-center gap-2">
@@ -863,9 +880,9 @@ const PropertyValuation = () => {
                 </TabsContent>
 
                 {/* Paso 5: Estado de la Casa */}
-                <TabsContent value="caracteristicas" className="mt-6">
-                  <Card className="border-2 border-orange-200 shadow-xl bg-gradient-to-br from-orange-50/50 to-yellow-50/50">
-                    <CardHeader className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
+                <TabsContent value="estado" className="mt-6">
+                  <Card className="border-2 border-yellow-200 shadow-xl bg-gradient-to-br from-yellow-50/50 to-orange-50/50">
+                    <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
                       <CardTitle className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep4Complete() ? '✓' : '5'}
