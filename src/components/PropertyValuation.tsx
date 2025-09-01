@@ -256,7 +256,7 @@ const PropertyValuation = () => {
     direccionCompleta: '',
     barrio: '',
     descripcion: '',
-      estratoSocial: 'medio_bajo' as EstratoSocial
+    estratoSocial: 'medio_bajo' as EstratoSocial
   });
 
   const [activeTab, setActiveTab] = useState<string>('estrato');
@@ -271,7 +271,7 @@ const PropertyValuation = () => {
 
   // Funciones de validación de pasos
   const isStep1Complete = () => {
-    return propertyData.estratoSocial && propertyData.estratoSocial !== 'medio_bajo';
+    return !!propertyData.estratoSocial;
   };
 
   const isStep2Complete = () => {
