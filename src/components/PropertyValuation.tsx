@@ -580,23 +580,41 @@ const PropertyValuation = () => {
               </div>
 
               <Tabs defaultValue="setup" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
-                  <TabsTrigger value="setup" className="text-xs">
+                <TabsList className="grid w-full grid-cols-6 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <TabsTrigger 
+                    value="setup" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep0Complete() ? '✅' : '1️⃣'} Inicio
                   </TabsTrigger>
-                  <TabsTrigger value="estrato" className="text-xs">
+                  <TabsTrigger 
+                    value="estrato" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-violet-100 dark:hover:bg-violet-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep2Complete() ? '✅' : '2️⃣'} Estrato
                   </TabsTrigger>
-                  <TabsTrigger value="tipo" className="text-xs">
+                  <TabsTrigger 
+                    value="tipo" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep4Complete() ? '✅' : '3️⃣'} Tipo
                   </TabsTrigger>
-                  <TabsTrigger value="ubicacion" className="text-xs">
+                  <TabsTrigger 
+                    value="ubicacion" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-teal-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-teal-100 dark:hover:bg-teal-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep1Complete() ? '✅' : '4️⃣'} Ubicación
                   </TabsTrigger>
-                  <TabsTrigger value="caracteristicas" className="text-xs">
+                  <TabsTrigger 
+                    value="caracteristicas" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep3Complete() ? '✅' : '5️⃣'} Área
                   </TabsTrigger>
-                  <TabsTrigger value="valuacion" className="text-xs">
+                  <TabsTrigger 
+                    value="valuacion" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-pink-100 dark:hover:bg-pink-900/50 text-slate-700 dark:text-slate-300"
+                  >
                     {isStep5Complete() ? '✅' : '6️⃣'} Resultado
                   </TabsTrigger>
                 </TabsList>
