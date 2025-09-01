@@ -916,7 +916,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'NUEVO' ? 'font-bold text-green-800' : ''
+                                    propertyData.estadoConservacion === 'NUEVO' ? 'font-bold text-green-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'NUEVO' ? '✅ NUEVO' : 'NUEVO'}
                                   </td>
@@ -933,7 +933,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'BUENO' ? 'font-bold text-green-800' : ''
+                                    propertyData.estadoConservacion === 'BUENO' ? 'font-bold text-green-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'BUENO' ? '✅ BUENO' : 'BUENO'}
                                   </td>
@@ -950,7 +950,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'MEDIO' ? 'font-bold text-blue-800' : ''
+                                    propertyData.estadoConservacion === 'MEDIO' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'MEDIO' ? '✅ MEDIO' : 'MEDIO'}
                                   </td>
@@ -967,7 +967,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'REGULAR' ? 'font-bold text-yellow-800' : ''
+                                    propertyData.estadoConservacion === 'REGULAR' ? 'font-bold text-yellow-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REGULAR' ? '✅ REGULAR' : 'REGULAR'}
                                   </td>
@@ -976,7 +976,7 @@ const PropertyValuation = () => {
                                   className={`cursor-pointer transition-all duration-300 ${
                                     propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' 
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
-                                      : 'hover:bg-blue-50'
+                                      : 'hover:bg-indigo-50'
                                   }`}
                                   onClick={() => {
                                     handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
@@ -984,7 +984,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? 'font-bold text-blue-800' : 'text-blue-600'
+                                    propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? '✅ REPARACIONES SENCILLAS' : 'REPARACIONES SENCILLAS'}
                                   </td>
@@ -993,7 +993,7 @@ const PropertyValuation = () => {
                                   className={`cursor-pointer transition-all duration-300 ${
                                     propertyData.estadoConservacion === 'REPARACIONES MEDIAS' 
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
-                                      : 'hover:bg-blue-50'
+                                      : 'hover:bg-indigo-50'
                                   }`}
                                   onClick={() => {
                                     handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
@@ -1001,7 +1001,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? 'font-bold text-blue-800' : 'text-blue-600'
+                                    propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? '✅ REPARACIONES MEDIAS' : 'REPARACIONES MEDIAS'}
                                   </td>
@@ -1010,7 +1010,7 @@ const PropertyValuation = () => {
                                   className={`cursor-pointer transition-all duration-300 ${
                                     propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' 
                                       ? 'bg-orange-100 border-l-4 border-orange-500 shadow-md transform scale-105' 
-                                      : 'hover:bg-orange-50'
+                                      : 'hover:bg-indigo-50'
                                   }`}
                                   onClick={() => {
                                     handleInputChange('estadoConservacion', 'REPARACIONES IMPORTANTES');
@@ -1018,7 +1018,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? 'font-bold text-orange-800' : 'text-orange-600'
+                                    propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? 'font-bold text-orange-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? '✅ REPARACIONES IMPORTANTES' : 'REPARACIONES IMPORTANTES'}
                                   </td>
@@ -1027,7 +1027,7 @@ const PropertyValuation = () => {
                                   className={`cursor-pointer transition-all duration-300 ${
                                     propertyData.estadoConservacion === 'DAÑOS GRAVES' 
                                       ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
-                                      : 'hover:bg-red-50'
+                                      : 'hover:bg-indigo-50'
                                   }`}
                                   onClick={() => {
                                     handleInputChange('estadoConservacion', 'DAÑOS GRAVES');
@@ -1035,7 +1035,7 @@ const PropertyValuation = () => {
                                   }}
                                 >
                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
-                                    propertyData.estadoConservacion === 'DAÑOS GRAVES' ? 'font-bold text-red-800' : 'text-red-600'
+                                    propertyData.estadoConservacion === 'DAÑOS GRAVES' ? 'font-bold text-red-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'DAÑOS GRAVES' ? '✅ DAÑOS GRAVES' : 'DAÑOS GRAVES'}
                                   </td>
@@ -1043,6 +1043,8 @@ const PropertyValuation = () => {
                               </tbody>
                             </table>
                           </div>
+                          
+                          {/* Panel de confirmación de selección */}
                           
                           {/* Panel de confirmación de selección */}
                           {propertyData.estadoConservacion && (
