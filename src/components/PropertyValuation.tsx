@@ -660,15 +660,14 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep2Complete() ? '✓' : '3'}
                         </div>
-                        🏠 Paso 3: Tipo de Propiedad y Estrato Social
+                        🏠 Paso 3: Tipo de Propiedad
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
                           <strong>🏠 ¿Qué tipo de casa tienes?</strong><br />
-                          Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial. 
-                          También necesitamos saber en qué tipo de barrio está.
+                          Necesitamos saber si tu propiedad es una casa, apartamento, terreno o local comercial.
                         </p>
                       </div>
 
