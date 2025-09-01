@@ -291,6 +291,102 @@ const PropertyValuation = () => {
     { value: 'EN DESECHO', label: 'EN DESECHO', factor: 0.1350 }
   ];
 
+  // Explicaciones detalladas para cada estado de conservación
+  const conservationExplanations = {
+    'NUEVO': {
+      description: 'Propiedad en estado óptimo, sin desgaste visible',
+      details: [
+        'Construcción reciente (menos de 2 años)',
+        'Acabados en perfecto estado',
+        'Instalaciones eléctricas, hidráulicas y sanitarias nuevas',
+        'Sin necesidad de reparaciones',
+        'Pintura y revestimientos en excelente condición'
+      ]
+    },
+    'BUENO': {
+      description: 'Propiedad bien mantenida con desgaste mínimo',
+      details: [
+        'Mantenimiento regular y adecuado',
+        'Desgaste normal por uso pero controlado',
+        'Instalaciones funcionando correctamente',
+        'Pequeños detalles de mantenimiento preventivo',
+        'Estructura sólida y estable'
+      ]
+    },
+    'MEDIO': {
+      description: 'Propiedad con desgaste normal del tiempo',
+      details: [
+        'Signos evidentes de uso y tiempo',
+        'Algunas instalaciones requieren revisión',
+        'Pintura con desgaste en ciertas áreas',
+        'Funcionalidad general buena',
+        'Mantenimiento correctivo ocasional'
+      ]
+    },
+    'REGULAR': {
+      description: 'Propiedad que requiere mantenimiento programado',
+      details: [
+        'Desgaste considerable pero no crítico',
+        'Necesita mantenimiento en múltiples áreas',
+        'Algunas instalaciones obsoletas',
+        'Problemas menores en acabados',
+        'Requiere inversión en mejoras'
+      ]
+    },
+    'REPARACIONES SENCILLAS': {
+      description: 'Requiere reparaciones básicas y económicas',
+      details: [
+        'Pintura interior y exterior',
+        'Reparación de cerrajería básica',
+        'Mantenimiento de jardines',
+        'Limpieza profunda y aseo',
+        'Reparaciones eléctricas menores'
+      ]
+    },
+    'REPARACIONES MEDIAS': {
+      description: 'Necesita reparaciones de nivel intermedio',
+      details: [
+        'Renovación de pisos y revestimientos',
+        'Reparación de instalaciones hidráulicas',
+        'Mejoras en cocina y baños',
+        'Reparaciones en techos y cubiertas',
+        'Actualizaciones en instalaciones eléctricas'
+      ]
+    },
+    'REPARACIONES IMPORTANTES': {
+      description: 'Requiere intervenciones estructurales significativas',
+      details: [
+        'Reparaciones en estructura principal',
+        'Renovación completa de techos',
+        'Reconstrucción de muros y tabiques',
+        'Reemplazo total de instalaciones',
+        'Impermeabilización y cimentación'
+      ]
+    },
+    'DAÑOS GRAVES': {
+      description: 'Presenta fallas estructurales que comprometen la seguridad',
+      details: [
+        'Grietas en estructura principal',
+        'Problemas de cimentación',
+        'Techos con filtraciónes severas',
+        'Instalaciones en estado crítico',
+        'Riesgo para la habitabilidad'
+      ]
+    },
+    'EN DESECHO': {
+      description: 'Propiedad que requiere demolición o reconstrucción total',
+      details: [
+        'Estructura comprometida irreversiblemente',
+        'Inhabitable por razones de seguridad',
+        'Costo de reparación superior al valor',
+        'Recomendable demolición completa',
+        'Solo conserva valor del terreno'
+      ]
+    }
+  };
+
+  const [selectedConservationState, setSelectedConservationState] = useState<string | null>(null);
+
   // Funciones de validación de pasos
   const isStep1Complete = () => {
     return !!propertyData.estratoSocial;
@@ -808,40 +904,100 @@ const PropertyValuation = () => {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-indigo-200">
-                                <tr className="hover:bg-indigo-50">
+                                <tr 
+                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'NUEVO' ? null : 'NUEVO')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center">NUEVO</td>
                                 </tr>
-                                <tr className="hover:bg-indigo-50">
+                                <tr 
+                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'BUENO' ? null : 'BUENO')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center">BUENO</td>
                                 </tr>
-                                <tr className="hover:bg-indigo-50">
+                                <tr 
+                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'MEDIO' ? null : 'MEDIO')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center">MEDIO</td>
                                 </tr>
-                                <tr className="hover:bg-indigo-50">
+                                <tr 
+                                  className="hover:bg-indigo-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REGULAR' ? null : 'REGULAR')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center">REGULAR</td>
                                 </tr>
-                                <tr className="hover:bg-blue-50">
+                                <tr 
+                                  className="hover:bg-blue-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES SENCILLAS' ? null : 'REPARACIONES SENCILLAS')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES SENCILLAS</td>
                                 </tr>
-                                <tr className="hover:bg-blue-50">
+                                <tr 
+                                  className="hover:bg-blue-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES MEDIAS' ? null : 'REPARACIONES MEDIAS')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center text-blue-600">REPARACIONES MEDIAS</td>
                                 </tr>
-                                <tr className="hover:bg-orange-50">
+                                <tr 
+                                  className="hover:bg-orange-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'REPARACIONES IMPORTANTES' ? null : 'REPARACIONES IMPORTANTES')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center text-orange-600">REPARACIONES IMPORTANTES</td>
                                 </tr>
-                                <tr className="hover:bg-red-50">
+                                <tr 
+                                  className="hover:bg-red-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'DAÑOS GRAVES' ? null : 'DAÑOS GRAVES')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center text-red-600">DAÑOS GRAVES</td>
                                 </tr>
-                                <tr className="hover:bg-red-50">
+                                <tr 
+                                  className="hover:bg-red-50 cursor-pointer transition-colors"
+                                  onClick={() => setSelectedConservationState(selectedConservationState === 'EN DESECHO' ? null : 'EN DESECHO')}
+                                >
                                   <td className="px-6 py-3 font-medium text-lg text-center text-red-700">EN DESECHO</td>
                                 </tr>
                               </tbody>
                             </table>
                           </div>
                           
+                          {/* Panel de explicación detallada */}
+                          {selectedConservationState && conservationExplanations[selectedConservationState] && (
+                            <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-300 shadow-md">
+                              <div className="flex items-center justify-between mb-4">
+                                <h4 className="text-xl font-bold text-indigo-800">
+                                  📋 {selectedConservationState}
+                                </h4>
+                                <button 
+                                  onClick={() => setSelectedConservationState(null)}
+                                  className="text-indigo-600 hover:text-indigo-800 text-xl font-bold"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                              
+                              <p className="text-indigo-700 font-medium text-lg mb-4">
+                                {conservationExplanations[selectedConservationState].description}
+                              </p>
+                              
+                              <div className="space-y-2">
+                                <h5 className="font-semibold text-indigo-800">🔍 Características detalladas:</h5>
+                                <ul className="space-y-2">
+                                  {conservationExplanations[selectedConservationState].details.map((detail, index) => (
+                                    <li key={index} className="flex items-start gap-2 text-indigo-700">
+                                      <span className="text-indigo-500 font-bold">•</span>
+                                      <span>{detail}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                          
                           <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                             <p className="text-sm text-indigo-700 text-center">
-                              💡 Esta tabla muestra los diferentes estados de conservación de una propiedad.
+                              💡 Haga clic en cualquier estado para ver su explicación detallada.
                             </p>
                           </div>
                         </div>
