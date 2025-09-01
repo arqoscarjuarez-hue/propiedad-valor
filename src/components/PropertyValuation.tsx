@@ -1568,14 +1568,20 @@ const PropertyValuation = () => {
                     </div>
                   </div>
 
-                  <Button
-                    onClick={reiniciarFormulario}
-                    variant="outline" 
-                    className="w-full mt-6 hover:bg-primary hover:text-primary-foreground transition-colors"
-                  >
-                    <Shuffle className="w-4 h-4 mr-2" />
-                    🔄 Nueva Valuación
-                  </Button>
+                  <div className="mt-8 border-t pt-6">
+                    <div className="text-center mb-4">
+                      <p className="text-lg font-semibold text-gray-700 mb-2">¿Desea realizar otro cálculo?</p>
+                      <p className="text-sm text-gray-600">Puede valuaar una nueva propiedad reiniciando el formulario</p>
+                    </div>
+                    <Button
+                      onClick={reiniciarFormulario}
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      <Shuffle className="w-5 h-5 mr-3" />
+                      🆕 Realizar Nuevo Cálculo
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
