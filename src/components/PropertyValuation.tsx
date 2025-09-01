@@ -837,30 +837,49 @@ const PropertyValuation = () => {
                              
                              {/* Selector de Estado */}
                              <div>
-                               <Label htmlFor="estadoConservacion" className="text-base font-semibold mb-2 block">
-                                 🔨 Seleccione el Estado de Conservación *
-                               </Label>
-                               <Select 
-                                 value={propertyData.estadoConservacion} 
-                                 onValueChange={(value) => handleInputChange('estadoConservacion', value)}
-                                 disabled={!isStep4Complete()}
-                               >
-                                 <SelectTrigger className="border-2 focus:border-indigo-500 bg-white">
-                                   <SelectValue placeholder="Selecciona el estado de conservación de la propiedad" />
-                                 </SelectTrigger>
-                                  <SelectContent className="bg-white border-2 border-indigo-200 shadow-xl z-[9999] max-h-60 overflow-y-auto pointer-events-auto">
-                                    {conservationStates.map((state) => (
-                                      <SelectItem 
-                                        key={state.value} 
-                                        value={state.value} 
-                                        className="font-medium hover:bg-indigo-50 cursor-pointer py-3 px-4 text-sm transition-colors focus:bg-indigo-100 data-[highlighted]:bg-indigo-100"
-                                      >
-                                        <span className="font-bold text-indigo-700">{state.label}</span> 
-                                        <span className="text-gray-600 ml-2">({state.factor.toFixed(4)})</span>
-                                      </SelectItem>
-                                    ))}
+                                <Label className="text-base font-semibold mb-2 block">
+                                  🔨 Seleccione el Estado de Conservación *
+                                </Label>
+                                <Select 
+                                  value={propertyData.estadoConservacion} 
+                                  onValueChange={(value) => {
+                                    console.log('ESTADO SELECCIONADO:', value);
+                                    handleInputChange('estadoConservacion', value);
+                                  }}
+                                >
+                                  <SelectTrigger className="w-full h-12 text-left border-2 border-gray-300 hover:border-indigo-500 focus:border-indigo-500 bg-white">
+                                    <SelectValue placeholder="Haga clic aquí para seleccionar el estado" />
+                                  </SelectTrigger>
+                                  <SelectContent className="z-[9999] bg-white border-2 border-gray-200 shadow-2xl">
+                                    <SelectItem value="NUEVO" className="cursor-pointer hover:bg-indigo-50 py-3">
+                                      <span className="font-bold text-green-700">✨ NUEVO</span> <span className="text-gray-600">(1.0000)</span>
+                                    </SelectItem>
+                                    <SelectItem value="BUENO" className="cursor-pointer hover:bg-indigo-50 py-3">
+                                      <span className="font-bold text-green-600">✅ BUENO</span> <span className="text-gray-600">(0.9968)</span>
+                                    </SelectItem>
+                                    <SelectItem value="MEDIO" className="cursor-pointer hover:bg-indigo-50 py-3">
+                                      <span className="font-bold text-blue-600">🔵 MEDIO</span> <span className="text-gray-600">(0.9748)</span>
+                                    </SelectItem>
+                                    <SelectItem value="REGULAR" className="cursor-pointer hover:bg-indigo-50 py-3">
+                                      <span className="font-bold text-yellow-600">⚠️ REGULAR</span> <span className="text-gray-600">(0.9191)</span>
+                                    </SelectItem>
+                                    <SelectItem value="REPARACIONES SENCILLAS" className="cursor-pointer hover:bg-yellow-50 py-3">
+                                      <span className="font-bold text-yellow-700">🔧 REPARACIONES SENCILLAS</span> <span className="text-gray-600">(0.8190)</span>
+                                    </SelectItem>
+                                    <SelectItem value="REPARACIONES MEDIAS" className="cursor-pointer hover:bg-yellow-50 py-3">
+                                      <span className="font-bold text-orange-600">🛠️ REPARACIONES MEDIAS</span> <span className="text-gray-600">(0.6680)</span>
+                                    </SelectItem>
+                                    <SelectItem value="REPARACIONES IMPORTANTES" className="cursor-pointer hover:bg-orange-50 py-3">
+                                      <span className="font-bold text-orange-700">⚒️ REPARACIONES IMPORTANTES</span> <span className="text-gray-600">(0.4740)</span>
+                                    </SelectItem>
+                                    <SelectItem value="DAÑOS GRAVES" className="cursor-pointer hover:bg-red-50 py-3">
+                                      <span className="font-bold text-red-600">💥 DAÑOS GRAVES</span> <span className="text-gray-600">(0.2480)</span>
+                                    </SelectItem>
+                                    <SelectItem value="EN DESECHO" className="cursor-pointer hover:bg-red-50 py-3">
+                                      <span className="font-bold text-red-700">🚫 EN DESECHO</span> <span className="text-gray-600">(0.1350)</span>
+                                    </SelectItem>
                                   </SelectContent>
-                               </Select>
+                                </Select>
                              </div>
                            </div>
                          </CardContent>
