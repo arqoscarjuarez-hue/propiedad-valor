@@ -810,19 +810,19 @@ const PropertyValuation = () => {
                                  onValueChange={(value) => handleInputChange('estadoConservacion', value)}
                                  disabled={!isStep4Complete()}
                                >
-                                 <SelectTrigger className="border-2 focus:border-indigo-500">
-                                   <SelectValue placeholder="Selecciona el estado de conservación" />
+                                 <SelectTrigger className="border-2 focus:border-indigo-500 bg-white">
+                                   <SelectValue placeholder="Selecciona el estado de conservación de la propiedad" />
                                  </SelectTrigger>
-                                 <SelectContent>
-                                   <SelectItem value="nuevo" className="font-medium">NUEVO</SelectItem>
-                                   <SelectItem value="bueno" className="font-medium">BUENO</SelectItem>
-                                   <SelectItem value="medio" className="font-medium">MEDIO</SelectItem>
-                                   <SelectItem value="regular" className="font-medium">REGULAR</SelectItem>
-                                   <SelectItem value="reparaciones_sencillas" className="font-medium">REPARACIONES SENCILLAS</SelectItem>
-                                   <SelectItem value="reparaciones_medias" className="font-medium">REPARACIONES MEDIAS</SelectItem>
-                                   <SelectItem value="reparaciones_importantes" className="font-medium">REPARACIONES IMPORTANTES</SelectItem>
-                                   <SelectItem value="danos_graves" className="font-medium">DAÑOS GRAVES</SelectItem>
-                                   <SelectItem value="en_desecho" className="font-medium">EN DESECHO</SelectItem>
+                                 <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50">
+                                   <SelectItem value="nuevo" className="font-medium hover:bg-indigo-50">✨ NUEVO</SelectItem>
+                                   <SelectItem value="bueno" className="font-medium hover:bg-indigo-50">✅ BUENO</SelectItem>
+                                   <SelectItem value="medio" className="font-medium hover:bg-indigo-50">🔵 MEDIO</SelectItem>
+                                   <SelectItem value="regular" className="font-medium hover:bg-indigo-50">⚠️ REGULAR</SelectItem>
+                                   <SelectItem value="reparaciones_sencillas" className="font-medium hover:bg-yellow-50">🔧 REPARACIONES SENCILLAS</SelectItem>
+                                   <SelectItem value="reparaciones_medias" className="font-medium hover:bg-yellow-50">🛠️ REPARACIONES MEDIAS</SelectItem>
+                                   <SelectItem value="reparaciones_importantes" className="font-medium hover:bg-orange-50">⚒️ REPARACIONES IMPORTANTES</SelectItem>
+                                   <SelectItem value="danos_graves" className="font-medium hover:bg-red-50">💥 DAÑOS GRAVES</SelectItem>
+                                   <SelectItem value="en_desecho" className="font-medium hover:bg-red-50">🚫 EN DESECHO</SelectItem>
                                  </SelectContent>
                                </Select>
                              </div>
