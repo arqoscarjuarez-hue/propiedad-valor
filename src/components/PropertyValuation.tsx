@@ -978,9 +978,6 @@ const PropertyValuation = () => {
                                 ))}
                               </ul>
                             </div>
-                            <div className="mt-2 text-xs text-blue-600">
-                              <strong>Factor de precio:</strong> {(conservationFactors[propertyData.estadoConservacion] * 100).toFixed(1)}%
-                            </div>
                           </div>
                         )}
 
