@@ -559,14 +559,14 @@ const PropertyValuation = () => {
                   <TabsTrigger value="estrato" className="text-xs">
                     {isStep2Complete() ? '✅' : '2️⃣'} Estrato
                   </TabsTrigger>
+                  <TabsTrigger value="tipo" className="text-xs">
+                    {isStep4Complete() ? '✅' : '3️⃣'} Tipo
+                  </TabsTrigger>
                   <TabsTrigger value="ubicacion" className="text-xs">
-                    {isStep1Complete() ? '✅' : '3️⃣'} Ubicación
+                    {isStep1Complete() ? '✅' : '4️⃣'} Ubicación
                   </TabsTrigger>
                   <TabsTrigger value="caracteristicas" className="text-xs">
-                    {isStep3Complete() ? '✅' : '4️⃣'} Área
-                  </TabsTrigger>
-                  <TabsTrigger value="tipo" className="text-xs">
-                    {isStep4Complete() ? '✅' : '5️⃣'} Tipo
+                    {isStep3Complete() ? '✅' : '5️⃣'} Área
                   </TabsTrigger>
                   <TabsTrigger value="valuacion" className="text-xs">
                     {isStep5Complete() ? '✅' : '6️⃣'} Resultado
