@@ -95,27 +95,27 @@ export type ClasePrincipal = 'bajo' | 'medio' | 'alto';
 
 // Etiquetas para estratos sociales completos
 export const estratoSocialLabels: Record<EstratoSocial, string> = {
-  // Clase Baja
-  'bajo_bajo': 'Clase Baja Baja - Barrios marginales con servicios limitados',
-  'bajo_medio': 'Clase Baja Media - Barrios populares con servicios básicos',
-  'bajo_alto': 'Clase Baja Alta - Barrios obreros con servicios mejorados',
+  // Estrato Bajo
+  'bajo_bajo': 'Estrato Bajo Bajo - Barrios marginales con servicios limitados',
+  'bajo_medio': 'Estrato Bajo Medio - Barrios populares con servicios básicos',
+  'bajo_alto': 'Estrato Bajo Alto - Barrios obreros con servicios mejorados',
   
-  // Clase Media
-  'medio_bajo': 'Clase Media Baja - Barrios residenciales con buenos servicios',
-  'medio_medio': 'Clase Media Media - Barrios de clase media consolidada',
-  'medio_alto': 'Clase Media Alta - Barrios residenciales premium',
+  // Estrato Medio
+  'medio_bajo': 'Estrato Medio Bajo - Barrios residenciales con buenos servicios',
+  'medio_medio': 'Estrato Medio Medio - Barrios de estrato medio consolidado',
+  'medio_alto': 'Estrato Medio Alto - Barrios residenciales premium',
   
-  // Clase Alta
-  'alto_bajo': 'Clase Alta Baja - Barrios exclusivos entrada',
-  'alto_medio': 'Clase Alta Media - Barrios exclusivos con servicios de lujo',
-  'alto_alto': 'Clase Alta Alta - Barrios de élite con servicios premium'
+  // Estrato Alto
+  'alto_bajo': 'Estrato Alto Bajo - Barrios exclusivos entrada',
+  'alto_medio': 'Estrato Alto Medio - Barrios exclusivos con servicios de lujo',
+  'alto_alto': 'Estrato Alto Alto - Barrios de élite con servicios premium'
 };
 
-// Etiquetas para clases principales
+// Etiquetas para estratos principales
 export const clasePrincipalLabels: Record<ClasePrincipal, string> = {
-  'bajo': 'Clase Socioeconómica Baja',
-  'medio': 'Clase Socioeconómica Media', 
-  'alto': 'Clase Socioeconómica Alta'
+  'bajo': 'Estrato Socioeconómico Bajo',
+  'medio': 'Estrato Socioeconómico Medio', 
+  'alto': 'Estrato Socioeconómico Alto'
 };
 
 // Mapeo de estratos a clases sociales principales
@@ -140,17 +140,17 @@ export const clasePrincipalToEstratos: Record<ClasePrincipal, EstratoSocial[]> =
 
 // Multiplicadores de valor según estrato social - normas internacionales
 export const estratoMultipliers: Record<EstratoSocial, number> = {
-  // Clase Baja (0.7-0.9)
+  // Estrato Bajo (0.7-0.9)
   'bajo_bajo': 0.7,
   'bajo_medio': 0.8,
   'bajo_alto': 0.9,
   
-  // Clase Media (1.0-1.3)
+  // Estrato Medio (1.0-1.3)
   'medio_bajo': 1.0,
   'medio_medio': 1.15,
   'medio_alto': 1.3,
   
-  // Clase Alta (1.4-1.8)
+  // Estrato Alto (1.4-1.8)
   'alto_bajo': 1.4,
   'alto_medio': 1.6,
   'alto_alto': 1.8
@@ -671,23 +671,23 @@ const PropertyValuation = () => {
                         <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                           {isStep1Complete() ? '✓' : '2'}
                         </div>
-                        🏘️ Paso 2: Clase Socioeconómica del Inmueble a Valuar
+                        🏘️ Paso 2: Estrato Socioeconómico del Inmueble a Valuar
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                         <p className="text-sm text-blue-800 dark:text-blue-200">
-                          <strong>🏘️ ¿Cuál es la clase socioeconómica del barrio?</strong><br />
+                          <strong>🏘️ ¿Cuál es el estrato socioeconómico del barrio?</strong><br />
                           Según las normas internacionales de Latinoamérica, clasifica el barrio donde está ubicada tu propiedad.
                         </p>
                       </div>
 
                       <div className="space-y-6">
-                        {/* SELECCIÓN DE CLASE PRINCIPAL */}
+                        {/* SELECCIÓN DE ESTRATO PRINCIPAL */}
                         <div className="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-lg">
-                          <h3 className="font-semibold mb-2">🏘️ Clase Socioeconómica Principal</h3>
+                          <h3 className="font-semibold mb-2">🏘️ Estrato Socioeconómico Principal</h3>
                           <p className="text-sm text-violet-800 dark:text-violet-200 mb-4">
-                            Primero selecciona la clase socioeconómica general del barrio:
+                            Primero selecciona el estrato socioeconómico general del barrio:
                           </p>
                           <Select 
                             value={propertyData.clasePrincipal} 
@@ -697,12 +697,12 @@ const PropertyValuation = () => {
                             }}
                           >
                             <SelectTrigger className="bg-white">
-                              <SelectValue placeholder="Selecciona la clase socioeconómica principal" />
+                              <SelectValue placeholder="Selecciona el estrato socioeconómico principal" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="bajo">🏘️ Clase Baja - Barrios populares y obreros</SelectItem>
-                              <SelectItem value="medio">🏡 Clase Media - Barrios residenciales</SelectItem>
-                              <SelectItem value="alto">🏰 Clase Alta - Barrios exclusivos</SelectItem>
+                              <SelectItem value="bajo">🏘️ Estrato Bajo - Barrios populares y obreros</SelectItem>
+                              <SelectItem value="medio">🏡 Estrato Medio - Barrios residenciales</SelectItem>
+                              <SelectItem value="alto">🏰 Estrato Alto - Barrios exclusivos</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
