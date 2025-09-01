@@ -396,8 +396,8 @@ const PropertyValuation = () => {
 
   // Funciones de validación de pasos
   const isStep0Complete = () => selectedLanguage && selectedCountry;
-  const isStep1Complete = () => propertyData.latitud && propertyData.longitud;
-  const isStep2Complete = () => propertyData.tipoPropiedad && propertyData.estratoSocial && propertyData.direccionCompleta;
+  const isStep1Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
+  const isStep2Complete = () => propertyData.tipoPropiedad && propertyData.estratoSocial;
   const isStep3Complete = () => propertyData.tipoPropiedad;
   const isStep4Complete = () => propertyData.area > 0;
   const isStep5Complete = () => propertyData.estadoConservacion;
