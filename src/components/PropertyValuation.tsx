@@ -640,14 +640,15 @@ const PropertyValuation = () => {
               distancia: comp.distance?.toFixed(2) + ' km'
             });
 
-            // Precio base del comparable con 5% de descuento por negociación
-            let adjustedPrice = comp.price_usd * 0.95;
+            // Precio base del comparable con 10% de descuento por negociación (más realista)
+            let adjustedPrice = comp.price_usd * 0.90;
 
-            // Ajuste por diferencia de área (Factor de escala)
+            // Ajuste por diferencia de área (más conservador para evitar inflación)
             const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
             const areaRatio = propertyAreaToUse / comp.total_area;
             if (areaRatio !== 1) {
-              const areaAdjustment = Math.pow(areaRatio, 0.9); // Factor de economía de escala más conservador
+              // Ajuste más conservador: máximo 20% de variación por área
+              const areaAdjustment = Math.min(1.2, Math.max(0.8, Math.pow(areaRatio, 0.95)));
               adjustedPrice *= areaAdjustment;
               console.log(`  ↳ Ajuste por área: ${(areaAdjustment * 100).toFixed(1)}%`);
             }
@@ -677,11 +678,11 @@ const PropertyValuation = () => {
       // 3. MÉTODO DE RESPALDO: Precio por m² del país
       if (estimatedValueUSD === 0 || comparablesData.length === 0) {
         console.log('📊 APLICANDO MÉTODO DE COSTO POR PAÍS (Respaldo)');
-        const basePricePerM2 = countryConfig.basePricePerM2USD || 200; // Precio más bajo por defecto
+        const basePricePerM2 = countryConfig.basePricePerM2USD || 200;
         const conservationMultiplier = conservationFactors[propertyData.estadoConservacion] || 0.9;
-        const economicMultiplier = countryConfig.economicFactor || 1;
+        // NO usar factor económico adicional, ya está incluido en el precio base
         const propertyAreaToUse = propertyData.tipoPropiedad === 'apartamento' ? propertyData.construction_area : propertyData.area;
-        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier * economicMultiplier;
+        estimatedValueUSD = propertyAreaToUse * basePricePerM2 * conservationMultiplier;
         console.log('✅ VALOR POR MÉTODO DE COSTO:', estimatedValueUSD);
       }
 
