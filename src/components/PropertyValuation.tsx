@@ -1344,7 +1344,24 @@ const PropertyValuation = () => {
                                   }`}>
                                     {propertyData.estadoConservacion === 'DAÑOS GRAVES' ? '✅ DAÑOS GRAVES' : 'DAÑOS GRAVES'}
                                   </td>
-                                </tr>
+                                 </tr>
+                                 <tr 
+                                   className={`cursor-pointer transition-all duration-300 ${
+                                     propertyData.estadoConservacion === 'EN DESECHO' 
+                                       ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
+                                       : 'hover:bg-indigo-50'
+                                   }`}
+                                   onClick={() => {
+                                     handleInputChange('estadoConservacion', 'EN DESECHO');
+                                     setSelectedConservationState('EN DESECHO');
+                                   }}
+                                 >
+                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                     propertyData.estadoConservacion === 'EN DESECHO' ? 'font-bold text-red-800' : 'text-gray-700'
+                                   }`}>
+                                     {propertyData.estadoConservacion === 'EN DESECHO' ? '✅ EN DESECHO' : 'EN DESECHO'}
+                                   </td>
+                                 </tr>
                               </tbody>
                             </table>
                           </div>
