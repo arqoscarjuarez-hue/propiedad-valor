@@ -591,7 +591,7 @@ const PropertyValuation = () => {
   };
 
   const isStep5Complete = () => {
-    return true; // Ya no hay paso 5
+    return propertyData.estadoConservacion !== '';
   };
 
   // Función para obtener el siguiente paso requerido
@@ -601,6 +601,7 @@ const PropertyValuation = () => {
     if (!isStep2Complete()) return 2;
     if (!isStep3Complete()) return 3;
     if (!isStep4Complete()) return 4;
+    if (!isStep5Complete()) return 5;
     return 'valuacion';
   };
 
