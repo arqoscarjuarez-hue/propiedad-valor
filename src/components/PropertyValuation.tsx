@@ -290,7 +290,7 @@ const PropertyValuation = () => {
 
   const isStep5Complete = () => {
     if (propertyData.tipoPropiedad === 'terreno') return true;
-    return propertyData.habitaciones > 0 && propertyData.banos > 0;
+    return propertyData.habitaciones > 0 && propertyData.banos > 0 && propertyData.antiguedad >= 0 && propertyData.estadoConservacion !== '';
   };
 
   // Función para obtener el siguiente paso requerido
@@ -313,8 +313,10 @@ const PropertyValuation = () => {
       setActiveTab('ubicacion');
     } else if ((field === 'latitud' || field === 'direccionCompleta') && value && isStep4Complete()) {
       setActiveTab('caracteristicas');
-    } else if ((field === 'area' || field === 'estadoConservacion') && value && !isStep5Complete() && propertyData.tipoPropiedad !== 'terreno') {
-      setActiveTab('detalles');
+    } else if (field === 'area' && value && isStep5Complete()) {
+      setActiveTab('depreciacion');
+    } else if ((field === 'habitaciones' || field === 'antiguedad' || field === 'estadoConservacion') && getNextRequiredStep() === 'valuacion') {
+      setActiveTab('valuacion');
     }
   };
 
@@ -540,20 +542,20 @@ const PropertyValuation = () => {
                     
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
-                        value="detalles" 
+                        value="depreciacion"
                         className="relative overflow-hidden p-4 rounded-xl text-xs font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-600 data-[state=active]:via-purple-600 data-[state=active]:to-indigo-700 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:ring-4 data-[state=active]:ring-indigo-300 data-[state=active]:scale-110 bg-white/80 backdrop-blur-sm border border-indigo-200"
                       >
                         <div className="flex flex-col items-center gap-1">
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-lg transition-all ${
                             isStep5Complete() 
                               ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white ring-2 ring-emerald-300' 
-                              : activeTab === 'detalles' 
-                                ? 'bg-gradient-to-r from-white to-indigo-50 text-indigo-700 ring-2 ring-indigo-300' 
+                            : activeTab === 'depreciacion' 
+                              ? 'bg-gradient-to-r from-white to-indigo-50 text-indigo-700 ring-2 ring-indigo-300'
                                 : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600'
                           }`}>
                             {isStep5Complete() ? '✓' : '5'}
                           </div>
-                          <span className={activeTab === 'detalles' ? 'text-white' : 'text-gray-700'}>🏠 Detalles</span>
+                          <span className={activeTab === 'depreciacion' ? 'text-white' : 'text-gray-700'}>📉 Depreciación</span>
                         </div>
                       </TabsTrigger>
                     )}
@@ -759,20 +761,57 @@ const PropertyValuation = () => {
                     </Card>
                   </TabsContent>
 
-                  {/* Paso 5: Detalles */}
-                  {propertyData.tipoPropiedad !== 'terreno' && (
-                    <TabsContent value="detalles" className="mt-6">
-                      <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
-                        <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
-                          <CardTitle className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                              {isStep5Complete() ? '✓' : '5'}
-                            </div>
-                            🏠 Paso 5: Detalles Adicionales
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-6">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                   {/* Paso 5: Depreciación */}
+                   {propertyData.tipoPropiedad !== 'terreno' && (
+                     <TabsContent value="depreciacion" className="mt-6">
+                       <Card className="border-2 border-indigo-200 shadow-xl bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
+                         <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+                           <CardTitle className="flex items-center gap-3">
+                             <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                               {isStep5Complete() ? '✓' : '5'}
+                             </div>
+                             📉 Paso 5: Depreciación y Detalles
+                           </CardTitle>
+                         </CardHeader>
+                         <CardContent className="p-6">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                             <div>
+                               <Label htmlFor="antiguedad" className="text-base font-semibold mb-2 block">
+                                 🗓️ Antigüedad (años) *
+                               </Label>
+                               <Input
+                                 id="antiguedad"
+                                 type="number"
+                                 value={propertyData.antiguedad || ''}
+                                 onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                                 placeholder="Ej: 5"
+                                 className="border-2 focus:border-indigo-500"
+                                 min="0"
+                                 disabled={!isStep4Complete()}
+                               />
+                             </div>
+                             <div>
+                               <Label htmlFor="estadoConservacion" className="text-base font-semibold mb-2 block">
+                                 🔨 Estado de Conservación *
+                               </Label>
+                               <Select 
+                                 value={propertyData.estadoConservacion} 
+                                 onValueChange={(value) => handleInputChange('estadoConservacion', value)}
+                                 disabled={!isStep4Complete()}
+                               >
+                                 <SelectTrigger className="border-2 focus:border-indigo-500">
+                                   <SelectValue placeholder="Selecciona el estado de conservación" />
+                                 </SelectTrigger>
+                                 <SelectContent>
+                                   <SelectItem value="excelente" className="font-medium">⭐ Excelente</SelectItem>
+                                   <SelectItem value="bueno" className="font-medium">✅ Bueno</SelectItem>
+                                   <SelectItem value="regular" className="font-medium">⚠️ Regular</SelectItem>
+                                   <SelectItem value="malo" className="font-medium">❌ Malo</SelectItem>
+                                 </SelectContent>
+                               </Select>
+                             </div>
+                           </div>
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                               <Label htmlFor="habitaciones" className="text-base font-semibold mb-2 block">
                                 🛏️ Habitaciones *
