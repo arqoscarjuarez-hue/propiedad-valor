@@ -273,17 +273,104 @@ const PropertyValuation = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState('');
 
-  // Configuración de países y monedas
+  // Configuración de países y monedas del mundo
   const countriesConfig = {
-    'colombia': { name: 'Colombia', currency: 'COP', symbol: '$', flag: '🇨🇴' },
-    'mexico': { name: 'México', currency: 'MXN', symbol: '$', flag: '🇲🇽' },
-    'argentina': { name: 'Argentina', currency: 'ARS', symbol: '$', flag: '🇦🇷' },
-    'chile': { name: 'Chile', currency: 'CLP', symbol: '$', flag: '🇨🇱' },
-    'peru': { name: 'Perú', currency: 'PEN', symbol: 'S/', flag: '🇵🇪' },
-    'ecuador': { name: 'Ecuador', currency: 'USD', symbol: '$', flag: '🇪🇨' },
-    'venezuela': { name: 'Venezuela', currency: 'VES', symbol: 'Bs.', flag: '🇻🇪' },
+    // América del Norte
     'usa': { name: 'Estados Unidos', currency: 'USD', symbol: '$', flag: '🇺🇸' },
-    'spain': { name: 'España', currency: 'EUR', symbol: '€', flag: '🇪🇸' }
+    'canada': { name: 'Canadá', currency: 'CAD', symbol: '$', flag: '🇨🇦' },
+    'mexico': { name: 'México', currency: 'MXN', symbol: '$', flag: '🇲🇽' },
+    
+    // América Central
+    'guatemala': { name: 'Guatemala', currency: 'GTQ', symbol: 'Q', flag: '🇬🇹' },
+    'belize': { name: 'Belice', currency: 'BZD', symbol: '$', flag: '🇧🇿' },
+    'honduras': { name: 'Honduras', currency: 'HNL', symbol: 'L', flag: '🇭🇳' },
+    'salvador': { name: 'El Salvador', currency: 'USD', symbol: '$', flag: '🇸🇻' },
+    'nicaragua': { name: 'Nicaragua', currency: 'NIO', symbol: 'C$', flag: '🇳🇮' },
+    'costarica': { name: 'Costa Rica', currency: 'CRC', symbol: '₡', flag: '🇨🇷' },
+    'panama': { name: 'Panamá', currency: 'PAB', symbol: 'B/.', flag: '🇵🇦' },
+    
+    // América del Sur
+    'colombia': { name: 'Colombia', currency: 'COP', symbol: '$', flag: '🇨🇴' },
+    'venezuela': { name: 'Venezuela', currency: 'VES', symbol: 'Bs.', flag: '🇻🇪' },
+    'guyana': { name: 'Guyana', currency: 'GYD', symbol: '$', flag: '🇬🇾' },
+    'suriname': { name: 'Suriname', currency: 'SRD', symbol: '$', flag: '🇸🇷' },
+    'brazil': { name: 'Brasil', currency: 'BRL', symbol: 'R$', flag: '🇧🇷' },
+    'ecuador': { name: 'Ecuador', currency: 'USD', symbol: '$', flag: '🇪🇨' },
+    'peru': { name: 'Perú', currency: 'PEN', symbol: 'S/', flag: '🇵🇪' },
+    'bolivia': { name: 'Bolivia', currency: 'BOB', symbol: 'Bs.', flag: '🇧🇴' },
+    'chile': { name: 'Chile', currency: 'CLP', symbol: '$', flag: '🇨🇱' },
+    'argentina': { name: 'Argentina', currency: 'ARS', symbol: '$', flag: '🇦🇷' },
+    'uruguay': { name: 'Uruguay', currency: 'UYU', symbol: '$', flag: '🇺🇾' },
+    'paraguay': { name: 'Paraguay', currency: 'PYG', symbol: '₲', flag: '🇵🇾' },
+    
+    // Europa
+    'spain': { name: 'España', currency: 'EUR', symbol: '€', flag: '🇪🇸' },
+    'france': { name: 'Francia', currency: 'EUR', symbol: '€', flag: '🇫🇷' },
+    'germany': { name: 'Alemania', currency: 'EUR', symbol: '€', flag: '🇩🇪' },
+    'italy': { name: 'Italia', currency: 'EUR', symbol: '€', flag: '🇮🇹' },
+    'portugal': { name: 'Portugal', currency: 'EUR', symbol: '€', flag: '🇵🇹' },
+    'uk': { name: 'Reino Unido', currency: 'GBP', symbol: '£', flag: '🇬🇧' },
+    'netherlands': { name: 'Países Bajos', currency: 'EUR', symbol: '€', flag: '🇳🇱' },
+    'belgium': { name: 'Bélgica', currency: 'EUR', symbol: '€', flag: '🇧🇪' },
+    'switzerland': { name: 'Suiza', currency: 'CHF', symbol: 'CHF', flag: '🇨🇭' },
+    'austria': { name: 'Austria', currency: 'EUR', symbol: '€', flag: '🇦🇹' },
+    'sweden': { name: 'Suecia', currency: 'SEK', symbol: 'kr', flag: '🇸🇪' },
+    'norway': { name: 'Noruega', currency: 'NOK', symbol: 'kr', flag: '🇳🇴' },
+    'denmark': { name: 'Dinamarca', currency: 'DKK', symbol: 'kr', flag: '🇩🇰' },
+    'finland': { name: 'Finlandia', currency: 'EUR', symbol: '€', flag: '🇫🇮' },
+    'poland': { name: 'Polonia', currency: 'PLN', symbol: 'zł', flag: '🇵🇱' },
+    'czechia': { name: 'República Checa', currency: 'CZK', symbol: 'Kč', flag: '🇨🇿' },
+    'hungary': { name: 'Hungría', currency: 'HUF', symbol: 'Ft', flag: '🇭🇺' },
+    'romania': { name: 'Rumania', currency: 'RON', symbol: 'lei', flag: '🇷🇴' },
+    'bulgaria': { name: 'Bulgaria', currency: 'BGN', symbol: 'лв', flag: '🇧🇬' },
+    'croatia': { name: 'Croacia', currency: 'EUR', symbol: '€', flag: '🇭🇷' },
+    'greece': { name: 'Grecia', currency: 'EUR', symbol: '€', flag: '🇬🇷' },
+    'russia': { name: 'Rusia', currency: 'RUB', symbol: '₽', flag: '🇷🇺' },
+    'ukraine': { name: 'Ucrania', currency: 'UAH', symbol: '₴', flag: '🇺🇦' },
+    
+    // Asia
+    'china': { name: 'China', currency: 'CNY', symbol: '¥', flag: '🇨🇳' },
+    'japan': { name: 'Japón', currency: 'JPY', symbol: '¥', flag: '🇯🇵' },
+    'southkorea': { name: 'Corea del Sur', currency: 'KRW', symbol: '₩', flag: '🇰🇷' },
+    'india': { name: 'India', currency: 'INR', symbol: '₹', flag: '🇮🇳' },
+    'thailand': { name: 'Tailandia', currency: 'THB', symbol: '฿', flag: '🇹🇭' },
+    'vietnam': { name: 'Vietnam', currency: 'VND', symbol: '₫', flag: '🇻🇳' },
+    'singapore': { name: 'Singapur', currency: 'SGD', symbol: '$', flag: '🇸🇬' },
+    'malaysia': { name: 'Malasia', currency: 'MYR', symbol: 'RM', flag: '🇲🇾' },
+    'indonesia': { name: 'Indonesia', currency: 'IDR', symbol: 'Rp', flag: '🇮🇩' },
+    'philippines': { name: 'Filipinas', currency: 'PHP', symbol: '₱', flag: '🇵🇭' },
+    'taiwan': { name: 'Taiwán', currency: 'TWD', symbol: '$', flag: '🇹🇼' },
+    'hongkong': { name: 'Hong Kong', currency: 'HKD', symbol: '$', flag: '🇭🇰' },
+    'pakistan': { name: 'Pakistán', currency: 'PKR', symbol: '₨', flag: '🇵🇰' },
+    'bangladesh': { name: 'Bangladesh', currency: 'BDT', symbol: '৳', flag: '🇧🇩' },
+    'srilanka': { name: 'Sri Lanka', currency: 'LKR', symbol: 'Rs', flag: '🇱🇰' },
+    'israel': { name: 'Israel', currency: 'ILS', symbol: '₪', flag: '🇮🇱' },
+    'uae': { name: 'Emiratos Árabes', currency: 'AED', symbol: 'د.إ', flag: '🇦🇪' },
+    'saudiarabia': { name: 'Arabia Saudí', currency: 'SAR', symbol: 'ر.س', flag: '🇸🇦' },
+    'turkey': { name: 'Turquía', currency: 'TRY', symbol: '₺', flag: '🇹🇷' },
+    
+    // África
+    'southafrica': { name: 'Sudáfrica', currency: 'ZAR', symbol: 'R', flag: '🇿🇦' },
+    'egypt': { name: 'Egipto', currency: 'EGP', symbol: '£', flag: '🇪🇬' },
+    'nigeria': { name: 'Nigeria', currency: 'NGN', symbol: '₦', flag: '🇳🇬' },
+    'kenya': { name: 'Kenia', currency: 'KES', symbol: 'KSh', flag: '🇰🇪' },
+    'morocco': { name: 'Marruecos', currency: 'MAD', symbol: 'د.م.', flag: '🇲🇦' },
+    'tunisia': { name: 'Túnez', currency: 'TND', symbol: 'د.ت', flag: '🇹🇳' },
+    'algeria': { name: 'Argelia', currency: 'DZD', symbol: 'د.ج', flag: '🇩🇿' },
+    'ghana': { name: 'Ghana', currency: 'GHS', symbol: '₵', flag: '🇬🇭' },
+    
+    // Oceanía
+    'australia': { name: 'Australia', currency: 'AUD', symbol: '$', flag: '🇦🇺' },
+    'newzealand': { name: 'Nueva Zelanda', currency: 'NZD', symbol: '$', flag: '🇳🇿' },
+    
+    // Caribe
+    'cuba': { name: 'Cuba', currency: 'CUP', symbol: '$', flag: '🇨🇺' },
+    'jamaica': { name: 'Jamaica', currency: 'JMD', symbol: '$', flag: '🇯🇲' },
+    'haiti': { name: 'Haití', currency: 'HTG', symbol: 'G', flag: '🇭🇹' },
+    'dominicanrepublic': { name: 'República Dominicana', currency: 'DOP', symbol: '$', flag: '🇩🇴' },
+    'puertorico': { name: 'Puerto Rico', currency: 'USD', symbol: '$', flag: '🇵🇷' },
+    'barbados': { name: 'Barbados', currency: 'BBD', symbol: '$', flag: '🇧🇧' },
+    'trinidadtobago': { name: 'Trinidad y Tobago', currency: 'TTD', symbol: '$', flag: '🇹🇹' }
   };
 
   const [activeTab, setActiveTab] = useState<string>('configuracion');
