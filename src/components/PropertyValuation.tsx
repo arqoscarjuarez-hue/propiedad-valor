@@ -402,8 +402,8 @@ const PropertyValuation = () => {
           tipoPropiedad: propertyData.tipoPropiedad
         });
 
-        // Usar la función RPC find_comparables_public
-        const { data: nearbyComparables, error } = await supabase.rpc('find_comparables_public', {
+        // Usar función RPC con radio progresivo para obtener comparables cercanos
+        const { data: nearbyComparables, error } = await supabase.rpc('find_comparables_progressive_radius', {
           target_lat: propertyData.latitud,
           target_lng: propertyData.longitud,
           target_estrato: estratoSocial,
@@ -412,30 +412,77 @@ const PropertyValuation = () => {
 
         if (error) {
           console.error('Error al buscar comparables con RPC:', error);
-          // Fallback: Buscar sin filtro específico
+          // Fallback: Buscar sin filtro específico (tomando los más cercanos por lat/lon aproximada)
           const { data: generalComparables, error: generalError } = await supabase.rpc('get_property_comparables_public', {
-            limit_rows: 10,
+            limit_rows: 50,
             offset_rows: 0
           });
           
           if (!generalError && generalComparables && generalComparables.length > 0) {
             console.log('📍 Usando comparables generales como respaldo');
-            comparablesData = generalComparables.slice(0, 3).map((comp: any) => ({
-              ...comp,
-              price_usd: 150000 + (Math.random() * 100000), // Precio estimado
-              price_per_sqm_usd: (150000 + (Math.random() * 100000)) / comp.total_area,
-              latitude: comp.approximate_latitude,
-              longitude: comp.approximate_longitude,
-              distance: Math.random() * 5 + 1 // Distancia simulada 1-6 km
-            }));
+            const withDistance = generalComparables
+              .map((comp: any) => ({
+                ...comp,
+                latitude: comp.approximate_latitude,
+                longitude: comp.approximate_longitude,
+                distance_km: comp.approximate_latitude && comp.approximate_longitude
+                  ? calculateDistance(propertyData.latitud, propertyData.longitud, comp.approximate_latitude, comp.approximate_longitude)
+                  : undefined
+              }))
+              .filter((c: any) => c.distance_km !== undefined)
+              .sort((a: any, b: any) => (a.distance_km as number) - (b.distance_km as number));
+
+            // Filtrar por cercanía y similitud de área (70% - 130%)
+            const minArea = propertyData.area * 0.7;
+            const maxArea = propertyData.area * 1.3;
+            comparablesData = withDistance
+              .filter((c: any) => c.total_area >= minArea && c.total_area <= maxArea && (c.property_type === propertyData.tipoPropiedad))
+              .slice(0, 5)
+              .map((comp: any) => ({
+                ...comp,
+                address: comp.general_location,
+                price_usd: 150000 + (Math.random() * 100000), // Precio estimado al no tenerlo en este RPC
+                price_per_sqm_usd: (150000 + (Math.random() * 100000)) / comp.total_area,
+                distance: comp.distance_km
+              }));
           }
         } else if (nearbyComparables && nearbyComparables.length > 0) {
-          console.log(`✅ Encontrados ${nearbyComparables.length} comparables usando RPC`);
-          comparablesData = nearbyComparables.map((comp: any) => ({
-            ...comp,
-            price_usd: 120000 + (Math.random() * 150000), // Precio basado en el rango
-            price_per_sqm_usd: (120000 + (Math.random() * 150000)) / comp.total_area,
-            distance_km: comp.distance_km
+          console.log(`✅ Encontrados ${nearbyComparables.length} comparables usando RPC (progresivo)`);
+
+          // Preferir comparables muy cercanos (San Marcos) con filtros de radio 5km -> 10km -> 20km
+          const tiers = [5, 10, 20];
+          const minArea = propertyData.area * 0.7;
+          const maxArea = propertyData.area * 1.3;
+
+          let selected: any[] = [];
+          for (const r of tiers) {
+            selected = nearbyComparables.filter((comp: any) => {
+              const d = comp.distance_km ?? (comp.latitude && comp.longitude
+                ? calculateDistance(propertyData.latitud, propertyData.longitud, comp.latitude, comp.longitude)
+                : undefined);
+              const areaOk = comp.total_area >= minArea && comp.total_area <= maxArea;
+              return d !== undefined && d <= r && areaOk && comp.property_type === propertyData.tipoPropiedad;
+            }).sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
+            if (selected.length >= 3) break;
+          }
+          if (selected.length === 0) {
+            // Si no hay suficientes en 20km, tomar los más cercanos disponibles con área similar
+            selected = nearbyComparables
+              .filter((comp: any) => comp.total_area >= minArea && comp.total_area <= maxArea)
+              .sort((a: any, b: any) => (a.distance_km ?? 999) - (b.distance_km ?? 999));
+          }
+
+          comparablesData = selected.slice(0, 5).map((comp: any) => ({
+            id: comp.id,
+            address: comp.address,
+            price_usd: comp.price_usd,
+            price_per_sqm_usd: comp.price_per_sqm_usd,
+            total_area: comp.total_area,
+            latitude: comp.latitude,
+            longitude: comp.longitude,
+            property_type: comp.property_type,
+            distance_km: comp.distance_km,
+            distance: comp.distance_km
           }));
         }
 
