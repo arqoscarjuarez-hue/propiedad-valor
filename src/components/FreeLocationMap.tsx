@@ -188,44 +188,126 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
-    try {
-      // Crear el mapa
-      map.current = L.map(mapContainer.current, {
-        center: [initialLat, initialLng],
-        zoom: 15,
-        zoomControl: true,
-        attributionControl: true
-      });
+    // Función para inicializar el mapa con coordenadas específicas
+    const initializeMap = (lat: number, lng: number) => {
+      try {
+        // Crear el mapa
+        map.current = L.map(mapContainer.current!, {
+          center: [lat, lng],
+          zoom: 15,
+          zoomControl: true,
+          attributionControl: true
+        });
 
-      // Agregar capa de OpenStreetMap (gratuito)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      }).addTo(map.current);
+        // Agregar capa de OpenStreetMap (gratuito)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19,
+        }).addTo(map.current);
 
-      // Crear marcador arrastrable
-      marker.current = L.marker([initialLat, initialLng], {
-        draggable: true,
-        icon: DefaultIcon
-      }).addTo(map.current);
+        // Crear marcador arrastrable
+        marker.current = L.marker([lat, lng], {
+          draggable: true,
+          icon: DefaultIcon
+        }).addTo(map.current);
 
-      // Evento cuando se arrastra el marcador
-      marker.current.on('dragend', () => {
-        if (marker.current) {
-          const position = marker.current.getLatLng();
-          handleLocationUpdate(position.lat, position.lng);
+        // Evento cuando se arrastra el marcador
+        marker.current.on('dragend', () => {
+          if (marker.current) {
+            const position = marker.current.getLatLng();
+            handleLocationUpdate(position.lat, position.lng);
+          }
+        });
+
+        // Evento cuando se hace clic en el mapa
+        map.current.on('click', (e: L.LeafletMouseEvent) => {
+          if (marker.current) {
+            const { lat: clickLat, lng: clickLng } = e.latlng;
+            marker.current.setLatLng([clickLat, clickLng]);
+            handleLocationUpdate(clickLat, clickLng);
+          }
+        });
+
+        setIsMapReady(true);
+        
+        // Forzar redibujado del mapa
+        setTimeout(() => {
+          if (map.current) {
+            map.current.invalidateSize();
+          }
+        }, 100);
+
+      } catch (error) {
+        console.error('Error inicializando mapa:', error);
+      }
+    };
+
+    // Verificar si es un nuevo usuario (sin coordenadas guardadas válidas)
+    const isNewUser = !initialLat || !initialLng || 
+                     (initialLat === 19.4326 && initialLng === -99.1332) ||
+                     (initialLat === 13.7042 && initialLng === -89.2073);
+
+    if (isNewUser && navigator.geolocation) {
+      // Para nuevos usuarios, intentar obtener ubicación actual
+      setGettingLocation(true);
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // Inicializar mapa con ubicación actual
+          initializeMap(latitude, longitude);
+          
+          // Obtener dirección de la ubicación actual
+          handleLocationUpdate(latitude, longitude);
+          
+          toast({
+            title: "¡Ubicación detectada!",
+            description: "Se ha cargado tu ubicación actual en el mapa",
+          });
+          
+          setGettingLocation(false);
+        },
+        (error) => {
+          // Si falla la geolocalización, usar coordenadas por defecto
+          console.log('Geolocalización falló, usando coordenadas por defecto:', error);
+          
+          const defaultLat = initialLat || 13.7042;
+          const defaultLng = initialLng || -89.2073;
+          
+          initializeMap(defaultLat, defaultLng);
+          
+          // Geocodificar posición inicial solo si no hay coordenadas válidas guardadas
+          if (initialAddress && (!initialLat || !initialLng || (initialLat === 19.4326 && initialLng === -99.1332))) {
+            geocodeAddress(initialAddress);
+          } else if (initialLat && initialLng && (initialLat !== 19.4326 || initialLng !== -99.1332)) {
+            // Si tenemos coordenadas válidas guardadas, usarlas y obtener la dirección si no la tenemos
+            if (!initialAddress) {
+              reverseGeocode(initialLat, initialLng);
+            } else {
+              setCurrentAddress(initialAddress);
+              onLocationChange?.(initialLat, initialLng, initialAddress);
+            }
+          } else {
+            // Solo hacer reverse geocoding si no tenemos nada guardado
+            reverseGeocode(defaultLat, defaultLng);
+          }
+          
+          setGettingLocation(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
         }
-      });
-
-      // Evento cuando se hace clic en el mapa
-      map.current.on('click', (e: L.LeafletMouseEvent) => {
-        if (marker.current) {
-          const { lat, lng } = e.latlng;
-          marker.current.setLatLng([lat, lng]);
-          handleLocationUpdate(lat, lng);
-        }
-      });
-
+      );
+    } else {
+      // Usuario con coordenadas guardadas, usar esas coordenadas
+      const savedLat = initialLat || 13.7042;
+      const savedLng = initialLng || -89.2073;
+      
+      initializeMap(savedLat, savedLng);
+      
       // Geocodificar posición inicial solo si no hay coordenadas válidas guardadas
       if (initialAddress && (!initialLat || !initialLng || (initialLat === 19.4326 && initialLng === -99.1332))) {
         geocodeAddress(initialAddress);
@@ -239,20 +321,8 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
         }
       } else {
         // Solo hacer reverse geocoding si no tenemos nada guardado
-        reverseGeocode(initialLat, initialLng);
+        reverseGeocode(savedLat, savedLng);
       }
-
-      setIsMapReady(true);
-      
-      // Forzar redibujado del mapa
-      setTimeout(() => {
-        if (map.current) {
-          map.current.invalidateSize();
-        }
-      }, 100);
-
-    } catch (error) {
-      console.error('Error inicializando mapa:', error);
     }
 
     // Cleanup
