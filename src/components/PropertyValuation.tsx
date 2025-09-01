@@ -879,11 +879,11 @@ const PropertyValuation = () => {
                             </div>
                           </div>
 
-                          {/* Selección de País/Moneda */}
+                          {/* Selección de País */}
                           <div className="space-y-4">
                             <div>
                               <Label className="text-base font-semibold mb-3 block">
-                                💰 Seleccione el País/Moneda *
+                                💰 Seleccione el *
                               </Label>
                               <Select 
                                 value={selectedCountry} 
