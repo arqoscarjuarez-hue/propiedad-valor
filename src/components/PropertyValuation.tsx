@@ -334,7 +334,7 @@ const PropertyValuation = () => {
   const isStep0Complete = () => selectedLanguage && selectedCountry;
   const isStep1Complete = () => propertyData.tipoPropiedad;
   const isStep2Complete = () => propertyData.latitud && propertyData.longitud && propertyData.direccionCompleta;
-  const isStep3Complete = () => propertyData.area > 0;
+  const isStep3Complete = () => propertyData.area > 0 && propertyData.construction_area > 0;
   const isStep4Complete = () => propertyData.estadoConservacion;
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
@@ -877,26 +877,42 @@ const PropertyValuation = () => {
                         </p>
                       </div>
 
-                      <div className="space-y-4">
-                        <Label htmlFor="area" className="text-base font-semibold">
-                          🌱 Área de Terreno (metros cuadrados) *
-                        </Label>
-                        <Input 
-                          id="area"
-                          type="number" 
-                          value={propertyData.area || ''}
-                          onChange={(e) => {
-                            handleInputChange('area', Number(e.target.value));
-                            if (Number(e.target.value) > 0) {
-                              setTimeout(goToNextStep, 500);
-                            }
-                          }}
-                          placeholder="Ejemplo: 200"
-                          className="border-2 focus:border-green-500 hover:border-green-400 transition-colors h-12"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
-                        </p>
+                      <div className="space-y-6">
+                        {/* Área de Terreno */}
+                        <div className="space-y-3">
+                          <Label htmlFor="area" className="text-base font-semibold">
+                            🌱 Área de Terreno (metros cuadrados) *
+                          </Label>
+                          <Input 
+                            id="area"
+                            type="number" 
+                            value={propertyData.area || ''}
+                            onChange={(e) => handleInputChange('area', Number(e.target.value))}
+                            placeholder="Ejemplo: 200"
+                            className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            🏞️ El área total del terreno (incluyendo patio, jardín, etc.)
+                          </p>
+                        </div>
+
+                        {/* Área Total de Construcción */}
+                        <div className="space-y-3">
+                          <Label htmlFor="construction_area" className="text-base font-semibold">
+                            🏠 Área Total de Construcción (metros cuadrados) *
+                          </Label>
+                          <Input 
+                            id="construction_area"
+                            type="number" 
+                            value={propertyData.construction_area || ''}
+                            onChange={(e) => handleInputChange('construction_area', Number(e.target.value))}
+                            placeholder="Ejemplo: 120"
+                            className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            🏗️ El área total construida (todas las habitaciones, baños, cocina, etc.)
+                          </p>
+                        </div>
 
                         {/* Confirmación cuando se complete el área */}
                         {isStep3Complete() && (
@@ -905,7 +921,7 @@ const PropertyValuation = () => {
                               <div className="flex items-center gap-2">
                                 <span className="text-green-600">✅</span>
                                 <p className="text-green-800 font-medium text-sm">
-                                  ¡Excelente! Ya sabemos el área: {propertyData.area} m²
+                                  ¡Excelente! Terreno: {propertyData.area}m² | Construcción: {propertyData.construction_area}m²
                                 </p>
                               </div>
                               <Button 
@@ -922,7 +938,7 @@ const PropertyValuation = () => {
                         <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                           <p className="text-yellow-800 text-xs">
                             🎯 <strong>¿Por qué necesitamos esto?</strong> El tamaño es lo más importante para saber cuánto vale tu casa. 
-                            Una casa más grande vale más dinero.
+                            Necesitamos tanto el terreno como la construcción para una valuación precisa.
                           </p>
                         </div>
                       </div>
