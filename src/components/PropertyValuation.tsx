@@ -848,14 +848,15 @@ const PropertyValuation = () => {
                                  <SelectTrigger className="border-2 focus:border-indigo-500 bg-white">
                                    <SelectValue placeholder="Selecciona el estado de conservación de la propiedad" />
                                  </SelectTrigger>
-                                  <SelectContent className="bg-white border-2 border-indigo-200 shadow-lg z-50 max-h-60 overflow-y-auto">
+                                  <SelectContent className="bg-white border-2 border-indigo-200 shadow-xl z-[9999] max-h-60 overflow-y-auto pointer-events-auto">
                                     {conservationStates.map((state) => (
                                       <SelectItem 
                                         key={state.value} 
                                         value={state.value} 
-                                        className="font-medium hover:bg-indigo-50 cursor-pointer py-3"
+                                        className="font-medium hover:bg-indigo-50 cursor-pointer py-3 px-4 text-sm transition-colors focus:bg-indigo-100 data-[highlighted]:bg-indigo-100"
                                       >
-                                        {state.label} ({state.factor.toFixed(4)})
+                                        <span className="font-bold text-indigo-700">{state.label}</span> 
+                                        <span className="text-gray-600 ml-2">({state.factor.toFixed(4)})</span>
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
