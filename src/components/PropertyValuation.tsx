@@ -1210,113 +1210,179 @@ const PropertyValuation = () => {
                               </thead>
                               <tbody className="divide-y divide-indigo-200">
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'NUEVO' 
                                       ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     console.log('Clicking NUEVO');
-                                     handleInputChange('estadoConservacion', 'NUEVO');
-                                     setSelectedConservationState('NUEVO');
-                                     console.log('Set selectedConservationState to NUEVO');
-                                   }}
+                                  onClick={() => {
+                                    console.log('Clicking NUEVO');
+                                    handleInputChange('estadoConservacion', 'NUEVO');
+                                    setSelectedConservationState('NUEVO');
+                                    console.log('Set selectedConservationState to NUEVO');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'NUEVO' ? 'font-bold text-green-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'NUEVO' ? '✅ NUEVO' : 'NUEVO'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🏠 NUEVO</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['NUEVO'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['NUEVO']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'BUENO' 
                                       ? 'bg-green-100 border-l-4 border-green-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     console.log('Clicking BUENO');
-                                     handleInputChange('estadoConservacion', 'BUENO');
-                                     setSelectedConservationState('BUENO');
-                                   }}
+                                  onClick={() => {
+                                    console.log('Clicking BUENO');
+                                    handleInputChange('estadoConservacion', 'BUENO');
+                                    setSelectedConservationState('BUENO');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'BUENO' ? 'font-bold text-green-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'BUENO' ? '✅ BUENO' : 'BUENO'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🏠 BUENO</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['BUENO'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['BUENO']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'MEDIO' 
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     console.log('Clicking MEDIO');
-                                     handleInputChange('estadoConservacion', 'MEDIO');
-                                     setSelectedConservationState('MEDIO');
-                                   }}
+                                  onClick={() => {
+                                    console.log('Clicking MEDIO');
+                                    handleInputChange('estadoConservacion', 'MEDIO');
+                                    setSelectedConservationState('MEDIO');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'MEDIO' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'MEDIO' ? '✅ MEDIO' : 'MEDIO'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🏠 MEDIO</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['MEDIO'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['MEDIO']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'REGULAR' 
                                       ? 'bg-yellow-100 border-l-4 border-yellow-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     handleInputChange('estadoConservacion', 'REGULAR');
-                                     setSelectedConservationState('REGULAR');
-                                   }}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REGULAR');
+                                    setSelectedConservationState('REGULAR');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'REGULAR' ? 'font-bold text-yellow-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REGULAR' ? '✅ REGULAR' : 'REGULAR'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🏠 REGULAR</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['REGULAR'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['REGULAR']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' 
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
-                                     setSelectedConservationState('REPARACIONES SENCILLAS');
-                                   }}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REPARACIONES SENCILLAS');
+                                    setSelectedConservationState('REPARACIONES SENCILLAS');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES SENCILLAS' ? '✅ REPARACIONES SENCILLAS' : 'REPARACIONES SENCILLAS'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🔧 REPARACIONES SENCILLAS</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['REPARACIONES SENCILLAS'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['REPARACIONES SENCILLAS']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'REPARACIONES MEDIAS' 
                                       ? 'bg-blue-100 border-l-4 border-blue-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
                                   }`}
-                                   onClick={() => {
-                                     handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
-                                     setSelectedConservationState('REPARACIONES MEDIAS');
-                                   }}
+                                  onClick={() => {
+                                    handleInputChange('estadoConservacion', 'REPARACIONES MEDIAS');
+                                    setSelectedConservationState('REPARACIONES MEDIAS');
+                                  }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? 'font-bold text-blue-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES MEDIAS' ? '✅ REPARACIONES MEDIAS' : 'REPARACIONES MEDIAS'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🔨 REPARACIONES MEDIAS</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['REPARACIONES MEDIAS'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['REPARACIONES MEDIAS']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' 
                                       ? 'bg-orange-100 border-l-4 border-orange-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
@@ -1326,14 +1392,25 @@ const PropertyValuation = () => {
                                      setSelectedConservationState('REPARACIONES IMPORTANTES');
                                    }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? 'font-bold text-orange-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'REPARACIONES IMPORTANTES' ? '✅ REPARACIONES IMPORTANTES' : 'REPARACIONES IMPORTANTES'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">⚠️ REPARACIONES IMPORTANTES</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['REPARACIONES IMPORTANTES'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['REPARACIONES IMPORTANTES']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                 </tr>
                                 <tr 
-                                  className={`cursor-pointer transition-all duration-300 ${
+                                  className={`cursor-pointer transition-all duration-300 relative group ${
                                     propertyData.estadoConservacion === 'DAÑOS GRAVES' 
                                       ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
                                       : 'hover:bg-indigo-50'
@@ -1343,14 +1420,25 @@ const PropertyValuation = () => {
                                      setSelectedConservationState('DAÑOS GRAVES');
                                    }}
                                 >
-                                  <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                  <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                     propertyData.estadoConservacion === 'DAÑOS GRAVES' ? 'font-bold text-red-800' : 'text-gray-700'
                                   }`}>
                                     {propertyData.estadoConservacion === 'DAÑOS GRAVES' ? '✅ DAÑOS GRAVES' : 'DAÑOS GRAVES'}
+                                    
+                                    {/* Tooltip explicativo */}
+                                    <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                      <h5 className="font-bold text-indigo-800 mb-2">🚨 DAÑOS GRAVES</h5>
+                                      <p className="text-sm text-indigo-700 mb-2">
+                                        {conservationExplanations['DAÑOS GRAVES'].description}
+                                      </p>
+                                      <div className="text-xs text-indigo-600">
+                                        <strong>Factor:</strong> {conservationFactors['DAÑOS GRAVES']?.toFixed(4)}
+                                      </div>
+                                    </div>
                                   </td>
                                  </tr>
                                  <tr 
-                                   className={`cursor-pointer transition-all duration-300 ${
+                                   className={`cursor-pointer transition-all duration-300 relative group ${
                                      propertyData.estadoConservacion === 'EN DESECHO' 
                                        ? 'bg-red-100 border-l-4 border-red-500 shadow-md transform scale-105' 
                                        : 'hover:bg-indigo-50'
@@ -1360,10 +1448,21 @@ const PropertyValuation = () => {
                                      setSelectedConservationState('EN DESECHO');
                                    }}
                                  >
-                                   <td className={`px-6 py-3 font-medium text-lg text-center ${
+                                   <td className={`px-6 py-3 font-medium text-lg text-center relative ${
                                      propertyData.estadoConservacion === 'EN DESECHO' ? 'font-bold text-red-800' : 'text-gray-700'
                                    }`}>
                                      {propertyData.estadoConservacion === 'EN DESECHO' ? '✅ EN DESECHO' : 'EN DESECHO'}
+                                     
+                                     {/* Tooltip explicativo */}
+                                     <div className="absolute left-full top-0 ml-4 w-80 bg-white border-2 border-indigo-300 rounded-lg p-4 shadow-xl z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                       <h5 className="font-bold text-indigo-800 mb-2">💥 EN DESECHO</h5>
+                                       <p className="text-sm text-indigo-700 mb-2">
+                                         {conservationExplanations['EN DESECHO'].description}
+                                       </p>
+                                       <div className="text-xs text-indigo-600">
+                                         <strong>Factor:</strong> {conservationFactors['EN DESECHO']?.toFixed(4)}
+                                       </div>
+                                     </div>
                                    </td>
                                  </tr>
                               </tbody>
