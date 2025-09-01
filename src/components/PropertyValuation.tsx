@@ -588,16 +588,16 @@ const PropertyValuation = () => {
                     {isStep0Complete() ? '✅' : '1️⃣'} Inicio
                   </TabsTrigger>
                   <TabsTrigger 
-                    value="estrato" 
-                    className="text-xs font-semibold transition-all data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-violet-100 dark:hover:bg-violet-900/50 text-slate-700 dark:text-slate-300"
-                  >
-                    {isStep2Complete() ? '✅' : '2️⃣'} Estrato
-                  </TabsTrigger>
-                  <TabsTrigger 
                     value="tipo" 
                     className="text-xs font-semibold transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-slate-700 dark:text-slate-300"
                   >
-                    {isStep4Complete() ? '✅' : '3️⃣'} Tipo
+                    {isStep4Complete() ? '✅' : '2️⃣'} Tipo
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="estrato" 
+                    className="text-xs font-semibold transition-all data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:scale-105 hover:bg-violet-100 dark:hover:bg-violet-900/50 text-slate-700 dark:text-slate-300"
+                  >
+                    {isStep2Complete() ? '✅' : '3️⃣'} Estrato
                   </TabsTrigger>
                   <TabsTrigger 
                     value="ubicacion" 
