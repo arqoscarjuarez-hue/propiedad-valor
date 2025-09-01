@@ -103,10 +103,10 @@ const PropertyValuation = () => {
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
 
   const handleInputChange = (field: keyof PropertyData, value: any) => {
-    console.log(`INPUT CHANGE: ${field}`, value);
+    console.log(`✅ CAMPO ACTUALIZADO: ${field} = ${value}`);
     setPropertyData(prev => {
       const updated = { ...prev, [field]: value };
-      console.log('PROPERTY DATA UPDATED:', updated);
+      console.log('📊 DATOS COMPLETOS:', updated);
       return updated;
     });
   };
