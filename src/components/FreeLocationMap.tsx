@@ -31,15 +31,13 @@ interface FreeLocationMapProps {
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
-  fixedAddress?: boolean; // Nuevo prop para controlar si la dirección está fija
 }
 
 const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   onLocationChange,
   initialLat = 19.4326,
   initialLng = -99.1332,
-  initialAddress = '',
-  fixedAddress = false
+  initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -53,15 +51,12 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
   
   const { toast } = useToast();
 
-  // Efecto para sincronizar la dirección cuando cambia initialAddress o fixedAddress
+  // Efecto para sincronizar la dirección cuando cambia initialAddress
   useEffect(() => {
-    if (fixedAddress && initialAddress) {
+    if (initialAddress) {
       setCurrentAddress(initialAddress);
-    } else if (!fixedAddress && !initialAddress) {
-      // Si no hay dirección fija ni inicial, limpiar la dirección actual
-      setCurrentAddress('');
     }
-  }, [initialAddress, fixedAddress]);
+  }, [initialAddress]);
 
   // Función para geocodificación inversa usando Nominatim (gratuito)
   const reverseGeocode = async (lat: number, lng: number) => {
@@ -74,14 +69,9 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
       if (data && data.display_name) {
         const address = data.display_name;
         
-        // Solo actualizar la dirección mostrada si no está fija
-        if (!fixedAddress) {
-          setCurrentAddress(address);
-          onLocationChange?.(lat, lng, address);
-        } else {
-          // Si la dirección está fija, solo enviar coordenadas
-          onLocationChange?.(lat, lng, currentAddress);
-        }
+        // Siempre actualizar la dirección
+        setCurrentAddress(address);
+        onLocationChange?.(lat, lng, address);
         return address;
       }
     } catch (error) {
@@ -350,8 +340,8 @@ const FreeLocationMap: React.FC<FreeLocationMapProps> = ({
         </div>
       </div>
 
-      {/* Información de la ubicación seleccionada - solo mostrar si no hay dirección fija */}
-      {currentAddress && !fixedAddress && (
+      {/* Información de la ubicación seleccionada */}
+      {currentAddress && (
         <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <p className="text-sm font-medium text-emerald-800 mb-1">📍 Ubicación seleccionada:</p>
           <p className="text-sm text-emerald-700">{currentAddress}</p>
