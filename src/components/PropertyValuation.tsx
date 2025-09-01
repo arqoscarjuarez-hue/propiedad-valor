@@ -883,7 +883,7 @@ const PropertyValuation = () => {
                           <div className="space-y-4">
                             <div>
                               <Label className="text-base font-semibold mb-3 block">
-                                💰 Seleccione el *
+                                💰 En qué país se realizará el avalúo *
                               </Label>
                               <Select 
                                 value={selectedCountry} 
