@@ -1198,7 +1198,7 @@ const PropertyValuation = () => {
                               Estado seleccionado: {propertyData.estadoConservacion}
                             </p>
                             <p className="text-green-700 text-sm">
-                              Factor de depreciación aplicado: <span className="font-bold">{conservationFactors[propertyData.estadoConservacion]?.toFixed(4)}</span>
+                              Factor de depreciación aplicado
                             </p>
                             <p className="text-green-600 text-xs mt-1">
                               ✨ Este factor influye directamente en el cálculo del avalúo final
