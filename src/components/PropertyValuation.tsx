@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -240,6 +240,27 @@ const conservationExplanations: Record<string, any> = {
   }
 };
 
+// Mapeo de códigos de país ISO a nuestras claves internas
+const countryCodeToKey: Record<string, string> = {
+  'US': 'usa',
+  'CA': 'canada', 
+  'MX': 'mexico',
+  'GT': 'guatemala',
+  'BZ': 'belize',
+  'HN': 'honduras',
+  'SV': 'salvador',
+  'NI': 'nicaragua',
+  'CR': 'costarica',
+  'PA': 'panama',
+  'CO': 'colombia',
+  'VE': 'venezuela',
+  'BR': 'brazil',
+  'EC': 'ecuador',
+  'PE': 'peru',
+  'CL': 'chile',
+  'AR': 'argentina'
+};
+
 // Configuración completa de países del mundo con factores económicos
 const countriesConfig = {
   // América del Norte
@@ -426,6 +447,7 @@ const PropertyValuation = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('es');
   const [selectedCountry, setSelectedCountry] = useState('salvador');
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   
   // Estados adicionales
   const [selectedMainStrata, setSelectedMainStrata] = useState('');
@@ -434,6 +456,70 @@ const PropertyValuation = () => {
   const [valuationResult, setValuationResult] = useState<any>(null);
   const [comparables, setComparables] = useState<Comparable[]>([]);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
+
+  // Función para detectar país automáticamente para nuevos usuarios
+  const detectUserCountry = async () => {
+    // Verificar si es un nuevo usuario (país por defecto)
+    if (selectedCountry !== 'salvador') {
+      return; // Ya tienen un país seleccionado
+    }
+
+    setIsDetectingLocation(true);
+
+    try {
+      // Intentar obtener ubicación del usuario
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error('Geolocalización no soportada'));
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          resolve,
+          reject,
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000 // 5 minutos
+          }
+        );
+      });
+
+      const { latitude, longitude } = position.coords;
+
+      // Usar geocodificación inversa para obtener el país
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&accept-language=es`
+      );
+      
+      const data = await response.json();
+      
+      if (data && data.address && data.address.country_code) {
+        const countryCode = data.address.country_code.toUpperCase();
+        const countryKey = countryCodeToKey[countryCode];
+        
+        if (countryKey && countriesConfig[countryKey as keyof typeof countriesConfig]) {
+          // Actualizar país y moneda detectados
+          setSelectedCountry(countryKey);
+          setSelectedCurrency(countriesConfig[countryKey as keyof typeof countriesConfig].currency);
+          
+          toast(
+            `¡País detectado automáticamente! Se detectó que estás en ${countriesConfig[countryKey as keyof typeof countriesConfig].name}`
+          );
+        }
+      }
+    } catch (error) {
+      console.log('No se pudo detectar el país automáticamente:', error);
+      // No mostrar error al usuario, simplemente mantener el país por defecto
+    } finally {
+      setIsDetectingLocation(false);
+    }
+  };
+
+  // Detectar país automáticamente al cargar el componente
+  useEffect(() => {
+    detectUserCountry();
+  }, []);
   const [highlightedElement, setHighlightedElement] = useState<string | null>(null);
 
   // Funciones de validación de pasos
@@ -673,6 +759,14 @@ const PropertyValuation = () => {
                         <div>
                           <Label className="text-base font-semibold mb-3 block">
                             🌍 ¿En qué país está tu casa? *
+                            {isDetectingLocation && (
+                              <span className="ml-2 text-sm text-blue-600 font-normal">
+                                <div className="inline-flex items-center">
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-1"></div>
+                                  Detectando ubicación...
+                                </div>
+                              </span>
+                            )}
                           </Label>
                           <Select 
                             value={selectedCountry} 
@@ -680,6 +774,7 @@ const PropertyValuation = () => {
                               setSelectedCountry(value);
                               setSelectedCurrency(countriesConfig[value as keyof typeof countriesConfig]?.currency || 'USD');
                             }}
+                            disabled={isDetectingLocation}
                           >
                             <SelectTrigger className="border-2 focus:border-purple-500 hover:border-purple-400 transition-colors h-12">
                               <SelectValue placeholder="Elige el país donde está tu casa" />
