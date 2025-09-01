@@ -1331,17 +1331,31 @@ const PropertyValuation = () => {
                               🏆 ¡Tu Casa Vale!
                             </h4>
                             
-                            {/* Precio en USD */}
-                            <div className="text-3xl font-bold text-green-900 mb-2">
-                              ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
-                            </div>
-                            
-                            {/* Precio en moneda local si es diferente */}
-                            {valuationResult.currency !== 'USD' && (
-                              <div className="text-2xl font-bold text-green-800 mb-4">
-                                {valuationResult.symbol}{valuationResult.estimatedValueLocal?.toLocaleString()} {valuationResult.currency}
+                            {/* Precio Máximo de Venta (Resultado del Avalúo) */}
+                            <div className="mb-4">
+                              <p className="text-sm font-medium text-green-700 mb-1">Precio Máximo de Venta (Resultado del Avalúo):</p>
+                              <div className="text-3xl font-bold text-green-900">
+                                ${valuationResult.estimatedValueUSD?.toLocaleString()} USD
                               </div>
-                            )}
+                              {valuationResult.currency !== 'USD' && (
+                                <div className="text-xl font-bold text-green-800 mt-1">
+                                  {valuationResult.symbol}{valuationResult.estimatedValueLocal?.toLocaleString()} {valuationResult.currency}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Precio Mínimo de Venta (-15%) */}
+                            <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded">
+                              <p className="text-sm font-medium text-green-700 mb-1">Precio Mínimo de Venta (-15%):</p>
+                              <div className="text-2xl font-bold text-green-800">
+                                ${Math.round((valuationResult.estimatedValueUSD || 0) * 0.85).toLocaleString()} USD
+                              </div>
+                              {valuationResult.currency !== 'USD' && (
+                                <div className="text-lg font-bold text-green-700 mt-1">
+                                  {valuationResult.symbol}{Math.round((valuationResult.estimatedValueLocal || 0) * 0.85).toLocaleString()} {valuationResult.currency}
+                                </div>
+                              )}
+                            </div>
                             
                              <div className="text-green-700 space-y-1 text-sm">
                                <p><strong>Propiedad:</strong> {valuationResult.propertyType} de {valuationResult.area} m²</p>
