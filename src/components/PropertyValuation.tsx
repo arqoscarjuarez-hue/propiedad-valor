@@ -782,20 +782,19 @@ const PropertyValuation = () => {
                                  <table className="w-full">
                                    <thead className="bg-indigo-100">
                                      <tr>
-                                       <th className="px-4 py-3 text-left font-bold text-indigo-800">CALIFICACIÓN</th>
                                        <th className="px-4 py-3 text-left font-bold text-indigo-800">ESTADO</th>
                                      </tr>
                                    </thead>
                                    <tbody className="divide-y divide-indigo-100">
-                                     <tr><td className="px-4 py-2 font-mono">1.0000</td><td className="px-4 py-2">NUEVO</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.9968</td><td className="px-4 py-2">BUENO</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.9748</td><td className="px-4 py-2">MEDIO</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.9191</td><td className="px-4 py-2">REGULAR</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.8190</td><td className="px-4 py-2 text-blue-600">REPARACIONES SENCILLAS</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.6680</td><td className="px-4 py-2 text-blue-600">REPARACIONES MEDIAS</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.4740</td><td className="px-4 py-2 text-blue-600">REPARACIONES IMPORTANTES</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.2480</td><td className="px-4 py-2 text-blue-600">DAÑOS GRAVES</td></tr>
-                                     <tr><td className="px-4 py-2 font-mono">0.1350</td><td className="px-4 py-2 text-blue-600">EN DESECHO</td></tr>
+                                     <tr><td className="px-4 py-2">NUEVO</td></tr>
+                                     <tr><td className="px-4 py-2">BUENO</td></tr>
+                                     <tr><td className="px-4 py-2">MEDIO</td></tr>
+                                     <tr><td className="px-4 py-2">REGULAR</td></tr>
+                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES SENCILLAS</td></tr>
+                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES MEDIAS</td></tr>
+                                     <tr><td className="px-4 py-2 text-blue-600">REPARACIONES IMPORTANTES</td></tr>
+                                     <tr><td className="px-4 py-2 text-blue-600">DAÑOS GRAVES</td></tr>
+                                     <tr><td className="px-4 py-2 text-blue-600">EN DESECHO</td></tr>
                                    </tbody>
                                  </table>
                                </div>
@@ -815,15 +814,15 @@ const PropertyValuation = () => {
                                    <SelectValue placeholder="Selecciona el estado de conservación" />
                                  </SelectTrigger>
                                  <SelectContent>
-                                   <SelectItem value="nuevo" className="font-medium">1.0000 - NUEVO</SelectItem>
-                                   <SelectItem value="bueno" className="font-medium">0.9968 - BUENO</SelectItem>
-                                   <SelectItem value="medio" className="font-medium">0.9748 - MEDIO</SelectItem>
-                                   <SelectItem value="regular" className="font-medium">0.9191 - REGULAR</SelectItem>
-                                   <SelectItem value="reparaciones_sencillas" className="font-medium">0.8190 - REPARACIONES SENCILLAS</SelectItem>
-                                   <SelectItem value="reparaciones_medias" className="font-medium">0.6680 - REPARACIONES MEDIAS</SelectItem>
-                                   <SelectItem value="reparaciones_importantes" className="font-medium">0.4740 - REPARACIONES IMPORTANTES</SelectItem>
-                                   <SelectItem value="danos_graves" className="font-medium">0.2480 - DAÑOS GRAVES</SelectItem>
-                                   <SelectItem value="en_desecho" className="font-medium">0.1350 - EN DESECHO</SelectItem>
+                                   <SelectItem value="nuevo" className="font-medium">NUEVO</SelectItem>
+                                   <SelectItem value="bueno" className="font-medium">BUENO</SelectItem>
+                                   <SelectItem value="medio" className="font-medium">MEDIO</SelectItem>
+                                   <SelectItem value="regular" className="font-medium">REGULAR</SelectItem>
+                                   <SelectItem value="reparaciones_sencillas" className="font-medium">REPARACIONES SENCILLAS</SelectItem>
+                                   <SelectItem value="reparaciones_medias" className="font-medium">REPARACIONES MEDIAS</SelectItem>
+                                   <SelectItem value="reparaciones_importantes" className="font-medium">REPARACIONES IMPORTANTES</SelectItem>
+                                   <SelectItem value="danos_graves" className="font-medium">DAÑOS GRAVES</SelectItem>
+                                   <SelectItem value="en_desecho" className="font-medium">EN DESECHO</SelectItem>
                                  </SelectContent>
                                </Select>
                              </div>
