@@ -1342,23 +1342,7 @@ const PropertyValuation = () => {
                               </div>
                             )}
                             
-                            {/* Mensaje cuando no hay comparables */}
-                            {comparables.length === 0 && propertyData.estratoSocial && (
-                              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded">
-                                <h5 className="font-semibold text-amber-800 mb-2">🔍 Búsqueda de Comparables</h5>
-                                <p className="text-xs text-amber-700">
-                                  No se encontraron propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> en la zona inmediata. 
-                                  El avalúo se basa en datos generales del mercado para este estrato social.
-                                </p>
-                              </div>
-                            )}
 
-                            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                              <p className="text-yellow-800 text-xs">
-                                ⚠️ <strong>Importante:</strong> Este es un estimado basado en datos del mercado. 
-                                Para un avalúo oficial, consulta con un profesional certificado.
-                              </p>
-                            </div>
                           </div>
                         )}
                       </div>
