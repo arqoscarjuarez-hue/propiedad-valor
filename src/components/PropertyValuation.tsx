@@ -1172,20 +1172,20 @@ const PropertyValuation = () => {
                           🏠 Paso 2: Tipo de Propiedad y Ubicación
                         </CardTitle>
                       </CardHeader>
-                       <CardContent className="p-6">
-                         {/* Validación si paso anterior no está completo */}
-                         {!isStep0Complete() && (
-                           <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
-                             <div className="flex items-center gap-2">
-                               <span className="text-red-600">🚫</span>
-                               <p className="text-red-800 font-medium text-sm">
-                                 <strong>¡Alto!</strong> Primero debes elegir el idioma y país en el paso anterior
-                               </p>
-                             </div>
-                           </div>
-                         )}
-                         
-                          {/* SELECCIÓN DE TIPO DE PROPIEDAD */}
+                        <CardContent className="p-6">
+                          {/* Validación si paso anterior no está completo */}
+                          {!isStep0Complete() && (
+                            <div className="p-4 bg-red-50 border-l-4 border-red-400 rounded mb-4">
+                              <div className="flex items-center gap-2">
+                                <span className="text-red-600">⚠️</span>
+                                <p className="text-red-800 font-medium text-sm">
+                                  <strong>Recomendación:</strong> Es mejor elegir primero el idioma y país en el paso anterior
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* SELECCIÓN DE TIPO DE PROPIEDAD - SIEMPRE VISIBLE */}
                           <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                             <h3 className="font-semibold mb-2">🏠 Tipo de Propiedad</h3>
                             <p className="text-sm text-green-800 dark:text-green-200 mb-4">
