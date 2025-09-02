@@ -20,7 +20,7 @@ serve(async (req) => {
 
     const { target_lat, target_lng, target_property_type, target_area } = await req.json();
 
-    console.log('🔬 ADVANCED SEARCH - Parameters:', {
+    console.log('🔬 PROFESSIONAL COMPARABLES SEARCH - Parameters:', {
       target_lat,
       target_lng,
       target_property_type,
@@ -28,113 +28,72 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // NORMA ACTUALIZADA: Búsqueda con filtro de 18 meses + expansión por cantidad
+    // METODOLOGÍA PROFESIONAL: Búsqueda flexible basada en estándares internacionales
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    // Estrategia 1: Búsqueda avanzada 0-5km (18 meses)
-    try {
-      console.log('🎯 Strategy 1A: Advanced similarity within 5km (18 months)');
-      const { data: adv5, error: adv5Err } = await supabase
-        .rpc('find_best_comparables', {
-          center_lat: target_lat,
-          center_lng: target_lng,
-          prop_type: target_property_type,
-          target_area: target_area || 0,
-          max_distance_km: 5,
-        });
+    // Estrategia 1: Búsqueda flexible profesional (2km, 5km, 8km, 15km)
+    const searchRadii = [2, 5, 8, 15];
+    
+    for (const radius of searchRadii) {
+      if (comparables.length >= 3) break; // Ya tenemos suficientes
+      
+      try {
+        console.log(`🎯 Professional search within ${radius}km radius`);
+        const { data: flexData, error: flexError } = await supabase
+          .rpc('find_flexible_comparables', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            target_area: target_area || 0,
+            max_distance_km: radius,
+          });
 
-      if (!adv5Err && adv5 && adv5.length >= 3) {
-        comparables = adv5;
-        searchStrategy = 'advanced_similarity_5km_18m';
-        console.log(`✅ Strategy 1A SUCCESS: ${comparables.length} comparables found`);
-      } else {
-        console.log(`⚠️ Strategy 1A insufficient results: ${adv5?.length || 0} (need 3+)`);
-        
-        // Estrategia 1B: Expandir a 8km
-        try {
-          console.log('🎯 Strategy 1B: Advanced similarity within 8km (18 months)');
-          const { data: adv8, error: adv8Err } = await supabase
-            .rpc('find_best_comparables', {
-              center_lat: target_lat,
-              center_lng: target_lng,
-              prop_type: target_property_type,
-              target_area: target_area || 0,
-              max_distance_km: 8,
-            });
-
-          if (!adv8Err && adv8 && adv8.length >= 3) {
-            comparables = adv8;
-            searchStrategy = 'advanced_similarity_8km_18m';
-            console.log(`✅ Strategy 1B SUCCESS: ${comparables.length} comparables found`);
-          } else {
-            console.log(`⚠️ Strategy 1B insufficient: ${adv8?.length || 0}, trying 10km...`);
-            
-            // Estrategia 1C: Expandir a 10km (última oportunidad)
-            try {
-              console.log('🎯 Strategy 1C: Advanced similarity within 10km (18 months)');
-              const { data: adv10, error: adv10Err } = await supabase
-                .rpc('find_best_comparables', {
-                  center_lat: target_lat,
-                  center_lng: target_lng,
-                  prop_type: target_property_type,
-                  target_area: target_area || 0,
-                  max_distance_km: 10,
-                });
-
-              if (!adv10Err && adv10 && adv10.length >= 3) {
-                comparables = adv10;
-                searchStrategy = 'advanced_similarity_10km_18m';
-                console.log(`✅ Strategy 1C SUCCESS: ${comparables.length} comparables found`);
-              } else {
-                console.log(`⚠️ Strategy 1C still insufficient: ${adv10?.length || 0}`);
-                // Guardar lo que tenemos aunque sean menos de 3
-                comparables = adv10 || adv8 || adv5 || [];
-                searchStrategy = comparables.length > 0 ? 'partial_results_10km_18m' : 'no_results';
-              }
-            } catch (error) {
-              console.log('❌ Strategy 1C ERROR:', error);
-            }
+        if (!flexError && flexData && flexData.length > 0) {
+          comparables = flexData;
+          searchStrategy = `flexible_${radius}km`;
+          console.log(`✅ Professional search SUCCESS at ${radius}km: ${comparables.length} comparables found`);
+          
+          if (comparables.length >= 3) {
+            break; // Suficientes comparables encontrados
           }
-        } catch (error) {
-          console.log('❌ Strategy 1B ERROR:', error);
+        } else {
+          console.log(`⚠️ Professional search at ${radius}km: no results`, flexError);
         }
-      }
-    } catch (error) {
-      console.log('❌ Strategy 1A ERROR:', error);
-    }
-
-    // Estrategia 2: Fallback con radio progresivo (solo si no tenemos al menos 3)
-    if (comparables.length < 3) {
-      console.log('🎯 Strategy 2: Progressive radius search (1,3,5,8,10km, 18 months)');
-      const radii = [1, 3, 5, 8, 10];
-
-      for (const radius of radii) {
-        try {
-          const { data, error } = await supabase
-            .rpc('find_comparables_within_radius', {
-              center_lat: target_lat,
-              center_lng: target_lng,
-              prop_type: target_property_type,
-              radius_km: radius,
-            });
-
-          if (!error && data && data.length >= 3) {
-            comparables = data;
-            searchStrategy = `radius_${radius}km_18m`;
-            console.log(`✅ Strategy 2 SUCCESS at ${radius}km: ${comparables.length} comparables`);
-            break;
-          } else {
-            console.log(`⚠️ Strategy 2 at ${radius}km: ${data?.length || 0} results (need 3+)`);
-          }
-        } catch (error) {
-          console.log(`❌ Strategy 2 ERROR at ${radius}km:`, error);
-        }
+      } catch (error) {
+        console.log(`❌ Professional search ERROR at ${radius}km:`, error);
       }
     }
 
-    // Nota: Eliminamos la estrategia de "type-only" para evitar resultados fuera del radio máximo (8km)
+    // Estrategia 2: Fallback usando función original si la flexible no encuentra nada
+    if (comparables.length === 0) {
+      console.log('🎯 Fallback: Using original functions with extended range');
+      
+      try {
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .rpc('find_best_comparables', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            target_area: target_area || 0,
+            max_distance_km: 50, // Much wider range as last resort
+          });
 
+        if (!fallbackError && fallbackData && fallbackData.length > 0) {
+          comparables = fallbackData;
+          searchStrategy = 'fallback_50km';
+          console.log(`✅ Fallback SUCCESS: ${comparables.length} comparables found`);
+        }
+      } catch (error) {
+        console.log('❌ Fallback ERROR:', error);
+      }
+    }
+
+    // Si aún no hay resultados, informar el problema
+    if (comparables.length === 0) {
+      console.log('⚠️ NO COMPARABLES FOUND with any strategy');
+      searchStrategy = 'no_results';
+    }
 
     // Resultado final con información detallada
     const result = {
