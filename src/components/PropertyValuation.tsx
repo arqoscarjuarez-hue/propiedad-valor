@@ -4720,7 +4720,7 @@ const PropertyValuation = () => {
               ✓
             </div>
             <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
-              Paso 1: {translations[selectedLanguage].languageSelector}
+              {translations[selectedLanguage].languageSelector}
             </Label>
           </div>
           <LanguageSelector />
@@ -4733,7 +4733,7 @@ const PropertyValuation = () => {
               ✓
             </div>
             <Label className="text-sm font-bold text-green-900 dark:text-green-100">
-              Paso 2: {translations[selectedLanguage].currencyValuation}
+              {translations[selectedLanguage].currencyValuation}
             </Label>
           </div>
           <CurrencySelector
