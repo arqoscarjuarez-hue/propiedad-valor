@@ -5789,7 +5789,7 @@ const PropertyValuation = () => {
                             ? 'bg-primary text-white'
                             : 'bg-gray-300 text-gray-600'
                       }`}>
-                        {valuation && valuation > 0 ? '✓' : '6'}
+                        {valuation && valuation > 0 ? '✓' : ''}
                       </div>
                       <div className="flex-1">
                         <span className={`font-medium ${
@@ -5799,7 +5799,7 @@ const PropertyValuation = () => {
                               ? 'text-primary'
                               : 'text-muted-foreground'
                         }`}>
-                          Paso 6: {valuation && valuation > 0 ? 'Valuación Completada' : 'Valuación Final'}
+                          {valuation && valuation > 0 ? 'Valuación Completada' : 'Valuación Final'}
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">
                           {valuation && valuation > 0 
