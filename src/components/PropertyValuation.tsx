@@ -4591,44 +4591,49 @@ const PropertyValuation = () => {
         </p>
       </div>
 
+      
+      {/* Pasos 1 y 2: Selectores arriba */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {/* Paso 1: Selector de Idioma */}
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              1
+            </div>
+            <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
+              {translations[selectedLanguage].languageSelector}
+            </Label>
+          </div>
+          <LanguageSelector />
+        </Card>
+        
+        {/* Paso 2: Selector de Moneda */}
+        <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              2
+            </div>
+            <Label className="text-sm font-bold text-green-900 dark:text-green-100">
+              {translations[selectedLanguage].currencyValuation}
+            </Label>
+          </div>
+          <CurrencySelector
+            selectedCurrency={selectedCurrency}
+            onCurrencyChange={handleCurrencyChange}
+            title=""
+            exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
+            exchangeRateError={translations[selectedLanguage].exchangeRateError}
+            errorTitle={translations[selectedLanguage].errorTitle}
+            lastUpdateText={translations[selectedLanguage].lastUpdateText}
+            exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
+            exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
+          />
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Paso 1: Selectores de Idioma y Moneda */}
+        {/* Botones de descarga y compartir a la izquierda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-          {/* Paso 1: Selector de Idioma */}
-          <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                1
-              </div>
-              <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
-                {translations[selectedLanguage].languageSelector}
-              </Label>
-            </div>
-            <LanguageSelector />
-          </Card>
-          
-          {/* Paso 2: Selector de Moneda */}
-          <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                2
-              </div>
-              <Label className="text-sm font-bold text-green-900 dark:text-green-100">
-                {translations[selectedLanguage].currencyValuation}
-              </Label>
-            </div>
-            <CurrencySelector
-              selectedCurrency={selectedCurrency}
-              onCurrencyChange={handleCurrencyChange}
-              title=""
-              exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
-              exchangeRateError={translations[selectedLanguage].exchangeRateError}
-              errorTitle={translations[selectedLanguage].errorTitle}
-              lastUpdateText={translations[selectedLanguage].lastUpdateText}
-              exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
-              exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
-            />
-          </Card>
            {/* Botones de Descarga de Documentos */}
            {valuation && (
              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
@@ -4660,8 +4665,6 @@ const PropertyValuation = () => {
               </Card>
             )}
 
-          
-          
           {/* Disclaimer de Valuación */}
           {valuation && (
             <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
