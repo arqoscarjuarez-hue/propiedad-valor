@@ -2996,6 +2996,34 @@ const PropertyValuation = () => {
     return valorAjustadoPorComparables;
   };
 
+  // Función para validar que todos los pasos estén completos
+  const isFormValid = () => {
+    // Paso 1: Idioma (siempre válido, ya está seleccionado)
+    
+    // Paso 2: Moneda (siempre válido, ya está seleccionada)
+    
+    // Paso 3: Datos de la propiedad
+    const hasValidPropertyType = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
+    const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
+    const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
+    
+    // Para terrenos, solo necesitamos tipo, ubicación y área de terreno
+    if (propertyData.tipoPropiedad === 'terreno') {
+      return hasValidPropertyType && hasValidLocation && hasValidLandArea;
+    }
+    
+    // Para otras propiedades, necesitamos área construida
+    const hasValidBuiltArea = (
+      (propertyData.areaSotano || 0) +
+      (propertyData.areaPrimerNivel || 0) +
+      (propertyData.areaSegundoNivel || 0) +
+      (propertyData.areaTercerNivel || 0) +
+      (propertyData.areaCuartoNivel || 0)
+    ) > 0;
+    
+    return hasValidPropertyType && hasValidLocation && hasValidLandArea && hasValidBuiltArea;
+  };
+
   const calculateValuation = async () => {
     if (isCalculating) return; // Prevenir múltiples cálculos simultáneos
     
@@ -5528,13 +5556,17 @@ const PropertyValuation = () => {
                 <div className="mt-6 text-center">
                   <Button 
                     onClick={() => {
-                      if (!isCalculating) {
+                      if (!isCalculating && isFormValid()) {
                         calculateValuation();
                       }
                     }} 
-                    className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-14 text-lg font-semibold"
+                    className={`w-full h-14 text-lg font-semibold transition-all ${
+                      isFormValid() 
+                        ? 'bg-gradient-to-r from-primary to-secondary hover:opacity-90' 
+                        : 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed'
+                    }`}
                     size="lg"
-                    disabled={isCalculating}
+                    disabled={isCalculating || !isFormValid()}
                   >
                     <Calculator className="mr-3 h-6 w-6" />
                     {isCalculating ? (
@@ -5549,6 +5581,25 @@ const PropertyValuation = () => {
                       translations[selectedLanguage].realizarValuacion
                     )}
                   </Button>
+                  
+                  {/* Mensaje informativo cuando faltan datos */}
+                  {!isFormValid() && (
+                    <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                      <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium mb-2">
+                        ⚠️ Para realizar la valuación, complete los siguientes datos:
+                      </p>
+                      <ul className="text-xs text-yellow-700 dark:text-yellow-300 space-y-1">
+                        {!propertyData.tipoPropiedad && <li>• Seleccione el tipo de propiedad</li>}
+                        {!propertyData.ubicacion && <li>• Ingrese la ubicación de la propiedad</li>}
+                        {!propertyData.areaTerreno && <li>• Ingrese el área del terreno</li>}
+                        {propertyData.tipoPropiedad !== 'terreno' && (
+                          (propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + 
+                          (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + 
+                          (propertyData.areaCuartoNivel || 0)
+                        ) === 0 && <li>• Ingrese al menos un área construida</li>}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
