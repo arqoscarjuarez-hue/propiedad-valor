@@ -45,10 +45,10 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         }
       });
 
-      console.log('Function response:', data, error);
+      // Proceso de moderación de comentario
 
       if (error) {
-        console.error('Function invocation error:', error);
+        // Error en la función de moderación
         throw error;
       }
 
@@ -74,13 +74,10 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           // Crear respuesta automática después de un breve delay
           if (data.comment && data.comment.id) {
             setTimeout(async () => {
-              console.log('🤖 Iniciando creación de respuesta automática...');
-              console.log('ID del comentario creado:', data.comment.id);
-              console.log('Idioma seleccionado:', selectedLanguage);
+              // Crear respuesta automática en segundo plano
               const autoReplySuccess = await createAutoReply(data.comment.id, content.trim(), selectedLanguage);
-              console.log('Resultado de respuesta automática:', autoReplySuccess ? '✅ Éxito' : '❌ Error');
               if (autoReplySuccess) {
-                console.log('🔄 Refrescando lista de comentarios...');
+                // Respuesta automática creada exitosamente
               }
               onCommentAdded(); // Refrescar la lista para mostrar la respuesta automática
             }, 2000); // Esperar 2 segundos antes de crear la respuesta
@@ -92,7 +89,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         throw new Error(data?.error || 'Unknown error occurred');
       }
     } catch (error) {
-      console.error('Error submitting comment:', error);
+      // Error enviando comentario
       toast({
         title: t.error,
         description: t.sendError,

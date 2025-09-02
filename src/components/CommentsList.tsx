@@ -34,13 +34,13 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Supabase error:', error);
+        // Error en consulta de Supabase
         throw error;
       }
       
       setComments(data || []);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      // Error obteniendo comentarios
     } finally {
       setLoading(false);
     }

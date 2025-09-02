@@ -117,7 +117,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       });
 
     } catch (error) {
-      console.error('Error updating exchange rates:', error);
+      // Error actualizando tipos de cambio
       toast({
         title: errorTitle,
         description: exchangeRateError,

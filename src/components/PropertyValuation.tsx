@@ -2421,7 +2421,7 @@ const PropertyValuation = () => {
         };
       }
     } catch (error) {
-      console.error('Error loading saved data:', error);
+      // Silenciar logs de error para localStorage en producción
     }
     return {
       propertyData: null,
@@ -2520,7 +2520,7 @@ const PropertyValuation = () => {
       try {
         localStorage.setItem('lastPropertyValuation', JSON.stringify(dataToSave));
       } catch (error) {
-        console.error('Error saving valuation data:', error);
+        // Silenciar logs para localStorage en producción
       }
     }
   }, [valuation, propertyData, baseValuation, comparativeProperties, selectedCurrency]);
@@ -2934,7 +2934,7 @@ const PropertyValuation = () => {
         return [];
       }
     } catch (error) {
-      console.error('Error buscando propiedades con Google Maps:', error);
+        // Error al buscar propiedades - continuar con datos simulados
       return [];
     }
   };
@@ -3019,8 +3019,10 @@ const PropertyValuation = () => {
     }
     const step3Complete = hasValidLandArea && hasValidBuiltArea;
     
-    // Paso 4: Espacios (opcional para terrenos)
-    const step4Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo para terrenos
+    // Paso 4: Espacios (solo requerido para propiedades construidas)
+    const hasRequiredSpaces = propertyData.tipoPropiedad === 'terreno' || 
+      (propertyData.recamaras > 0 || propertyData.banos > 0 || propertyData.cocina > 0);
+    const step4Complete = hasRequiredSpaces;
     
     // Paso 5: Características
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
@@ -3102,8 +3104,8 @@ const PropertyValuation = () => {
     // Limpiar localStorage
     try {
       localStorage.removeItem('propertyValuationData');
-    } catch (error) {
-      console.error('Error clearing localStorage:', error);
+      } catch (error) {
+        // Silenciar logs para localStorage en producción
     }
     
     // Mostrar notificación
@@ -3289,7 +3291,7 @@ const PropertyValuation = () => {
         const valorFinalAjustado = calcularValorConComparables(valorFinalEnMonedaSeleccionada, selectedProps);
         setValuation(valorFinalAjustado);
       } catch (comparativesError) {
-        console.error('Error generating comparatives:', comparativesError);
+        // Error generando comparativas - usar datos de respaldo
         // Generar comparativas básicas de respaldo
         const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
         const fallbackComparatives = Array.from({ length: 3 }, (_, i) => {
@@ -3374,7 +3376,7 @@ const PropertyValuation = () => {
       //   description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(valorFinalParaToast, selectedCurrency)} (3 ${translations[selectedLanguage].comparables})`,
       // });
     } catch (error) {
-      console.error('Error in calculateValuation:', error);
+      // Error en cálculo de valuación
       toast({
         title: translations[selectedLanguage].errorGeneric,
         description: translations[selectedLanguage].errorCalculatingValuation,
@@ -3496,7 +3498,7 @@ const PropertyValuation = () => {
       // Convertir canvas a imagen base64
       return canvas.toDataURL('image/png');
     } catch (error) {
-      console.error('Error generando imagen del mapa:', error);
+      // Error generando imagen del mapa
       return null;
     }
   };
@@ -4127,7 +4129,7 @@ const PropertyValuation = () => {
         description: translations[selectedLanguage].pdfGeneratedDesc,
       });
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      // Error generando PDF
       toast({
         title: "Error",
         description: "No se pudo generar el PDF",
@@ -4692,7 +4694,7 @@ const PropertyValuation = () => {
         description: "El avalúo completo se ha descargado correctamente",
       });
     } catch (error) {
-      console.error('Error generating Word document:', error);
+      // Error generando documento Word
       toast({
         title: "Error",
         description: "No se pudo generar el documento Word",
@@ -4935,8 +4937,8 @@ const PropertyValuation = () => {
                 try {
                   setActiveTab(newValue);
                 } catch (error) {
-                  console.error('Error changing tab:', error);
-                  // Fallback al tab de áreas si hay error
+                  // Error cambiando tab - usar fallback
+                  setActiveTab('ubicacion');
                   setActiveTab('ubicacion');
                 }
               }} className="w-full">
