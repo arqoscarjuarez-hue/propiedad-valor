@@ -1026,7 +1026,8 @@ const translations = {
     
     
     // Botones de acción
-    calculate: 'Calculer l\'Évaluation',
+    calculate: 'Évaluation',
+    realizarValuacion: 'Effectuer l\'Évaluation',
     regenerate: 'Régénérer les Comparaisons',
     downloadPDF: 'Télécharger PDF',
     downloadWord: 'Télécharger Word',
@@ -1406,7 +1407,8 @@ const translations = {
     
     
     // Botones de acción
-    calculate: 'Bewertung Berechnen',
+    calculate: 'Bewertung',
+    realizarValuacion: 'Bewertung Durchführen',
     regenerate: 'Vergleiche Regenerieren',
     downloadPDF: 'PDF Herunterladen',
     downloadWord: 'Word Herunterladen',
@@ -1783,7 +1785,8 @@ const translations = {
 
     
     // Botones de acción
-    calculate: 'Calcola Valutazione',
+    calculate: 'Valutazione',
+    realizarValuacion: 'Eseguire Valutazione',
     regenerate: 'Rigenera Comparazioni',
     downloadPDF: 'Scarica PDF',
     downloadWord: 'Scarica Word',
@@ -2161,7 +2164,8 @@ const translations = {
     
     
     // Botones de acción
-    calculate: 'Calcular Avaliação',
+    calculate: 'Avaliação',
+    realizarValuacion: 'Realizar Avaliação',
     regenerate: 'Regenerar Comparações',
     downloadPDF: 'Baixar PDF',
     downloadWord: 'Baixar Word',
@@ -5534,6 +5538,33 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 )}
+                
+                {/* Botón principal de valuación */}
+                <div className="mt-6 text-center">
+                  <Button 
+                    onClick={() => {
+                      if (!isCalculating) {
+                        calculateValuation();
+                      }
+                    }} 
+                    className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity h-14 text-lg font-semibold"
+                    size="lg"
+                    disabled={isCalculating}
+                  >
+                    <Calculator className="mr-3 h-6 w-6" />
+                    {isCalculating ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Calculando...
+                      </>
+                    ) : (
+                      translations[selectedLanguage].realizarValuacion
+                    )}
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
