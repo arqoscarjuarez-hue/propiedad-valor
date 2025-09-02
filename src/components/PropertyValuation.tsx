@@ -4631,12 +4631,12 @@ const PropertyValuation = () => {
         </Card>
 
         {/* Botones de Descarga de Documentos */}
-        {valuation && (
-          <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-            <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
-              <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-               {translations[selectedLanguage].downloadDocuments}
-            </Label>
+        <Card className="p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-200 dark:border-orange-800">
+          <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-orange-900 dark:text-orange-100 flex items-center gap-2">
+            <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+            {translations[selectedLanguage].downloadDocuments}
+          </Label>
+          {valuation ? (
             <div className="space-y-2 sm:space-y-3">
               <Button 
                 onClick={generatePDF} 
@@ -4657,26 +4657,28 @@ const PropertyValuation = () => {
                <Download className="mr-2 h-4 w-4" />
                {translations[selectedLanguage].downloadWord}
              </Button>
-             </div>
-           </Card>
-         )}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              Los documentos estarán disponibles después de realizar la valuación.
+            </p>
+          )}
+        </Card>
 
         {/* Disclaimer de Valuación */}
-        {valuation && (
-          <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                ⚠
-              </div>
-              <Label className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                Disclaimer
-              </Label>
+        <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ⚠
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {translations[selectedLanguage].disclaimerText}
-            </p>
-          </Card>
-        )}
+            <Label className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              Disclaimer
+            </Label>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {translations[selectedLanguage].disclaimerText}
+          </p>
+        </Card>
       </div>
 
       <div className="w-full">
