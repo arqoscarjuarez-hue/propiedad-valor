@@ -84,6 +84,13 @@ interface Comparable {
   estrato_social: any;
   overall_similarity_score?: number;
   area_similarity_score?: number;
+  // New fields for enhanced portal integration
+  area_difference?: number;
+  source?: string;
+  confidence_score?: number;
+  months_old?: number;
+  latitude?: number;
+  longitude?: number;
 }
 
 // Tipos de estrato social - normas internacionales de Latinoamérica
@@ -1487,12 +1494,20 @@ const PropertyValuation = () => {
                       <CardContent className="p-6">
                          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                            <p className="text-blue-800 text-sm">
-                             <strong>📍 Metodología de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
-                             de tipo <strong>{propertyData.tipoPropiedad}</strong> mediante análisis de similaridad avanzado considerando 
-                             ubicación (0-10 km), área y características específicas en los <strong>últimos 18 meses</strong>.
+                             <strong>🎯 Metodología ÁREA-PRIORITARIA + PORTALES:</strong> Se encontraron {comparables.length} propiedades 
+                             priorizando por <strong>área más similar</strong> a {propertyData.area}m² y búsqueda automática en 
+                             <strong>portales inmobiliarios del país</strong>.
+                             {debugInfo && debugInfo.metadata && (
+                               <span className="block mt-2">
+                                 📍 País detectado: <strong>{debugInfo.metadata.country_detected}</strong> | 
+                                 🌐 Portales: {debugInfo.metadata.portals_searched} | 
+                                 🏠 Online: {debugInfo.metadata.portal_properties_found} | 
+                                 💾 Base: {debugInfo.metadata.database_properties_found}
+                               </span>
+                             )}
                              {comparables.length < 3 && (
                                <span className="block mt-2 text-orange-700 font-medium">
-                                 ⚠️ Menos de 3 comparables disponibles en el área. Precisión del avalúo limitada.
+                                 ⚠️ Menos de 3 comparables con área similar. Precisión limitada.
                                </span>
                              )}
                            </p>
@@ -1531,6 +1546,26 @@ const PropertyValuation = () => {
                                  {comparable.sale_date && (
                                    <div>
                                      <strong>📅 Fecha de venta:</strong> {new Date(comparable.sale_date).toLocaleDateString('es-ES')}
+                                   </div>
+                                 )}
+                                 {comparable.area_difference && (
+                                   <div>
+                                     <strong>📏 Dif. área:</strong> {Math.abs(comparable.area_difference).toFixed(1)}m² 
+                                     ({comparable.area_difference > 0 ? 'mayor' : 'menor'})
+                                   </div>
+                                 )}
+                                 {comparable.source && (
+                                   <div className="text-xs">
+                                     <strong>🔍 Fuente:</strong> {
+                                       comparable.source === 'database' ? '💾 Base de datos' :
+                                       comparable.source === 'portal_scraping' ? '🌐 Portal inmobiliario' :
+                                       comparable.source
+                                     }
+                                     {comparable.confidence_score && (
+                                       <span className="ml-2 text-green-600">
+                                         ✓ {(comparable.confidence_score * 100).toFixed(0)}%
+                                       </span>
+                                     )}
                                    </div>
                                  )}
                                  <div className="text-xs text-gray-600">

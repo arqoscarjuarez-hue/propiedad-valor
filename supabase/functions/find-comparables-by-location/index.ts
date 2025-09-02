@@ -28,32 +28,47 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // METODOLOGÍA PROFESIONAL: Búsqueda flexible de comparables
+    // NUEVA METODOLOGÍA: Área prioritaria + búsqueda en portales del país
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    console.log('🎯 Professional Flexible Search: Starting comprehensive search');
+    console.log('🎯 AREA-PRIORITIZED + PORTAL SEARCH: Starting comprehensive search');
 
-    // Estrategia 1: Búsqueda flexible profesional (2-15km, últimos 36 meses)
+    // Estrategia 1: Top 3 más similares en área + búsqueda en portales
     try {
-      const { data: flexData, error: flexError } = await supabase
-        .rpc('find_flexible_comparables', {
-          center_lat: target_lat,
-          center_lng: target_lng,
-          prop_type: target_property_type,
-          target_area: target_area || 0,
-          max_distance_km: 15, // Professional standard: expand search area
-        });
+      console.log('🏠 Strategy: Area-prioritized + Real Estate Portals');
+      
+      // Call the new portal search function
+      const portalResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/search-real-estate-portals`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          target_lat,
+          target_lng,
+          target_property_type,
+          target_area
+        })
+      });
 
-      if (!flexError && flexData && flexData.length > 0) {
-        comparables = flexData;
-        searchStrategy = 'professional_flexible';
-        console.log(`✅ Professional Flexible SUCCESS: ${comparables.length} comparables found`);
+      if (portalResponse.ok) {
+        const portalData = await portalResponse.json();
+        comparables = portalData.data || [];
+        searchStrategy = portalData.metadata?.strategy_used || 'portal_search';
+        
+        console.log(`✅ Portal + Area Search SUCCESS: ${comparables.length} comparables found`);
+        console.log(`📊 Country: ${portalData.metadata?.country_detected}`);
+        console.log(`🌐 Portals searched: ${portalData.metadata?.portals_searched}`);
+        console.log(`🏠 Portal properties: ${portalData.metadata?.portal_properties_found}`);
+        console.log(`💾 Database properties: ${portalData.metadata?.database_properties_found}`);
       } else {
-        console.log('⚠️ Professional Flexible failed:', flexError);
+        console.warn('⚠️ Portal search failed, falling back to database only');
+        throw new Error('Portal search failed');
       }
     } catch (error) {
-      console.log('❌ Professional Flexible ERROR:', error);
+      console.log('❌ Portal Search ERROR, falling back:', error.message);
     }
 
     // Estrategia 2: Fallback ampliado si no hay suficientes resultados
