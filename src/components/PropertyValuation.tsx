@@ -4827,9 +4827,6 @@ const PropertyValuation = () => {
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 sm:p-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                <div className="w-6 h-6 bg-white text-primary rounded-full flex items-center justify-center text-sm font-bold mr-2">
-                  3
-                </div>
                 <Home className="h-4 w-4 sm:h-5 sm:w-5" />
                 {translations[selectedLanguage].propertyData}
               </CardTitle>
