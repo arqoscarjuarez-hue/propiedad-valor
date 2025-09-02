@@ -138,6 +138,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      find_best_comparables: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          max_distance_km?: number
+          prop_type: string
+          target_area: number
+        }
+        Returns: {
+          address: string
+          area_similarity_score: number
+          distance: number
+          estrato_social: Database["public"]["Enums"]["estrato_social"]
+          id: string
+          latitude: number
+          longitude: number
+          overall_similarity_score: number
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          total_area: number
+        }[]
+      }
       find_comparables_progressive_radius: {
         Args: {
           target_estrato: Database["public"]["Enums"]["estrato_social"]

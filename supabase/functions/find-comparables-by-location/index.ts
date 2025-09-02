@@ -18,50 +18,48 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { target_lat, target_lng, target_property_type } = await req.json();
+    const { target_lat, target_lng, target_property_type, target_area } = await req.json();
 
     console.log('Searching for comparables with:', {
       target_lat,
       target_lng,
-      target_property_type
+      target_property_type,
+      target_area
     });
 
-    // Progressive radius search: 1km, 2km, 5km, 10km, 20km, 50km
-    // Always try to find exactly 5 comparables
-    const radii = [1, 2, 5, 10, 20, 50];
-    let comparables: any[] = [];
+    // Use the advanced function to find the best comparables
+    const { data, error } = await supabase
+      .rpc('find_best_comparables', {
+        center_lat: target_lat,
+        center_lng: target_lng,
+        prop_type: target_property_type,
+        target_area: target_area || 0,
+        max_distance_km: 50
+      });
 
-    for (const radius of radii) {
-      console.log(`Searching within ${radius}km radius`);
+    if (error) {
+      console.error('Error finding comparables:', error);
+      return new Response(
+        JSON.stringify({ data: [], error: error.message }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400,
+        }
+      );
+    }
+
+    const comparables = data || [];
+    console.log(`Found ${comparables.length} comparables with similarity scores`);
+    
+    // Log the quality of matches found
+    if (comparables.length > 0) {
+      const avgSimilarity = comparables.reduce((sum: number, comp: any) => 
+        sum + (comp.overall_similarity_score || 0), 0) / comparables.length;
+      console.log(`Average similarity score: ${avgSimilarity.toFixed(3)}`);
       
-      const { data, error } = await supabase
-        .rpc('find_comparables_within_radius', {
-          center_lat: target_lat,
-          center_lng: target_lng,
-          prop_type: target_property_type,
-          radius_km: radius
-        });
-
-      if (error) {
-        console.error(`Error searching within ${radius}km:`, error);
-        continue;
-      }
-
-      if (data && data.length > 0) {
-        comparables = data;
-        console.log(`Found ${data.length} comparables within ${radius}km`);
-        
-        // If we found 5 or more, we're done
-        if (data.length >= 5) {
-          break;
-        }
-        
-        // If this is the last radius and we still don't have 5, 
-        // take what we found
-        if (radius === 50) {
-          break;
-        }
-      }
+      comparables.forEach((comp: any, index: number) => {
+        console.log(`Comparable ${index + 1}: ${comp.total_area}m², ${comp.distance}km, similarity: ${comp.overall_similarity_score}`);
+      });
     }
 
     return new Response(

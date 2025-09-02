@@ -82,6 +82,8 @@ interface Comparable {
   sale_date?: string;
   distance?: number;
   estrato_social: any;
+  overall_similarity_score?: number;
+  area_similarity_score?: number;
 }
 
 // Tipos de estrato social - normas internacionales de Latinoamérica
@@ -591,7 +593,8 @@ const PropertyValuation = () => {
             body: {
               target_lat: propertyData.latitud,
               target_lng: propertyData.longitud,
-              target_property_type: propertyData.tipoPropiedad
+              target_property_type: propertyData.tipoPropiedad,
+              target_area: propertyData.area
             }
           });
 
@@ -621,18 +624,67 @@ const PropertyValuation = () => {
 
       setComparables(comparablesData);
 
-      // 7. SEGUNDO AJUSTE: Aplicar factor de estrato social después del método comparativo
+      // 7. CÁLCULO BASADO EN COMPARABLES REALES (método principal)
+      let comparativeValueFromComparables = comparativeValue; // valor base por defecto
+      let comparableAnalysis = null;
+
+      if (comparablesData && comparablesData.length > 0) {
+        // Calcular estadísticas de los comparables
+        const prices_per_sqm = comparablesData.map((comp: any) => comp.price_per_sqm_usd).filter((price: number) => price > 0);
+        
+        if (prices_per_sqm.length > 0) {
+          // Calcular precio promedio ponderado por similaridad
+          let totalWeight = 0;
+          let weightedPriceSum = 0;
+          
+          comparablesData.forEach((comp: any) => {
+            const weight = comp.overall_similarity_score || 1; // usar score de similaridad como peso
+            weightedPriceSum += comp.price_per_sqm_usd * weight;
+            totalWeight += weight;
+          });
+
+          const weightedAvgPricePerSqm = totalWeight > 0 ? weightedPriceSum / totalWeight : prices_per_sqm.reduce((a: number, b: number) => a + b, 0) / prices_per_sqm.length;
+          
+          // Calcular valor basado en comparables
+          comparativeValueFromComparables = weightedAvgPricePerSqm * propertyData.area;
+          
+          // Aplicar factor de conservación
+          comparativeValueFromComparables *= conservationMultiplier;
+          
+          comparableAnalysis = {
+            comparablesCount: comparablesData.length,
+            avgPricePerSqm: weightedAvgPricePerSqm,
+            priceRange: {
+              min: Math.min(...prices_per_sqm),
+              max: Math.max(...prices_per_sqm)
+            },
+            avgSimilarityScore: comparablesData.reduce((sum: number, comp: any) => sum + (comp.overall_similarity_score || 0), 0) / comparablesData.length,
+            usedWeightedAverage: true
+          };
+
+          console.log('📊 ANÁLISIS DE COMPARABLES:', comparableAnalysis);
+          console.log(`🎯 Valor calculado por comparables: $${comparativeValueFromComparables.toLocaleString()} USD`);
+        }
+      }
+
+      // Usar el mejor valor disponible (comparables reales vs método base)
+      const finalComparativeValue = comparableAnalysis ? comparativeValueFromComparables : comparativeValue;
+
+      // 8. SEGUNDO AJUSTE: Aplicar factor de estrato social después del método comparativo
       const estratoAdjustmentFactor = 1 + (estratoValuationFactors[propertyData.estratoSocial as EstratoSocial] || 0);
-      const finalValueWithEstratoAdjustment = comparativeValue * estratoAdjustmentFactor;
+      const finalValueWithEstratoAdjustment = finalComparativeValue * estratoAdjustmentFactor;
       
       // 8. Convertir a moneda local
       const valueInLocalCurrency = finalValueWithEstratoAdjustment * (countryConfig.exchangeRate || 1);
 
       console.log('📊 CÁLCULO COMPLETO CON SEGUNDO AJUSTE:', {
-        comparativeValue,
+        baseComparativeValue: comparativeValue,
+        comparablesValue: comparativeValueFromComparables,
+        finalComparativeValue,
+        estratoPercentage: (estratoValuationFactors[propertyData.estratoSocial as EstratoSocial] * 100).toFixed(1) + '%',
+        comparableAnalysis,
         estratoSelected: propertyData.estratoSocial,
         estratoAdjustmentFactor,
-        estratoPercentage: (estratoValuationFactors[propertyData.estratoSocial as EstratoSocial] * 100).toFixed(1) + '%',
         finalValueWithEstratoAdjustment,
         valueInLocalCurrency
       });
@@ -641,7 +693,7 @@ const PropertyValuation = () => {
       const result = {
         estimatedValueUSD: finalValueWithEstratoAdjustment,
         estimatedValueLocal: valueInLocalCurrency,
-        comparativeValueUSD: comparativeValue, // Valor del método comparativo antes del ajuste
+        comparativeValueUSD: finalComparativeValue, // Valor del método comparativo (con comparables reales si están disponibles)
         currency: countryConfig.currency,
         symbol: countryConfig.symbol,
         country: countryConfig.name,
@@ -1306,13 +1358,24 @@ const PropertyValuation = () => {
                             <div className="mt-4 p-3 bg-white border border-green-200 rounded text-left">
                               <h5 className="font-semibold text-green-800 mb-2">📊 ¿Cómo calculamos este precio?</h5>
                               
-                              {/* Método Comparativo */}
+                              {/* Método Comparativo Mejorado */}
                               <div className="mb-3 p-2 bg-blue-50 rounded">
-                                <h6 className="font-semibold text-blue-800 text-xs mb-1">1️⃣ MÉTODO COMPARATIVO BASE</h6>
+                                <h6 className="font-semibold text-blue-800 text-xs mb-1">1️⃣ MÉTODO COMPARATIVO AVANZADO</h6>
                                 <div className="text-xs text-blue-700 space-y-1">
-                                  <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                  {valuationResult.factors?.comparableAnalysis ? (
+                                    <>
+                                      <p>• Comparables analizados: {valuationResult.factors.comparableAnalysis.comparablesCount}</p>
+                                      <p>• Precio promedio ponderado: ${valuationResult.factors.comparableAnalysis.avgPricePerSqm?.toLocaleString()} USD/m²</p>
+                                      <p>• Similaridad promedio: {(valuationResult.factors.comparableAnalysis.avgSimilarityScore * 100).toFixed(1)}%</p>
+                                      <p>• Rango de precios: ${valuationResult.factors.comparableAnalysis.priceRange?.min?.toLocaleString()} - ${valuationResult.factors.comparableAnalysis.priceRange?.max?.toLocaleString()} USD/m²</p>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
+                                      <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
+                                    </>
+                                  )}
                                   <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
-                                  <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
                                   <p className="font-semibold border-t pt-1">
                                     = Valor comparativo: ${valuationResult.comparativeValueUSD?.toLocaleString()} USD
                                   </p>
@@ -1334,10 +1397,13 @@ const PropertyValuation = () => {
 
                             {/* Comparables si los hay */}
                             {comparables.length > 0 && (
-                              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                                <h5 className="font-semibold text-blue-800 mb-2">🏘️ Propiedades Similares Encontradas</h5>
-                                <p className="text-xs text-blue-700">
-                                  Encontramos {comparables.length} propiedades similares del estrato <strong>{estratoSocialLabels[propertyData.estratoSocial as EstratoSocial]}</strong> para comparar en la zona.
+                              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded">
+                                <h5 className="font-semibold text-green-800 mb-2">🏘️ Comparables Utilizados para el Cálculo</h5>
+                                <p className="text-xs text-green-700">
+                                  ✅ Se utilizaron {comparables.length} propiedades similares con alta precisión para calcular el valor de mercado.
+                                  {valuationResult.factors?.comparableAnalysis && (
+                                    <> Similaridad promedio: {(valuationResult.factors.comparableAnalysis.avgSimilarityScore * 100).toFixed(1)}%</>
+                                  )}
                                 </p>
                               </div>
                             )}
@@ -1365,8 +1431,9 @@ const PropertyValuation = () => {
                       <CardContent className="p-6">
                         <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                           <p className="text-blue-800 text-sm">
-                            <strong>📍 Ubicación de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
-                            de tipo <strong>{propertyData.tipoPropiedad}</strong> en un radio cercano a la ubicación seleccionada.
+                            <strong>📍 Metodología de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
+                            de tipo <strong>{propertyData.tipoPropiedad}</strong> mediante análisis de similaridad avanzado considerando 
+                            ubicación, área y características específicas.
                           </p>
                         </div>
                         
@@ -1374,8 +1441,13 @@ const PropertyValuation = () => {
                           {comparables.map((comparable, index) => (
                             <div key={comparable.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                               <div className="flex items-start justify-between mb-2">
-                                <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded">
+                                <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded flex items-center gap-1">
                                   Comparable #{index + 1}
+                                  {comparable.overall_similarity_score && (
+                                    <span className="text-green-600">
+                                      ★ {(comparable.overall_similarity_score * 100).toFixed(0)}%
+                                    </span>
+                                  )}
                                 </span>
                                 <span className="text-xs text-gray-500">
                                   📍 {comparable.distance ? `${comparable.distance.toFixed(1)} km` : 'Zona local'}
@@ -1405,8 +1477,9 @@ const PropertyValuation = () => {
                         
                         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                           <p className="text-green-800 text-xs">
-                            ✅ <strong>Metodología:</strong> Estos comparables se utilizaron para validar y ajustar 
-                            el precio base por m² en la zona, asegurando que el avalúo refleje el mercado local actual.
+                            ✅ <strong>Metodología avanzada:</strong> Estos comparables fueron seleccionados mediante algoritmo de similaridad 
+                            que considera distancia, área similar y características específicas del tipo de propiedad. Los scores de similaridad 
+                            se utilizaron como pesos para calcular un precio promedio ponderado más preciso.
                           </p>
                         </div>
                       </CardContent>
