@@ -47,10 +47,10 @@ serve(async (req) => {
 
     console.log(`📍 Market estimation: ${estimatedPricePerSqm}/m² → Total: $${estimatedTotalPrice.toLocaleString()}`);
 
-    // Estrategia 1: Búsqueda con ajuste de mercado
+    // Estrategia 1: TIPO EXACTO prioritario + ajuste de mercado
     try {
-      const { data: marketData, error: marketError } = await supabase
-        .rpc('find_market_adjusted_comparables', {
+      const { data: exactTypeData, error: exactTypeError } = await supabase
+        .rpc('find_exact_type_comparables', {
           center_lat: target_lat,
           center_lng: target_lng,
           prop_type: target_property_type,
@@ -58,16 +58,21 @@ serve(async (req) => {
           target_price_range: estimatedTotalPrice
         });
 
-      if (!marketError && marketData && marketData.length > 0) {
-        comparables = marketData;
-        searchStrategy = 'market_adjusted';
-        console.log(`✅ Market Adjusted SUCCESS: ${comparables.length} comparables found`);
-        console.log(`💰 Price range: $${Math.min(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()} - $${Math.max(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()}`);
+      if (!exactTypeError && exactTypeData && exactTypeData.length > 0) {
+        comparables = exactTypeData;
+        searchStrategy = 'exact_type_prioritized';
+        
+        const exactMatches = exactTypeData.filter(c => c.type_match_score === 1.0).length;
+        const similarMatches = exactTypeData.filter(c => c.type_match_score === 0.8).length;
+        
+        console.log(`✅ Exact Type Priority SUCCESS: ${comparables.length} comparables found`);
+        console.log(`🎯 Exact type matches: ${exactMatches} | Similar types: ${similarMatches}`);
+        console.log(`💰 Adjusted price range: $${Math.min(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()} - $${Math.max(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()}`);
       } else {
-        console.log('⚠️ Market Adjusted failed:', marketError);
+        console.log('⚠️ Exact Type Priority failed:', exactTypeError);
       }
     } catch (error) {
-      console.log('❌ Market Adjusted ERROR:', error);
+      console.log('❌ Exact Type Priority ERROR:', error);
     }
 
     // Estrategia 2: Fallback ampliado si no hay suficientes resultados

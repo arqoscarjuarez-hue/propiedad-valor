@@ -80,6 +80,8 @@ interface Comparable {
   adjusted_price_usd?: number;
   adjusted_price_per_sqm?: number;
   market_adjustment_factor?: number;
+  // Type matching priority
+  type_match_score?: number;
   // Enhanced properties
   bedrooms?: number;
   bathrooms?: number;
@@ -1498,20 +1500,19 @@ const PropertyValuation = () => {
                       <CardContent className="p-6">
                          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                            <p className="text-blue-800 text-sm">
-                             <strong>🎯 Metodología ÁREA-PRIORITARIA + PORTALES:</strong> Se encontraron {comparables.length} propiedades 
-                             priorizando por <strong>área más similar</strong> a {propertyData.area}m² y búsqueda automática en 
-                             <strong>portales inmobiliarios del país</strong>.
+                             <strong>🎯 Metodología TIPO-PRIORITARIA:</strong> Se encontraron {comparables.length} propiedades 
+                             priorizando <strong>EXACTAMENTE el mismo tipo</strong> ({propertyData.tipoPropiedad}) 
+                             con precios ajustados al mercado local.
                              {debugInfo && debugInfo.metadata && (
                                <span className="block mt-2">
-                                 📍 País detectado: <strong>{debugInfo.metadata.country_detected}</strong> | 
-                                 🌐 Portales: {debugInfo.metadata.portals_searched} | 
-                                 🏠 Online: {debugInfo.metadata.portal_properties_found} | 
-                                 💾 Base: {debugInfo.metadata.database_properties_found}
+                                 📍 País: <strong>{debugInfo.metadata.country_detected}</strong> | 
+                                 🎯 Exactos: {comparables.filter(c => c.type_match_score === 1.0).length} | 
+                                 📊 Similares: {comparables.filter(c => c.type_match_score === 0.8).length}
                                </span>
                              )}
                              {comparables.length < 3 && (
                                <span className="block mt-2 text-orange-700 font-medium">
-                                 ⚠️ Menos de 3 comparables con área similar. Precisión limitada.
+                                 ⚠️ Menos de 3 comparables del mismo tipo. Se incluyen tipos similares.
                                </span>
                              )}
                            </p>
@@ -1520,24 +1521,33 @@ const PropertyValuation = () => {
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                           {comparables.map((comparable, index) => (
                             <div key={comparable.id} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-                              <div className="flex items-start justify-between mb-2">
-                                <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded flex items-center gap-1">
-                                  Comparable #{index + 1}
-                                  {comparable.overall_similarity_score && (
-                                    <span className="text-green-600">
-                                      ★ {(comparable.overall_similarity_score * 100).toFixed(0)}%
-                                    </span>
-                                  )}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  📍 {comparable.distance ? `${comparable.distance.toFixed(1)} km` : 'Zona local'}
-                                </span>
-                              </div>
-                              
-                              <div className="space-y-2 text-sm">
-                                <div>
-                                  <strong>🏠 Tipo:</strong> {comparable.property_type}
-                                </div>
+                               <div className="flex items-start justify-between mb-2">
+                                 <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded flex items-center gap-1">
+                                   Comparable #{index + 1}
+                                   {comparable.type_match_score === 1.0 && (
+                                     <span className="text-green-600 font-bold">🎯 TIPO EXACTO</span>
+                                   )}
+                                   {comparable.overall_similarity_score && (
+                                     <span className="text-green-600">
+                                       ★ {(comparable.overall_similarity_score * 100).toFixed(0)}%
+                                     </span>
+                                   )}
+                                 </span>
+                                 <span className="text-xs text-gray-500">
+                                   📍 {comparable.distance ? `${comparable.distance.toFixed(1)} km` : 'Zona local'}
+                                 </span>
+                               </div>
+                               
+                               <div className="space-y-2 text-sm">
+                                 <div className="flex items-center gap-2">
+                                   <strong>🏠 Tipo:</strong> 
+                                   <span className={comparable.type_match_score === 1.0 ? 'text-green-600 font-bold' : ''}>
+                                     {comparable.property_type}
+                                   </span>
+                                   {comparable.type_match_score === 1.0 && (
+                                     <span className="text-xs bg-green-100 text-green-700 px-1 rounded">EXACTO</span>
+                                   )}
+                                 </div>
                                 <div>
                                   <strong>📐 Área:</strong> {comparable.total_area} m²
                                 </div>
