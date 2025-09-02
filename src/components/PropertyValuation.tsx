@@ -60,6 +60,7 @@ interface PropertyData {
   banos: number;
   parqueaderos: number;
   antiguedad: number;
+  calidadConstructiva: string;
   estadoConservacion: string;
   latitud: number;
   longitud: number;
@@ -443,6 +444,51 @@ const countriesConfig = {
   }
 };
 
+// Centros urbanos por país (aprox. capitales)
+const countryCenters: Record<string, { lat: number; lng: number }> = {
+  usa: { lat: 38.9072, lng: -77.0369 }, // Washington, D.C.
+  canada: { lat: 45.4215, lng: -75.6972 }, // Ottawa
+  mexico: { lat: 19.4326, lng: -99.1332 }, // CDMX
+  guatemala: { lat: 14.6349, lng: -90.5069 }, // Ciudad de Guatemala
+  belize: { lat: 17.2510, lng: -88.7590 }, // Belmopán
+  honduras: { lat: 14.0723, lng: -87.1921 }, // Tegucigalpa
+  salvador: { lat: 13.6929, lng: -89.2182 }, // San Salvador
+  nicaragua: { lat: 12.114993, lng: -86.236174 }, // Managua
+  costarica: { lat: 9.9281, lng: -84.0907 }, // San José
+  panama: { lat: 8.9824, lng: -79.5199 }, // Ciudad de Panamá
+  colombia: { lat: 4.7110, lng: -74.0721 }, // Bogotá
+  venezuela: { lat: 10.4806, lng: -66.9036 }, // Caracas
+  brazil: { lat: -15.8267, lng: -47.9218 }, // Brasilia
+  ecuador: { lat: -0.1807, lng: -78.4678 }, // Quito
+  peru: { lat: -12.0464, lng: -77.0428 }, // Lima
+  chile: { lat: -33.4489, lng: -70.6693 }, // Santiago
+  argentina: { lat: -34.6037, lng: -58.3816 }, // Buenos Aires,
+};
+
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const R = 6371; // km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function computeLocationMultiplier(countryKey: string, lat?: number, lng?: number) {
+  if (!lat || !lng) return { multiplier: 1, distanceKm: null as number | null };
+  const center = countryCenters[countryKey];
+  if (!center) return { multiplier: 1, distanceKm: null as number | null };
+  const distanceKm = haversineKm(lat, lng, center.lat, center.lng);
+  let multiplier = 1;
+  if (distanceKm <= 2) multiplier = 1.15;
+  else if (distanceKm <= 5) multiplier = 1.08;
+  else if (distanceKm <= 10) multiplier = 1.03;
+  else if (distanceKm <= 20) multiplier = 0.97;
+  else multiplier = 0.9;
+  return { multiplier, distanceKm };
+}
+
 const PropertyValuation = () => {
   console.log('PropertyValuation component is loading...');
   const [propertyData, setPropertyData] = useState<PropertyData>({
@@ -453,6 +499,7 @@ const PropertyValuation = () => {
     banos: 0,
     parqueaderos: 0,
     antiguedad: 0,
+    calidadConstructiva: '',
     estadoConservacion: '',
     latitud: 0,
     longitud: 0,
@@ -590,15 +637,46 @@ const PropertyValuation = () => {
 
       // 4. Cálculo del precio base sin estrato (método comparativo base)
       const baseValue = propertyData.area * basePricePerM2;
+
+      // 4.1 Depreciación por edad efectiva (años)
+      const ageYears = propertyData.antiguedad || 0;
+      let ageMultiplier = 1.0;
+      if (ageYears <= 5) ageMultiplier = 1.0;
+      else if (ageYears <= 10) ageMultiplier = 0.98;
+      else if (ageYears <= 20) ageMultiplier = 0.95;
+      else if (ageYears <= 30) ageMultiplier = 0.90;
+      else if (ageYears <= 40) ageMultiplier = 0.85;
+      else ageMultiplier = 0.80;
+
+      // 4.2 Calidad constructiva
+      const qualityMap: Record<string, number> = {
+        baja: 0.92,
+        media: 1.0,
+        alta: 1.08,
+        premium: 1.15,
+      };
+      const qualityMultiplier = qualityMap[propertyData.calidadConstructiva || 'media'] ?? 1.0;
+
+      // 4.3 Índice de localización (proximidad a centro urbano)
+      const { multiplier: locationMultiplier, distanceKm } = computeLocationMultiplier(selectedCountry, propertyData.latitud, propertyData.longitud);
       
       // 5. Aplicar multiplicadores base (sin estrato)
-      const comparativeValue = baseValue * conservationMultiplier * economicMultiplier;
+      const comparativeValue = baseValue 
+        * conservationMultiplier 
+        * economicMultiplier 
+        * ageMultiplier 
+        * qualityMultiplier 
+        * locationMultiplier;
 
       console.log('📊 MÉTODO COMPARATIVO BASE:', {
         area: propertyData.area,
         basePricePerM2,
         conservationMultiplier,
         economicMultiplier,
+        ageMultiplier,
+        qualityMultiplier,
+        locationMultiplier,
+        distanceKm,
         baseValue,
         comparativeValue
       });
@@ -689,9 +767,13 @@ const PropertyValuation = () => {
           basePricePerM2,
           conservationMultiplier,
           economicMultiplier,
+          ageMultiplier,
+          qualityMultiplier,
+          locationMultiplier,
+          locationDistanceKm: distanceKm,
           estratoAdjustmentFactor,
           estratoPercentage: estratoValuationLabels[propertyData.estratoSocial as EstratoSocial]
-        }
+        
       };
 
       setValuationResult(result);
