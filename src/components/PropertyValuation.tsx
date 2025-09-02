@@ -2998,6 +2998,8 @@ const PropertyValuation = () => {
 
   // Función para validar el progreso paso a paso
   const getStepCompletion = () => {
+    console.log('getStepCompletion called');
+    
     // Paso 1: Idioma (siempre completo)
     const step1Complete = true;
     
@@ -3006,6 +3008,7 @@ const PropertyValuation = () => {
     
     // Paso 3.1: Tipo de propiedad
     const step3_1Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
+    console.log('step3_1Complete:', step3_1Complete);
     
     // Paso 3.2: Áreas
     const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
@@ -3020,22 +3023,27 @@ const PropertyValuation = () => {
       ) > 0;
     }
     const step3_2Complete = hasValidLandArea && hasValidBuiltArea;
+    console.log('step3_2Complete:', step3_2Complete);
     
     // Paso 3.3: Espacios (opcional para terrenos, siempre completo)
-    const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo
+    const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true;
+    console.log('step3_3Complete:', step3_3Complete);
     
     // Paso 3.4: Características
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
     const step3_4Complete = hasValidLocation;
+    console.log('step3_4Complete:', step3_4Complete);
     
     // Paso 3.5: Ubicación
     const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
     const step3_5Complete = hasValidCoordinates;
+    console.log('step3_5Complete:', step3_5Complete);
     
     // Paso 3.6: Valuación completada
     const step3_6Complete = valuation && valuation > 0;
+    console.log('step3_6Complete:', step3_6Complete);
     
-    return {
+    const result = {
       step1: step1Complete,
       step2: step2Complete,
       step3_1: step3_1Complete,
@@ -3045,6 +3053,9 @@ const PropertyValuation = () => {
       step3_5: step3_5Complete && step3_4Complete,
       step3_6: step3_6Complete
     };
+    
+    console.log('getStepCompletion result:', result);
+    return result;
   };
 
   // Función para reiniciar todo y comenzar un nuevo valúo
