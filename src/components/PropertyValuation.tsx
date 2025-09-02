@@ -2499,7 +2499,7 @@ const PropertyValuation = () => {
     rate: 1
   });
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
-  const [activeTab, setActiveTab] = useState('areas');
+  const [activeTab, setActiveTab] = useState('ubicacion');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
@@ -4841,16 +4841,32 @@ const PropertyValuation = () => {
                 } catch (error) {
                   console.error('Error changing tab:', error);
                   // Fallback al tab de áreas si hay error
-                  setActiveTab('areas');
+                  setActiveTab('ubicacion');
                 }
               }} className="w-full">
                 <TabsList className="grid w-full grid-cols-6 h-auto gap-1 bg-muted/50">
                    <TabsTrigger 
-                     value="tipo" 
+                     value="ubicacion" 
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                        getStepCompletion().step2
+                        getStepCompletion().step1
                          ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                     }`}
+                   >
+                     <span className="font-bold mr-1">
+                       {getStepCompletion().step1 ? '✓' : '1'}
+                     </span> 
+                     {translations[selectedLanguage].location}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="tipo" 
+                     disabled={!getStepCompletion().step1}
+                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
+                        !getStepCompletion().step1 
+                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                          : getStepCompletion().step2
+                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
+                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
@@ -4875,10 +4891,26 @@ const PropertyValuation = () => {
                      {translations[selectedLanguage].areas}
                    </TabsTrigger>
                    <TabsTrigger 
-                     value="caracteristicas" 
+                     value="servicios" 
                      disabled={!getStepCompletion().step3}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                        !getStepCompletion().step3 
+                        !getStepCompletion().step3
+                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                         : getStepCompletion().step4
+                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white'
+                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                     }`}
+                   >
+                     <span className="font-bold mr-1">
+                       {getStepCompletion().step4 ? '✓' : '4'}
+                     </span> 
+                     {translations[selectedLanguage].spaces}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="caracteristicas" 
+                     disabled={!getStepCompletion().step4}
+                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
+                        !getStepCompletion().step4 
                           ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
                           : getStepCompletion().step5
                            ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
@@ -4891,33 +4923,6 @@ const PropertyValuation = () => {
                      {translations[selectedLanguage].characteristics}
                    </TabsTrigger>
                    <TabsTrigger 
-                     value="servicios" 
-                      disabled={!getStepCompletion().step5}
-                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                        !getStepCompletion().step5
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
-                     }`}
-                   >
-                     <span className="font-bold mr-1">3.4</span> {translations[selectedLanguage].services}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="ubicacion" 
-                     disabled={!getStepCompletion().step1}
-                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                        !getStepCompletion().step1 
-                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                          : getStepCompletion().step1
-                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
-                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
-                     }`}
-                   >
-                     <span className="font-bold mr-1">
-                       {getStepCompletion().step1 ? '✓' : '1'}
-                     </span> 
-                     {translations[selectedLanguage].location}
-                   </TabsTrigger>
-                   <TabsTrigger 
                      value="valuacion" 
                      disabled={!getStepCompletion().step5}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
@@ -4926,7 +4931,7 @@ const PropertyValuation = () => {
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                     <span className="font-bold mr-1">3.6</span> {translations[selectedLanguage].calculate}
+                     <span className="font-bold mr-1">6</span> {translations[selectedLanguage].calculate}
                    </TabsTrigger>
                   </TabsList>
 
