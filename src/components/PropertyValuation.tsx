@@ -4592,8 +4592,8 @@ const PropertyValuation = () => {
       </div>
 
       
-      {/* Pasos 1, 2 y Descargar Documentos arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      {/* Pasos 1, 2, Descargar Documentos y Disclaimer arriba */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Paso 1: Selector de Idioma */}
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
           <div className="flex items-center gap-2 mb-3">
@@ -4660,20 +4660,29 @@ const PropertyValuation = () => {
              </div>
            </Card>
          )}
+
+        {/* Disclaimer de Valuación */}
+        {valuation && (
+          <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 bg-gray-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                ⚠
+              </div>
+              <Label className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                Disclaimer
+              </Label>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {translations[selectedLanguage].disclaimerText}
+            </p>
+          </Card>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Disclaimer y otros elementos a la izquierda */}
+        {/* Columna izquierda vacía o para otros elementos */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-          {/* Disclaimer de Valuación */}
-          {valuation && (
-            <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
-              <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                * {translations[selectedLanguage].disclaimerText}
-              </p>
-            </Card>
-          )}
-          
+          {/* Espacio para otros elementos si es necesario */}
         </div>
 
         {/* Paso 3: Formulario Principal */}
