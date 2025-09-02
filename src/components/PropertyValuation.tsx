@@ -3040,7 +3040,8 @@ const PropertyValuation = () => {
       step3_3: step3_3Complete && step3_2Complete,
       step3_4: step3_4Complete && step3_3Complete,
       step3_5: step3_5Complete && step3_4Complete,
-      step3_6: step3_5Complete && step3_4Complete && step3_3Complete && step3_2Complete && step3_1Complete
+      step3_6: step3_5Complete && step3_4Complete && step3_3Complete && step3_2Complete && step3_1Complete,
+      step3_6_completed: valuation && valuation > 0
     };
   };
 
@@ -4817,10 +4818,10 @@ const PropertyValuation = () => {
             </Label>
             </div>
             <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_6 && valuation ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_6 && valuation ? '✓' : '3.6'}
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_6_completed ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_6_completed ? '✓' : '3.6'}
               </div>
-              <span className={`text-sm ${getStepCompletion().step3_6 && valuation ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+              <span className={`text-sm ${getStepCompletion().step3_6_completed ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
                 Valuación
               </span>
             </div>
@@ -5029,17 +5030,17 @@ const PropertyValuation = () => {
                    </TabsTrigger>
                    <TabsTrigger 
                      value="valuacion" 
-                     disabled={!getStepCompletion().step3_5}
+                     disabled={!getStepCompletion().step3_6}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_5 
+                       !getStepCompletion().step3_6 
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_6 && valuation
+                         : getStepCompletion().step3_6_completed
                            ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                            : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_6 && valuation ? '✓' : '3.6'}
+                       {getStepCompletion().step3_6_completed ? '✓' : '3.6'}
                      </span> 
                      {translations[selectedLanguage].calculate}
                    </TabsTrigger>
