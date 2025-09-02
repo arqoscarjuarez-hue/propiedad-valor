@@ -5781,25 +5781,25 @@ const PropertyValuation = () => {
                       </div>
                     </div>
                     
-                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50 border-2 border-dashed border-primary/20">
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${
                         valuation && valuation > 0 
                           ? 'bg-green-500 text-white' 
-                          : isFormValid()
+                          : getStepCompletion().step5
                             ? 'bg-primary text-white'
                             : 'bg-gray-300 text-gray-600'
                       }`}>
-                        {valuation && valuation > 0 ? '✓' : ''}
+                        {valuation && valuation > 0 ? '✓' : '6'}
                       </div>
                       <div className="flex-1">
                         <span className={`font-medium ${
                           valuation && valuation > 0 
                             ? 'text-green-600 dark:text-green-400' 
-                            : isFormValid()
+                            : getStepCompletion().step5
                               ? 'text-primary'
                               : 'text-muted-foreground'
                         }`}>
-                          {valuation && valuation > 0 ? 'Valuación Completada' : 'Valuación Final'}
+                          Paso 6: Valuación Final
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">
                           {valuation && valuation > 0 
