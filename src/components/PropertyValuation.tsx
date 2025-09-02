@@ -2513,7 +2513,7 @@ const PropertyValuation = () => {
     rate: 1
   });
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
-  const [activeTab, setActiveTab] = useState('tipo');
+  const [activeTab, setActiveTab] = useState('areas');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
   const [selectedLetterhead, setSelectedLetterhead] = useState('casa'); // Nuevo estado para el membrete
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
@@ -3616,49 +3616,31 @@ const PropertyValuation = () => {
           yPosition += 6;
         }
         
-        // Servicios seleccionados - solo para terrenos mostrar servicios básicos relevantes
+        // Servicios seleccionados
         if (propertyData.servicios) {
-          let serviciosActivos = [];
-          
-          if (propertyData.tipoPropiedad === 'terreno') {
-            // Para terrenos, solo mostrar servicios básicos que realmente estén seleccionados
-            const serviciosBasicosTerreno = ['agua', 'electricidad', 'gas', 'drenaje'];
-            serviciosActivos = Object.entries(propertyData.servicios)
-              .filter(([key, value]) => value === true && serviciosBasicosTerreno.includes(key))
-              .map(([key, _]) => {
-                switch(key) {
-                  case 'agua': return translations[selectedLanguage].water;
-                  case 'electricidad': return translations[selectedLanguage].electricity;
-                  case 'gas': return translations[selectedLanguage].gas;
-                  case 'drenaje': return translations[selectedLanguage].drainage;
-                  default: return key;
-                }
-              });
-          } else {
-            // Para otros tipos de propiedad, mostrar todos los servicios seleccionados
-            serviciosActivos = Object.entries(propertyData.servicios)
-              .filter(([_, value]) => value === true)
-              .map(([key, _]) => {
-                switch(key) {
-                  case 'agua': return translations[selectedLanguage].water;
-                  case 'electricidad': return translations[selectedLanguage].electricity;
-                  case 'gas': return translations[selectedLanguage].gas;
-                  case 'drenaje': return translations[selectedLanguage].drainage;
-                  case 'internet': return translations[selectedLanguage].internet;
-                  case 'cable': return translations[selectedLanguage].cable;
-                  case 'telefono': return translations[selectedLanguage].phone;
-                  case 'seguridad': return translations[selectedLanguage].security;
-                  case 'alberca': return translations[selectedLanguage].swimmingPool;
-                  case 'jardin': return translations[selectedLanguage].garden;
-                  case 'elevador': return translations[selectedLanguage].elevator;
-                  case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
-                  case 'calefaccion': return translations[selectedLanguage].heating;
-                  case 'panelesSolares': return translations[selectedLanguage].solarPanels;
-                  case 'tinaco': return translations[selectedLanguage].waterTank;
-                  default: return key;
-                }
-              });
-          }
+          const serviciosActivos = Object.entries(propertyData.servicios)
+            .filter(([_, value]) => value === true)
+            .map(([key, _]) => {
+              switch(key) {
+                case 'agua': return translations[selectedLanguage].water;
+                case 'electricidad': return translations[selectedLanguage].electricity;
+                case 'gas': return translations[selectedLanguage].gas;
+                case 'drenaje': return translations[selectedLanguage].drainage;
+                case 'internet': return translations[selectedLanguage].internet;
+                case 'cable': return translations[selectedLanguage].cable;
+                case 'telefono': return translations[selectedLanguage].phone;
+                case 'seguridad': return translations[selectedLanguage].security;
+                case 'alberca': return translations[selectedLanguage].swimmingPool;
+                case 'jardin': return translations[selectedLanguage].garden;
+                case 'elevador': return translations[selectedLanguage].elevator;
+                case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
+                case 'calefaccion': return translations[selectedLanguage].heating;
+                case 'panelesSolares': return translations[selectedLanguage].solarPanels;
+                case 'tinaco': return translations[selectedLanguage].waterTank;
+                default: return key;
+              }
+            });
+            
           if (serviciosActivos.length > 0) {
             doc.setFont("helvetica", "bold");
             doc.text(`${translations[selectedLanguage].availableServices}:`, marginLeft, yPosition);
@@ -4239,179 +4221,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para generar PDF como Blob (para compartir directamente)
-  const generatePDFBlob = async (): Promise<Blob | null> => {
-    if (!valuation) {
-      return null;
-    }
-
-    try {
-      const doc = new jsPDF('portrait', 'mm', 'letter'); 
-      const pageWidth = doc.internal.pageSize.width;
-      const pageHeight = doc.internal.pageSize.height;
-      
-      const marginLeft = 15;
-      const marginRight = 15;
-      const marginTop = 15;
-      const marginBottom = 15;
-      const contentWidth = pageWidth - marginLeft - marginRight;
-      
-      let yPosition = marginTop + 10;
-      
-      // Función para verificar si necesitamos nueva página
-      const checkNewPage = (requiredSpace: number) => {
-        if (yPosition + requiredSpace > pageHeight - marginBottom) {
-          doc.addPage();
-          yPosition = marginTop;
-        }
-      };
-
-      // Título principal
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(20);
-      doc.setTextColor(37, 99, 235); // Color azul
-      doc.text("AVALÚO INMOBILIARIO PROFESIONAL", pageWidth / 2, yPosition, { align: "center" });
-      yPosition += 12;
-
-      // Subtítulo
-      doc.setFontSize(14);
-      doc.setTextColor(100, 100, 100);
-      doc.text("Sistema de Valuación Inmobiliaria", pageWidth / 2, yPosition, { align: "center" });
-      yPosition += 15;
-
-      // Información básica
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text("1. INFORMACIÓN GENERAL", marginLeft, yPosition);
-      yPosition += 10;
-
-      // Fecha y folio
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-      doc.text(`Fecha de Evaluación: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition);
-      yPosition += 6;
-      doc.text(`Folio: AV-${Date.now().toString().slice(-8)}`, marginLeft, yPosition);
-      yPosition += 6;
-      doc.text(`Tipo de Propiedad: ${propertyData.tipoPropiedad}`, marginLeft, yPosition);
-      yPosition += 10;
-
-      // Valor estimado
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.setTextColor(37, 99, 235);
-      doc.text(`VALOR ESTIMADO: ${formatCurrency(valuation, selectedCurrency)}`, marginLeft, yPosition);
-      yPosition += 15;
-
-      // Áreas
-      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + 
-                       propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
-      
-      if (areaTotal > 0) {
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.setTextColor(0, 0, 0);
-        doc.text("2. CARACTERÍSTICAS PRINCIPALES", marginLeft, yPosition);
-        yPosition += 10;
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        doc.text(`Área Total Construida: ${areaTotal} m²`, marginLeft, yPosition);
-        yPosition += 6;
-        
-        if (propertyData.areaTerreno > 0) {
-          doc.text(`Área del Terreno: ${propertyData.areaTerreno} m²`, marginLeft, yPosition);
-          yPosition += 6;
-        }
-        
-        doc.text(`Precio por m²: ${formatCurrency(valuation / areaTotal, selectedCurrency)}`, marginLeft, yPosition);
-        yPosition += 10;
-      }
-
-      // Servicios (solo para terrenos mostrar servicios básicos)
-      if (propertyData.servicios) {
-        let serviciosActivos = [];
-        
-        if (propertyData.tipoPropiedad === 'terreno') {
-          const serviciosBasicosTerreno = ['agua', 'electricidad', 'gas', 'drenaje'];
-          serviciosActivos = Object.entries(propertyData.servicios)
-            .filter(([key, value]) => value === true && serviciosBasicosTerreno.includes(key))
-            .map(([key, _]) => {
-              switch(key) {
-                case 'agua': return translations[selectedLanguage].water;
-                case 'electricidad': return translations[selectedLanguage].electricity;
-                case 'gas': return translations[selectedLanguage].gas;
-                case 'drenaje': return translations[selectedLanguage].drainage;
-                default: return key;
-              }
-            });
-        } else {
-          serviciosActivos = Object.entries(propertyData.servicios)
-            .filter(([_, value]) => value === true)
-            .map(([key, _]) => {
-              switch(key) {
-                case 'agua': return translations[selectedLanguage].water;
-                case 'electricidad': return translations[selectedLanguage].electricity;
-                case 'gas': return translations[selectedLanguage].gas;
-                case 'drenaje': return translations[selectedLanguage].drainage;
-                case 'internet': return translations[selectedLanguage].internet;
-                case 'cable': return translations[selectedLanguage].cable;
-                case 'telefono': return translations[selectedLanguage].phone;
-                case 'seguridad': return translations[selectedLanguage].security;
-                case 'alberca': return translations[selectedLanguage].swimmingPool;
-                case 'jardin': return translations[selectedLanguage].garden;
-                case 'elevador': return translations[selectedLanguage].elevator;
-                case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
-                case 'calefaccion': return translations[selectedLanguage].heating;
-                case 'panelesSolares': return translations[selectedLanguage].solarPanels;
-                case 'tinaco': return translations[selectedLanguage].waterTank;
-                default: return key;
-              }
-            });
-        }
-        
-        if (serviciosActivos.length > 0) {
-          doc.setFont("helvetica", "bold");
-          doc.text(`${translations[selectedLanguage].availableServices}:`, marginLeft, yPosition);
-          doc.setFont("helvetica", "normal");
-          const servicesText = doc.splitTextToSize(serviciosActivos.join(', '), contentWidth - 50);
-          doc.text(servicesText, marginLeft + 50, yPosition);
-          yPosition += (servicesText.length * 5) + 10;
-        }
-      }
-
-      // Información adicional
-      checkNewPage(50);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.text("3. METODOLOGÍA", marginLeft, yPosition);
-      yPosition += 10;
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-      const metodologia = "Este avalúo se realizó utilizando el método de comparación de mercado, " +
-        "considerando propiedades similares en ubicaciones cercanas y aplicando factores de ajuste " +
-        "por características específicas de la propiedad.";
-      const metodologiaLines = doc.splitTextToSize(metodologia, contentWidth);
-      doc.text(metodologiaLines, marginLeft, yPosition);
-      yPosition += (metodologiaLines.length * 5) + 10;
-
-      // Pie de página
-      yPosition = pageHeight - 30;
-      doc.setFont("helvetica", "italic");
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text("Sistema de Valuación Inmobiliaria - Avalúo Profesional", pageWidth / 2, yPosition, { align: "center" });
-
-      // Generar blob
-      return doc.output('blob');
-
-    } catch (error) {
-      console.error('Error generating PDF blob:', error);
-      return null;
-    }
-  };
-
   const generateWord = async () => {
     if (!valuation) {
       toast({
@@ -4765,47 +4574,10 @@ const PropertyValuation = () => {
               new Paragraph({ text: "" }) // Espacio
             ] : []),
 
-            // 5. SERVICIOS DISPONIBLES
-            // Para terrenos: solo servicios básicos disponibles
-            ...(propertyData.tipoPropiedad === 'terreno' ? [
-              ...((() => {
-                const serviciosBasicosTerreno = ['agua', 'electricidad', 'gas', 'drenaje'];
-                const serviciosActivos = Object.entries(propertyData.servicios)
-                  .filter(([key, value]) => value === true && serviciosBasicosTerreno.includes(key))
-                  .map(([key, _]) => {
-                    const serviceNames = {
-                      agua: translations[selectedLanguage].water,
-                      electricidad: translations[selectedLanguage].electricity,
-                      gas: translations[selectedLanguage].gas,
-                      drenaje: translations[selectedLanguage].drainage
-                    };
-                    return serviceNames[key as keyof typeof serviceNames] || key;
-                  });
-                
-                if (serviciosActivos.length > 0) {
-                  return [
-                    new Paragraph({
-                      text: `3. ${translations[selectedLanguage].availableServices}`,
-                      heading: HeadingLevel.HEADING_1
-                    }),
-                    new Paragraph({
-                      children: [
-                        new TextRun({ text: `${translations[selectedLanguage].basicServices}:`, bold: true })
-                      ]
-                    }),
-                    ...serviciosActivos.map(servicio => 
-                      new Paragraph({ children: [new TextRun({ text: `✓ ${servicio}` })] })
-                    ),
-                    new Paragraph({ text: "" }) // Espacio
-                  ];
-                } else {
-                  return [];
-                }
-              })())
-            ] : [
-              // Para otros tipos de propiedad: todos los servicios
+            // 5. SERVICIOS DISPONIBLES (solo para propiedades construidas)
+            ...(propertyData.tipoPropiedad !== 'terreno' ? [
               new Paragraph({
-                text: `5. ${translations[selectedLanguage].availableServices}`,
+                text: `${propertyData.tipoPropiedad === 'terreno' ? '3' : '5'}. ${translations[selectedLanguage].availableServices}`,
                 heading: HeadingLevel.HEADING_1
               }),
               new Paragraph({
@@ -4836,7 +4608,7 @@ const PropertyValuation = () => {
               ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].waterTank}` })] })] : []),
 
               new Paragraph({ text: "" }) // Espacio
-            ]),
+            ] : []),
 
             // 6. ANÁLISIS DE MERCADO (si hay comparables)
             ...(comparativeProperties.length > 0 ? (() => {
@@ -5301,143 +5073,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para generar Word como Blob (para compartir directamente)
-  const generateWordBlob = async (): Promise<Blob | null> => {
-    if (!valuation) {
-      return null;
-    }
-
-    try {
-      const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + 
-                       propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
-
-      const doc = new DocxDocument({
-        sections: [{
-          properties: {},
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "AVALÚO INMOBILIARIO PROFESIONAL", 
-                  bold: true, 
-                  size: 32,
-                  color: "2563eb"
-                })
-              ],
-              alignment: AlignmentType.CENTER
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "Sistema de Valuación Inmobiliaria",
-                  size: 24,
-                  color: "666666"
-                })
-              ],
-              alignment: AlignmentType.CENTER
-            }),
-            new Paragraph({ text: "" }),
-            
-            new Paragraph({
-              text: "1. INFORMACIÓN GENERAL",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Fecha de Evaluación: ", bold: true }),
-                new TextRun({ text: new Date().toLocaleDateString('es-ES') })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Folio: ", bold: true }),
-                new TextRun({ text: `AV-${Date.now().toString().slice(-8)}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Tipo de Propiedad: ", bold: true }),
-                new TextRun({ text: propertyData.tipoPropiedad || 'No especificado' })
-              ]
-            }),
-            new Paragraph({ text: "" }),
-            
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: `VALOR ESTIMADO: ${formatCurrency(valuation, selectedCurrency)}`, 
-                  bold: true, 
-                  size: 28,
-                  color: "2563eb"
-                })
-              ]
-            }),
-            new Paragraph({ text: "" }),
-            
-            ...(areaTotal > 0 ? [
-              new Paragraph({
-                text: "2. CARACTERÍSTICAS PRINCIPALES",
-                heading: HeadingLevel.HEADING_1
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Área Total Construida: ", bold: true }),
-                  new TextRun({ text: `${areaTotal} m²` })
-                ]
-              }),
-              ...(propertyData.areaTerreno > 0 ? [
-                new Paragraph({
-                  children: [
-                    new TextRun({ text: "Área del Terreno: ", bold: true }),
-                    new TextRun({ text: `${propertyData.areaTerreno} m²` })
-                  ]
-                })
-              ] : []),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: "Precio por m²: ", bold: true }),
-                  new TextRun({ text: formatCurrency(valuation / areaTotal, selectedCurrency) })
-                ]
-              }),
-              new Paragraph({ text: "" })
-            ] : []),
-
-            new Paragraph({
-              text: "3. METODOLOGÍA",
-              heading: HeadingLevel.HEADING_1
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "Este avalúo se realizó utilizando el método de comparación de mercado, considerando propiedades similares en ubicaciones cercanas y aplicando factores de ajuste por características específicas de la propiedad."
-                })
-              ]
-            }),
-            new Paragraph({ text: "" }),
-            
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "Sistema de Valuación Inmobiliaria - Avalúo Profesional",
-                  italics: true,
-                  size: 20,
-                  color: "666666"
-                })
-              ],
-              alignment: AlignmentType.CENTER
-            })
-          ]
-        }]
-      });
-
-      return await Packer.toBlob(doc);
-
-    } catch (error) {
-      console.error('Error generating Word blob:', error);
-      return null;
-    }
-  };
-
 
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
@@ -5509,10 +5144,6 @@ const PropertyValuation = () => {
                 <ShareButtons 
                   title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
                   description="He obtenido una valuación profesional de mi propiedad. ¡Descubre el valor de la tuya también!"
-                  onGeneratePDF={generatePDF}
-                  onGenerateWord={generateWord}
-                  onGeneratePDFBlob={generatePDFBlob}
-                  onGenerateWordBlob={generateWordBlob}
                 />
               </Card>
             )}
@@ -5580,28 +5211,22 @@ const PropertyValuation = () => {
                   setActiveTab(newValue);
                 } catch (error) {
                   console.error('Error changing tab:', error);
-                  // Fallback al tab de tipo si hay error
-                  setActiveTab('tipo');
+                  // Fallback al tab de áreas si hay error
+                  setActiveTab('areas');
                 }
               }} className="w-full">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 grid-rows-4 sm:grid-rows-2 h-auto gap-1 bg-muted/50">
                    <TabsTrigger 
-                     value="ubicacion" 
+                     value="areas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].location}
+                     {translations[selectedLanguage].areas}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="tipo" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
                      {translations[selectedLanguage].propertyType}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="areas" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].areas}
                    </TabsTrigger>
                     {propertyData.tipoPropiedad !== 'terreno' && (
                       <TabsTrigger 
@@ -5622,6 +5247,12 @@ const PropertyValuation = () => {
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
                      {translations[selectedLanguage].services}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="ubicacion" 
+                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                   >
+                     {translations[selectedLanguage].location}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="fotos" 

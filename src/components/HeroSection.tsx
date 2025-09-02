@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, TrendingUp, Shield, Zap, Star, MapPin } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { indexTranslations } from '@/translations/indexTranslations';
 
-const HeroSection = () => {
+const HeroSection = ({ onStartValuation, onShowDemo }: { onStartValuation: () => void; onShowDemo: () => void }) => {
   const { selectedLanguage } = useLanguage();
   const t = indexTranslations[selectedLanguage];
   return (
@@ -36,24 +35,23 @@ const HeroSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-              <Link to="/avaluos">
-                <Button 
-                  size="lg" 
-                  className="text-lg px-8 py-6"
-                >
-                  <Calculator className="w-5 h-5 mr-2" />
-                  {t.heroButtonMain}
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={onStartValuation}
+              >
+                <Calculator className="w-5 h-5 mr-2" />
+                {t.heroButtonMain}
+              </Button>
               
               <Button 
                 variant="outline" 
                 size="lg"
                 className="text-lg px-8 py-6"
-                onClick={() => {}}
+                onClick={onShowDemo}
               >
                 <TrendingUp className="w-5 h-5 mr-2" />
-                Ver Demo
+                {t.heroButtonDemo}
               </Button>
             </div>
             
