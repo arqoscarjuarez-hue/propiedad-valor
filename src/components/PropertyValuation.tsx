@@ -4585,7 +4585,7 @@ const PropertyValuation = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Paso 1: Selectores de Idioma y Moneda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
           {/* Paso 1: Selector de Idioma */}
@@ -5540,8 +5540,6 @@ const PropertyValuation = () => {
             </Card>
           </div>
 
-        {/* Paso 4: Panel de Resultados */}
-        <div className="lg:col-span-1" data-results-panel>
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -5712,6 +5710,53 @@ const PropertyValuation = () => {
         </div>
       </div>
       
+      {/* Paso 4: Panel de Resultados - Aparece debajo del formulario */}
+      {valuation && valuation > 0 && (
+        <div className="mt-6">
+          <Card className="shadow-lg" data-results-panel>
+            <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <div className="w-6 h-6 bg-white text-secondary rounded-full flex items-center justify-center text-sm font-bold mr-2">
+                  4
+                </div>
+                {translations[selectedLanguage].valuationResultsTitle}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-center">
+                  <h3 className="text-base sm:text-lg font-semibold text-muted-foreground">{translations[selectedLanguage].estimatedValue}</h3>
+                   <p className="text-2xl sm:text-3xl font-bold text-primary leading-tight break-words">
+                     {formatCurrency(valuation, selectedCurrency)}
+                   </p>
+                   <Badge variant="secondary" className="mt-1 sm:mt-2">{selectedCurrency.code}</Badge>
+                   <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].basedOnComparablesText}</p>
+                 </div>
+                 
+                 <div className="space-y-2 text-sm">
+                   {/* Mostrar área construida solo si NO es terreno */}
+                   {propertyData.tipoPropiedad !== 'terreno' && (
+                     <div className="flex justify-between">
+                       <span className="font-medium">{translations[selectedLanguage].totalBuiltAreaLabel}:</span>
+                       <span>{(propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel).toLocaleString()} m²</span>
+                     </div>
+                   )}
+                   {propertyData.areaTerreno > 0 && (
+                     <div className="flex justify-between">
+                       <span className="font-medium">{translations[selectedLanguage].landAreaLabel}:</span>
+                       <span>{propertyData.areaTerreno.toLocaleString()} m²</span>
+                     </div>
+                   )}
+                   <div className="flex justify-between">
+                     <span className="font-medium">{translations[selectedLanguage].propertyLocation}:</span>
+                     <span>{propertyData.ubicacion || translations[selectedLanguage].notSpecified}</span>
+                   </div>
+                 </div>
+               </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
       {/* Demo Walkthrough */}
       {showDemo && <DemoWalkthrough onClose={handleCloseDemo} />}
     </div>
