@@ -3618,6 +3618,9 @@ const PropertyValuation = () => {
         
         // Servicios seleccionados
         if (propertyData.servicios) {
+          console.log('DEBUG - PropertyData servicios:', propertyData.servicios);
+          console.log('DEBUG - PropertyData tipo:', propertyData.tipoPropiedad);
+          
           const serviciosActivos = Object.entries(propertyData.servicios)
             .filter(([_, value]) => value === true)
             .map(([key, _]) => {
@@ -3641,6 +3644,7 @@ const PropertyValuation = () => {
               }
             });
             
+          console.log('DEBUG - Servicios activos filtrados:', serviciosActivos);
           if (serviciosActivos.length > 0) {
             doc.setFont("helvetica", "bold");
             doc.text(`${translations[selectedLanguage].availableServices}:`, marginLeft, yPosition);
