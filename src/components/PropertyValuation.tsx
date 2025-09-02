@@ -3044,6 +3044,79 @@ const PropertyValuation = () => {
     };
   };
 
+  // Función para reiniciar todo y comenzar un nuevo valúo
+  const startNewValuation = () => {
+    // Reiniciar propertyData a valores iniciales
+    setPropertyData({
+      areaSotano: 0,
+      areaPrimerNivel: 0,
+      areaSegundoNivel: 0,
+      areaTercerNivel: 0,
+      areaCuartoNivel: 0,
+      areaTerreno: 0,
+      tipoPropiedad: 'casa',
+      recamaras: 0,
+      salas: 0,
+      comedor: 0,
+      cocina: 0,
+      bodega: 0,
+      areaServicio: 0,
+      cochera: 0,
+      banos: 0,
+      otros: 0,
+      antiguedad: 0,
+      ubicacion: '',
+      estadoGeneral: '',
+      tipoAcceso: '',
+      latitud: 0,
+      longitud: 0,
+      direccionCompleta: '',
+      servicios: {
+        agua: false,
+        electricidad: false,
+        gas: false,
+        drenaje: false,
+        internet: false,
+        cable: false,
+        telefono: false,
+        seguridad: false,
+        alberca: false,
+        jardin: false,
+        elevador: false,
+        aireAcondicionado: false,
+        calefaccion: false,
+        panelesSolares: false,
+        tinaco: false,
+      }
+    });
+
+    // Reiniciar todos los estados relacionados
+    setValuation(null);
+    setBaseValuation(null);
+    setMultipleValuations([]);
+    setComparativeProperties([]);
+    setAllComparativeProperties([]);
+    setSelectedComparatives([0, 1, 2]);
+    setPropertyImages([]);
+    setIsCalculating(false);
+    
+    // Volver al primer paso
+    setActiveTab('tipo');
+    
+    // Limpiar localStorage
+    try {
+      localStorage.removeItem('propertyValuationData');
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+    }
+    
+    // Mostrar notificación
+    toast({
+      title: "Nuevo Valúo Iniciado",
+      description: "Todos los datos han sido reiniciados. Puede comenzar un nuevo valúo.",
+    });
+  };
+
   // Función para validar que todos los pasos estén completos
   const isFormValid = () => {
     const completion = getStepCompletion();
@@ -4646,8 +4719,8 @@ const PropertyValuation = () => {
       </div>
 
       
-      {/* Pasos 1, 2, Descargar Documentos y Disclaimer arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         {/* Paso 1: Selector de Idioma */}
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
           <div className="flex items-center gap-2 mb-3">
@@ -4717,6 +4790,27 @@ const PropertyValuation = () => {
               Los documentos estarán disponibles después de realizar la valuación.
             </p>
           )}
+        </Card>
+
+        {/* Botón para Nuevo Valúo */}
+        <Card className="p-4 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border-purple-200 dark:border-purple-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              🔄
+            </div>
+            <Label className="text-sm font-bold text-purple-900 dark:text-purple-100">
+              Nuevo Valúo
+            </Label>
+          </div>
+          <Button 
+            onClick={startNewValuation}
+            variant="outline" 
+            className="w-full border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 h-10 text-xs sm:text-sm"
+            size="sm"
+          >
+            <Shuffle className="mr-2 h-4 w-4" />
+            Comenzar de Nuevo
+          </Button>
         </Card>
 
         {/* Disclaimer de Valuación */}
