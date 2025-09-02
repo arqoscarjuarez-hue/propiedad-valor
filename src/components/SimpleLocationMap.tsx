@@ -417,16 +417,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
 
       {/* Instrucciones */}
       <div className="text-xs text-muted-foreground space-y-1">
-        <p>💡 <strong>Cómo usar:</strong></p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
-          <li>Busca una dirección específica en el primer campo</li>
-          <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
-          <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
-          <li><strong>Mueve el mapa</strong> arrastrando para explorar diferentes áreas</li>
-          <li><strong>Haz clic en el mapa</strong> para colocar el marcador en la ubicación exacta</li>
-          <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
-          <li>Las coordenadas se usan automáticamente en la valuación</li>
-        </ul>
         <div className="flex items-center gap-2 mt-2">
           <Button
             onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}
