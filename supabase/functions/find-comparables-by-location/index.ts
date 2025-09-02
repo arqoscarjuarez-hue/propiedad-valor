@@ -1,254 +1,304 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.53.0";
 
+// CORS for browser calls
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+// Haversine distance in km
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // km
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// Bounding box for a radius (km)
+function bbox(lat: number, lng: number, radiusKm: number) {
+  const latDelta = radiusKm / 111; // ~111 km per degree latitude
+  const lngDelta = radiusKm / (111 * Math.cos((lat * Math.PI) / 180));
+  return {
+    minLat: lat - latDelta,
+    maxLat: lat + latDelta,
+    minLng: lng - lngDelta,
+    maxLng: lng + lngDelta,
+  };
+}
+
+// Normalize property type + synonyms group
+function normalizeType(raw?: string) {
+  const t = (raw || "").toLowerCase().trim();
+  if (["casa", "vivienda", "residencial"].includes(t)) return { canonical: "casa", group: ["casa", "vivienda", "residencial"] };
+  if (["apartamento", "departamento", "condominio", "piso"].includes(t)) return { canonical: "apartamento", group: ["apartamento", "departamento", "condominio", "piso"] };
+  if (["terreno", "lote", "solar"].includes(t)) return { canonical: "terreno", group: ["terreno", "lote", "solar"] };
+  if (["local_comercial", "local", "comercial", "oficina"].includes(t)) return { canonical: "local_comercial", group: ["local_comercial", "local", "comercial", "oficina"] };
+  return { canonical: t || "casa", group: [t || "casa"] };
+}
+
+// Very simple country detection by bounding boxes used elsewhere in project
+function countryFromLatLng(lat: number, lng: number): string {
+  if (lat >= 13.0 && lat <= 14.5 && lng >= -90.5 && lng <= -87.5) return "El Salvador";
+  if (lat >= 13.7 && lat <= 17.8 && lng >= -92.3 && lng <= -88.2) return "Guatemala";
+  if (lat >= 12.9 && lat <= 16.0 && lng >= -89.4 && lng <= -83.1) return "Honduras";
+  // Default to Mexico for broader LATAM coverage in our dataset
+  return "Mexico";
+}
+
+function monthsBetween(from: Date, to: Date) {
+  return Math.max(0, (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24 * 30.4375));
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { target_lat, target_lng, target_property_type, target_area } = await req.json();
+    const body = await req.json();
+    const target_lat = Number(body?.target_lat);
+    const target_lng = Number(body?.target_lng);
+    const target_property_type = String(body?.target_property_type || "casa");
+    const target_area = Number(body?.target_area || 0);
 
-    console.log('🏛️ PROFESSIONAL USPAP SEARCH - Parameters:', {
+    const { canonical, group } = normalizeType(target_property_type);
+    const detectedCountry = countryFromLatLng(target_lat, target_lng);
+
+    const now = new Date();
+    const cutoff = new Date(now);
+    cutoff.setMonth(cutoff.getMonth() - 24); // ≤ 24 months
+    const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+    console.log("🌎 LATAM SIMPLE SEARCH - Params:", {
       target_lat,
       target_lng,
-      target_property_type,
+      canonical_type: canonical,
       target_area,
-      timestamp: new Date().toISOString()
+      country: detectedCountry,
+      cutoff: cutoffStr,
     });
 
-    // ALGORITMO PROFESIONAL USPAP/FANNIE MAE BASADO EN INVESTIGACIÓN
-    let comparables: any[] = [];
-    let searchStrategy = 'none';
+    // Progressive radii (km)
+    const radii = [1, 2, 5, 10, 15, 20, 25];
 
-    console.log('🏛️ STARTING INDUSTRY-STANDARD COMPARABLE SELECTION');
+    // Filters
+    const areaMin = target_area > 0 ? target_area * 0.7 : 0; // ±30%
+    const areaMax = target_area > 0 ? target_area * 1.3 : 1_000_000_000;
 
-    // Estrategia 1: Algoritmo profesional basado en estándares USPAP y Fannie Mae
-    try {
-      const { data: professionalData, error: professionalError } = await supabase
-        .rpc('find_professional_comparables', {
-          center_lat: target_lat,
-          center_lng: target_lng,
-          prop_type: target_property_type,
-          target_area: target_area || 0,
-          target_bedrooms: 0,  // TODO: Extract from frontend data
-          target_bathrooms: 0, // TODO: Extract from frontend data
-          target_age_years: 0  // TODO: Extract from frontend data
-        });
+    type Row = {
+      id: string;
+      address: string | null;
+      price_usd: number | null;
+      price_per_sqm_usd: number | null;
+      total_area: number | null;
+      latitude: number | null;
+      longitude: number | null;
+      property_type: string | null;
+      estrato_social: string | null;
+      sale_date: string | null;
+      country: string | null;
+      city: string | null;
+      state: string | null;
+    };
 
-      if (!professionalError && professionalData && professionalData.length > 0) {
-        comparables = professionalData;
-        searchStrategy = 'uspap_professional';
-        
-        console.log(`✅ USPAP PROFESSIONAL SUCCESS: ${comparables.length} comparables found`);
-        console.log(`📊 Similarity scores: ${comparables.map(c => c.similarity_score).join(', ')}`);
-        console.log(`💰 Adjusted price range: $${Math.min(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()} - $${Math.max(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()}`);
-        console.log(`📏 Distance range: ${Math.min(...comparables.map(c => c.distance)).toFixed(1)}km - ${Math.max(...comparables.map(c => c.distance)).toFixed(1)}km`);
-        
-        // Log professional adjustment details for first comparable
-        if (comparables[0]) {
-          const c = comparables[0];
-          console.log(`🔧 PROFESSIONAL ADJUSTMENTS for ${c.address}:`);
-          console.log(`   📐 Area: ${(c.area_adjustment_factor * 100).toFixed(1)}% (${c.total_area}m² vs ${target_area}m²)`);
-          console.log(`   📅 Time: ${(c.time_adjustment_factor * 100).toFixed(1)}% (${c.months_old} months old)`);
-          console.log(`   📍 Location: ${(c.location_adjustment_factor * 100).toFixed(1)}% (${c.distance}km away)`);
-          console.log(`   🏠 Condition: ${(c.condition_adjustment_factor * 100).toFixed(1)}%`);
-          console.log(`   🎯 Overall: ${(c.overall_adjustment_factor * 100).toFixed(1)}%`);
-          console.log(`   💡 Reason: ${c.selection_reason}`);
-          console.log(`   💰 Net Adjustment: $${c.net_adjustment_amount?.toLocaleString()}`);
-          console.log(`   📊 Gross Adjustment: $${c.gross_adjustment_amount?.toLocaleString()}`);
-        }
+    const picked = new Map<string, any>();
+    let usedRadius = 0;
+    let usedTypeMode: "exact" | "similar" = "exact";
+
+    // Helper to fetch for one radius + types
+    const fetchFor = async (radiusKm: number, allowedTypes: string[]) => {
+      const { minLat, maxLat, minLng, maxLng } = bbox(target_lat, target_lng, radiusKm);
+
+      let query = supabase
+        .from("property_comparables")
+        .select(
+          "id,address,price_usd,price_per_sqm_usd,total_area,latitude,longitude,property_type,estrato_social,sale_date,country,city,state"
+        )
+        .eq("country", detectedCountry)
+        .gte("latitude", minLat)
+        .lte("latitude", maxLat)
+        .gte("longitude", minLng)
+        .lte("longitude", maxLng)
+        .gte("sale_date", cutoffStr)
+        .limit(200);
+
+      if (target_area > 0) {
+        query = query.gte("total_area", areaMin).lte("total_area", areaMax);
+      }
+
+      if (allowedTypes.length === 1) {
+        query = query.eq("property_type", allowedTypes[0]);
       } else {
-        console.log('⚠️ USPAP Professional failed:', professionalError);
+        query = query.in("property_type", allowedTypes);
       }
-    } catch (error) {
-      console.log('❌ USPAP Professional ERROR:', error);
+
+      const { data, error } = await query;
+      if (error) {
+        console.error("❌ Query error:", error);
+        return [] as Row[];
+      }
+      return (data || []) as Row[];
+    };
+
+    // 1) Exact type pass
+    for (const r of radii) {
+      const rows = await fetchFor(r, [canonical]);
+      console.log(`🔎 Radius ${r}km (exact: ${canonical}) → candidates:`, rows.length);
+
+      for (const row of rows) {
+        if (!row.id || row.latitude == null || row.longitude == null || row.total_area == null) continue;
+        const d = haversineKm(target_lat, target_lng, row.latitude, row.longitude);
+        if (d > r) continue; // precise filter inside bbox
+
+        const saleDate = row.sale_date ? new Date(row.sale_date) : null;
+        const mOld = saleDate ? monthsBetween(saleDate, now) : 999;
+
+        // Scoring
+        const areaScore = target_area > 0 && row.total_area
+          ? Math.max(0, 1 - Math.abs(row.total_area - target_area) / Math.max(row.total_area, target_area))
+          : 0.5;
+        const distanceScore = d <= 1 ? 1 : d <= 5 ? 0.8 : d <= 10 ? 0.6 : d <= 15 ? 0.4 : 0.2;
+        const recencyScore = mOld <= 6 ? 1 : mOld <= 12 ? 0.8 : mOld <= 18 ? 0.6 : mOld <= 24 ? 0.4 : 0.2;
+        const overall = 0.5 * areaScore + 0.3 * distanceScore + 0.2 * recencyScore;
+
+        picked.set(row.id, {
+          ...row,
+          distance: d,
+          distance_km: d,
+          months_old: Math.round(mOld),
+          area_similarity_score: Number(areaScore.toFixed(3)),
+          overall_similarity_score: Number(overall.toFixed(3)),
+          similarity_score: Math.round(overall * 100),
+          selection_reason: "Exact type, LATAM simple scoring",
+        });
+      }
+
+      if (picked.size >= 5) {
+        usedRadius = r;
+        usedTypeMode = "exact";
+        break;
+      }
     }
 
-    // Fallback Strategy 2: If no professional results, try broader search
-    if (comparables.length === 0) {
-      console.log('🔄 FALLBACK: Trying area-prioritized within local radius');
-      try {
-        const { data: areaFirst, error: areaErr } = await supabase
-          .rpc('find_area_prioritized_comparables', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            target_area: target_area || 0,
-            max_distance_km: 15
-          });
+    // 2) Similar types if not enough
+    if (picked.size < 3) {
+      for (const r of radii) {
+        const rows = await fetchFor(r, group);
+        console.log(`🔁 Radius ${r}km (similar group: ${group.join(",")}) → candidates:`, rows.length);
 
-        if (!areaErr && areaFirst && areaFirst.length > 0) {
-          comparables = areaFirst.map((c: any) => ({
-            ...c,
-            similarity_score: Math.round(((c.overall_similarity_score || 0) * 100 + (c.area_similarity_score || 0) * 100) / 2),
-            selection_reason: c.selection_reason || 'Area-prioritized comparable (≤15km)'
-          }));
-          searchStrategy = 'area_prioritized_local';
-          console.log(`✅ Area-prioritized SUCCESS: ${comparables.length} within local radius`);
+        for (const row of rows) {
+          if (!row.id || row.latitude == null || row.longitude == null || row.total_area == null) continue;
+          const d = haversineKm(target_lat, target_lng, row.latitude, row.longitude);
+          if (d > r) continue;
+
+          const saleDate = row.sale_date ? new Date(row.sale_date) : null;
+          const mOld = saleDate ? monthsBetween(saleDate, now) : 999;
+
+          const areaScore = target_area > 0 && row.total_area
+            ? Math.max(0, 1 - Math.abs(row.total_area - target_area) / Math.max(row.total_area, target_area))
+            : 0.5;
+          const distanceScore = d <= 1 ? 1 : d <= 5 ? 0.8 : d <= 10 ? 0.6 : d <= 15 ? 0.4 : 0.2;
+          const recencyScore = mOld <= 6 ? 1 : mOld <= 12 ? 0.8 : mOld <= 18 ? 0.6 : mOld <= 24 ? 0.4 : 0.2;
+          const overall = 0.5 * areaScore + 0.3 * distanceScore + 0.2 * recencyScore;
+
+          if (!picked.has(row.id)) {
+            picked.set(row.id, {
+              ...row,
+              distance: d,
+              distance_km: d,
+              months_old: Math.round(mOld),
+              area_similarity_score: Number(areaScore.toFixed(3)),
+              overall_similarity_score: Number(overall.toFixed(3)),
+              similarity_score: Math.round(overall * 100),
+              selection_reason: "Similar type group, LATAM simple scoring",
+            });
+          }
         }
-      } catch (error) {
-        console.log('❌ Area-prioritized ERROR:', error);
-      }
-    }
 
-    if (comparables.length === 0) {
-      console.log('🔄 FALLBACK 2: Trying exact/similar types with dynamic radius (≤25km)');
-      try {
-        const { data: exactType, error: exactErr } = await supabase
-          .rpc('find_exact_type_comparables', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            target_area: target_area || 0
-          });
-
-        if (!exactErr && exactType && exactType.length > 0) {
-          comparables = exactType.map((c: any) => ({
-            ...c,
-            similarity_score: Math.round((c.overall_similarity_score || 0) * 100),
-            selection_reason: c.selection_reason || 'Exact/similar type within ≤25km'
-          }));
-          searchStrategy = 'exact_type_priority';
-          console.log(`✅ Exact/Similar type SUCCESS: ${comparables.length} results`);
+        if (picked.size >= 5) {
+          usedRadius = r;
+          usedTypeMode = "similar";
+          break;
         }
-      } catch (error) {
-        console.log('❌ Exact type fallback ERROR:', error);
       }
     }
 
-    if (comparables.length === 0) {
-      console.log('🔄 FALLBACK 3: Trying flexible comparables (≤25km)');
-      try {
-        const { data: flexible, error: flexErr } = await supabase
-          .rpc('find_flexible_comparables', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            target_area: target_area || 0,
-            max_distance_km: 25
-          });
+    const all = Array.from(picked.values());
+    all.sort((a, b) => {
+      if (b.overall_similarity_score !== a.overall_similarity_score) return b.overall_similarity_score - a.overall_similarity_score;
+      if (a.distance !== b.distance) return a.distance - b.distance;
+      return (a.months_old || 999) - (b.months_old || 999);
+    });
 
-        if (!flexErr && flexible && flexible.length > 0) {
-          comparables = flexible.map((c: any) => ({
-            ...c,
-            similarity_score: Math.round((c.overall_similarity_score || 0) * 100),
-            selection_reason: c.selection_reason || 'Flexible comparable within ≤25km'
-          }));
-          searchStrategy = 'flexible_local_radius';
-          console.log(`✅ Flexible SUCCESS: ${comparables.length} results within ≤25km`);
-        }
-      } catch (error) {
-        console.log('❌ Flexible fallback ERROR:', error);
-      }
-    }
+    const top = all.slice(0, 5);
 
-    if (comparables.length === 0) {
-      console.log('🔄 FALLBACK 4: Exact type within radius using basic query (≤25km)');
-      try {
-        const { data: withinRadius, error: radiusErr } = await supabase
-          .rpc('find_comparables_within_radius', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            radius_km: 25
-          });
+    console.log("✅ LATAM SIMPLE RESULT:", {
+      count: top.length,
+      usedRadiusKm: usedRadius,
+      type_mode: usedTypeMode,
+      country: detectedCountry,
+      ids: top.map((x) => x.id),
+    });
 
-        if (!radiusErr && withinRadius && withinRadius.length > 0) {
-          comparables = withinRadius.map((item: any) => ({
-            ...item,
-            adjusted_price_usd: item.price_usd, // no market adjust here
-            adjusted_price_per_sqm: item.price_per_sqm_usd,
-            similarity_score: 60.0,
-            selection_reason: 'Within 25km radius (basic)',
-            distance: item.distance
-          }));
-          searchStrategy = 'within_radius_basic';
-          console.log(`✅ Radius SUCCESS: ${comparables.length} results within 25km`);
-        }
-      } catch (error) {
-        console.log('❌ Radius fallback ERROR:', error);
-      }
-    }
-
-    // Professional result metadata
     const result = {
-      data: comparables,
+      data: top,
       metadata: {
-        strategy_used: searchStrategy,
-        total_found: comparables.length,
-        search_timestamp: new Date().toISOString(),
+        strategy_used: "latam_simple",
+        country: detectedCountry,
+        radius_used_km: usedRadius || (top[0]?.distance_km ? Math.ceil(top[0].distance_km) : 0),
+        type_mode: usedTypeMode,
+        scoring: {
+          weights: { area: 0.5, distance: 0.3, recency: 0.2 },
+          filters: {
+            area_tolerance: "+/-30%",
+            recency_months_max: 24,
+            never_leave_country: true,
+          },
+        },
         search_parameters: {
           target_lat,
           target_lng,
-          target_property_type,
-          target_area
+          target_property_type: canonical,
+          target_area,
         },
-        professional_standards: {
-          methodology: 'USPAP Sales Comparison Approach',
-          standards_applied: ['Fannie Mae Guidelines', 'USPAP Standards', 'Professional Adjustment Factors'],
-          adjustment_criteria: ['Area (±50% max)', 'Time (24 months max)', 'Location (25km max)', 'Condition (age proxy)'],
-          minimum_comparables: 3,
-          radius_expansion: 'Progressive: 1km → 2km → 5km → 10km → 25km',
-          market_adjustments: 'Country-specific pricing (El Salvador: 35% of Mexico prices)'
+        totals: {
+          considered: all.length,
+          returned: top.length,
         },
-        quality_metrics: comparables.length > 0 ? {
-          avg_similarity_score: Math.round(comparables.reduce((sum, c) => sum + (c.similarity_score || 0), 0) / comparables.length * 10) / 10,
-          avg_distance_km: Math.round(comparables.reduce((sum, c) => sum + (c.distance || 0), 0) / comparables.length * 10) / 10,
-          avg_adjustment_factor: Math.round(comparables.reduce((sum, c) => sum + (c.overall_adjustment_factor || 0), 0) / comparables.length * 1000) / 1000,
-          optimal_comparables: comparables.filter(c => c.selection_reason?.includes('Optimal')).length,
-          good_comparables: comparables.filter(c => c.selection_reason?.includes('Good')).length,
-          acceptable_comparables: comparables.filter(c => c.selection_reason?.includes('Acceptable')).length
-        } : null
-      }
+        search_timestamp: new Date().toISOString(),
+      },
     };
 
-    console.log('🎉 PROFESSIONAL USPAP SEARCH RESULT:', {
-      strategy: searchStrategy,
-      count: comparables.length,
-      quality: result.metadata.quality_metrics,
-      standards_compliance: comparables.length >= 3 ? 'COMPLIANT' : 'INSUFFICIENT_DATA'
+    return new Response(JSON.stringify(result), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
     });
-
-    return new Response(
-      JSON.stringify(result),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    );
-
   } catch (error) {
-    console.error('💥 CRITICAL ERROR in professional comparable search:', error);
+    console.error("💥 LATAM SIMPLE ERROR:", error);
     return new Response(
-      JSON.stringify({ 
-        data: [], 
-        error: error.message,
+      JSON.stringify({
+        data: [],
+        error: error?.message || String(error),
         metadata: {
-          strategy_used: 'error',
-          total_found: 0,
+          strategy_used: "latam_simple",
+          error: true,
           search_timestamp: new Date().toISOString(),
-          professional_standards: {
-            methodology: 'USPAP Sales Comparison Approach',
-            error_occurred: true
-          }
-        }
+        },
       }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
-})
+});
