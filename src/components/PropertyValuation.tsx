@@ -1462,33 +1462,6 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* DEBUGGING VISUAL TEMPORAL */}
-                {debugInfo && (
-                  <div className="mt-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
-                    <h3 className="font-bold text-red-800 mb-2">🔬 DEBUG INFO AVANZADO (TEMPORAL)</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="text-xs text-red-700 space-y-1">
-                        <p><strong>Timestamp:</strong> {debugInfo.timestamp}</p>
-                        <p><strong>Comparables encontrados:</strong> {debugInfo.comparablesFound}</p>
-                        <p><strong>Tiene ubicación:</strong> {debugInfo.hasLocation ? 'SÍ' : 'NO'}</p>
-                        <p><strong>Coordenadas:</strong> {debugInfo.searchParams?.lat}, {debugInfo.searchParams?.lng}</p>
-                        <p><strong>Tipo propiedad:</strong> {debugInfo.searchParams?.propertyType}</p>
-                        <p><strong>Área:</strong> {debugInfo.searchParams?.area} m²</p>
-                      </div>
-                      <div className="text-xs text-red-700 space-y-1">
-                        <p><strong>Resultado avalúo existe:</strong> {valuationResult ? 'SÍ' : 'NO'}</p>
-                        <p><strong>Array comparables length:</strong> {comparables.length}</p>
-                        <p><strong>Estado renderizado:</strong> {comparables.length > 0 ? 'DEBERÍA MOSTRAR' : 'NO DEBERÍA MOSTRAR'}</p>
-                        <p><strong>Condición completa:</strong> {(comparables.length > 0) ? 'CUMPLIDA ✅' : 'NO CUMPLIDA ❌'}</p>
-                      </div>
-                    </div>
-                    {debugInfo.comparablesData && debugInfo.comparablesData.length > 0 && (
-                      <div className="mt-3 p-2 bg-white rounded text-xs">
-                        <strong>Primer comparable:</strong> {JSON.stringify(debugInfo.comparablesData[0], null, 2)}
-                      </div>
-                    )}
-                  </div>
-                )}
 
                 {/* Sección de Comparables Utilizados - FORZADA SIEMPRE */}
                 {comparables.length > 0 && (
