@@ -4730,7 +4730,7 @@ const PropertyValuation = () => {
               Progreso de Completación
             </Label>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
             <div className="flex items-center gap-2">
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                 {getStepCompletion().step1 ? '✓' : '1'}
@@ -4815,7 +4815,15 @@ const PropertyValuation = () => {
             <Label className="text-sm font-bold text-green-900 dark:text-green-100">
               Paso 2: {translations[selectedLanguage].currencyValuation}
             </Label>
-          </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_6 && valuation ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_6 && valuation ? '✓' : '3.6'}
+              </div>
+              <span className={`text-sm ${getStepCompletion().step3_6 && valuation ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Valuación
+              </span>
+            </div>
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
@@ -5025,10 +5033,15 @@ const PropertyValuation = () => {
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
                        !getStepCompletion().step3_5 
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                         : getStepCompletion().step3_6 && valuation
+                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
+                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                     <span className="font-bold mr-1">3.6</span> {translations[selectedLanguage].calculate}
+                     <span className="font-bold mr-1">
+                       {getStepCompletion().step3_6 && valuation ? '✓' : '3.6'}
+                     </span> 
+                     {translations[selectedLanguage].calculate}
                    </TabsTrigger>
                   </TabsList>
 
