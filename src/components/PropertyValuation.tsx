@@ -3616,35 +3616,49 @@ const PropertyValuation = () => {
           yPosition += 6;
         }
         
-        // Servicios seleccionados
+        // Servicios seleccionados - solo para terrenos mostrar servicios básicos relevantes
         if (propertyData.servicios) {
-          console.log('DEBUG - PropertyData servicios:', propertyData.servicios);
-          console.log('DEBUG - PropertyData tipo:', propertyData.tipoPropiedad);
+          let serviciosActivos = [];
           
-          const serviciosActivos = Object.entries(propertyData.servicios)
-            .filter(([_, value]) => value === true)
-            .map(([key, _]) => {
-              switch(key) {
-                case 'agua': return translations[selectedLanguage].water;
-                case 'electricidad': return translations[selectedLanguage].electricity;
-                case 'gas': return translations[selectedLanguage].gas;
-                case 'drenaje': return translations[selectedLanguage].drainage;
-                case 'internet': return translations[selectedLanguage].internet;
-                case 'cable': return translations[selectedLanguage].cable;
-                case 'telefono': return translations[selectedLanguage].phone;
-                case 'seguridad': return translations[selectedLanguage].security;
-                case 'alberca': return translations[selectedLanguage].swimmingPool;
-                case 'jardin': return translations[selectedLanguage].garden;
-                case 'elevador': return translations[selectedLanguage].elevator;
-                case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
-                case 'calefaccion': return translations[selectedLanguage].heating;
-                case 'panelesSolares': return translations[selectedLanguage].solarPanels;
-                case 'tinaco': return translations[selectedLanguage].waterTank;
-                default: return key;
-              }
-            });
-            
-          console.log('DEBUG - Servicios activos filtrados:', serviciosActivos);
+          if (propertyData.tipoPropiedad === 'terreno') {
+            // Para terrenos, solo mostrar servicios básicos que realmente estén seleccionados
+            const serviciosBasicosTerreno = ['agua', 'electricidad', 'gas', 'drenaje'];
+            serviciosActivos = Object.entries(propertyData.servicios)
+              .filter(([key, value]) => value === true && serviciosBasicosTerreno.includes(key))
+              .map(([key, _]) => {
+                switch(key) {
+                  case 'agua': return translations[selectedLanguage].water;
+                  case 'electricidad': return translations[selectedLanguage].electricity;
+                  case 'gas': return translations[selectedLanguage].gas;
+                  case 'drenaje': return translations[selectedLanguage].drainage;
+                  default: return key;
+                }
+              });
+          } else {
+            // Para otros tipos de propiedad, mostrar todos los servicios seleccionados
+            serviciosActivos = Object.entries(propertyData.servicios)
+              .filter(([_, value]) => value === true)
+              .map(([key, _]) => {
+                switch(key) {
+                  case 'agua': return translations[selectedLanguage].water;
+                  case 'electricidad': return translations[selectedLanguage].electricity;
+                  case 'gas': return translations[selectedLanguage].gas;
+                  case 'drenaje': return translations[selectedLanguage].drainage;
+                  case 'internet': return translations[selectedLanguage].internet;
+                  case 'cable': return translations[selectedLanguage].cable;
+                  case 'telefono': return translations[selectedLanguage].phone;
+                  case 'seguridad': return translations[selectedLanguage].security;
+                  case 'alberca': return translations[selectedLanguage].swimmingPool;
+                  case 'jardin': return translations[selectedLanguage].garden;
+                  case 'elevador': return translations[selectedLanguage].elevator;
+                  case 'aireAcondicionado': return translations[selectedLanguage].airConditioning;
+                  case 'calefaccion': return translations[selectedLanguage].heating;
+                  case 'panelesSolares': return translations[selectedLanguage].solarPanels;
+                  case 'tinaco': return translations[selectedLanguage].waterTank;
+                  default: return key;
+                }
+              });
+          }
           if (serviciosActivos.length > 0) {
             doc.setFont("helvetica", "bold");
             doc.text(`${translations[selectedLanguage].availableServices}:`, marginLeft, yPosition);
@@ -4578,10 +4592,47 @@ const PropertyValuation = () => {
               new Paragraph({ text: "" }) // Espacio
             ] : []),
 
-            // 5. SERVICIOS DISPONIBLES (solo para propiedades construidas)
-            ...(propertyData.tipoPropiedad !== 'terreno' ? [
+            // 5. SERVICIOS DISPONIBLES
+            // Para terrenos: solo servicios básicos disponibles
+            ...(propertyData.tipoPropiedad === 'terreno' ? [
+              ...((() => {
+                const serviciosBasicosTerreno = ['agua', 'electricidad', 'gas', 'drenaje'];
+                const serviciosActivos = Object.entries(propertyData.servicios)
+                  .filter(([key, value]) => value === true && serviciosBasicosTerreno.includes(key))
+                  .map(([key, _]) => {
+                    const serviceNames = {
+                      agua: translations[selectedLanguage].water,
+                      electricidad: translations[selectedLanguage].electricity,
+                      gas: translations[selectedLanguage].gas,
+                      drenaje: translations[selectedLanguage].drainage
+                    };
+                    return serviceNames[key as keyof typeof serviceNames] || key;
+                  });
+                
+                if (serviciosActivos.length > 0) {
+                  return [
+                    new Paragraph({
+                      text: `3. ${translations[selectedLanguage].availableServices}`,
+                      heading: HeadingLevel.HEADING_1
+                    }),
+                    new Paragraph({
+                      children: [
+                        new TextRun({ text: `${translations[selectedLanguage].basicServices}:`, bold: true })
+                      ]
+                    }),
+                    ...serviciosActivos.map(servicio => 
+                      new Paragraph({ children: [new TextRun({ text: `✓ ${servicio}` })] })
+                    ),
+                    new Paragraph({ text: "" }) // Espacio
+                  ];
+                } else {
+                  return [];
+                }
+              })())
+            ] : [
+              // Para otros tipos de propiedad: todos los servicios
               new Paragraph({
-                text: `${propertyData.tipoPropiedad === 'terreno' ? '3' : '5'}. ${translations[selectedLanguage].availableServices}`,
+                text: `5. ${translations[selectedLanguage].availableServices}`,
                 heading: HeadingLevel.HEADING_1
               }),
               new Paragraph({
@@ -4612,7 +4663,7 @@ const PropertyValuation = () => {
               ...(propertyData.servicios.tinaco ? [new Paragraph({ children: [new TextRun({ text: `✓ ${translations[selectedLanguage].waterTank}` })] })] : []),
 
               new Paragraph({ text: "" }) // Espacio
-            ] : []),
+            ]),
 
             // 6. ANÁLISIS DE MERCADO (si hay comparables)
             ...(comparativeProperties.length > 0 ? (() => {
