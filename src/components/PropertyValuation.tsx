@@ -5713,47 +5713,79 @@ const PropertyValuation = () => {
                 
                 {/* Progreso de pasos */}
                 <div className="mb-6 p-4 bg-muted rounded-lg">
-                  <h4 className="text-md font-semibold mb-3">Progreso de Completación</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                  <h4 className="text-md font-semibold mb-4 text-center">🏠 Secuencia de Valuación</h4>
+                  <p className="text-xs text-muted-foreground mb-4 text-center">Complete los pasos en orden para obtener su valuación profesional</p>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                         {getStepCompletion().step3_1 ? '✓' : '1'}
                       </div>
-                      <span className={getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 1: Tipo de Propiedad
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 1: Tipo de Propiedad
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Seleccione si es casa, apartamento, terreno o comercial</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                         {getStepCompletion().step3_2 ? '✓' : '2'}
                       </div>
-                      <span className={getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 2: Áreas
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 2: Áreas
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Ingrese el área del terreno y construcción en m²</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                         {getStepCompletion().step3_3 ? '✓' : '3'}
                       </div>
-                      <span className={getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3: Espacios
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 3: Espacios
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Defina recámaras, baños, cocinas y espacios adicionales</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                         {getStepCompletion().step3_4 ? '✓' : '4'}
                       </div>
-                      <span className={getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 4: Características
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 4: Características
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Evalúe antigüedad, estado y calidad de la zona</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
                         {getStepCompletion().step3_5 ? '✓' : '5'}
                       </div>
-                      <span className={getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 5: Ubicación
-                      </span>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 5: Ubicación
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Marque la ubicación exacta en el mapa</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50 border-2 border-dashed border-primary/20">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 bg-primary text-white">
+                        6
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-medium text-primary">
+                          Paso 6: Valuación Final
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Obtenga su avalúo profesional con comparables</p>
+                      </div>
                     </div>
                   </div>
                 </div>
