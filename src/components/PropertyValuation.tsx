@@ -603,72 +603,10 @@ const PropertyValuation = () => {
         comparativeValue
       });
 
-      // 6. Buscar comparables basados en tipo de propiedad y ubicación (SIN estrato social)
-      let comparablesData: any[] = [];
-      try {
-        if (propertyData.latitud && propertyData.longitud) {
-          // Buscar comparables por ubicación y tipo de propiedad únicamente
-          const { data } = await supabase.functions.invoke('find-comparables-by-location', {
-            body: {
-              target_lat: propertyData.latitud,
-              target_lng: propertyData.longitud,
-              target_property_type: propertyData.tipoPropiedad,
-              target_area: propertyData.area
-            }
-          });
-
-          // MANEJO AVANZADO: Extraer datos y metadata
-          const responseData = data?.data || [];
-          const metadata = data?.metadata || {};
-          
-          comparablesData = responseData;
-          
-          console.log('🎯 RESPUESTA FUNCIÓN EDGE:', {
-            dataReceived: responseData,
-            metadata: metadata,
-            strategy: metadata.strategy_used,
-            count: metadata.total_found
-          });
-          
-          if (comparablesData && comparablesData.length > 0) {
-            console.log(`✅ Encontrados ${comparablesData.length} comparables usando estrategia: ${metadata.strategy_used}`);
-          } else {
-            console.log(`⚠️ No se encontraron comparables. Estrategia usada: ${metadata.strategy_used}`);
-          }
-        } else {
-          // Fallback: búsqueda básica por tipo de propiedad sin ubicación específica
-          const { data } = await supabase
-            .from('property_comparables')
-            .select('*')
-            .eq('property_type', propertyData.tipoPropiedad)
-            .gte('total_area', propertyData.area * 0.8)
-            .lte('total_area', propertyData.area * 1.2)
-            .limit(5);
-
-          comparablesData = data || [];
-          console.log(`✅ Búsqueda básica: encontrados ${comparablesData?.length || 0} comparables de tipo ${propertyData.tipoPropiedad}`);
-        }
-      } catch (error) {
-        console.log('⚠️ Error al buscar comparables:', error);
-      }
-
-      setComparables(comparablesData);
-      
-      // DEBUGGING AVANZADO: Capturar toda la información de comparables
-      const debugData = {
-        timestamp: new Date().toISOString(),
-        comparablesFound: comparablesData?.length || 0,
-        comparablesData: comparablesData,
-        hasLocation: !!(propertyData.latitud && propertyData.longitud),
-        searchParams: {
-          lat: propertyData.latitud,
-          lng: propertyData.longitud,
-          propertyType: propertyData.tipoPropiedad,
-          area: propertyData.area
-        }
-      };
-      setDebugInfo(debugData);
-      console.log('🔬 DEBUGGING AVANZADO - Comparables:', debugData);
+      // 6. Búsqueda de comparables deshabilitada por solicitud del cliente
+      const comparablesData: any[] = [];
+      setComparables([]);
+      setDebugInfo(null);
 
       // 7. CÁLCULO BASADO EN COMPARABLES REALES (método principal)
       let comparativeValueFromComparables = comparativeValue; // valor base por defecto
