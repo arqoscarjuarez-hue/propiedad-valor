@@ -4592,8 +4592,8 @@ const PropertyValuation = () => {
       </div>
 
       
-      {/* Pasos 1 y 2: Selectores arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      {/* Pasos 1, 2 y Descargar Documentos arriba */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {/* Paso 1: Selector de Idioma */}
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
           <div className="flex items-center gap-2 mb-3">
@@ -4629,42 +4629,42 @@ const PropertyValuation = () => {
             exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
           />
         </Card>
+
+        {/* Botones de Descarga de Documentos */}
+        {valuation && (
+          <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
+            <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
+              <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+               {translations[selectedLanguage].downloadDocuments}
+            </Label>
+            <div className="space-y-2 sm:space-y-3">
+              <Button 
+                onClick={generatePDF} 
+                variant="outline" 
+                className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50 h-10 sm:h-auto text-xs sm:text-sm"
+                size="sm"
+              >
+                <FileText className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                {translations[selectedLanguage].downloadPDF}
+              </Button>
+             
+             <Button 
+               onClick={generateWord} 
+               variant="outline" 
+               className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300"
+               size="sm"
+             >
+               <Download className="mr-2 h-4 w-4" />
+               {translations[selectedLanguage].downloadWord}
+             </Button>
+             </div>
+           </Card>
+         )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Botones de descarga y compartir a la izquierda */}
+        {/* Disclaimer y otros elementos a la izquierda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-           {/* Botones de Descarga de Documentos */}
-           {valuation && (
-             <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-               <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
-                 <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {translations[selectedLanguage].downloadDocuments}
-               </Label>
-               <div className="space-y-2 sm:space-y-3">
-                 <Button 
-                   onClick={generatePDF} 
-                   variant="outline" 
-                   className="w-full border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/50 h-10 sm:h-auto text-xs sm:text-sm"
-                   size="sm"
-                 >
-                   <FileText className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                   {translations[selectedLanguage].downloadPDF}
-                 </Button>
-                
-                <Button 
-                  onClick={generateWord} 
-                  variant="outline" 
-                  className="w-full border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300"
-                  size="sm"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  {translations[selectedLanguage].downloadWord}
-                </Button>
-                </div>
-              </Card>
-            )}
-
           {/* Disclaimer de Valuación */}
           {valuation && (
             <Card className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 border-gray-200 dark:border-gray-700">
