@@ -28,38 +28,57 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // TÁCTICA AVANZADA: Multi-estrategia de búsqueda
+    // TÁCTICA AVANZADA: Búsqueda HIPERLOCAL (0-5km, fallback 8km)
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    // Estrategia 1: Búsqueda avanzada con similaridad
+    // Estrategia 1: Búsqueda avanzada con similaridad (máx. 5km, luego 8km)
     try {
-      console.log('🎯 Strategy 1: Advanced similarity search');
-      const { data: advancedData, error: advancedError } = await supabase
+      console.log('🎯 Strategy 1A: Advanced similarity within 5km');
+      const { data: adv5, error: adv5Err } = await supabase
         .rpc('find_best_comparables', {
           center_lat: target_lat,
           center_lng: target_lng,
           prop_type: target_property_type,
           target_area: target_area || 0,
-          max_distance_km: 50
+          max_distance_km: 5,
         });
 
-      if (!advancedError && advancedData && advancedData.length > 0) {
-        comparables = advancedData;
-        searchStrategy = 'advanced_similarity';
-        console.log(`✅ Strategy 1 SUCCESS: ${comparables.length} comparables found`);
+      if (!adv5Err && adv5 && adv5.length > 0) {
+        comparables = adv5;
+        searchStrategy = 'advanced_similarity_5km';
+        console.log(`✅ Strategy 1A SUCCESS: ${comparables.length} comparables found`);
       } else {
-        console.log('⚠️ Strategy 1 FAILED:', advancedError);
+        console.log('⚠️ Strategy 1A no results, trying 8km', adv5Err);
+        try {
+          console.log('🎯 Strategy 1B: Advanced similarity within 8km');
+          const { data: adv8, error: adv8Err } = await supabase
+            .rpc('find_best_comparables', {
+              center_lat: target_lat,
+              center_lng: target_lng,
+              prop_type: target_property_type,
+              target_area: target_area || 0,
+              max_distance_km: 8,
+            });
+
+          if (!adv8Err && adv8 && adv8.length > 0) {
+            comparables = adv8;
+            searchStrategy = 'advanced_similarity_8km';
+            console.log(`✅ Strategy 1B SUCCESS: ${comparables.length} comparables found`);
+          }
+        } catch (error) {
+          console.log('❌ Strategy 1B ERROR:', error);
+        }
       }
     } catch (error) {
-      console.log('❌ Strategy 1 ERROR:', error);
+      console.log('❌ Strategy 1A ERROR:', error);
     }
 
-    // Estrategia 2: Fallback - búsqueda simple por radio
+    // Estrategia 2: Fallback - búsqueda simple por radio (1km, 3km, 5km, 8km)
     if (comparables.length === 0) {
-      console.log('🎯 Strategy 2: Simple radius search');
-      const radii = [1, 2, 5, 10, 20, 50];
-      
+      console.log('🎯 Strategy 2: Simple radius search (1,3,5,8km)');
+      const radii = [1, 3, 5, 8];
+
       for (const radius of radii) {
         try {
           const { data, error } = await supabase
@@ -67,7 +86,7 @@ serve(async (req) => {
               center_lat: target_lat,
               center_lng: target_lng,
               prop_type: target_property_type,
-              radius_km: radius
+              radius_km: radius,
             });
 
           if (!error && data && data.length > 0) {
@@ -82,40 +101,8 @@ serve(async (req) => {
       }
     }
 
-    // Estrategia 3: Último recurso - búsqueda básica por tipo
-    if (comparables.length === 0) {
-      console.log('🎯 Strategy 3: Basic type-only search');
-      try {
-        const { data, error } = await supabase
-          .from('property_comparables')
-          .select('*')
-          .eq('property_type', target_property_type)
-          .not('price_usd', 'is', null)
-          .not('price_per_sqm_usd', 'is', null)
-          .not('total_area', 'is', null)
-          .gt('price_usd', 0)
-          .gt('price_per_sqm_usd', 0)
-          .gt('total_area', 0)
-          .order('created_at', { ascending: false })
-          .limit(5);
+    // Nota: Eliminamos la estrategia de "type-only" para evitar resultados fuera del radio máximo (8km)
 
-        if (!error && data && data.length > 0) {
-          // Agregar campos faltantes para compatibilidad
-          comparables = data.map(item => ({
-            ...item,
-            distance: null,
-            overall_similarity_score: 0.5,
-            area_similarity_score: target_area ? 
-              Math.max(0, 1 - Math.abs(item.total_area - target_area) / Math.max(item.total_area, target_area)) 
-              : 0.5
-          }));
-          searchStrategy = 'basic_type';
-          console.log(`✅ Strategy 3 SUCCESS: ${comparables.length} comparables`);
-        }
-      } catch (error) {
-        console.log('❌ Strategy 3 ERROR:', error);
-      }
-    }
 
     // Resultado final con información detallada
     const result = {
