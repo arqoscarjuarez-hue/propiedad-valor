@@ -5877,11 +5877,16 @@ const PropertyValuation = () => {
                              📐 Siguiente: Complete el <strong>Paso 3 - Áreas</strong> (área del terreno y construcción)
                            </p>
                          )}
-                         {getStepCompletion().step3 && !getStepCompletion().step5 && (
-                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                             ⭐ Siguiente: Complete el <strong>Paso 5 - Características</strong> (calidad de ubicación)
-                           </p>
-                         )}
+                          {getStepCompletion().step3 && !getStepCompletion().step4 && (
+                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                              🏠 Siguiente: Complete el <strong>Paso 4 - Espacios</strong> (recámaras, baños, etc.)
+                            </p>
+                          )}
+                          {getStepCompletion().step4 && !getStepCompletion().step5 && (
+                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                              ⭐ Siguiente: Complete el <strong>Paso 5 - Características</strong> (calidad de ubicación)
+                            </p>
+                          )}
                       </div>
                     </div>
                   )}
