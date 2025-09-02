@@ -4931,7 +4931,7 @@ const PropertyValuation = () => {
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                     <span className="font-bold mr-1">6</span> {translations[selectedLanguage].calculate}
+                     {translations[selectedLanguage].calculate}
                    </TabsTrigger>
                   </TabsList>
 
