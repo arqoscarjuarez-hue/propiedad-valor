@@ -2998,8 +2998,6 @@ const PropertyValuation = () => {
 
   // Función para validar el progreso paso a paso
   const getStepCompletion = () => {
-    console.log('getStepCompletion called');
-    
     // Paso 1: Idioma (siempre completo)
     const step1Complete = true;
     
@@ -3008,7 +3006,6 @@ const PropertyValuation = () => {
     
     // Paso 3.1: Tipo de propiedad
     const step3_1Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
-    console.log('step3_1Complete:', step3_1Complete);
     
     // Paso 3.2: Áreas
     const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
@@ -3023,27 +3020,19 @@ const PropertyValuation = () => {
       ) > 0;
     }
     const step3_2Complete = hasValidLandArea && hasValidBuiltArea;
-    console.log('step3_2Complete:', step3_2Complete);
     
-    // Paso 3.3: Espacios (opcional para terrenos, siempre completo)
-    const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true;
-    console.log('step3_3Complete:', step3_3Complete);
+    // Paso 3.3: Espacios (opcional para terrenos)
+    const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo para terrenos
     
     // Paso 3.4: Características
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
     const step3_4Complete = hasValidLocation;
-    console.log('step3_4Complete:', step3_4Complete);
     
     // Paso 3.5: Ubicación
     const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
     const step3_5Complete = hasValidCoordinates;
-    console.log('step3_5Complete:', step3_5Complete);
     
-    // Paso 3.6: Valuación completada
-    const step3_6Complete = valuation && valuation > 0;
-    console.log('step3_6Complete:', step3_6Complete);
-    
-    const result = {
+    return {
       step1: step1Complete,
       step2: step2Complete,
       step3_1: step3_1Complete,
@@ -3051,11 +3040,8 @@ const PropertyValuation = () => {
       step3_3: step3_3Complete && step3_2Complete,
       step3_4: step3_4Complete && step3_3Complete,
       step3_5: step3_5Complete && step3_4Complete,
-      step3_6: step3_6Complete
+      step3_6: step3_5Complete && step3_4Complete && step3_3Complete && step3_2Complete && step3_1Complete
     };
-    
-    console.log('getStepCompletion result:', result);
-    return result;
   };
 
   // Función para reiniciar todo y comenzar un nuevo valúo
@@ -4733,79 +4719,7 @@ const PropertyValuation = () => {
       </div>
 
       
-      {/* Progreso de Completación - Fila Superior */}
-      <div className="mb-4">
-        <Card className="p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border-teal-200 dark:border-teal-700">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-              📊
-            </div>
-            <Label className="text-lg font-bold text-teal-900 dark:text-teal-100">
-              Progreso de Completación
-            </Label>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step1 ? '✓' : '1'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Idioma
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step2 ? '✓' : '2'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Moneda
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_1 ? '✓' : '3.1'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Tipo
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_2 ? '✓' : '3.2'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Áreas
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_3 ? '✓' : '3.3'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Espacios
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_4 ? '✓' : '3.4'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Características
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_5 ? '✓' : '3.5'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Ubicación
-              </span>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer */}
+      {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         {/* Paso 1: Selector de Idioma */}
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
@@ -4829,15 +4743,7 @@ const PropertyValuation = () => {
             <Label className="text-sm font-bold text-green-900 dark:text-green-100">
               Paso 2: {translations[selectedLanguage].currencyValuation}
             </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_6 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                {getStepCompletion().step3_6 ? '✓' : '3.6'}
-              </div>
-              <span className={`text-sm ${getStepCompletion().step3_6 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                Valuación
-              </span>
-            </div>
+          </div>
           <CurrencySelector
             selectedCurrency={selectedCurrency}
             onCurrencyChange={handleCurrencyChange}
@@ -4850,7 +4756,6 @@ const PropertyValuation = () => {
             exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
           />
         </Card>
-
 
         {/* Botones de Descarga de Documentos */}
         <Card className="p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-200 dark:border-orange-800">
@@ -4934,7 +4839,7 @@ const PropertyValuation = () => {
                   3
                 </div>
                 <Home className="h-4 w-4 sm:h-5 sm:w-5" />
-                Paso 3: {translations[selectedLanguage].propertyData}
+                {translations[selectedLanguage].propertyData}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
@@ -4988,42 +4893,21 @@ const PropertyValuation = () => {
                            : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                      <span className="font-bold mr-1">
-                        {getStepCompletion().step3_4 ? '✓' : '3.4'}
-                      </span> 
-                      {translations[selectedLanguage].characteristics}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="espacios" 
-                     disabled={!getStepCompletion().step3_2}
-                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_2 
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_3 
-                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
-                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
-                     }`}
-                   >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_3 ? '✓' : '3.3'}
-                     </span> 
-                     {translations[selectedLanguage].spaces}
-                   </TabsTrigger>
-                   <TabsTrigger 
-                     value="caracteristicas" 
-                     disabled={!getStepCompletion().step3_3}
-                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_3 
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_4 
-                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
-                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
-                     }`}
-                   >
-                     <span className="font-bold mr-1">
-                       {getStepCompletion().step3_4 ? '✓' : '3.4'}
+                       {getStepCompletion().step3_4 ? '✓' : '3.3'}
                      </span> 
                      {translations[selectedLanguage].characteristics}
+                   </TabsTrigger>
+                   <TabsTrigger 
+                     value="servicios" 
+                     disabled={!getStepCompletion().step3_4}
+                     className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
+                       !getStepCompletion().step3_4 
+                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                         : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                     }`}
+                   >
+                     <span className="font-bold mr-1">3.4</span> {translations[selectedLanguage].services}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="ubicacion" 
@@ -5038,7 +4922,7 @@ const PropertyValuation = () => {
                    >
                      <span className="font-bold mr-1">
                        {getStepCompletion().step3_5 ? '✓' : '3.5'}
-                     </span>
+                     </span> 
                      {translations[selectedLanguage].location}
                    </TabsTrigger>
                    <TabsTrigger 
@@ -5047,15 +4931,10 @@ const PropertyValuation = () => {
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
                        !getStepCompletion().step3_5 
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_6
-                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
-                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                         : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                     <span className="font-bold mr-1">
-                       {getStepCompletion().step3_6 ? '✓' : '3.6'}
-                     </span> 
-                     {translations[selectedLanguage].calculate}
+                     <span className="font-bold mr-1">3.6</span> {translations[selectedLanguage].calculate}
                    </TabsTrigger>
                   </TabsList>
 
@@ -5198,90 +5077,612 @@ const PropertyValuation = () => {
                   </Select>
                 </TabsContent>
 
-                <TabsContent value="espacios" className="space-y-4 mt-6">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">Paso 3.3: {translations[selectedLanguage].spaces}</h3>
+
+                <TabsContent value="caracteristicas" className="space-y-4 mt-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].characteristics}</h3>
                   
-                  {/* Solo mostrar espacios si NO es terreno */}
-                  {propertyData.tipoPropiedad !== 'terreno' ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      <div>
-                        <Label htmlFor="recamaras">{translations[selectedLanguage].bedrooms}</Label>
-                        <Input
-                          id="recamaras"
-                          type="number"
-                          value={propertyData.recamaras || ''}
-                          onChange={(e) => handleInputChange('recamaras', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
+                   {/* Información específica según tipo de propiedad */}
+                   {propertyData.tipoPropiedad === 'terreno' ? (
+                     <div className="space-y-6">
+                      
+                       {/* Características del terreno */}
+                       <div className="mb-6">
+                         <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].landCharacteristics}</h4>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div>
+                             <Label className="flex items-center gap-2">
+                               <MapPin className="h-4 w-4" />
+                               {translations[selectedLanguage].topography}
+                             </Label>
+                             <Select 
+                               value={propertyData.topografia} 
+                               onValueChange={(value) => {
+                                 handleInputChange('topografia', value);
+                               }}
+                             >
+                               <SelectTrigger>
+                                 <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
+                               </SelectTrigger>
+                               <SelectContent>
+                                 <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
+                                 <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
+                                 <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
+                                 <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
+                                 <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
+                               </SelectContent>
+                             </Select>
+                           </div>
+                           <div>
+                             <Label className="flex items-center gap-2">
+                               <Star className="h-4 w-4" />
+                               {translations[selectedLanguage].valuationType}
+                             </Label>
+                             <Select 
+                               value={propertyData.tipoValoracion} 
+                               onValueChange={(value) => {
+                                 handleInputChange('tipoValoracion', value);
+                               }}
+                             >
+                               <SelectTrigger>
+                                 <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
+                               </SelectTrigger>
+                               <SelectContent>
+                                 <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
+                                 <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
+                                 <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
+                                 <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
+                                 <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
+                               </SelectContent>
+                             </Select>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className="mb-6">
+                       <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].temporalInfo}</h4>
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div>
+                           <Label htmlFor="antiguedad" className="flex items-center gap-2">
+                             <Calendar className="h-4 w-4" />
+                             {translations[selectedLanguage].constructionAge} ({translations[selectedLanguage].years})
+                           </Label>
+                           <Input
+                             id="antiguedad"
+                             type="number"
+                             value={propertyData.antiguedad || ''}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
+                              }}
+                             placeholder="0"
+                           />
+                           <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].yearsSinceConstruction}</p>
+                         </div>
+                       </div>
+                     </div>
+                   )}
+
+                  {/* Calidad y Estado */}
+                  <div className="mb-6">
+                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].qualityAndCondition}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <div>
+                         <Label className="flex items-center gap-2">
+                           <MapPin className="h-4 w-4" />
+                            {propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalFactors : translations[selectedLanguage].locationQuality}
+                         </Label>
+                          <Select 
+                            value={propertyData.ubicacion} 
+                            onValueChange={(value) => {
+                              
+                              handleInputChange('ubicacion', value);
+                            }}
+                          >
+                           <SelectTrigger>
+                             <SelectValue placeholder={propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].locationQualityPlaceholder} />
+                           </SelectTrigger>
+             <SelectContent>
+                {propertyData.tipoPropiedad === 'terreno' ? (
+                  <>
+                    <SelectItem value="excelente">{translations[selectedLanguage].environmentalExcellent}</SelectItem>
+                    <SelectItem value="buena">{translations[selectedLanguage].environmentalGood}</SelectItem>
+                    <SelectItem value="regular">{translations[selectedLanguage].environmentalRegular}</SelectItem>
+                    <SelectItem value="mala">{translations[selectedLanguage].environmentalPoor}</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+                    <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                    <SelectItem value="media">{translations[selectedLanguage].mediumZone}</SelectItem>
+                    <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
+                    <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
+                  </>
+                )}
+             </SelectContent>
+                         </Select>
+                         <p className="text-xs text-muted-foreground mt-1">{propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].evaluateServices}</p>
+                       </div>
+                      
+                       {propertyData.tipoPropiedad !== 'terreno' && (
+                         <div>
+                           <Label className="flex items-center gap-2">
+                             <Star className="h-4 w-4" />
+                              {translations[selectedLanguage].generalConditionLabel}
+                           </Label>
+                            <Select 
+                              value={propertyData.estadoGeneral} 
+                              onValueChange={(value) => {
+                                
+                                handleInputChange('estadoGeneral', value);
+                              }}
+                            >
+                             <SelectTrigger>
+                               <SelectValue placeholder={translations[selectedLanguage].conditionPlaceholder} />
+                             </SelectTrigger>
+             <SelectContent>
+                <SelectItem value="nuevo">{translations[selectedLanguage].newCondition}</SelectItem>
+                <SelectItem value="bueno">{translations[selectedLanguage].goodCondition}</SelectItem>
+                <SelectItem value="medio">{translations[selectedLanguage].mediumCondition}</SelectItem>
+                <SelectItem value="regular">{translations[selectedLanguage].regularCondition}</SelectItem>
+               <SelectItem value="reparaciones-sencillas">{translations[selectedLanguage].simpleRepairsCondition}</SelectItem>
+               <SelectItem value="reparaciones-medias">{translations[selectedLanguage].mediumRepairsCondition}</SelectItem>
+               <SelectItem value="reparaciones-importantes">{translations[selectedLanguage].importantRepairsCondition}</SelectItem>
+               <SelectItem value="danos-graves">{translations[selectedLanguage].seriousDamageCondition}</SelectItem>
+               <SelectItem value="en-desecho">{translations[selectedLanguage].wasteCondition}</SelectItem>
+            </SelectContent>
+                        </Select>
+                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsPropertyValue}</p>
+                        </div>
+                       )}
+                        
+                        <div>
+                         <Label className="flex items-center gap-2">
+                           <MapPin className="h-4 w-4" />
+                            {translations[selectedLanguage].accessType}
+                         </Label>
+                          <Select 
+                            value={propertyData.tipoAcceso || ''} 
+                            onValueChange={(value) => {
+                              handleInputChange('tipoAcceso', value);
+                            }}
+                          >
+                           <SelectTrigger>
+                             <SelectValue placeholder={translations[selectedLanguage].accessTypePlaceholder} />
+                           </SelectTrigger>
+             <SelectContent>
+                <SelectItem value="mainStreet">{translations[selectedLanguage].mainStreet}</SelectItem>
+                <SelectItem value="vehicularPassage">{translations[selectedLanguage].vehicularPassage}</SelectItem>
+                <SelectItem value="pedestrianPassage">{translations[selectedLanguage].pedestrianPassage}</SelectItem>
+                <SelectItem value="rightOfWay">{translations[selectedLanguage].rightOfWay}</SelectItem>
+             </SelectContent>
+                         </Select>
+                         <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsAccessibility}</p>
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Resumen de características */}
+                  <div className="bg-muted p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].characteristicsSummary}</h4>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                       {propertyData.tipoPropiedad === 'terreno' ? (
+                         <>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyTopography}</span> {propertyData.topografia || translations[selectedLanguage].notSpecified}
+                           </div>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyValuationType}</span> {propertyData.tipoValoracion || translations[selectedLanguage].notSpecified}
+                           </div>
+                         </>
+                       ) : (
+                         <>
+                           <div>
+                             <span className="font-medium">{translations[selectedLanguage].propertyAge}</span> {propertyData.antiguedad} {translations[selectedLanguage].years}
+                           </div>
+                           <div className="md:col-span-2">
+                             <span className="font-medium">{translations[selectedLanguage].propertyCondition}</span> {propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}
+                           </div>
+                         </>
+                       )}
+                       <div>
+                         <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
+                       </div>
+                       <div className="md:col-span-2">
+                         <span className="font-medium">{translations[selectedLanguage].accessType}:</span> {
+                           propertyData.tipoAcceso ? 
+                           translations[selectedLanguage][propertyData.tipoAcceso as keyof typeof translations[typeof selectedLanguage]] || propertyData.tipoAcceso
+                           : translations[selectedLanguage].notSpecified
+                         }
+                       </div>
+                     </div>
+                  </div>
+                 </TabsContent>
+
+                 <TabsContent value="servicios" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].availableServices}</h3>
+                   
+                   {/* Servicios Básicos */}
+                   <div className="mb-6">
+                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].basicServices}</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="agua"
+                           checked={propertyData.servicios.agua}
+                           onCheckedChange={(checked) => handleServiceChange('agua', checked as boolean)}
+                         />
+                         <label htmlFor="agua" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].water}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="electricidad"
+                           checked={propertyData.servicios.electricidad}
+                           onCheckedChange={(checked) => handleServiceChange('electricidad', checked as boolean)}
+                         />
+                         <label htmlFor="electricidad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].electricity}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="gas"
+                           checked={propertyData.servicios.gas}
+                           onCheckedChange={(checked) => handleServiceChange('gas', checked as boolean)}
+                         />
+                         <label htmlFor="gas" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].gas}
+                         </label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <Checkbox 
+                           id="drenaje"
+                           checked={propertyData.servicios.drenaje}
+                           onCheckedChange={(checked) => handleServiceChange('drenaje', checked as boolean)}
+                         />
+                         <label htmlFor="drenaje" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                           {translations[selectedLanguage].drainage}
+                         </label>
+                       </div>
+                     </div>
+                   </div>
+
+                    {/* Servicios Adicionales - Solo mostrar si NO es terreno */}
+                    {propertyData.tipoPropiedad !== 'terreno' && (
+                      <div className="mb-6">
+                        <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalServices}</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="internet"
+                              checked={propertyData.servicios.internet}
+                              onCheckedChange={(checked) => handleServiceChange('internet', checked as boolean)}
+                            />
+                            <label htmlFor="internet" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].internet}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="cable"
+                              checked={propertyData.servicios.cable}
+                              onCheckedChange={(checked) => handleServiceChange('cable', checked as boolean)}
+                            />
+                            <label htmlFor="cable" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].cable}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="telefono"
+                              checked={propertyData.servicios.telefono}
+                              onCheckedChange={(checked) => handleServiceChange('telefono', checked as boolean)}
+                            />
+                            <label htmlFor="telefono" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].phone}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="seguridad"
+                              checked={propertyData.servicios.seguridad}
+                              onCheckedChange={(checked) => handleServiceChange('seguridad', checked as boolean)}
+                            />
+                            <label htmlFor="seguridad" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].security}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="alberca"
+                              checked={propertyData.servicios.alberca}
+                              onCheckedChange={(checked) => handleServiceChange('alberca', checked as boolean)}
+                            />
+                            <label htmlFor="alberca" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].swimmingPool}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="jardin"
+                              checked={propertyData.servicios.jardin}
+                              onCheckedChange={(checked) => handleServiceChange('jardin', checked as boolean)}
+                            />
+                            <label htmlFor="jardin" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].garden}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="elevador"
+                              checked={propertyData.servicios.elevador}
+                              onCheckedChange={(checked) => handleServiceChange('elevador', checked as boolean)}
+                            />
+                            <label htmlFor="elevador" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].elevator}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="aireAcondicionado"
+                              checked={propertyData.servicios.aireAcondicionado}
+                              onCheckedChange={(checked) => handleServiceChange('aireAcondicionado', checked as boolean)}
+                            />
+                            <label htmlFor="aireAcondicionado" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].airConditioning}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="calefaccion"
+                              checked={propertyData.servicios.calefaccion}
+                              onCheckedChange={(checked) => handleServiceChange('calefaccion', checked as boolean)}
+                            />
+                            <label htmlFor="calefaccion" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].heating}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="panelesSolares"
+                              checked={propertyData.servicios.panelesSolares}
+                              onCheckedChange={(checked) => handleServiceChange('panelesSolares', checked as boolean)}
+                            />
+                            <label htmlFor="panelesSolares" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].solarPanels}
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id="tinaco"
+                              checked={propertyData.servicios.tinaco}
+                              onCheckedChange={(checked) => handleServiceChange('tinaco', checked as boolean)}
+                            />
+                            <label htmlFor="tinaco" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                              {translations[selectedLanguage].waterTank}
+                            </label>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="banos">{translations[selectedLanguage].bathrooms}</Label>
-                        <Input
-                          id="banos"
-                          type="number"
-                          value={propertyData.banos || ''}
-                          onChange={(e) => handleInputChange('banos', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="cochera">{translations[selectedLanguage].garage}</Label>
-                        <Input
-                          id="cochera"
-                          type="number"
-                          value={propertyData.cochera || ''}
-                          onChange={(e) => handleInputChange('cochera', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="salas">{translations[selectedLanguage].livingRooms}</Label>
-                        <Input
-                          id="salas"
-                          type="number"
-                          value={propertyData.salas || ''}
-                          onChange={(e) => handleInputChange('salas', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="comedor">{translations[selectedLanguage].diningRoom}</Label>
-                        <Input
-                          id="comedor"
-                          type="number"
-                          value={propertyData.comedor || ''}
-                          onChange={(e) => handleInputChange('comedor', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="cocina">{translations[selectedLanguage].kitchen}</Label>
-                        <Input
-                          id="cocina"
-                          type="number"
-                          value={propertyData.cocina || ''}
-                          onChange={(e) => handleInputChange('cocina', parseInt(e.target.value) || 0)}
-                          placeholder="0"
-                          className="mt-1"
-                        />
-                      </div>
+                    )}
+
+                    {/* Resumen de servicios */}
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].servicesSummary}</h4>
+                      
+                      {/* Servicios Básicos disponibles */}
+                      {[propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje].some(Boolean) && (
+                        <div className="mb-3">
+                          <span className="text-xs font-medium text-muted-foreground">{translations[selectedLanguage].basicServicesSummary}</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {propertyData.servicios.agua && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].water}</span>
+                            )}
+                            {propertyData.servicios.electricidad && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].electricity}</span>
+                            )}
+                            {propertyData.servicios.gas && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].gas}</span>
+                            )}
+                            {propertyData.servicios.drenaje && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{translations[selectedLanguage].drainage}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Servicios Adicionales disponibles - Solo si NO es terreno */}
+                      {propertyData.tipoPropiedad !== 'terreno' && [propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono, propertyData.servicios.seguridad, propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].some(Boolean) && (
+                        <div>
+                          <span className="text-xs font-medium text-muted-foreground">{translations[selectedLanguage].additionalServicesSummary}</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {propertyData.servicios.internet && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].internet}</span>
+                            )}
+                            {propertyData.servicios.cable && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].cable}</span>
+                            )}
+                            {propertyData.servicios.telefono && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{translations[selectedLanguage].phone}</span>
+                            )}
+                            {propertyData.servicios.seguridad && (
+                              <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">{translations[selectedLanguage].security}</span>
+                            )}
+                            {propertyData.servicios.alberca && (
+                              <span className="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded">{translations[selectedLanguage].swimmingPool}</span>
+                            )}
+                            {propertyData.servicios.jardin && (
+                              <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded">{translations[selectedLanguage].garden}</span>
+                            )}
+                            {propertyData.servicios.elevador && (
+                              <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">{translations[selectedLanguage].elevator}</span>
+                            )}
+                            {propertyData.servicios.aireAcondicionado && (
+                              <span className="text-xs bg-sky-100 text-sky-800 px-2 py-1 rounded">{translations[selectedLanguage].airConditioning}</span>
+                            )}
+                            {propertyData.servicios.calefaccion && (
+                              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">{translations[selectedLanguage].heating}</span>
+                            )}
+                            {propertyData.servicios.panelesSolares && (
+                              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{translations[selectedLanguage].solarPanels}</span>
+                            )}
+                            {propertyData.servicios.tinaco && (
+                              <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">{translations[selectedLanguage].waterTank}</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Mensaje si no hay servicios disponibles */}
+                      {![propertyData.servicios.agua, propertyData.servicios.electricidad, propertyData.servicios.gas, propertyData.servicios.drenaje, propertyData.servicios.internet, propertyData.servicios.cable, propertyData.servicios.telefono, propertyData.servicios.seguridad, propertyData.servicios.alberca, propertyData.servicios.jardin, propertyData.servicios.elevador, propertyData.servicios.aireAcondicionado, propertyData.servicios.calefaccion, propertyData.servicios.panelesSolares, propertyData.servicios.tinaco].some(Boolean) && (
+                        <p className="text-xs text-muted-foreground italic">No hay servicios seleccionados</p>
+                      )}
                     </div>
-                  ) : (
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-muted-foreground text-center">
-                        Los espacios no aplican para terrenos. Este paso se considera completo.
+                 </TabsContent>
+
+                 <TabsContent value="valuacion" className="space-y-4 mt-6">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">Calcular Valuación</h3>
+                   
+                    <div className="text-center space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Una vez completados todos los datos de la propiedad, presiona el botón para calcular la valuación.
                       </p>
                     </div>
-                  )}
-                </TabsContent>
+                 </TabsContent>
+
+                    <TabsContent value="ubicacion" className="space-y-4 mt-6">
+                     <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].locationSketch}</h3>
+                     
+                     <Tabs defaultValue="mapa" className="w-full">
+                       <TabsList className="grid w-full grid-cols-2">
+                         <TabsTrigger value="mapa">{translations[selectedLanguage].viewMap}</TabsTrigger>
+                         <TabsTrigger value="editar">{translations[selectedLanguage].editData}</TabsTrigger>
+                       </TabsList>
+                       
+                       <TabsContent value="mapa" className="space-y-4 mt-4">
+                         <p className="text-sm text-muted-foreground mb-4">
+                           {translations[selectedLanguage].mapInstructions}
+                         </p>
+                        <SimpleLocationMap
+                          onLocationChange={handleLocationChange}
+                          initialLat={propertyData.latitud}
+                          initialLng={propertyData.longitud}
+                          initialAddress={propertyData.direccionCompleta}
+                        />
+                         {propertyData.direccionCompleta && (
+                           <div className="p-3 bg-muted rounded-lg">
+                             <div className="flex items-start gap-2">
+                               <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                               <div>
+                                 <p className="text-sm font-medium">{translations[selectedLanguage].registeredAddress}</p>
+                                 <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                                 <p className="text-xs text-muted-foreground mt-1">
+                                   {translations[selectedLanguage].coordinates} {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                                 </p>
+                               </div>
+                             </div>
+                           </div>
+                         )}
+                      </TabsContent>
+                      
+                       <TabsContent value="editar" className="space-y-4 mt-4">
+                         <p className="text-sm text-muted-foreground mb-4">
+                           {translations[selectedLanguage].editLocationInstructions}
+                         </p>
+                         
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="direccion-completa">{translations[selectedLanguage].fullAddress}</Label>
+                              <Input
+                                id="direccion-completa"
+                                value={propertyData.direccionCompleta || ''}
+                                onChange={(e) => {
+                                  // Solo actualizar la dirección, mantener las coordenadas del mapa
+                                  setPropertyData(prev => ({
+                                    ...prev,
+                                    direccionCompleta: e.target.value
+                                  }));
+                                }}
+                                placeholder={translations[selectedLanguage].fullAddressPlaceholder}
+                                className="mt-1"
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {translations[selectedLanguage].coordinatesNote}
+                              </p>
+                            </div>
+                          
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div>
+                               <Label htmlFor="latitud">{translations[selectedLanguage].latitude}</Label>
+                               <Input
+                                 id="latitud"
+                                 type="number"
+                                 step="any"
+                                 value={propertyData.latitud || ''}
+                                 onChange={(e) => handleInputChange('latitud', parseFloat(e.target.value) || 0)}
+                                 placeholder={translations[selectedLanguage].latitudePlaceholder}
+                                 className="mt-1"
+                               />
+                             </div>
+                             
+                             <div>
+                               <Label htmlFor="longitud">{translations[selectedLanguage].longitude}</Label>
+                               <Input
+                                 id="longitud"
+                                 type="number"
+                                 step="any"
+                                 value={propertyData.longitud || ''}
+                                 onChange={(e) => handleInputChange('longitud', parseFloat(e.target.value) || 0)}
+                                 placeholder={translations[selectedLanguage].longitudePlaceholder}
+                                 className="mt-1"
+                               />
+                             </div>
+                           </div>
+                          
+                          <div>
+                            <Label htmlFor="ubicacion-calidad">Calidad de la Ubicación</Label>
+                            <Select
+                              value={propertyData.ubicacion}
+                              onValueChange={(value) => handleInputChange('ubicacion', value)}
+                            >
+                              <SelectTrigger className="mt-1">
+                                <SelectValue placeholder="Selecciona la calidad de la ubicación" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                                <SelectItem value="excelente">Excelente</SelectItem>
+                                <SelectItem value="buena">Buena</SelectItem>
+                                <SelectItem value="regular">Regular</SelectItem>
+                                <SelectItem value="mala">Mala</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          {propertyData.direccionCompleta && propertyData.latitud && propertyData.longitud && (
+                            <div className="p-3 bg-muted rounded-lg">
+                              <div className="flex items-start gap-2">
+                                <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                                <div>
+                                  <p className="text-sm font-medium">Datos Guardados:</p>
+                                  <p className="text-sm text-muted-foreground">{propertyData.direccionCompleta}</p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Coordenadas: {propertyData.latitud?.toFixed(6)}, {propertyData.longitud?.toFixed(6)}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Ubicación: {propertyData.ubicacion}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </TabsContent>
+                    </Tabs>
+                 </TabsContent>
 
 
-                
+
                 </Tabs>
               
               <div className="mt-6 sm:mt-8 pt-3 sm:pt-4">
@@ -5318,6 +5719,68 @@ const PropertyValuation = () => {
                   </div>
                 )}
                 
+                {/* Progreso de pasos */}
+                <div className="mb-6 p-4 bg-muted rounded-lg">
+                  <h4 className="text-md font-semibold mb-3">Progreso de Completación</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step1 ? '✓' : '1'}
+                      </div>
+                      <span className={getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 1: Idioma
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step2 ? '✓' : '2'}
+                      </div>
+                      <span className={getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 2: Moneda
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3_1 ? '✓' : '3.1'}
+                      </div>
+                      <span className={getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 3.1: Tipo de Propiedad
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3_2 ? '✓' : '3.2'}
+                      </div>
+                      <span className={getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 3.2: Áreas
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3_3 ? '✓' : '3.3'}
+                      </div>
+                      <span className={getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 3.3: Espacios
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3_4 ? '✓' : '3.4'}
+                      </div>
+                      <span className={getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 3.4: Características
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3_5 ? '✓' : '3.5'}
+                      </div>
+                      <span className={getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
+                        Paso 3.5: Ubicación
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Botón principal de valuación */}
                 <div className="mt-6 text-center">
