@@ -4033,30 +4033,6 @@ const PropertyValuation = () => {
         }
       }
 
-          doc.text(`Antigüedad: ${comp.antiguedad} años`, marginLeft + 10, yPosition);
-          doc.text(`Tipo: Casa`, marginLeft + 80, yPosition);
-          yPosition += 6;
-
-          // Información de precio
-          doc.setFont("helvetica", "bold");
-          doc.text("INFORMACIÓN DE PRECIO:", marginLeft + 5, yPosition);
-          yPosition += 8;
-
-          doc.setFont("helvetica", "normal");
-          doc.text(`Precio Total: ${formatCurrency(comp.precio, selectedCurrency)}`, marginLeft + 10, yPosition);
-          yPosition += 6;
-          doc.text(`Precio por m²: ${formatCurrency(comp.precio / comp.areaConstruida, selectedCurrency)}`, marginLeft + 10, yPosition);
-          yPosition += 6;
-
-          // Análisis comparativo
-          const pricePerM2Property = valuation / areaTotal;
-          const pricePerM2Comp = comp.precio / comp.areaConstruida;
-          const variance = ((pricePerM2Comp - pricePerM2Property) / pricePerM2Property * 100);
-          
-          doc.setFont("helvetica", "bold");
-          doc.text(translations[selectedLanguage].comparativeAnalysisReport, marginLeft + 5, yPosition);
-          yPosition += 8;
-
 
       // NUEVA PÁGINA FINAL para sección de compartir
       doc.addPage();
@@ -4613,7 +4589,9 @@ const PropertyValuation = () => {
                 ]
               }),
               new Paragraph({ text: "" }) // Espacio
-            ] : []),
+            ] : [])
+          ]
+        },
         
         // NUEVA SECCIÓN (PÁGINA) PARA COMPARTIR
         {
