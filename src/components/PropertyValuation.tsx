@@ -3275,31 +3275,6 @@ const PropertyValuation = () => {
     }
   };
 
-  // Función para manejar cambios en el ajuste de precio
-  const handlePriceAdjustment = (newAdjustment: number) => {
-    
-    
-    if (baseValuation && comparativeProperties.length > 0) {
-      // Calcular valor ajustado por comparables primero, luego aplicar ajuste de precio
-      const valorAjustadoPorComparables = calcularValorConComparables(baseValuation, comparativeProperties);
-      const valorFinal = valorAjustadoPorComparables * (1 + newAdjustment / 100);
-      setValuation(valorFinal);
-      
-      toast({
-        title: translations[selectedLanguage].priceAdjusted,
-        description: `${translations[selectedLanguage].adjustment}: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(valorFinal, selectedCurrency)}`,
-      });
-    } else if (baseValuation) {
-      // Fallback si no hay comparables
-      const valorAjustado = baseValuation * (1 + newAdjustment / 100);
-      setValuation(valorAjustado);
-      
-      toast({
-        title: translations[selectedLanguage].priceAdjusted,
-        description: `${translations[selectedLanguage].adjustment}: ${newAdjustment > 0 ? '+' : ''}${newAdjustment}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(valorAjustado, selectedCurrency)}`,
-      });
-    }
-  };
 
   const regenerateComparatives = async () => {
     if (valuation) {
