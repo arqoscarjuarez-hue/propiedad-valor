@@ -8,24 +8,21 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => {
-  console.log('App component is loading...');
-  return (
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Valuation />} />
-            <Route path="/avaluos" element={<Valuation />} />
-            <Route path="/valuation" element={<Valuation />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </LanguageProvider>
-    </QueryClientProvider>
-  );
-};
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Valuation />} />
+          <Route path="/avaluos" element={<Valuation />} />
+          <Route path="/valuation" element={<Valuation />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </LanguageProvider>
+  </QueryClientProvider>
+);
 
 export default App;
