@@ -5899,9 +5899,6 @@ const PropertyValuation = () => {
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                <div className="w-6 h-6 bg-white text-secondary rounded-full flex items-center justify-center text-sm font-bold mr-2">
-                  4
-                </div>
                 {translations[selectedLanguage].valuationResultsTitle}
               </CardTitle>
             </CardHeader>
