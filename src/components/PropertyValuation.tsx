@@ -132,6 +132,7 @@ const translations = {
     // Location Quality options
     excellentZone: 'Excelente',
     goodZone: 'Buena',
+    mediumZone: 'Media',
     regularZone: 'Regular',
     badZone: 'Mala',
     locationQualityPlaceholder: 'Selecciona la calidad de ubicación',
@@ -506,7 +507,8 @@ const translations = {
     
     // Location Quality options
     excellentZone: 'Excellent',
-    goodZone: 'Good',
+    goodZone: 'Good', 
+    mediumZone: 'Medium',
     regularZone: 'Regular', 
     badZone: 'Bad',
     locationQualityPlaceholder: 'Select location quality',
@@ -884,6 +886,7 @@ const translations = {
     // Location Quality options
     excellentZone: 'Excellent - Zone exclusive/premium',
     goodZone: 'Bon - Zone résidentielle établie',
+    mediumZone: 'Moyen - Zone stable avec services de base',
     regularZone: 'Régulier - Zone en développement',
     badZone: 'Mauvais - Zone avec problèmes urbains',
     locationQualityPlaceholder: 'Sélectionnez la qualité de l\'emplacement',
@@ -1260,6 +1263,7 @@ const translations = {
     // Location Quality options
     excellentZone: 'Exzellent - Exklusive/Premium-Zone',
     goodZone: 'Gut - Etablierte Wohngegend',
+    mediumZone: 'Mittel - Stabile Zone mit grundlegenden Dienstleistungen',
     regularZone: 'Regulär - Entwicklungsgebiet',
     badZone: 'Schlecht - Gebiet mit städtischen Problemen',
     locationQualityPlaceholder: 'Standortqualität auswählen',
@@ -1640,6 +1644,7 @@ const translations = {
     // Location Quality options
     excellentZone: 'Eccellente - Zona esclusiva/premium',
     goodZone: 'Buona - Zona residenziale consolidata',
+    mediumZone: 'Media - Zona stabile con servizi di base',
     regularZone: 'Regolare - Zona in sviluppo',
     badZone: 'Cattiva - Zona con problemi urbani',
     locationQualityPlaceholder: 'Seleziona qualità della posizione',
@@ -2016,6 +2021,7 @@ const translations = {
     // Location Quality options
     excellentZone: 'Excelente - Zona exclusiva/premium',
     goodZone: 'Boa - Zona residencial consolidada',
+    mediumZone: 'Média - Zona estável com serviços básicos',
     regularZone: 'Regular - Zona em desenvolvimento',
     badZone: 'Ruim - Zona com problemas urbanos',
     locationQualityPlaceholder: 'Selecione qualidade da localização',
@@ -4997,6 +5003,7 @@ const PropertyValuation = () => {
                   <>
                     <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
                     <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                    <SelectItem value="media">{translations[selectedLanguage].mediumZone}</SelectItem>
                     <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
                     <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
                   </>
