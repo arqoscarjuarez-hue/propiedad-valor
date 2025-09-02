@@ -4672,7 +4672,7 @@ const PropertyValuation = () => {
               ⚠
             </div>
             <Label className="text-sm font-bold text-gray-900 dark:text-gray-100">
-              Disclaimer
+              Nota Importante
             </Label>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
