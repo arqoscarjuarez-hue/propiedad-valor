@@ -5553,8 +5553,7 @@ const PropertyValuation = () => {
           </Card>
         </div>
 
-        {/* Paso 4: Panel de Resultados - Solo visible después de calcular valuación */}
-        {valuation && valuation > 0 && (
+        {/* Paso 4: Panel de Resultados */}
         <div className="lg:col-span-1" data-results-panel>
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
@@ -5724,7 +5723,6 @@ const PropertyValuation = () => {
             </CardContent>
           </Card>
         </div>
-        )}
       </div>
       
       {/* Demo Walkthrough */}
