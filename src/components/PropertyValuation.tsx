@@ -4633,19 +4633,6 @@ const PropertyValuation = () => {
               </Card>
             )}
 
-            {/* Botón de Compartir */}
-            {valuation && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
-                <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-blue-900 dark:text-blue-100 flex items-center gap-2">
-                  <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                   {translations[selectedLanguage].shareValuation}
-                </Label>
-                <ShareButtons 
-                  title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
-                  description="He obtenido una valuación profesional de mi propiedad. ¡Descubre el valor de la tuya también!"
-                />
-              </Card>
-            )}
           
           {/* Selector de tipo de membrete */}
           {valuation && (
