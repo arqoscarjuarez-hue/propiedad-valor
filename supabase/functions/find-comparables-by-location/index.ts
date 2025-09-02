@@ -28,13 +28,13 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // TÁCTICA AVANZADA: Búsqueda HIPERLOCAL (0-5km, fallback 8km)
+    // NORMA ACTUALIZADA: Búsqueda con filtro de 18 meses + expansión por cantidad
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    // Estrategia 1: Búsqueda avanzada con similaridad (máx. 5km, luego 8km)
+    // Estrategia 1: Búsqueda avanzada 0-5km (18 meses)
     try {
-      console.log('🎯 Strategy 1A: Advanced similarity within 5km');
+      console.log('🎯 Strategy 1A: Advanced similarity within 5km (18 months)');
       const { data: adv5, error: adv5Err } = await supabase
         .rpc('find_best_comparables', {
           center_lat: target_lat,
@@ -44,14 +44,16 @@ serve(async (req) => {
           max_distance_km: 5,
         });
 
-      if (!adv5Err && adv5 && adv5.length > 0) {
+      if (!adv5Err && adv5 && adv5.length >= 3) {
         comparables = adv5;
-        searchStrategy = 'advanced_similarity_5km';
+        searchStrategy = 'advanced_similarity_5km_18m';
         console.log(`✅ Strategy 1A SUCCESS: ${comparables.length} comparables found`);
       } else {
-        console.log('⚠️ Strategy 1A no results, trying 8km', adv5Err);
+        console.log(`⚠️ Strategy 1A insufficient results: ${adv5?.length || 0} (need 3+)`);
+        
+        // Estrategia 1B: Expandir a 8km
         try {
-          console.log('🎯 Strategy 1B: Advanced similarity within 8km');
+          console.log('🎯 Strategy 1B: Advanced similarity within 8km (18 months)');
           const { data: adv8, error: adv8Err } = await supabase
             .rpc('find_best_comparables', {
               center_lat: target_lat,
@@ -61,10 +63,38 @@ serve(async (req) => {
               max_distance_km: 8,
             });
 
-          if (!adv8Err && adv8 && adv8.length > 0) {
+          if (!adv8Err && adv8 && adv8.length >= 3) {
             comparables = adv8;
-            searchStrategy = 'advanced_similarity_8km';
+            searchStrategy = 'advanced_similarity_8km_18m';
             console.log(`✅ Strategy 1B SUCCESS: ${comparables.length} comparables found`);
+          } else {
+            console.log(`⚠️ Strategy 1B insufficient: ${adv8?.length || 0}, trying 10km...`);
+            
+            // Estrategia 1C: Expandir a 10km (última oportunidad)
+            try {
+              console.log('🎯 Strategy 1C: Advanced similarity within 10km (18 months)');
+              const { data: adv10, error: adv10Err } = await supabase
+                .rpc('find_best_comparables', {
+                  center_lat: target_lat,
+                  center_lng: target_lng,
+                  prop_type: target_property_type,
+                  target_area: target_area || 0,
+                  max_distance_km: 10,
+                });
+
+              if (!adv10Err && adv10 && adv10.length >= 3) {
+                comparables = adv10;
+                searchStrategy = 'advanced_similarity_10km_18m';
+                console.log(`✅ Strategy 1C SUCCESS: ${comparables.length} comparables found`);
+              } else {
+                console.log(`⚠️ Strategy 1C still insufficient: ${adv10?.length || 0}`);
+                // Guardar lo que tenemos aunque sean menos de 3
+                comparables = adv10 || adv8 || adv5 || [];
+                searchStrategy = comparables.length > 0 ? 'partial_results_10km_18m' : 'no_results';
+              }
+            } catch (error) {
+              console.log('❌ Strategy 1C ERROR:', error);
+            }
           }
         } catch (error) {
           console.log('❌ Strategy 1B ERROR:', error);
@@ -74,10 +104,10 @@ serve(async (req) => {
       console.log('❌ Strategy 1A ERROR:', error);
     }
 
-    // Estrategia 2: Fallback - búsqueda simple por radio (1km, 3km, 5km, 8km)
-    if (comparables.length === 0) {
-      console.log('🎯 Strategy 2: Simple radius search (1,3,5,8km)');
-      const radii = [1, 3, 5, 8];
+    // Estrategia 2: Fallback con radio progresivo (solo si no tenemos al menos 3)
+    if (comparables.length < 3) {
+      console.log('🎯 Strategy 2: Progressive radius search (1,3,5,8,10km, 18 months)');
+      const radii = [1, 3, 5, 8, 10];
 
       for (const radius of radii) {
         try {
@@ -89,11 +119,13 @@ serve(async (req) => {
               radius_km: radius,
             });
 
-          if (!error && data && data.length > 0) {
+          if (!error && data && data.length >= 3) {
             comparables = data;
-            searchStrategy = `radius_${radius}km`;
+            searchStrategy = `radius_${radius}km_18m`;
             console.log(`✅ Strategy 2 SUCCESS at ${radius}km: ${comparables.length} comparables`);
             break;
+          } else {
+            console.log(`⚠️ Strategy 2 at ${radius}km: ${data?.length || 0} results (need 3+)`);
           }
         } catch (error) {
           console.log(`❌ Strategy 2 ERROR at ${radius}km:`, error);

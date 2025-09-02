@@ -158,6 +158,7 @@ export type Database = {
           price_per_sqm_usd: number
           price_usd: number
           property_type: string
+          sale_date: string
           total_area: number
         }[]
       }
@@ -217,6 +218,7 @@ export type Database = {
           price_per_sqm_usd: number
           price_usd: number
           property_type: string
+          sale_date: string
           total_area: number
         }[]
       }
