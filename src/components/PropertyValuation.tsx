@@ -4679,14 +4679,9 @@ const PropertyValuation = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Columna izquierda vacía o para otros elementos */}
-        <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-          {/* Espacio para otros elementos si es necesario */}
-        </div>
-
+      <div className="w-full">
         {/* Paso 3: Formulario Principal */}
-        <div className="lg:col-span-2">
+        <div className="w-full">
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 sm:p-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
