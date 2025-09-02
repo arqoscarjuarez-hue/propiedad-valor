@@ -3021,7 +3021,7 @@ const PropertyValuation = () => {
     
     // Paso 4: Espacios (solo requerido para propiedades construidas)
     const hasRequiredSpaces = propertyData.tipoPropiedad === 'terreno' || 
-      (propertyData.recamaras > 0 || propertyData.banos > 0 || propertyData.cocina > 0);
+      (propertyData.recamaras > 0 || propertyData.banos > 0 || propertyData.cocina > 0 || propertyData.salas > 0);
     const step4Complete = hasRequiredSpaces;
     
     // Paso 5: Características
