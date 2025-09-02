@@ -268,6 +268,7 @@ const translations = {
     
     // Botones de acción
     calculate: 'Valuación',
+    realizarValuacion: 'Realizar Valuación',
     regenerate: 'Regenerar Comparativas',
     downloadPDF: 'Descargar PDF',
     downloadWord: 'Descargar Word',
@@ -645,7 +646,8 @@ const translations = {
     
     
     // Botones de acción
-    calculate: 'Calculate Valuation',
+    calculate: 'Valuation',
+    realizarValuacion: 'Perform Valuation',
     regenerate: 'Regenerate Comparatives',
     downloadPDF: 'Download PDF',
     downloadWord: 'Download Word',
