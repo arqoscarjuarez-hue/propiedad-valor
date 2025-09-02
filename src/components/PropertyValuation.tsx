@@ -4700,13 +4700,13 @@ const PropertyValuation = () => {
                      value="areas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     <span className="font-bold text-primary mr-1">3.2</span> {translations[selectedLanguage].areas}
+                     <span className="font-bold text-primary mr-1">3.3</span> {translations[selectedLanguage].areas}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="tipo" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     <span className="font-bold text-primary mr-1">3.3</span> {translations[selectedLanguage].propertyType}
+                     <span className="font-bold text-primary mr-1">3.2</span> {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="caracteristicas" 
