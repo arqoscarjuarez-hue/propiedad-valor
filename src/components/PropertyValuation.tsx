@@ -4719,8 +4719,8 @@ const PropertyValuation = () => {
       </div>
 
       
-      {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      {/* Pasos 1, 2, Progreso, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
         {/* Paso 1: Selector de Idioma */}
         <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
           <div className="flex items-center gap-2 mb-3">
@@ -4755,6 +4755,76 @@ const PropertyValuation = () => {
             exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
             exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
           />
+        </Card>
+
+        {/* Progreso de Completación */}
+        <Card className="p-3 sm:p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border-teal-200 dark:border-teal-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              📊
+            </div>
+            <Label className="text-sm font-bold text-teal-900 dark:text-teal-100">
+              Progreso de Completación
+            </Label>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step1 ? '✓' : '1'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Idioma
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step2 ? '✓' : '2'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Moneda
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_1 ? '✓' : '3.1'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Tipo
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_2 ? '✓' : '3.2'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Áreas
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_3 ? '✓' : '3.3'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Espacios
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_4 ? '✓' : '3.4'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Características
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                {getStepCompletion().step3_5 ? '✓' : '3.5'}
+              </div>
+              <span className={`text-xs ${getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                Ubicación
+              </span>
+            </div>
+          </div>
         </Card>
 
         {/* Botones de Descarga de Documentos */}
@@ -5218,68 +5288,6 @@ const PropertyValuation = () => {
                   </div>
                 )}
                 
-                {/* Progreso de pasos */}
-                <div className="mb-6 p-4 bg-muted rounded-lg">
-                  <h4 className="text-md font-semibold mb-3">Progreso de Completación</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step1 ? '✓' : '1'}
-                      </div>
-                      <span className={getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 1: Idioma
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step2 ? '✓' : '2'}
-                      </div>
-                      <span className={getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 2: Moneda
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_1 ? '✓' : '3.1'}
-                      </div>
-                      <span className={getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.1: Tipo de Propiedad
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_2 ? '✓' : '3.2'}
-                      </div>
-                      <span className={getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.2: Áreas
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_3 ? '✓' : '3.3'}
-                      </div>
-                      <span className={getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.3: Espacios
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_4 ? '✓' : '3.4'}
-                      </div>
-                      <span className={getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.4: Características
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_5 ? '✓' : '3.5'}
-                      </div>
-                      <span className={getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.5: Ubicación
-                      </span>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Botón principal de valuación */}
                 <div className="mt-6 text-center">
