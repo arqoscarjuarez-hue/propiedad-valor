@@ -773,7 +773,7 @@ const PropertyValuation = () => {
           locationDistanceKm: distanceKm,
           estratoAdjustmentFactor,
           estratoPercentage: estratoValuationLabels[propertyData.estratoSocial as EstratoSocial]
-        
+        }
       };
 
       setValuationResult(result);
