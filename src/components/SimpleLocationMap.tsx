@@ -119,6 +119,13 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
     }
   }, [position]);
 
+  // Efecto para asegurar que el mapa se inicialice correctamente
+  useEffect(() => {
+    if (window.L && !leafletMapRef.current && mapRef.current) {
+      initMap();
+    }
+  }, [window.L]);
+
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
   const searchLocation = async (query: string) => {
     if (!query.trim()) return;
