@@ -5843,12 +5843,12 @@ const PropertyValuation = () => {
                         {valuation && valuation > 0 ? (
                           <>
                             <span className="mr-3 text-2xl">✓</span>
-                            Paso 6: Valuación Completada
+                            Valuación Completada
                           </>
                         ) : (
                           <>
                             <Calculator className="mr-3 h-7 w-7" />
-                            Paso 6: {translations[selectedLanguage].realizarValuacion}
+                            {translations[selectedLanguage].realizarValuacion}
                           </>
                         )}
                       </>
