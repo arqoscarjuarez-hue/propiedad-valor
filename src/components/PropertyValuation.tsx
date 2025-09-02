@@ -4586,22 +4586,43 @@ const PropertyValuation = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Selectores de Idioma y Moneda */}
+        {/* Paso 1: Selectores de Idioma y Moneda */}
         <div className="lg:col-span-1 space-y-3 sm:space-y-4">
-           <LanguageSelector />
-          <CurrencySelector
-            selectedCurrency={selectedCurrency}
-            onCurrencyChange={handleCurrencyChange}
-            title={translations[selectedLanguage].currencyValuation}
-            exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
-            exchangeRateError={translations[selectedLanguage].exchangeRateError}
-            errorTitle={translations[selectedLanguage].errorTitle}
-            lastUpdateText={translations[selectedLanguage].lastUpdateText}
-            exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
-            exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
-          />
+          {/* Paso 1: Selector de Idioma */}
+          <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                1
+              </div>
+              <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
+                {translations[selectedLanguage].languageSelector}
+              </Label>
+            </div>
+            <LanguageSelector />
+          </Card>
           
-          
+          {/* Paso 2: Selector de Moneda */}
+          <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                2
+              </div>
+              <Label className="text-sm font-bold text-green-900 dark:text-green-100">
+                {translations[selectedLanguage].currencyValuation}
+              </Label>
+            </div>
+            <CurrencySelector
+              selectedCurrency={selectedCurrency}
+              onCurrencyChange={handleCurrencyChange}
+              title=""
+              exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
+              exchangeRateError={translations[selectedLanguage].exchangeRateError}
+              errorTitle={translations[selectedLanguage].errorTitle}
+              lastUpdateText={translations[selectedLanguage].lastUpdateText}
+              exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
+              exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
+            />
+          </Card>
            {/* Botones de Descarga de Documentos */}
            {valuation && (
              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
@@ -4646,11 +4667,14 @@ const PropertyValuation = () => {
           
         </div>
 
-        {/* Formulario Principal */}
+        {/* Paso 3: Formulario Principal */}
         <div className="lg:col-span-2">
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 sm:p-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <div className="w-6 h-6 bg-white text-primary rounded-full flex items-center justify-center text-sm font-bold mr-2">
+                  3
+                </div>
                 <Home className="h-4 w-4 sm:h-5 sm:w-5" />
                 {translations[selectedLanguage].propertyData}
               </CardTitle>
@@ -5496,11 +5520,16 @@ const PropertyValuation = () => {
           </Card>
         </div>
 
-        {/* Panel de Resultados */}
+        {/* Paso 4: Panel de Resultados */}
         <div className="lg:col-span-1" data-results-panel>
           <Card className="shadow-lg">
             <CardHeader className="bg-gradient-to-r from-secondary to-real-estate-accent text-secondary-foreground p-3 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl">{translations[selectedLanguage].valuationResultsTitle}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <div className="w-6 h-6 bg-white text-secondary rounded-full flex items-center justify-center text-sm font-bold mr-2">
+                  4
+                </div>
+                {translations[selectedLanguage].valuationResultsTitle}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               {valuation && valuation > 0 ? (
