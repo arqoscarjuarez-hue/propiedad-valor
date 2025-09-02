@@ -4675,24 +4675,6 @@ const PropertyValuation = () => {
             </Card>
           )}
           
-          {/* Botón de Demo */}
-          {valuation && (
-            <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-3">
-                  {translations[selectedLanguage].needHelpSystem}
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={handleShowDemo}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
-                >
-                  <Play className="w-4 h-4 mr-2" />
-                   {translations[selectedLanguage].viewDemo}
-                </Button>
-              </div>
-            </Card>
-          )}
         </div>
 
         {/* Formulario Principal */}
