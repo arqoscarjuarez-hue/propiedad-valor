@@ -1485,13 +1485,18 @@ const PropertyValuation = () => {
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6">
-                        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                          <p className="text-blue-800 text-sm">
-                            <strong>📍 Metodología de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
-                            de tipo <strong>{propertyData.tipoPropiedad}</strong> mediante análisis de similaridad avanzado considerando 
-                            ubicación, área y características específicas.
-                          </p>
-                        </div>
+                         <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                           <p className="text-blue-800 text-sm">
+                             <strong>📍 Metodología de búsqueda:</strong> Se encontraron {comparables.length} propiedades similares 
+                             de tipo <strong>{propertyData.tipoPropiedad}</strong> mediante análisis de similaridad avanzado considerando 
+                             ubicación (0-10 km), área y características específicas en los <strong>últimos 18 meses</strong>.
+                             {comparables.length < 3 && (
+                               <span className="block mt-2 text-orange-700 font-medium">
+                                 ⚠️ Menos de 3 comparables disponibles en el área. Precisión del avalúo limitada.
+                               </span>
+                             )}
+                           </p>
+                         </div>
                         
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                           {comparables.map((comparable, index) => (
@@ -1522,10 +1527,15 @@ const PropertyValuation = () => {
                                 </div>
                                 <div>
                                   <strong>💵 Precio por m²:</strong> ${comparable.price_per_sqm_usd?.toLocaleString()} USD
-                                </div>
-                                <div className="text-xs text-gray-600">
-                                  <strong>📍 Ubicación:</strong> {comparable.address}
-                                </div>
+                                 </div>
+                                 {comparable.sale_date && (
+                                   <div>
+                                     <strong>📅 Fecha de venta:</strong> {new Date(comparable.sale_date).toLocaleDateString('es-ES')}
+                                   </div>
+                                 )}
+                                 <div className="text-xs text-gray-600">
+                                   <strong>📍 Ubicación:</strong> {comparable.address}
+                                 </div>
                               </div>
                             </div>
                           ))}
