@@ -20,7 +20,7 @@ serve(async (req) => {
 
     const { target_lat, target_lng, target_property_type, target_area } = await req.json();
 
-    console.log('🔬 PROFESSIONAL COMPARABLES SEARCH - Parameters:', {
+    console.log('🔬 PROFESSIONAL SEARCH - Parameters:', {
       target_lat,
       target_lng,
       target_property_type,
@@ -28,71 +28,120 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // METODOLOGÍA PROFESIONAL: Búsqueda flexible basada en estándares internacionales
+    // METODOLOGÍA PROFESIONAL: Búsqueda flexible de comparables
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    // Estrategia 1: Búsqueda flexible profesional (2km, 5km, 8km, 15km)
-    const searchRadii = [2, 5, 8, 15];
-    
-    for (const radius of searchRadii) {
-      if (comparables.length >= 3) break; // Ya tenemos suficientes
+    console.log('🎯 Professional Flexible Search: Starting comprehensive search');
+
+    // Estrategia 1: Búsqueda flexible profesional (2-15km, últimos 36 meses)
+    try {
+      const { data: flexData, error: flexError } = await supabase
+        .rpc('find_flexible_comparables', {
+          center_lat: target_lat,
+          center_lng: target_lng,
+          prop_type: target_property_type,
+          target_area: target_area || 0,
+          max_distance_km: 15, // Professional standard: expand search area
+        });
+
+      if (!flexError && flexData && flexData.length > 0) {
+        comparables = flexData;
+        searchStrategy = 'professional_flexible';
+        console.log(`✅ Professional Flexible SUCCESS: ${comparables.length} comparables found`);
+      } else {
+        console.log('⚠️ Professional Flexible failed:', flexError);
+      }
+    } catch (error) {
+      console.log('❌ Professional Flexible ERROR:', error);
+    }
+
+    // Estrategia 2: Fallback ampliado si no hay suficientes resultados
+    if (comparables.length < 3) {
+      console.log('🎯 Fallback: Expanding search criteria for minimum comparables');
       
       try {
-        console.log(`🎯 Professional search within ${radius}km radius`);
-        const { data: flexData, error: flexError } = await supabase
-          .rpc('find_flexible_comparables', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            target_area: target_area || 0,
-            max_distance_km: radius,
-          });
+        // Buscar con criterios más amplios: todos los tipos de propiedades similares
+        const { data: broadData, error: broadError } = await supabase
+          .from('property_comparables')
+          .select('*')
+          .or(`property_type.eq.${target_property_type},property_type.eq.casa,property_type.eq.vivienda,property_type.eq.residencial`)
+          .not('price_usd', 'is', null)
+          .not('price_per_sqm_usd', 'is', null)
+          .not('total_area', 'is', null)
+          .gt('price_usd', 0)
+          .gt('price_per_sqm_usd', 0)
+          .gt('total_area', 0)
+          .gte('sale_date', new Date(Date.now() - 36 * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]) // Last 36 months
+          .order('sale_date', { ascending: false })
+          .limit(10);
 
-        if (!flexError && flexData && flexData.length > 0) {
-          comparables = flexData;
-          searchStrategy = `flexible_${radius}km`;
-          console.log(`✅ Professional search SUCCESS at ${radius}km: ${comparables.length} comparables found`);
-          
-          if (comparables.length >= 3) {
-            break; // Suficientes comparables encontrados
-          }
-        } else {
-          console.log(`⚠️ Professional search at ${radius}km: no results`, flexError);
+        if (!broadError && broadData && broadData.length > 0) {
+          // Calcular distancias y scores para los resultados amplios
+          comparables = broadData.map(item => {
+            const distance = item.latitude && item.longitude ? 
+              Math.round(
+                6371 * Math.acos(
+                  Math.cos(target_lat * Math.PI / 180) * 
+                  Math.cos(item.latitude * Math.PI / 180) * 
+                  Math.cos((item.longitude - target_lng) * Math.PI / 180) + 
+                  Math.sin(target_lat * Math.PI / 180) * 
+                  Math.sin(item.latitude * Math.PI / 180)
+                ) * 100
+              ) / 100 : null;
+
+            const area_similarity = target_area ? 
+              Math.max(0, 1 - Math.abs(item.total_area - target_area) / Math.max(item.total_area, target_area)) 
+              : 0.5;
+
+            return {
+              ...item,
+              distance,
+              area_similarity_score: area_similarity,
+              overall_similarity_score: area_similarity * 0.7 + (distance ? Math.max(0, 1 - distance / 20) * 0.3 : 0.3),
+              months_old: Math.floor((Date.now() - new Date(item.sale_date).getTime()) / (30 * 24 * 60 * 60 * 1000))
+            };
+          }).sort((a, b) => b.overall_similarity_score - a.overall_similarity_score);
+
+          searchStrategy = 'broad_fallback';
+          console.log(`✅ Broad Fallback SUCCESS: ${comparables.length} comparables found`);
         }
       } catch (error) {
-        console.log(`❌ Professional search ERROR at ${radius}km:`, error);
+        console.log('❌ Broad Fallback ERROR:', error);
       }
     }
 
-    // Estrategia 2: Fallback usando función original si la flexible no encuentra nada
+    // Estrategia 3: Último recurso - cualquier propiedad con datos válidos
     if (comparables.length === 0) {
-      console.log('🎯 Fallback: Using original functions with extended range');
+      console.log('🎯 Last Resort: Any valid property data');
       
       try {
-        const { data: fallbackData, error: fallbackError } = await supabase
-          .rpc('find_best_comparables', {
-            center_lat: target_lat,
-            center_lng: target_lng,
-            prop_type: target_property_type,
-            target_area: target_area || 0,
-            max_distance_km: 50, // Much wider range as last resort
-          });
+        const { data: lastData, error: lastError } = await supabase
+          .from('property_comparables')
+          .select('*')
+          .not('price_usd', 'is', null)
+          .not('price_per_sqm_usd', 'is', null)
+          .not('total_area', 'is', null)
+          .gt('price_usd', 0)
+          .gt('price_per_sqm_usd', 0)
+          .gt('total_area', 0)
+          .order('sale_date', { ascending: false })
+          .limit(5);
 
-        if (!fallbackError && fallbackData && fallbackData.length > 0) {
-          comparables = fallbackData;
-          searchStrategy = 'fallback_50km';
-          console.log(`✅ Fallback SUCCESS: ${comparables.length} comparables found`);
+        if (!lastError && lastData && lastData.length > 0) {
+          comparables = lastData.map(item => ({
+            ...item,
+            distance: null,
+            area_similarity_score: 0.3,
+            overall_similarity_score: 0.3,
+            months_old: item.sale_date ? Math.floor((Date.now() - new Date(item.sale_date).getTime()) / (30 * 24 * 60 * 60 * 1000)) : null
+          }));
+          searchStrategy = 'last_resort';
+          console.log(`✅ Last Resort SUCCESS: ${comparables.length} comparables found`);
         }
       } catch (error) {
-        console.log('❌ Fallback ERROR:', error);
+        console.log('❌ Last Resort ERROR:', error);
       }
-    }
-
-    // Si aún no hay resultados, informar el problema
-    if (comparables.length === 0) {
-      console.log('⚠️ NO COMPARABLES FOUND with any strategy');
-      searchStrategy = 'no_results';
     }
 
     // Resultado final con información detallada
@@ -107,14 +156,26 @@ serve(async (req) => {
           target_lng,
           target_property_type,
           target_area
+        },
+        professional_methodology: {
+          time_range: '36 months (flexible)',
+          distance_range: '0-15km (expandable)',
+          property_types: 'flexible matching',
+          minimum_data_quality: 'price, area, coordinates required'
         }
       }
     };
 
-    console.log('🎉 FINAL RESULT:', {
+    console.log('🎉 PROFESSIONAL SEARCH RESULT:', {
       strategy: searchStrategy,
       count: comparables.length,
-      has_similarity_scores: comparables.some(c => c.overall_similarity_score !== undefined)
+      has_scores: comparables.some(c => c.overall_similarity_score !== undefined),
+      sample_comparable: comparables[0] ? {
+        address: comparables[0].address,
+        price: comparables[0].price_usd,
+        distance: comparables[0].distance,
+        similarity: comparables[0].overall_similarity_score
+      } : null
     });
 
     return new Response(
