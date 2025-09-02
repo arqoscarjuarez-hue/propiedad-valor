@@ -4694,31 +4694,31 @@ const PropertyValuation = () => {
                      value="ubicacion" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].location}
+                     <span className="font-bold text-primary mr-1">3.1</span> {translations[selectedLanguage].location}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="areas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].areas}
+                     <span className="font-bold text-primary mr-1">3.2</span> {translations[selectedLanguage].areas}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="tipo" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].propertyType}
+                     <span className="font-bold text-primary mr-1">3.3</span> {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="caracteristicas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].characteristics}
+                     <span className="font-bold text-primary mr-1">3.4</span> {translations[selectedLanguage].characteristics}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="servicios" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                    >
-                     {translations[selectedLanguage].services}
+                     <span className="font-bold text-primary mr-1">3.5</span> {translations[selectedLanguage].services}
                    </TabsTrigger>
                   </TabsList>
 
