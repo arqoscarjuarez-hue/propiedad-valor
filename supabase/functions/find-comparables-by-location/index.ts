@@ -78,45 +78,107 @@ serve(async (req) => {
 
     // Fallback Strategy 2: If no professional results, try broader search
     if (comparables.length === 0) {
-      console.log('🔄 FALLBACK: Trying broader search criteria');
-      
+      console.log('🔄 FALLBACK: Trying area-prioritized within local radius');
       try {
-        // Simple fallback to any available data for emergency cases
-        const { data: fallbackData, error: fallbackError } = await supabase
-          .from('property_comparables')
-          .select('*')
-          .eq('property_type', target_property_type)
-          .not('price_usd', 'is', null)
-          .not('total_area', 'is', null)
-          .order('sale_date', { ascending: false })
-          .limit(3);
+        const { data: areaFirst, error: areaErr } = await supabase
+          .rpc('find_area_prioritized_comparables', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            target_area: target_area || 0,
+            max_distance_km: 15
+          });
 
-        if (!fallbackError && fallbackData && fallbackData.length > 0) {
-          // Apply basic market adjustments
-          const market_factor = target_lat >= 13.0 && target_lat <= 14.5 && target_lng >= -90.5 && target_lng <= -87.5 ? 0.35 : 1.0;
-          
-          comparables = fallbackData.map(item => ({
-            ...item,
-            adjusted_price_usd: Math.round(item.price_usd * market_factor),
-            adjusted_price_per_sqm: Math.round(item.price_per_sqm_usd * market_factor),
-            similarity_score: 50.0, // Default moderate score
-            selection_reason: 'Fallback: Limited data available - basic type match only',
-            distance: null,
-            area_adjustment_factor: 0.85,
-            time_adjustment_factor: 0.90,
-            location_adjustment_factor: 0.75,
-            condition_adjustment_factor: 0.90,
-            overall_adjustment_factor: 0.85 * 0.90 * 0.75 * 0.90,
-            net_adjustment_amount: Math.round(item.price_usd * market_factor * 0.15),
-            gross_adjustment_amount: Math.round(item.price_usd * market_factor * 0.25),
-            months_old: item.sale_date ? Math.floor((Date.now() - new Date(item.sale_date).getTime()) / (30 * 24 * 60 * 60 * 1000)) : null
+        if (!areaErr && areaFirst && areaFirst.length > 0) {
+          comparables = areaFirst.map((c: any) => ({
+            ...c,
+            similarity_score: Math.round(((c.overall_similarity_score || 0) * 100 + (c.area_similarity_score || 0) * 100) / 2),
+            selection_reason: c.selection_reason || 'Area-prioritized comparable (≤15km)'
           }));
-          
-          searchStrategy = 'basic_fallback';
-          console.log(`✅ Fallback SUCCESS: ${comparables.length} comparables with basic adjustments`);
+          searchStrategy = 'area_prioritized_local';
+          console.log(`✅ Area-prioritized SUCCESS: ${comparables.length} within local radius`);
         }
       } catch (error) {
-        console.log('❌ Fallback ERROR:', error);
+        console.log('❌ Area-prioritized ERROR:', error);
+      }
+    }
+
+    if (comparables.length === 0) {
+      console.log('🔄 FALLBACK 2: Trying exact/similar types with dynamic radius (≤25km)');
+      try {
+        const { data: exactType, error: exactErr } = await supabase
+          .rpc('find_exact_type_comparables', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            target_area: target_area || 0
+          });
+
+        if (!exactErr && exactType && exactType.length > 0) {
+          comparables = exactType.map((c: any) => ({
+            ...c,
+            similarity_score: Math.round((c.overall_similarity_score || 0) * 100),
+            selection_reason: c.selection_reason || 'Exact/similar type within ≤25km'
+          }));
+          searchStrategy = 'exact_type_priority';
+          console.log(`✅ Exact/Similar type SUCCESS: ${comparables.length} results`);
+        }
+      } catch (error) {
+        console.log('❌ Exact type fallback ERROR:', error);
+      }
+    }
+
+    if (comparables.length === 0) {
+      console.log('🔄 FALLBACK 3: Trying flexible comparables (≤25km)');
+      try {
+        const { data: flexible, error: flexErr } = await supabase
+          .rpc('find_flexible_comparables', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            target_area: target_area || 0,
+            max_distance_km: 25
+          });
+
+        if (!flexErr && flexible && flexible.length > 0) {
+          comparables = flexible.map((c: any) => ({
+            ...c,
+            similarity_score: Math.round((c.overall_similarity_score || 0) * 100),
+            selection_reason: c.selection_reason || 'Flexible comparable within ≤25km'
+          }));
+          searchStrategy = 'flexible_local_radius';
+          console.log(`✅ Flexible SUCCESS: ${comparables.length} results within ≤25km`);
+        }
+      } catch (error) {
+        console.log('❌ Flexible fallback ERROR:', error);
+      }
+    }
+
+    if (comparables.length === 0) {
+      console.log('🔄 FALLBACK 4: Exact type within radius using basic query (≤25km)');
+      try {
+        const { data: withinRadius, error: radiusErr } = await supabase
+          .rpc('find_comparables_within_radius', {
+            center_lat: target_lat,
+            center_lng: target_lng,
+            prop_type: target_property_type,
+            radius_km: 25
+          });
+
+        if (!radiusErr && withinRadius && withinRadius.length > 0) {
+          comparables = withinRadius.map((item: any) => ({
+            ...item,
+            adjusted_price_usd: item.price_usd, // no market adjust here
+            adjusted_price_per_sqm: item.price_per_sqm_usd,
+            similarity_score: 60.0,
+            selection_reason: 'Within 25km radius (basic)',
+            distance: item.distance
+          }));
+          searchStrategy = 'within_radius_basic';
+          console.log(`✅ Radius SUCCESS: ${comparables.length} results within 25km`);
+        }
+      } catch (error) {
+        console.log('❌ Radius fallback ERROR:', error);
       }
     }
 
