@@ -2998,16 +2998,10 @@ const PropertyValuation = () => {
 
   // Función para validar el progreso paso a paso
   const getStepCompletion = () => {
-    // Paso 1: Idioma (siempre completo)
-    const step1Complete = true;
-    
-    // Paso 2: Moneda (siempre completo)
-    const step2Complete = true;
-    
-    // Paso 3.1: Tipo de propiedad
+    // Paso 1: Tipo de propiedad
     const step3_1Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
     
-    // Paso 3.2: Áreas
+    // Paso 2: Áreas
     const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
     let hasValidBuiltArea = true;
     if (propertyData.tipoPropiedad !== 'terreno') {
@@ -3021,20 +3015,18 @@ const PropertyValuation = () => {
     }
     const step3_2Complete = hasValidLandArea && hasValidBuiltArea;
     
-    // Paso 3.3: Espacios (opcional para terrenos)
+    // Paso 3: Espacios (opcional para terrenos)
     const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo para terrenos
     
-    // Paso 3.4: Características
+    // Paso 4: Características
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
     const step3_4Complete = hasValidLocation;
     
-    // Paso 3.5: Ubicación
+    // Paso 5: Ubicación
     const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
     const step3_5Complete = hasValidCoordinates;
     
     return {
-      step1: step1Complete,
-      step2: step2Complete,
       step3_1: step3_1Complete,
       step3_2: step3_2Complete && step3_1Complete,
       step3_3: step3_3Complete && step3_2Complete,
@@ -5724,59 +5716,43 @@ const PropertyValuation = () => {
                   <h4 className="text-md font-semibold mb-3">Progreso de Completación</h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step1 ? '✓' : '1'}
-                      </div>
-                      <span className={getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 1: Idioma
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step2 ? '✓' : '2'}
-                      </div>
-                      <span className={getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 2: Moneda
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_1 ? '✓' : '3.1'}
+                        {getStepCompletion().step3_1 ? '✓' : '1'}
                       </div>
                       <span className={getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.1: Tipo de Propiedad
+                        Paso 1: Tipo de Propiedad
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_2 ? '✓' : '3.2'}
+                        {getStepCompletion().step3_2 ? '✓' : '2'}
                       </div>
                       <span className={getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.2: Áreas
+                        Paso 2: Áreas
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_3 ? '✓' : '3.3'}
+                        {getStepCompletion().step3_3 ? '✓' : '3'}
                       </div>
                       <span className={getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.3: Espacios
+                        Paso 3: Espacios
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_4 ? '✓' : '3.4'}
+                        {getStepCompletion().step3_4 ? '✓' : '4'}
                       </div>
                       <span className={getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.4: Características
+                        Paso 4: Características
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_5 ? '✓' : '3.5'}
+                        {getStepCompletion().step3_5 ? '✓' : '5'}
                       </div>
                       <span className={getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}>
-                        Paso 3.5: Ubicación
+                        Paso 5: Ubicación
                       </span>
                     </div>
                   </div>
@@ -5808,7 +5784,7 @@ const PropertyValuation = () => {
                         Calculando...
                       </>
                     ) : (
-                      `Paso 3.6: ${translations[selectedLanguage].realizarValuacion}`
+                      `Paso 6: ${translations[selectedLanguage].realizarValuacion}`
                     )}
                   </Button>
                   
@@ -5819,26 +5795,26 @@ const PropertyValuation = () => {
                         ⚠️ Complete los pasos en orden para habilitar la valuación:
                       </p>
                       <div className="text-left space-y-1">
-                        {!getStepCompletion().step3_1 && (
-                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                            📝 Siguiente: Complete el <strong>Paso 3.1 - Tipo de Propiedad</strong>
+                         {!getStepCompletion().step3_1 && (
+                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                             📝 Siguiente: Complete el <strong>Paso 1 - Tipo de Propiedad</strong>
                           </p>
                         )}
-                        {getStepCompletion().step3_1 && !getStepCompletion().step3_2 && (
-                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                            📐 Siguiente: Complete el <strong>Paso 3.2 - Áreas</strong> (área del terreno y construcción)
-                          </p>
-                        )}
-                        {getStepCompletion().step3_2 && !getStepCompletion().step3_4 && (
-                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                            ⭐ Siguiente: Complete el <strong>Paso 3.4 - Características</strong> (calidad de ubicación)
-                          </p>
-                        )}
-                        {getStepCompletion().step3_4 && !getStepCompletion().step3_5 && (
-                          <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                            📍 Siguiente: Complete el <strong>Paso 3.5 - Ubicación</strong> (coordenadas en el mapa)
-                          </p>
-                        )}
+                         {getStepCompletion().step3_1 && !getStepCompletion().step3_2 && (
+                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                             📐 Siguiente: Complete el <strong>Paso 2 - Áreas</strong> (área del terreno y construcción)
+                           </p>
+                         )}
+                         {getStepCompletion().step3_2 && !getStepCompletion().step3_4 && (
+                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                             ⭐ Siguiente: Complete el <strong>Paso 4 - Características</strong> (calidad de ubicación)
+                           </p>
+                         )}
+                         {getStepCompletion().step3_4 && !getStepCompletion().step3_5 && (
+                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                             📍 Siguiente: Complete el <strong>Paso 5 - Ubicación</strong> (coordenadas en el mapa)
+                           </p>
+                         )}
                       </div>
                     </div>
                   )}
