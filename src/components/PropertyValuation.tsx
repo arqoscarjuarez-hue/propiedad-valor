@@ -5531,10 +5531,9 @@ const PropertyValuation = () => {
                     </div>
                   </div>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
 
         {/* Paso 4: Panel de Resultados */}
         <div className="lg:col-span-1" data-results-panel>
