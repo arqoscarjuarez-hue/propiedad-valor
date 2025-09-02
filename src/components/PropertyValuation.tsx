@@ -457,6 +457,7 @@ const PropertyValuation = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [valuationResult, setValuationResult] = useState<any>(null);
   const [comparables, setComparables] = useState<Comparable[]>([]);
+  const [debugInfo, setDebugInfo] = useState<any>(null);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   // Función para detectar país automáticamente para nuevos usuarios
@@ -598,12 +599,23 @@ const PropertyValuation = () => {
             }
           });
 
-          comparablesData = data?.data || [];
+          // MANEJO AVANZADO: Extraer datos y metadata
+          const responseData = data?.data || [];
+          const metadata = data?.metadata || {};
+          
+          comparablesData = responseData;
+          
+          console.log('🎯 RESPUESTA FUNCIÓN EDGE:', {
+            dataReceived: responseData,
+            metadata: metadata,
+            strategy: metadata.strategy_used,
+            count: metadata.total_found
+          });
           
           if (comparablesData && comparablesData.length > 0) {
-            console.log(`✅ Encontrados ${comparablesData.length} comparables de tipo ${propertyData.tipoPropiedad} en la zona`);
+            console.log(`✅ Encontrados ${comparablesData.length} comparables usando estrategia: ${metadata.strategy_used}`);
           } else {
-            console.log(`⚠️ No se encontraron comparables de tipo ${propertyData.tipoPropiedad} en la zona`);
+            console.log(`⚠️ No se encontraron comparables. Estrategia usada: ${metadata.strategy_used}`);
           }
         } else {
           // Fallback: búsqueda básica por tipo de propiedad sin ubicación específica
@@ -623,6 +635,22 @@ const PropertyValuation = () => {
       }
 
       setComparables(comparablesData);
+      
+      // DEBUGGING AVANZADO: Capturar toda la información de comparables
+      const debugData = {
+        timestamp: new Date().toISOString(),
+        comparablesFound: comparablesData?.length || 0,
+        comparablesData: comparablesData,
+        hasLocation: !!(propertyData.latitud && propertyData.longitud),
+        searchParams: {
+          lat: propertyData.latitud,
+          lng: propertyData.longitud,
+          propertyType: propertyData.tipoPropiedad,
+          area: propertyData.area
+        }
+      };
+      setDebugInfo(debugData);
+      console.log('🔬 DEBUGGING AVANZADO - Comparables:', debugData);
 
       // 7. CÁLCULO BASADO EN COMPARABLES REALES (método principal)
       let comparativeValueFromComparables = comparativeValue; // valor base por defecto
@@ -1416,18 +1444,36 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Sección de Comparables Utilizados - Debugging */}
-                {(() => {
-                  console.log('🔍 Debugging comparables section:', {
-                    hasValuationResult: !!valuationResult,
-                    comparablesLength: comparables.length,
-                    comparables: comparables,
-                    shouldShow: valuationResult && comparables.length > 0
-                  });
-                  return null;
-                })()}
-                
-                {valuationResult && comparables.length > 0 && (
+                {/* DEBUGGING VISUAL TEMPORAL */}
+                {debugInfo && (
+                  <div className="mt-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+                    <h3 className="font-bold text-red-800 mb-2">🔬 DEBUG INFO AVANZADO (TEMPORAL)</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="text-xs text-red-700 space-y-1">
+                        <p><strong>Timestamp:</strong> {debugInfo.timestamp}</p>
+                        <p><strong>Comparables encontrados:</strong> {debugInfo.comparablesFound}</p>
+                        <p><strong>Tiene ubicación:</strong> {debugInfo.hasLocation ? 'SÍ' : 'NO'}</p>
+                        <p><strong>Coordenadas:</strong> {debugInfo.searchParams?.lat}, {debugInfo.searchParams?.lng}</p>
+                        <p><strong>Tipo propiedad:</strong> {debugInfo.searchParams?.propertyType}</p>
+                        <p><strong>Área:</strong> {debugInfo.searchParams?.area} m²</p>
+                      </div>
+                      <div className="text-xs text-red-700 space-y-1">
+                        <p><strong>Resultado avalúo existe:</strong> {valuationResult ? 'SÍ' : 'NO'}</p>
+                        <p><strong>Array comparables length:</strong> {comparables.length}</p>
+                        <p><strong>Estado renderizado:</strong> {comparables.length > 0 ? 'DEBERÍA MOSTRAR' : 'NO DEBERÍA MOSTRAR'}</p>
+                        <p><strong>Condición completa:</strong> {(comparables.length > 0) ? 'CUMPLIDA ✅' : 'NO CUMPLIDA ❌'}</p>
+                      </div>
+                    </div>
+                    {debugInfo.comparablesData && debugInfo.comparablesData.length > 0 && (
+                      <div className="mt-3 p-2 bg-white rounded text-xs">
+                        <strong>Primer comparable:</strong> {JSON.stringify(debugInfo.comparablesData[0], null, 2)}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Sección de Comparables Utilizados - FORZADA SIEMPRE */}
+                {comparables.length > 0 && (
                   <div className="mt-6">
                     <Card className="border-2 border-blue-200 shadow-lg bg-gradient-to-br from-blue-50/50 to-indigo-50/50">
                       <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
