@@ -3743,41 +3743,6 @@ const PropertyValuation = () => {
         doc.rect(marginLeft - 2, yPosition - 3, contentWidth + 4, 12, 'F');
         doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
         doc.setFontSize(16);
-        doc.setFont("helvetica", "bold");
-        const seccionNumero = propertyData.tipoPropiedad === 'terreno' ? '3' : '4';
-        doc.text(`${seccionNumero}. ${translations[selectedLanguage].propertySpaces}`, marginLeft, yPosition + 6);
-        doc.setTextColor(0, 0, 0);
-        yPosition += 18;
-
-        // Espacios habitacionales
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text(`${translations[selectedLanguage].livingSpaces}:`, marginLeft, yPosition);
-        yPosition += 8;
-
-        const espacios = [
-          { nombre: translations[selectedLanguage].bedrooms, cantidad: propertyData.recamaras },
-          { nombre: translations[selectedLanguage].livingRooms, cantidad: propertyData.salas },
-          { nombre: translations[selectedLanguage].diningRoom, cantidad: propertyData.comedor },
-          { nombre: translations[selectedLanguage].kitchen, cantidad: propertyData.cocina },
-          { nombre: translations[selectedLanguage].bathrooms, cantidad: propertyData.banos },
-          { nombre: translations[selectedLanguage].serviceArea, cantidad: propertyData.areaServicio },
-          { nombre: translations[selectedLanguage].storage, cantidad: propertyData.bodega },
-          { nombre: translations[selectedLanguage].garage, cantidad: propertyData.cochera },
-          { nombre: translations[selectedLanguage].others, cantidad: propertyData.otros }
-        ];
-
-        doc.setFontSize(11);
-        doc.setFont("helvetica", "bold");
-        espacios.forEach(({ nombre, cantidad }) => {
-          doc.text(`• ${nombre}:`, marginLeft + 5, yPosition);
-          doc.setFont("helvetica", "normal");
-          doc.text(`${cantidad}`, marginLeft + 70, yPosition);
-          doc.setFont("helvetica", "bold");
-          yPosition += 5;
-        });
-
-        yPosition += 10;
       }
 
       // SECCIÓN 5: SERVICIOS DISPONIBLES (solo para propiedades construidas)
@@ -4347,72 +4312,6 @@ const PropertyValuation = () => {
             ] : []),
 
             // 4. ESPACIOS Y CARACTERÍSTICAS (solo para propiedades construidas)
-            ...(propertyData.tipoPropiedad !== 'terreno' ? [
-              new Paragraph({
-                text: `${propertyData.tipoPropiedad === 'terreno' ? '3' : '4'}. ${translations[selectedLanguage].propertySpaces}`,
-                heading: HeadingLevel.HEADING_1
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `${translations[selectedLanguage].livingSpaces}:`, bold: true })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].bedrooms}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.recamaras}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].livingRooms}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.salas}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].diningRoom}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.comedor}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].kitchen}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.cocina}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].bathrooms}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.banos}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].serviceArea}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.areaServicio}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].storage}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.bodega}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].garage}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.cochera}` })
-                ]
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `• ${translations[selectedLanguage].others}: `, bold: true }),
-                  new TextRun({ text: `${propertyData.otros}` })
-                ]
-              }),
-              new Paragraph({ text: "" }) // Espacio
-            ] : []),
 
             // 5. SERVICIOS DISPONIBLES
             // Para terrenos: solo servicios básicos disponibles
@@ -4847,14 +4746,6 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
-                    {propertyData.tipoPropiedad !== 'terreno' && (
-                      <TabsTrigger 
-                        value="espacios" 
-                        className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                      >
-                        {translations[selectedLanguage].spaces}
-                      </TabsTrigger>
-                    )}
                    <TabsTrigger 
                      value="caracteristicas" 
                      className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -5020,126 +4911,6 @@ const PropertyValuation = () => {
                   </Select>
                 </TabsContent>
 
-                 <TabsContent value="espacios" className="space-y-4 mt-6 px-1">
-                    <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].spacesDistribution}</h3>
-                    
-                    {/* Espacios Habitacionales */}
-                    <div className="mb-6">
-                      <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].livingSpaces}</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {[
-                          { key: 'recamaras', label: translations[selectedLanguage].bedrooms, description: translations[selectedLanguage].bedroomsDescription },
-                          { key: 'salas', label: translations[selectedLanguage].livingRooms, description: translations[selectedLanguage].livingRoomsDescription },
-                          { key: 'comedor', label: translations[selectedLanguage].diningRoom, description: translations[selectedLanguage].diningRoomDescription },
-                          { key: 'banos', label: translations[selectedLanguage].bathrooms, description: translations[selectedLanguage].bathroomsDescription }
-                         ].map(({ key, label, description }) => (
-                          <div key={key} className="space-y-2">
-                            <Label htmlFor={key} className="text-sm font-medium block">{label}</Label>
-                            <Input
-                              id={key}
-                              type="number"
-                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                               onChange={(e) => {
-                                 const value = e.target.value;
-                                 handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
-                               }}
-                              placeholder="0"
-                              className="text-center h-10"
-                              min="0"
-                              step="1"
-                            />
-                            <p className="text-xs text-muted-foreground leading-tight">{description}</p>
-                          </div>
-                        ))}
-                     </div>
-                   </div>
-
-                   {/* Espacios de Servicio */}
-                   <div className="mb-6">
-                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].serviceSpaces}</h4>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {[
-                          { key: 'cocina', label: translations[selectedLanguage].kitchen, description: translations[selectedLanguage].kitchenDescription },
-                          { key: 'areaServicio', label: translations[selectedLanguage].serviceArea, description: translations[selectedLanguage].serviceAreaDescription },
-                          { key: 'bodega', label: translations[selectedLanguage].storage, description: translations[selectedLanguage].storageDescription },
-                          { key: 'cochera', label: translations[selectedLanguage].garage, description: translations[selectedLanguage].garageDescription }
-                        ].map(({ key, label, description }) => (
-                          <div key={key} className="space-y-2">
-                            <Label htmlFor={key} className="text-sm font-medium block">{label}</Label>
-                            <Input
-                              id={key}
-                              type="number"
-                              value={propertyData[key as keyof Omit<PropertyData, 'servicios'>] || ''}
-                               onChange={(e) => {
-                                 const value = e.target.value;
-                                 handleInputChange(key as keyof PropertyData, value === '' ? 0 : parseFloat(value) || 0);
-                               }}
-                              placeholder="0"
-                              className="text-center h-10"
-                              min="0"
-                              step="1"
-                            />
-                            <p className="text-xs text-muted-foreground leading-tight">{description}</p>
-                          </div>
-                        ))}
-                     </div>
-                   </div>
-
-                   {/* Espacios Adicionales */}
-                   <div className="mb-6">
-                     <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].additionalSpaces}</h4>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                       <div className="space-y-2">
-                         <Label htmlFor="otros" className="text-sm font-medium block">{translations[selectedLanguage].others}</Label>
-                         <Input
-                           id="otros"
-                           type="number"
-                           value={propertyData.otros || ''}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              handleInputChange('otros', value === '' ? 0 : parseFloat(value) || 0);
-                            }}
-                           placeholder="0"
-                           className="text-center h-10"
-                           min="0"
-                           step="1"
-                         />
-                         <p className="text-xs text-muted-foreground leading-tight">{translations[selectedLanguage].othersDescription}</p>
-                       </div>
-                     </div>
-                   </div>
-
-                   {/* Resumen de espacios */}
-                   <div className="bg-muted p-3 sm:p-4 rounded-lg">
-                      <h4 className="text-sm font-semibold mb-3">{translations[selectedLanguage].spacesSummary}</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div className="flex justify-between py-1">
-                          <span>Total {translations[selectedLanguage].bedrooms}:</span>
-                          <span className="font-medium">{propertyData.recamaras}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>Total {translations[selectedLanguage].bathrooms}:</span>
-                          <span className="font-medium">{propertyData.banos}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>Total {translations[selectedLanguage].livingRooms}:</span>
-                          <span className="font-medium">{propertyData.salas}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>{translations[selectedLanguage].garage}:</span>
-                          <span className="font-medium">{propertyData.cochera}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>{translations[selectedLanguage].serviceSpaces}:</span>
-                          <span className="font-medium">{propertyData.areaServicio + propertyData.bodega}</span>
-                        </div>
-                        <div className="flex justify-between py-1">
-                          <span>{translations[selectedLanguage].others}:</span>
-                          <span className="font-medium">{propertyData.otros}</span>
-                        </div>
-                     </div>
-                   </div>
-                </TabsContent>
 
                 <TabsContent value="caracteristicas" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].characteristics}</h3>
