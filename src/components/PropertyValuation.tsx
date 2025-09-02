@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Camera, Trash2, Play, Info, Share2 } from 'lucide-react';
+import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/lib/supabase';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
@@ -55,7 +55,7 @@ const translations = {
     spaces: 'Espacios',
     characteristics: 'Características',
     location: 'Ubicación',
-    photos: 'Fotografías',
+    
     valuation: 'Ajuste de Valor',
     
     // Sección de áreas
@@ -264,11 +264,6 @@ const translations = {
      latitudePlaceholder: 'Ej: 19.4326',
      longitudePlaceholder: 'Ej: -99.1332',
     
-    // Fotografías
-    propertyPhotos: 'Fotografías del Inmueble',
-    uploadPhotos: 'Subir Fotografías',
-    photosDescription: 'Sube imágenes del interior y exterior del inmueble',
-    removePhoto: 'Eliminar foto',
     
     // Botones de acción
     calculate: 'Calcular Valuación',
@@ -436,7 +431,6 @@ const translations = {
     spaces: 'Spaces',
     characteristics: 'Features',
     location: 'Location',
-    photos: 'Photos',
     valuation: 'Valuation',
     
     // Sección de áreas
@@ -647,10 +641,6 @@ const translations = {
     longitudePlaceholder: 'E.g.: -99.1332',
     
     
-    // Fotografías
-    uploadPhotos: 'Upload Photos',
-    photosDescription: 'Upload interior and exterior images of the property',
-    removePhoto: 'Remove photo',
     
     // Botones de acción
     calculate: 'Calculate Valuation',
@@ -817,7 +807,7 @@ const translations = {
     spaces: 'Espaces',
     characteristics: 'Caractéristiques',
     location: 'Localisation',
-    photos: 'Photos',
+    
     valuation: 'Évaluation',
     
     // Sección de áreas
@@ -1029,9 +1019,6 @@ const translations = {
     latitudePlaceholder: 'Ex: 19.4326',
     longitudePlaceholder: 'Ex: -99.1332',
     
-    // Fotografías
-    photosDescription: 'Téléchargez des images intérieures et extérieures de la propriété',
-    removePhoto: 'Supprimer la photo',
     
     // Botones de acción
     calculate: 'Calculer l\'Évaluation',
@@ -1198,7 +1185,6 @@ const translations = {
     spaces: 'Räume',
     characteristics: 'Eigenschaften',
     location: 'Lage',
-    photos: 'Fotos',
     valuation: 'Bewertung',
     
     // Sección de áreas
@@ -1412,9 +1398,6 @@ const translations = {
     latitudePlaceholder: 'Z.B.: 19.4326',
     longitudePlaceholder: 'Z.B.: -99.1332',
     
-    // Fotografías
-    photosDescription: 'Innen- und Außenbilder der Immobilie hochladen',
-    removePhoto: 'Foto entfernen',
     
     // Botones de acción
     calculate: 'Bewertung Berechnen',
@@ -1581,7 +1564,7 @@ const translations = {
     spaces: 'Spazi',
     characteristics: 'Caratteristiche',
     location: 'Posizione',
-    photos: 'Foto',
+    
     valuation: 'Valutazione',
     
     // Sección de áreas
@@ -1791,9 +1774,6 @@ const translations = {
     latitudePlaceholder: 'Es: 19.4326',
     longitudePlaceholder: 'Es: -99.1332',
 
-    // Fotografías
-    photosDescription: 'Carica immagini interne ed esterne della proprietà',
-    removePhoto: 'Rimuovi foto',
     
     // Botones de acción
     calculate: 'Calcola Valutazione',
@@ -1960,7 +1940,7 @@ const translations = {
     spaces: 'Espaços',
     characteristics: 'Características',
     location: 'Localização',
-    photos: 'Fotos',
+    
     valuation: 'Avaliação',
     
     // Sección de áreas
@@ -2171,11 +2151,6 @@ const translations = {
     longitudePlaceholder: 'Ex: -99.1332',
     
     
-    // Fotografías
-    propertyPhotos: 'Fotos da Propriedade',
-    uploadPhotos: 'Enviar Fotos',
-    photosDescription: 'Envie imagens internas e externas da propriedade',
-    removePhoto: 'Remover foto',
     
     // Botones de acción
     calculate: 'Calcular Avaliação',
@@ -4764,12 +4739,6 @@ const PropertyValuation = () => {
                    >
                      {translations[selectedLanguage].location}
                    </TabsTrigger>
-                   <TabsTrigger 
-                     value="fotos" 
-                     className="h-8 sm:h-10 text-xs sm:text-sm touch-manipulation bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                   >
-                     {translations[selectedLanguage].photos}
-                   </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="areas" className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
@@ -5504,60 +5473,6 @@ const PropertyValuation = () => {
                     </Tabs>
                  </TabsContent>
 
-                 <TabsContent value="fotos" className="space-y-4 mt-6">
-                   <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                     <Camera className="h-5 w-5" />
-                     {translations[selectedLanguage].photos} ({translations[selectedLanguage].optional})
-                   </h3>
-                   <p className="text-sm text-muted-foreground mb-4">
-                     Agrega fotos del inmueble para incluirlas en el reporte de valuación. Formatos aceptados: JPG, PNG, WebP
-                   </p>
-                   
-                   <div className="space-y-4">
-                     <div>
-                       <Label htmlFor="property-images" className="cursor-pointer">
-                         <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
-                           <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                           <p className="text-sm text-muted-foreground">Haz clic para seleccionar fotos o arrastra aquí</p>
-                           <p className="text-xs text-muted-foreground mt-1">Máximo 12 fotos</p>
-                         </div>
-                       </Label>
-                       <Input
-                         id="property-images"
-                         type="file"
-                         multiple
-                         accept="image/*"
-                         onChange={handleImageUpload}
-                         className="hidden"
-                       />
-                     </div>
-
-                       {propertyImages.length > 0 && (
-                         <div className="space-y-2 sm:space-y-3">
-                           <h4 className="text-xs sm:text-sm font-medium">Fotos seleccionadas ({propertyImages.length})</h4>
-                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
-                           {propertyImages.map((image, index) => (
-                             <div key={index} className="relative group">
-                               <img
-                                 src={image.preview}
-                                 alt={`Foto ${index + 1}`}
-                                 className="w-full h-24 object-cover rounded-lg border"
-                               />
-                               <Button
-                                 variant="destructive"
-                                 size="sm"
-                                 className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                                 onClick={() => removeImage(index)}
-                               >
-                                 <Trash2 className="h-3 w-3" />
-                               </Button>
-                             </div>
-                           ))}
-                         </div>
-                       </div>
-                     )}
-                   </div>
-                  </TabsContent>
 
 
                 </Tabs>
@@ -5642,27 +5557,6 @@ const PropertyValuation = () => {
                     
                    </div>
                    
-                   {/* Mostrar imágenes si existen */}
-                   {propertyImages.length > 0 && (
-                     <div className="space-y-2">
-                       <h4 className="text-sm font-medium">{translations[selectedLanguage].photos}</h4>
-                       <div className="grid grid-cols-2 gap-2">
-                         {propertyImages.slice(0, 4).map((image, index) => (
-                           <img
-                             key={index}
-                             src={image.preview}
-                             alt={`Foto ${index + 1}`}
-                             className="w-full h-16 object-cover rounded border"
-                           />
-                         ))}
-                       </div>
-                       {propertyImages.length > 4 && (
-                         <p className="text-xs text-muted-foreground">
-                           +{propertyImages.length - 4} fotos más
-                         </p>
-                       )}
-                     </div>
-                   )}
                    
                     <div className="space-y-2 text-sm">
                       {/* Mostrar área construida solo si NO es terreno */}
