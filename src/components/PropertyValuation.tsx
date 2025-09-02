@@ -4667,6 +4667,107 @@ const PropertyValuation = () => {
           
         </div>
 
+        {/* Guía de Pasos */}
+        <div className="lg:col-span-3">
+          <Card className="shadow-lg border-2 border-blue-200 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Guía de Pasos:</h3>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {/* Paso 1 */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">
+                        ✓
+                      </div>
+                      <span className="text-sm font-medium text-green-700 dark:text-green-300">1</span>
+                    </div>
+                    
+                    {/* Línea conectora */}
+                    <div className="w-4 h-0.5 bg-green-400"></div>
+                    
+                    {/* Paso 2 */}
+                    <div className="flex items-center gap-1">
+                      <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md">
+                        ✓
+                      </div>
+                      <span className="text-sm font-medium text-green-700 dark:text-green-300">2</span>
+                    </div>
+                    
+                    {/* Línea conectora */}
+                    <div className="w-4 h-0.5 bg-green-400"></div>
+                    
+                    {/* Paso 3 */}
+                    <div className="flex items-center gap-1">
+                      <div className={`w-8 h-8 ${
+                        (propertyData.tipoPropiedad && propertyData.areaTerreno > 0) 
+                          ? 'bg-green-600' 
+                          : 'bg-blue-500'
+                      } text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md`}>
+                        {(propertyData.tipoPropiedad && propertyData.areaTerreno > 0) ? '✓' : '3'}
+                      </div>
+                      <span className={`text-sm font-medium ${
+                        (propertyData.tipoPropiedad && propertyData.areaTerreno > 0) 
+                          ? 'text-green-700 dark:text-green-300' 
+                          : 'text-blue-700 dark:text-blue-300'
+                      }`}>3</span>
+                    </div>
+                    
+                    {/* Línea conectora */}
+                    <div className={`w-4 h-0.5 ${
+                      (propertyData.tipoPropiedad && propertyData.areaTerreno > 0) 
+                        ? 'bg-green-400' 
+                        : 'bg-gray-300'
+                    }`}></div>
+                    
+                    {/* Paso 4 - Valuación */}
+                    <div className="flex items-center gap-1">
+                      <div className={`w-8 h-8 ${
+                        valuation > 0 
+                          ? 'bg-green-600' 
+                          : (propertyData.tipoPropiedad && propertyData.areaTerreno > 0)
+                          ? 'bg-yellow-500 animate-pulse'
+                          : 'bg-gray-400'
+                      } text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md`}>
+                        {valuation > 0 ? '✓' : '📊'}
+                      </div>
+                      <span className={`text-sm font-medium ${
+                        valuation > 0 
+                          ? 'text-green-700 dark:text-green-300' 
+                          : (propertyData.tipoPropiedad && propertyData.areaTerreno > 0)
+                          ? 'text-yellow-700 dark:text-yellow-300'
+                          : 'text-gray-500'
+                      }`}>Valuación</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Mensaje de estado */}
+                <div className="text-center sm:text-right">
+                  {valuation > 0 ? (
+                    <p className="text-sm font-medium text-green-700 dark:text-green-300">
+                      ¡Valuación completada! 🎉
+                    </p>
+                  ) : (propertyData.tipoPropiedad && propertyData.areaTerreno > 0) ? (
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                        ¡Todos los pasos están completados!
+                      </p>
+                      <p className="text-xs text-blue-600 dark:text-blue-400">
+                        Ahora debe tocar el botón 'Realizar Valuación' para obtener el resultado.
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      Complete los datos básicos en el Paso 3
+                    </p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Paso 3: Formulario Principal */}
         <div className="lg:col-span-2">
           <Card className="shadow-lg">
