@@ -394,19 +394,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Info de aplicación gratuita */}
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-        <CardContent className="pt-4">
-          <div className="flex items-center gap-2 text-blue-800 dark:text-blue-200">
-            <Zap className="h-4 w-4" />
-            <span className="text-sm font-medium">Búsqueda de Ubicación Gratuita</span>
-            <span className="text-xs bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">OpenStreetMap</span>
-          </div>
-          <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-            Sin necesidad de API keys • Completamente gratuito • Búsqueda global
-          </p>
-        </CardContent>
-      </Card>
 
 
       {/* Controles de búsqueda */}
