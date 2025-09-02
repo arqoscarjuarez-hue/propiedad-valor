@@ -408,47 +408,6 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         </CardContent>
       </Card>
 
-      {/* Instrucciones */}
-      <div className="text-xs text-muted-foreground space-y-1">
-        <p>💡 <strong>Cómo usar:</strong></p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
-          <li>Busca una dirección específica en el primer campo</li>
-          <li><strong>Busca por coordenadas</strong> en el segundo campo (formato: latitud, longitud)</li>
-          <li>Usa "Mi Ubicación" para obtener tu posición actual</li>
-          <li><strong>Mueve el mapa</strong> arrastrando para explorar diferentes áreas</li>
-          <li><strong>Haz clic en el mapa</strong> para colocar el marcador en la ubicación exacta</li>
-          <li>Haz clic en cualquier botón de mapa para ver la ubicación en detalle</li>
-          <li>Las coordenadas se usan automáticamente en la valuación</li>
-        </ul>
-        <div className="flex items-center gap-2 mt-2">
-          <Button
-            onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}
-            variant="ghost"
-            size="sm"
-            className="p-1 h-auto text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-          >
-            <Info className="h-4 w-4" />
-          </Button>
-          <span className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer" onClick={() => setShowCoordinatesInfo(!showCoordinatesInfo)}>
-            Ver formatos de coordenadas válidos
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          Si tu ubicación NO es actual haz clic en editar datos
-        </p>
-        
-        {showCoordinatesInfo && (
-          <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
-            <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
-              <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
-              <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
-              <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
-              <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
-            </ul>
-          </div>
-        )}
-      </div>
 
       {/* Controles de búsqueda */}
       <div className="space-y-3">
