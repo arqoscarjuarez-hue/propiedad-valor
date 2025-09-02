@@ -332,6 +332,45 @@ export type Database = {
           total_area: number
         }[]
       }
+      find_professional_comparables: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          prop_type: string
+          target_age_years?: number
+          target_area: number
+          target_bathrooms?: number
+          target_bedrooms?: number
+        }
+        Returns: {
+          address: string
+          adjusted_price_per_sqm: number
+          adjusted_price_usd: number
+          age_years: number
+          area_adjustment_factor: number
+          bathrooms: number
+          bedrooms: number
+          condition_adjustment_factor: number
+          distance: number
+          estrato_social: Database["public"]["Enums"]["estrato_social"]
+          gross_adjustment_amount: number
+          id: string
+          latitude: number
+          location_adjustment_factor: number
+          longitude: number
+          months_old: number
+          net_adjustment_amount: number
+          overall_adjustment_factor: number
+          price_per_sqm_usd: number
+          price_usd: number
+          property_type: string
+          sale_date: string
+          selection_reason: string
+          similarity_score: number
+          time_adjustment_factor: number
+          total_area: number
+        }[]
+      }
       get_property_comparables_public: {
         Args: { limit_rows?: number; offset_rows?: number }
         Returns: {

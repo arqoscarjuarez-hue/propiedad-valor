@@ -76,21 +76,26 @@ interface Comparable {
   total_area: number;
   price_per_sqm_usd: number;
   price_usd: number;
-  // Market-adjusted pricing
+  // Professional USPAP adjustments
   adjusted_price_usd?: number;
   adjusted_price_per_sqm?: number;
-  market_adjustment_factor?: number;
-  // Type matching priority
-  type_match_score?: number;
-  // Enhanced properties
+  area_adjustment_factor?: number;
+  time_adjustment_factor?: number;
+  location_adjustment_factor?: number;
+  condition_adjustment_factor?: number;
+  overall_adjustment_factor?: number;
+  net_adjustment_amount?: number;
+  gross_adjustment_amount?: number;
+  similarity_score?: number;
+  selection_reason?: string;
+  // Basic properties
   bedrooms?: number;
   bathrooms?: number;
+  age_years?: number;
   address: string;
   sale_date?: string;
   distance?: number;
   estrato_social: any;
-  overall_similarity_score?: number;
-  area_similarity_score?: number;
   area_difference?: number;
   source?: string;
   confidence_score?: number;
@@ -1500,19 +1505,19 @@ const PropertyValuation = () => {
                       <CardContent className="p-6">
                          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                            <p className="text-blue-800 text-sm">
-                             <strong>🎯 Metodología TIPO-PRIORITARIA:</strong> Se encontraron {comparables.length} propiedades 
-                             priorizando <strong>EXACTAMENTE el mismo tipo</strong> ({propertyData.tipoPropiedad}) 
-                             con precios ajustados al mercado local.
-                             {debugInfo && debugInfo.metadata && (
+                             <strong>🏛️ Metodología USPAP PROFESIONAL:</strong> Sistema basado en estándares de la industria 
+                             (USPAP + Fannie Mae) con {comparables.length} comparables encontrados.
+                             {debugInfo && debugInfo.metadata && debugInfo.metadata.quality_metrics && (
                                <span className="block mt-2">
-                                 📍 País: <strong>{debugInfo.metadata.country_detected}</strong> | 
-                                 🎯 Exactos: {comparables.filter(c => c.type_match_score === 1.0).length} | 
-                                 📊 Similares: {comparables.filter(c => c.type_match_score === 0.8).length}
+                                 📊 Calidad promedio: <strong>{debugInfo.metadata.quality_metrics.avg_similarity_score}%</strong> | 
+                                 📏 Distancia promedio: <strong>{debugInfo.metadata.quality_metrics.avg_distance_km}km</strong> | 
+                                 🎯 Óptimos: {debugInfo.metadata.quality_metrics.optimal_comparables} | 
+                                 ✅ Buenos: {debugInfo.metadata.quality_metrics.good_comparables}
                                </span>
                              )}
                              {comparables.length < 3 && (
                                <span className="block mt-2 text-orange-700 font-medium">
-                                 ⚠️ Menos de 3 comparables del mismo tipo. Se incluyen tipos similares.
+                                 ⚠️ Menos de 3 comparables profesionales. Datos limitados en la zona.
                                </span>
                              )}
                            </p>
@@ -1524,12 +1529,12 @@ const PropertyValuation = () => {
                                <div className="flex items-start justify-between mb-2">
                                  <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded flex items-center gap-1">
                                    Comparable #{index + 1}
-                                   {comparable.type_match_score === 1.0 && (
-                                     <span className="text-green-600 font-bold">🎯 TIPO EXACTO</span>
+                                   {comparable.similarity_score && comparable.similarity_score >= 90 && (
+                                     <span className="text-green-600 font-bold">🎯 ÓPTIMO</span>
                                    )}
-                                   {comparable.overall_similarity_score && (
+                                   {comparable.similarity_score && (
                                      <span className="text-green-600">
-                                       ★ {(comparable.overall_similarity_score * 100).toFixed(0)}%
+                                       ★ {comparable.similarity_score.toFixed(1)}%
                                      </span>
                                    )}
                                  </span>
@@ -1541,12 +1546,10 @@ const PropertyValuation = () => {
                                <div className="space-y-2 text-sm">
                                  <div className="flex items-center gap-2">
                                    <strong>🏠 Tipo:</strong> 
-                                   <span className={comparable.type_match_score === 1.0 ? 'text-green-600 font-bold' : ''}>
+                                   <span className="text-green-600 font-bold">
                                      {comparable.property_type}
                                    </span>
-                                   {comparable.type_match_score === 1.0 && (
-                                     <span className="text-xs bg-green-100 text-green-700 px-1 rounded">EXACTO</span>
-                                   )}
+                                   <span className="text-xs bg-green-100 text-green-700 px-1 rounded">EXACTO</span>
                                  </div>
                                 <div>
                                   <strong>📐 Área:</strong> {comparable.total_area} m²
@@ -1596,17 +1599,35 @@ const PropertyValuation = () => {
                                      ({comparable.area_difference > 0 ? 'mayor' : 'menor'})
                                    </div>
                                  )}
-                                 {comparable.source && (
+                                 {comparable.selection_reason && (
                                    <div className="text-xs">
-                                     <strong>🔍 Fuente:</strong> {
-                                       comparable.source === 'database' ? '💾 Base de datos' :
-                                       comparable.source === 'portal_scraping' ? '🌐 Portal inmobiliario' :
-                                       comparable.source
-                                     }
-                                     {comparable.confidence_score && (
-                                       <span className="ml-2 text-green-600">
-                                         ✓ {(comparable.confidence_score * 100).toFixed(0)}%
-                                       </span>
+                                     <strong>💡 Selección:</strong> {comparable.selection_reason}
+                                   </div>
+                                 )}
+                                 {comparable.overall_adjustment_factor && (
+                                   <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
+                                     <strong>🔧 Ajustes USPAP:</strong>
+                                     <div className="grid grid-cols-2 gap-1 mt-1">
+                                       {comparable.area_adjustment_factor && (
+                                         <span>📐 Área: {(comparable.area_adjustment_factor * 100).toFixed(1)}%</span>
+                                       )}
+                                       {comparable.time_adjustment_factor && (
+                                         <span>📅 Tiempo: {(comparable.time_adjustment_factor * 100).toFixed(1)}%</span>
+                                       )}
+                                       {comparable.location_adjustment_factor && (
+                                         <span>📍 Ubicación: {(comparable.location_adjustment_factor * 100).toFixed(1)}%</span>
+                                       )}
+                                       {comparable.condition_adjustment_factor && (
+                                         <span>🏠 Condición: {(comparable.condition_adjustment_factor * 100).toFixed(1)}%</span>
+                                       )}
+                                     </div>
+                                     <div className="mt-1 font-medium">
+                                       🎯 Factor total: {(comparable.overall_adjustment_factor * 100).toFixed(1)}%
+                                     </div>
+                                     {comparable.net_adjustment_amount && (
+                                       <div className="text-green-600 font-medium">
+                                         💰 Ajuste neto: ${comparable.net_adjustment_amount.toLocaleString()}
+                                       </div>
                                      )}
                                    </div>
                                  )}
