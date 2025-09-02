@@ -2998,10 +2998,14 @@ const PropertyValuation = () => {
 
   // Función para validar el progreso paso a paso
   const getStepCompletion = () => {
-    // Paso 1: Tipo de propiedad
-    const step3_1Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
+    // Paso 1: Ubicación
+    const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
+    const step1Complete = hasValidCoordinates;
     
-    // Paso 2: Áreas
+    // Paso 2: Tipo de propiedad
+    const step2Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
+    
+    // Paso 3: Áreas
     const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
     let hasValidBuiltArea = true;
     if (propertyData.tipoPropiedad !== 'terreno') {
@@ -3013,26 +3017,22 @@ const PropertyValuation = () => {
         (propertyData.areaCuartoNivel || 0)
       ) > 0;
     }
-    const step3_2Complete = hasValidLandArea && hasValidBuiltArea;
+    const step3Complete = hasValidLandArea && hasValidBuiltArea;
     
-    // Paso 3: Espacios (opcional para terrenos)
-    const step3_3Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo para terrenos
+    // Paso 4: Espacios (opcional para terrenos)
+    const step4Complete = propertyData.tipoPropiedad === 'terreno' || true; // Siempre completo para terrenos
     
-    // Paso 4: Características
+    // Paso 5: Características
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
-    const step3_4Complete = hasValidLocation;
-    
-    // Paso 5: Ubicación
-    const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
-    const step3_5Complete = hasValidCoordinates;
+    const step5Complete = hasValidLocation;
     
     return {
-      step3_1: step3_1Complete,
-      step3_2: step3_2Complete && step3_1Complete,
-      step3_3: step3_3Complete && step3_2Complete,
-      step3_4: step3_4Complete && step3_3Complete,
-      step3_5: step3_5Complete && step3_4Complete,
-      step3_6: step3_5Complete && step3_4Complete && step3_3Complete && step3_2Complete && step3_1Complete
+      step1: step1Complete,
+      step2: step2Complete && step1Complete,
+      step3: step3Complete && step2Complete,
+      step4: step4Complete && step3Complete,
+      step5: step5Complete && step4Complete,
+      step3_6: step5Complete
     };
   };
 
@@ -4848,53 +4848,53 @@ const PropertyValuation = () => {
                    <TabsTrigger 
                      value="tipo" 
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       getStepCompletion().step3_1 
+                        getStepCompletion().step2
                          ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_1 ? '✓' : '3.1'}
+                       {getStepCompletion().step2 ? '✓' : '2'}
                      </span> 
                      {translations[selectedLanguage].propertyType}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="areas" 
-                     disabled={!getStepCompletion().step3_1}
+                     disabled={!getStepCompletion().step2}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_1 
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_2 
+                        !getStepCompletion().step2 
+                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                          : getStepCompletion().step3
                            ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                            : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_2 ? '✓' : '3.2'}
+                       {getStepCompletion().step3 ? '✓' : '3'}
                      </span> 
                      {translations[selectedLanguage].areas}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="caracteristicas" 
-                     disabled={!getStepCompletion().step3_2}
+                     disabled={!getStepCompletion().step3}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_2 
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_4 
+                        !getStepCompletion().step3 
+                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                          : getStepCompletion().step5
                            ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                            : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_4 ? '✓' : '3.3'}
+                       {getStepCompletion().step5 ? '✓' : '5'}
                      </span> 
                      {translations[selectedLanguage].characteristics}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="servicios" 
-                     disabled={!getStepCompletion().step3_4}
+                      disabled={!getStepCompletion().step5}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_4 
+                        !getStepCompletion().step5
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
@@ -4903,25 +4903,25 @@ const PropertyValuation = () => {
                    </TabsTrigger>
                    <TabsTrigger 
                      value="ubicacion" 
-                     disabled={!getStepCompletion().step3_4}
+                     disabled={!getStepCompletion().step1}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_4 
-                         ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : getStepCompletion().step3_5 
+                        !getStepCompletion().step1 
+                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
+                          : getStepCompletion().step1
                            ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white' 
                            : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
                      <span className="font-bold mr-1">
-                       {getStepCompletion().step3_5 ? '✓' : '3.5'}
+                       {getStepCompletion().step1 ? '✓' : '1'}
                      </span> 
                      {translations[selectedLanguage].location}
                    </TabsTrigger>
                    <TabsTrigger 
                      value="valuacion" 
-                     disabled={!getStepCompletion().step3_5}
+                     disabled={!getStepCompletion().step5}
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
-                       !getStepCompletion().step3_5 
+                       !getStepCompletion().step5 
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
                          : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
@@ -5717,62 +5717,62 @@ const PropertyValuation = () => {
                   <p className="text-xs text-muted-foreground mb-4 text-center">Complete los pasos en orden para obtener su valuación profesional</p>
                   <div className="space-y-3">
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_1 ? '✓' : '1'}
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step1 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step1 ? '✓' : '1'}
                       </div>
                       <div className="flex-1">
-                        <span className={`font-medium ${getStepCompletion().step3_1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                          Paso 1: Tipo de Propiedad
+                        <span className={`font-medium ${getStepCompletion().step1 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 1: Ubicación
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Marque la ubicación exacta en el mapa</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step2 ? '✓' : '2'}
+                      </div>
+                      <div className="flex-1">
+                        <span className={`font-medium ${getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 2: Tipo de Propiedad
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Seleccione si es casa, apartamento, terreno o comercial</p>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_2 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_2 ? '✓' : '2'}
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step3 ? '✓' : '3'}
                       </div>
                       <div className="flex-1">
-                        <span className={`font-medium ${getStepCompletion().step3_2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                          Paso 2: Áreas
+                        <span className={`font-medium ${getStepCompletion().step3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 3: Áreas
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Ingrese el área del terreno y construcción en m²</p>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_3 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_3 ? '✓' : '3'}
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step4 ? '✓' : '4'}
                       </div>
                       <div className="flex-1">
-                        <span className={`font-medium ${getStepCompletion().step3_3 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                          Paso 3: Espacios
+                        <span className={`font-medium ${getStepCompletion().step4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 4: Espacios
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Defina recámaras, baños, cocinas y espacios adicionales</p>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_4 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_4 ? '✓' : '4'}
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        {getStepCompletion().step5 ? '✓' : '5'}
                       </div>
                       <div className="flex-1">
-                        <span className={`font-medium ${getStepCompletion().step3_4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                          Paso 4: Características
+                        <span className={`font-medium ${getStepCompletion().step5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
+                          Paso 5: Características
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Evalúe antigüedad, estado y calidad de la zona</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${getStepCompletion().step3_5 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        {getStepCompletion().step3_5 ? '✓' : '5'}
-                      </div>
-                      <div className="flex-1">
-                        <span className={`font-medium ${getStepCompletion().step3_5 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-                          Paso 5: Ubicación
-                        </span>
-                        <p className="text-xs text-muted-foreground mt-1">Marque la ubicación exacta en el mapa</p>
                       </div>
                     </div>
                     
@@ -5826,25 +5826,25 @@ const PropertyValuation = () => {
                       <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium mb-3">
                         ⚠️ Complete los pasos en orden para habilitar la valuación:
                       </p>
-                      <div className="text-left space-y-1">
-                         {!getStepCompletion().step3_1 && (
+                       <div className="text-left space-y-1">
+                         {!getStepCompletion().step1 && (
                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                             📝 Siguiente: Complete el <strong>Paso 1 - Tipo de Propiedad</strong>
-                          </p>
-                        )}
-                         {getStepCompletion().step3_1 && !getStepCompletion().step3_2 && (
-                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                             📐 Siguiente: Complete el <strong>Paso 2 - Áreas</strong> (área del terreno y construcción)
+                             📍 Siguiente: Complete el <strong>Paso 1 - Ubicación</strong> (coordenadas en el mapa)
                            </p>
                          )}
-                         {getStepCompletion().step3_2 && !getStepCompletion().step3_4 && (
+                         {getStepCompletion().step1 && !getStepCompletion().step2 && (
                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                             ⭐ Siguiente: Complete el <strong>Paso 4 - Características</strong> (calidad de ubicación)
+                             📝 Siguiente: Complete el <strong>Paso 2 - Tipo de Propiedad</strong>
                            </p>
                          )}
-                         {getStepCompletion().step3_4 && !getStepCompletion().step3_5 && (
+                         {getStepCompletion().step2 && !getStepCompletion().step3 && (
                            <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                             📍 Siguiente: Complete el <strong>Paso 5 - Ubicación</strong> (coordenadas en el mapa)
+                             📐 Siguiente: Complete el <strong>Paso 3 - Áreas</strong> (área del terreno y construcción)
+                           </p>
+                         )}
+                         {getStepCompletion().step3 && !getStepCompletion().step5 && (
+                           <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                             ⭐ Siguiente: Complete el <strong>Paso 5 - Características</strong> (calidad de ubicación)
                            </p>
                          )}
                       </div>
