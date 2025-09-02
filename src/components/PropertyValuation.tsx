@@ -76,6 +76,11 @@ interface Comparable {
   total_area: number;
   price_per_sqm_usd: number;
   price_usd: number;
+  // Market-adjusted pricing
+  adjusted_price_usd?: number;
+  adjusted_price_per_sqm?: number;
+  market_adjustment_factor?: number;
+  // Enhanced properties
   bedrooms?: number;
   bathrooms?: number;
   address: string;
@@ -84,7 +89,6 @@ interface Comparable {
   estrato_social: any;
   overall_similarity_score?: number;
   area_similarity_score?: number;
-  // New fields for enhanced portal integration
   area_difference?: number;
   source?: string;
   confidence_score?: number;
@@ -1537,11 +1541,39 @@ const PropertyValuation = () => {
                                 <div>
                                   <strong>📐 Área:</strong> {comparable.total_area} m²
                                 </div>
-                                <div>
-                                  <strong>💰 Precio total:</strong> ${comparable.price_usd?.toLocaleString()} USD
-                                </div>
-                                <div>
-                                  <strong>💵 Precio por m²:</strong> ${comparable.price_per_sqm_usd?.toLocaleString()} USD
+                                 <div>
+                                   <strong>💰 Precio total:</strong> 
+                                   {comparable.adjusted_price_usd ? (
+                                     <span>
+                                       <span className="text-lg font-bold text-green-600">
+                                         ${comparable.adjusted_price_usd?.toLocaleString()} USD
+                                       </span>
+                                       <span className="text-xs text-gray-500 ml-2">
+                                         (orig: ${comparable.price_usd?.toLocaleString()})
+                                       </span>
+                                     </span>
+                                   ) : (
+                                     <span className="text-lg font-bold text-green-600">
+                                       ${comparable.price_usd?.toLocaleString()} USD
+                                     </span>
+                                   )}
+                                 </div>
+                                 <div>
+                                   <strong>💵 Precio por m²:</strong> 
+                                   {comparable.adjusted_price_per_sqm ? (
+                                     <span>
+                                       <span className="font-bold text-green-600">
+                                         ${comparable.adjusted_price_per_sqm?.toLocaleString()}
+                                       </span>
+                                       <span className="text-xs text-gray-500 ml-2">
+                                         (orig: ${comparable.price_per_sqm_usd?.toLocaleString()})
+                                       </span>
+                                     </span>
+                                   ) : (
+                                     <span className="font-bold text-green-600">
+                                       ${comparable.price_per_sqm_usd?.toLocaleString()}
+                                     </span>
+                                   )}
                                  </div>
                                  {comparable.sale_date && (
                                    <div>

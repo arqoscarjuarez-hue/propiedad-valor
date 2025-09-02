@@ -28,47 +28,46 @@ serve(async (req) => {
       timestamp: new Date().toISOString()
     });
 
-    // NUEVA METODOLOGÍA: Área prioritaria + búsqueda en portales del país
+    // AJUSTE DE MERCADO: Precios realistas según ubicación geográfica
     let comparables: any[] = [];
     let searchStrategy = 'none';
 
-    console.log('🎯 AREA-PRIORITIZED + PORTAL SEARCH: Starting comprehensive search');
+    console.log('🎯 MARKET-ADJUSTED SEARCH: Starting location-aware pricing');
 
-    // Estrategia 1: Top 3 más similares en área + búsqueda en portales
+    // Estimar precio objetivo basado en área y mercado local
+    const estimatedPricePerSqm = target_lat >= 13.0 && target_lat <= 14.5 && target_lng >= -90.5 && target_lng <= -87.5 
+      ? 600  // El Salvador: ~$600/m²
+      : target_lat >= 13.7 && target_lat <= 17.8 && target_lng >= -92.3 && target_lng <= -88.2
+      ? 750  // Guatemala: ~$750/m²
+      : target_lat >= 12.9 && target_lat <= 16.0 && target_lng >= -89.4 && target_lng <= -83.1
+      ? 500  // Honduras: ~$500/m²
+      : 1500; // Mexico/Other: ~$1500/m²
+
+    const estimatedTotalPrice = (target_area || 100) * estimatedPricePerSqm;
+
+    console.log(`📍 Market estimation: ${estimatedPricePerSqm}/m² → Total: $${estimatedTotalPrice.toLocaleString()}`);
+
+    // Estrategia 1: Búsqueda con ajuste de mercado
     try {
-      console.log('🏠 Strategy: Area-prioritized + Real Estate Portals');
-      
-      // Call the new portal search function
-      const portalResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/search-real-estate-portals`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          target_lat,
-          target_lng,
-          target_property_type,
-          target_area
-        })
-      });
+      const { data: marketData, error: marketError } = await supabase
+        .rpc('find_market_adjusted_comparables', {
+          center_lat: target_lat,
+          center_lng: target_lng,
+          prop_type: target_property_type,
+          target_area: target_area || 0,
+          target_price_range: estimatedTotalPrice
+        });
 
-      if (portalResponse.ok) {
-        const portalData = await portalResponse.json();
-        comparables = portalData.data || [];
-        searchStrategy = portalData.metadata?.strategy_used || 'portal_search';
-        
-        console.log(`✅ Portal + Area Search SUCCESS: ${comparables.length} comparables found`);
-        console.log(`📊 Country: ${portalData.metadata?.country_detected}`);
-        console.log(`🌐 Portals searched: ${portalData.metadata?.portals_searched}`);
-        console.log(`🏠 Portal properties: ${portalData.metadata?.portal_properties_found}`);
-        console.log(`💾 Database properties: ${portalData.metadata?.database_properties_found}`);
+      if (!marketError && marketData && marketData.length > 0) {
+        comparables = marketData;
+        searchStrategy = 'market_adjusted';
+        console.log(`✅ Market Adjusted SUCCESS: ${comparables.length} comparables found`);
+        console.log(`💰 Price range: $${Math.min(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()} - $${Math.max(...comparables.map(c => c.adjusted_price_usd)).toLocaleString()}`);
       } else {
-        console.warn('⚠️ Portal search failed, falling back to database only');
-        throw new Error('Portal search failed');
+        console.log('⚠️ Market Adjusted failed:', marketError);
       }
     } catch (error) {
-      console.log('❌ Portal Search ERROR, falling back:', error.message);
+      console.log('❌ Market Adjusted ERROR:', error);
     }
 
     // Estrategia 2: Fallback ampliado si no hay suficientes resultados
