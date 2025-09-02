@@ -4623,13 +4623,18 @@ const PropertyValuation = () => {
               exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
             />
           </Card>
-           {/* Botones de Descarga de Documentos */}
+           {/* Paso 5: Botones de Descarga de Documentos */}
            {valuation && (
              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-               <Label className="text-xs sm:text-sm font-bold mb-2 sm:mb-3 block text-green-900 dark:text-green-100 flex items-center gap-2">
-                 <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {translations[selectedLanguage].downloadDocuments}
-               </Label>
+               <div className="flex items-center gap-2 mb-3">
+                 <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                   5
+                 </div>
+                 <Label className="text-xs sm:text-sm font-bold text-green-900 dark:text-green-100 flex items-center gap-2">
+                   <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                   {translations[selectedLanguage].downloadDocuments}
+                 </Label>
+               </div>
                <div className="space-y-2 sm:space-y-3">
                  <Button 
                    onClick={generatePDF} 
