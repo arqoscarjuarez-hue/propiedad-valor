@@ -1416,7 +1416,17 @@ const PropertyValuation = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Sección de Comparables Utilizados */}
+                {/* Sección de Comparables Utilizados - Debugging */}
+                {(() => {
+                  console.log('🔍 Debugging comparables section:', {
+                    hasValuationResult: !!valuationResult,
+                    comparablesLength: comparables.length,
+                    comparables: comparables,
+                    shouldShow: valuationResult && comparables.length > 0
+                  });
+                  return null;
+                })()}
+                
                 {valuationResult && comparables.length > 0 && (
                   <div className="mt-6">
                     <Card className="border-2 border-blue-200 shadow-lg bg-gradient-to-br from-blue-50/50 to-indigo-50/50">
