@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -58,150 +58,15 @@ export type Database = {
           },
         ]
       }
-      property_comparables: {
-        Row: {
-          address: string
-          age_years: number | null
-          apartment_area: number | null
-          bathrooms: number | null
-          bedrooms: number | null
-          city: string | null
-          construction_area: number | null
-          country: string | null
-          created_at: string
-          estrato_social: Database["public"]["Enums"]["estrato_social"] | null
-          id: string
-          land_area: number | null
-          latitude: number | null
-          location_type: string | null
-          longitude: number | null
-          price_per_sqm_usd: number
-          price_usd: number
-          property_type: string
-          sale_date: string | null
-          state: string | null
-          total_area: number
-          updated_at: string
-        }
-        Insert: {
-          address: string
-          age_years?: number | null
-          apartment_area?: number | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          city?: string | null
-          construction_area?: number | null
-          country?: string | null
-          created_at?: string
-          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
-          id?: string
-          land_area?: number | null
-          latitude?: number | null
-          location_type?: string | null
-          longitude?: number | null
-          price_per_sqm_usd: number
-          price_usd: number
-          property_type: string
-          sale_date?: string | null
-          state?: string | null
-          total_area: number
-          updated_at?: string
-        }
-        Update: {
-          address?: string
-          age_years?: number | null
-          apartment_area?: number | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          city?: string | null
-          construction_area?: number | null
-          country?: string | null
-          created_at?: string
-          estrato_social?: Database["public"]["Enums"]["estrato_social"] | null
-          id?: string
-          land_area?: number | null
-          latitude?: number | null
-          location_type?: string | null
-          longitude?: number | null
-          price_per_sqm_usd?: number
-          price_usd?: number
-          property_type?: string
-          sale_date?: string | null
-          state?: string | null
-          total_area?: number
-          updated_at?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      find_comparables_progressive_radius: {
-        Args: {
-          target_estrato: Database["public"]["Enums"]["estrato_social"]
-          target_lat: number
-          target_lng: number
-          target_property_type?: string
-        }
-        Returns: {
-          address: string
-          distance_km: number
-          estrato_social: Database["public"]["Enums"]["estrato_social"]
-          id: string
-          latitude: number
-          longitude: number
-          price_per_sqm_usd: number
-          price_usd: number
-          property_type: string
-          total_area: number
-        }[]
-      }
-      find_comparables_public: {
-        Args: {
-          target_estrato: Database["public"]["Enums"]["estrato_social"]
-          target_lat: number
-          target_lng: number
-          target_property_type?: string
-        }
-        Returns: {
-          approximate_latitude: number
-          approximate_longitude: number
-          distance_km: number
-          estrato_social: Database["public"]["Enums"]["estrato_social"]
-          general_location: string
-          id: string
-          price_range: string
-          property_type: string
-          total_area: number
-        }[]
-      }
-      get_property_comparables_public: {
-        Args: { limit_rows?: number; offset_rows?: number }
-        Returns: {
-          approximate_latitude: number
-          approximate_longitude: number
-          estrato_social: Database["public"]["Enums"]["estrato_social"]
-          general_location: string
-          id: string
-          price_range: string
-          property_type: string
-          total_area: number
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
-      estrato_social:
-        | "alto_alto"
-        | "alto_medio"
-        | "alto_bajo"
-        | "medio_alto"
-        | "medio_medio"
-        | "medio_bajo"
-        | "bajo_alto"
-        | "bajo_medio"
-        | "bajo_bajo"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -328,18 +193,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      estrato_social: [
-        "alto_alto",
-        "alto_medio",
-        "alto_bajo",
-        "medio_alto",
-        "medio_medio",
-        "medio_bajo",
-        "bajo_alto",
-        "bajo_medio",
-        "bajo_bajo",
-      ],
-    },
+    Enums: {},
   },
 } as const
