@@ -12,7 +12,6 @@ import { toast } from 'sonner';
 import FreeLocationMap from '@/components/FreeLocationMap';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { ValuationWalkthrough } from '@/components/ValuationWalkthrough';
-import ComparablesFinder from '@/components/ComparablesFinder';
 
 // Interfaces y tipos
 interface Translation {
@@ -1305,18 +1304,6 @@ const PropertyValuation = () => {
                             <p className="text-sm text-green-800">
                               <strong>📍 Ubicación seleccionada:</strong> {propertyData.direccionCompleta}
                             </p>
-                          </div>
-                        )}
-
-                        {/* Búsqueda de Comparables */}
-                        {propertyData.latitud && propertyData.longitud && propertyData.tipoPropiedad && (
-                          <div className="mt-6">
-                            <ComparablesFinder
-                              latitude={propertyData.latitud}
-                              longitude={propertyData.longitud}
-                              propertyType={propertyData.tipoPropiedad}
-                              area={propertyData.area}
-                            />
                           </div>
                         )}
 
