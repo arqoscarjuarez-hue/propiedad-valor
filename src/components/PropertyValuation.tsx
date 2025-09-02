@@ -5782,14 +5782,31 @@ const PropertyValuation = () => {
                     </div>
                     
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50 border-2 border-dashed border-primary/20">
-                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 bg-primary text-white">
-                        6
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${
+                        valuation && valuation > 0 
+                          ? 'bg-green-500 text-white' 
+                          : isFormValid()
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-300 text-gray-600'
+                      }`}>
+                        {valuation && valuation > 0 ? '✓' : '6'}
                       </div>
                       <div className="flex-1">
-                        <span className="font-medium text-primary">
-                          Paso 6: Valuación Final
+                        <span className={`font-medium ${
+                          valuation && valuation > 0 
+                            ? 'text-green-600 dark:text-green-400' 
+                            : isFormValid()
+                              ? 'text-primary'
+                              : 'text-muted-foreground'
+                        }`}>
+                          Paso 6: {valuation && valuation > 0 ? 'Valuación Completada' : 'Valuación Final'}
                         </span>
-                        <p className="text-xs text-muted-foreground mt-1">Obtenga su avalúo profesional con comparables</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {valuation && valuation > 0 
+                            ? 'Su avalúo profesional está listo' 
+                            : 'Obtenga su avalúo profesional con comparables'
+                          }
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -5804,14 +5821,15 @@ const PropertyValuation = () => {
                       }
                     }} 
                     className={`w-full h-16 text-xl font-bold transition-all ${
-                      isFormValid() 
-                        ? 'bg-gradient-to-r from-primary to-secondary hover:opacity-90' 
-                        : 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed'
+                      !isFormValid()
+                        ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed opacity-50'
+                        : valuation && valuation > 0
+                          ? 'bg-green-500 hover:bg-green-600 text-white'
+                          : 'bg-gradient-to-r from-primary to-secondary hover:opacity-90'
                     }`}
                     size="lg"
                     disabled={isCalculating || !isFormValid()}
                   >
-                    <Calculator className="mr-3 h-7 w-7" />
                     {isCalculating ? (
                       <>
                         <svg className="animate-spin -ml-1 mr-2 h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
@@ -5821,7 +5839,19 @@ const PropertyValuation = () => {
                         Calculando...
                       </>
                     ) : (
-                      `Paso 6: ${translations[selectedLanguage].realizarValuacion}`
+                      <>
+                        {valuation && valuation > 0 ? (
+                          <>
+                            <span className="mr-3 text-2xl">✓</span>
+                            Paso 6: Valuación Completada
+                          </>
+                        ) : (
+                          <>
+                            <Calculator className="mr-3 h-7 w-7" />
+                            Paso 6: {translations[selectedLanguage].realizarValuacion}
+                          </>
+                        )}
+                      </>
                     )}
                   </Button>
                   
