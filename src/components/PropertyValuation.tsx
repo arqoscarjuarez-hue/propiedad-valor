@@ -1241,6 +1241,48 @@ const PropertyValuation = () => {
                           </SelectContent>
                         </Select>
 
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                          <div>
+                            <Label htmlFor="antiguedad" className="text-base font-semibold">
+                              ⏳ Edad efectiva (años)
+                            </Label>
+                            <Input 
+                              id="antiguedad"
+                              type="number" 
+                              min={0}
+                              value={propertyData.antiguedad || ''}
+                              onChange={(e) => handleInputChange('antiguedad', Number(e.target.value))}
+                              placeholder="Ejemplo: 12"
+                              className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12"
+                            />
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Años estimados considerando remodelaciones y mantenimiento.
+                            </p>
+                          </div>
+
+                          <div>
+                            <Label className="text-base font-semibold">
+                              🧱 Calidad constructiva
+                            </Label>
+                            <Select 
+                              value={propertyData.calidadConstructiva} 
+                              onValueChange={(value) => handleInputChange('calidadConstructiva', value)}
+                            >
+                              <SelectTrigger className="border-2 focus:border-orange-500 hover:border-orange-400 transition-colors h-12">
+                                <SelectValue placeholder="Selecciona la calidad de la construcción" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="baja">Baja (materiales básicos)</SelectItem>
+                                <SelectItem value="media">Media (estándar)</SelectItem>
+                                <SelectItem value="alta">Alta (superiores al estándar)</SelectItem>
+                                <SelectItem value="premium">Premium (acabados de lujo)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Impacta acabados, materiales y sistemas.
+                            </p>
+                          </div>
+                        </div>
                         {/* Mostrar explicación del estado seleccionado */}
                         {propertyData.estadoConservacion && conservationExplanations[propertyData.estadoConservacion] && (
                           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -1440,11 +1482,14 @@ const PropertyValuation = () => {
                                       <p>• Precio base por m²: ${valuationResult.factors?.basePricePerM2?.toLocaleString()} USD</p>
                                       <p>• Factor económico del país: {((valuationResult.factors?.economicMultiplier || 1) * 100).toFixed(0)}%</p>
                                     </>
-                                  )}
-                                  <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
-                                  <p className="font-semibold border-t pt-1">
-                                    = Valor comparativo: ${valuationResult.comparativeValueUSD?.toLocaleString()} USD
-                                  </p>
+                                   )}
+                                   <p>• Factor por estado: {((valuationResult.factors?.conservationMultiplier || 1) * 100).toFixed(0)}%</p>
+                                   <p>• Depreciación por edad: {((valuationResult.factors?.ageMultiplier || 1) * 100).toFixed(0)}%</p>
+                                   <p>• Calidad constructiva: {((valuationResult.factors?.qualityMultiplier || 1) * 100).toFixed(0)}%</p>
+                                   <p>• Índice de localización: {((valuationResult.factors?.locationMultiplier || 1) * 100).toFixed(0)}% {valuationResult.factors?.locationDistanceKm != null ? `(${valuationResult.factors.locationDistanceKm.toFixed(1)} km al centro)` : ''}</p>
+                                   <p className="font-semibold border-t pt-1">
+                                     = Valor comparativo: ${valuationResult.comparativeValueUSD?.toLocaleString()} USD
+                                   </p>
                                 </div>
                               </div>
 
