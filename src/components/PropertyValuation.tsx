@@ -3026,12 +3026,16 @@ const PropertyValuation = () => {
     const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
     const step5Complete = hasValidLocation;
     
+    // Paso 6: Valuación
+    const step6Complete = valuation && valuation > 0;
+    
     return {
       step1: step1Complete,
       step2: step2Complete && step1Complete,
       step3: step3Complete && step2Complete,
       step4: step4Complete && step3Complete,
       step5: step5Complete && step4Complete,
+      step6: step6Complete && step5Complete,
       step3_6: step5Complete
     };
   };
@@ -4925,10 +4929,15 @@ const PropertyValuation = () => {
                      className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
                        !getStepCompletion().step5 
                          ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
-                         : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+                         : getStepCompletion().step6
+                           ? 'bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 data-[state=active]:bg-green-500 data-[state=active]:text-white'
+                           : 'bg-background hover:bg-muted/80 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
                      }`}
                    >
-                     <span className="font-bold mr-1">6</span> {translations[selectedLanguage].calculate}
+                     <span className="font-bold mr-1">
+                       {getStepCompletion().step6 ? '✓' : '6'}
+                     </span> 
+                     {translations[selectedLanguage].calculate}
                    </TabsTrigger>
                   </TabsList>
 
@@ -5780,27 +5789,21 @@ const PropertyValuation = () => {
                     
                     <div className="flex items-start gap-3 p-2 rounded-lg bg-background/50">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ${
-                        valuation && valuation > 0 
-                          ? 'bg-green-500 text-white' 
-                          : getStepCompletion().step5
-                            ? 'bg-primary text-white'
-                            : 'bg-gray-300 text-gray-600'
+                        getStepCompletion().step6 ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
                       }`}>
-                        {valuation && valuation > 0 ? '✓' : '6'}
+                        {getStepCompletion().step6 ? '✓' : '6'}
                       </div>
                       <div className="flex-1">
                         <span className={`font-medium ${
-                          valuation && valuation > 0 
+                          getStepCompletion().step6 
                             ? 'text-green-600 dark:text-green-400' 
-                            : getStepCompletion().step5
-                              ? 'text-primary'
-                              : 'text-muted-foreground'
+                            : 'text-muted-foreground'
                         }`}>
                           Paso 6: Valuación Final
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {valuation && valuation > 0 
-                            ? 'Su avalúo profesional está listo' 
+                          {getStepCompletion().step6
+                            ? 'Su avalúo profesional está completado' 
                             : 'Obtenga su avalúo profesional con comparables'
                           }
                         </p>
