@@ -467,7 +467,9 @@ const PropertyValuation = () => {
   const [finalAdjustedValue, setFinalAdjustedValue] = useState<number | null>(null);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
 
-  const { selectedLanguage } = useLanguage();
+  const { selectedLanguage: rawLanguage } = useLanguage();
+  // Fallback to 'es' if the selected language is not available in translations
+  const selectedLanguage = (rawLanguage in translations) ? rawLanguage : 'es';
 
   // Geolocation on component mount
   useEffect(() => {
