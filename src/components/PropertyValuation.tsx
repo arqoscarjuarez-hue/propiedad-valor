@@ -423,7 +423,7 @@ const PropertyValuation = () => {
         areaTercerNivel: 0,
         areaCuartoNivel: 0,
         areaTerreno: 0,
-        tipoPropiedad: 'casa',
+        tipoPropiedad: '',
         antiguedad: 0,
         ubicacion: '',
         estadoGeneral: '',
