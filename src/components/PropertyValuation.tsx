@@ -467,7 +467,7 @@ const PropertyValuation = () => {
   const [finalAdjustedValue, setFinalAdjustedValue] = useState<number | null>(null);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
 
-  const { language: selectedLanguage } = useLanguage();
+  const { selectedLanguage } = useLanguage();
 
   // Geolocation on component mount
   useEffect(() => {
@@ -2226,7 +2226,7 @@ const PropertyValuation = () => {
                    <div className="md:col-span-2">
                      <span className="font-medium">{translations[selectedLanguage].accessType}:</span> {
                        propertyData.tipoAcceso ? 
-                       translations[selectedLanguage][propertyData.tipoAcceso as keyof typeof translations[typeof selectedLanguage]] || propertyData.tipoAcceso
+                       (translations[selectedLanguage] as any)[propertyData.tipoAcceso] || propertyData.tipoAcceso
                        : translations[selectedLanguage].notSpecified
                      }
                    </div>
@@ -2260,9 +2260,9 @@ const PropertyValuation = () => {
                       {/* Usar el componente SimpleLocationMap */}
                       {propertyData.latitud && propertyData.longitud ? (
                         <SimpleLocationMap
-                          latitude={propertyData.latitud}
-                          longitude={propertyData.longitud}
-                          onLocationSelect={handleLocationSelect}
+                          initialLat={propertyData.latitud}
+                          initialLng={propertyData.longitud}
+                          onLocationChange={handleLocationSelect}
                         />
                       ) : (
                         <div className="text-center p-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
@@ -2332,10 +2332,9 @@ const PropertyValuation = () => {
                           )}
                         </div>
                       )}
-                     </div>
-                   </TabsContent>
-                 </Tabs>
-              </TabsContent>
+                    </TabsContent>
+                  </Tabs>
+                </TabsContent>
 
             </Tabs>
         </CardContent>
@@ -2402,13 +2401,34 @@ const PropertyValuation = () => {
           {/* Comparables */}
           {comparativeProperties.length > 0 && (
             <PropertyComparison 
-              comparativeProperties={comparativeProperties}
-              selectedComparatives={selectedComparatives}
-              onComparativeSelect={setSelectedComparatives}
-              onRegenerate={regenerateComparatives}
-              selectedLanguage={selectedLanguage}
-              selectedCurrency={selectedCurrency}
-              translations={translations}
+              currentProperty={{
+                id: 'current',
+                address: propertyData.direccionCompleta || '',
+                type: propertyData.tipoPropiedad,
+                price: valuation || 0,
+                size: propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel + propertyData.areaSotano,
+                bedrooms: 0,
+                bathrooms: 0,
+                age: propertyData.antiguedad,
+                condition: propertyData.estadoGeneral,
+                location: propertyData.ubicacion,
+                score: 0,
+                features: []
+              }}
+              comparableProperties={comparativeProperties.map(comp => ({
+                id: comp.id,
+                address: comp.address,
+                type: comp.tipoPropiedad,
+                price: comp.precio,
+                size: comp.areaConstruida,
+                bedrooms: 0,
+                bathrooms: 0,
+                age: comp.antiguedad,
+                condition: comp.estadoGeneral,
+                location: comp.ubicacion,
+                score: comp.rating || 0,
+                features: []
+              }))}
             />
           )}
 
@@ -2422,11 +2442,8 @@ const PropertyValuation = () => {
             </CardHeader>
             <CardContent>
               <ShareButtons 
-                valuation={finalAdjustedValue || valuation}
-                propertyType={propertyData.tipoPropiedad}
-                currency={selectedCurrency}
-                selectedLanguage={selectedLanguage}
-                translations={translations}
+                title={`Valuación de ${propertyData.tipoPropiedad}`}
+                description={`Valor estimado: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`}
               />
             </CardContent>
           </Card>
@@ -2437,7 +2454,6 @@ const PropertyValuation = () => {
       {showDemo && (
         <DemoWalkthrough 
           onClose={handleCloseDemo}
-          selectedLanguage={selectedLanguage}
         />
       )}
     </div>
