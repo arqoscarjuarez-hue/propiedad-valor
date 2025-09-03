@@ -517,7 +517,30 @@ const PropertyValuation = () => {
   };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
-    setPropertyData(prev => ({ ...prev, [field]: value }));
+    setPropertyData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Cuando se cambia el tipo de propiedad, limpiar campos específicos
+      if (field === 'tipoPropiedad') {
+        if (value === 'departamento') {
+          // Para departamentos, limpiar todos los campos excepto areaPrimerNivel y resetear areaTerreno
+          newData.areaSotano = 0;
+          newData.areaSegundoNivel = 0;
+          newData.areaTercerNivel = 0;
+          newData.areaCuartoNivel = 0;
+          newData.areaTerreno = 0;
+        } else if (value === 'terreno') {
+          // Para terrenos, limpiar todas las áreas de construcción
+          newData.areaSotano = 0;
+          newData.areaPrimerNivel = 0;
+          newData.areaSegundoNivel = 0;
+          newData.areaTercerNivel = 0;
+          newData.areaCuartoNivel = 0;
+        }
+      }
+      
+      return newData;
+    });
   };
 
   const handleLocationSelect = (lat: number, lng: number, address: string = '') => {
@@ -593,8 +616,8 @@ const PropertyValuation = () => {
         return;
       }
       
-      // Para apartamentos, no validar área de terreno
-      if (propertyData.tipoPropiedad !== 'apartamento' && propertyData.areaTerreno <= 0) {
+      // Para departamentos, no validar área de terreno
+      if (propertyData.tipoPropiedad !== 'departamento' && propertyData.areaTerreno <= 0) {
         toast({
           title: translations[selectedLanguage].errorTitle,
           description: "Debe ingresar un área de terreno mayor a 0",
@@ -693,8 +716,8 @@ const PropertyValuation = () => {
         // Lógica para propiedades construidas
         let areaTotalParaCalculo = areaTotal;
         
-        // Para apartamentos, duplicar el área para el cálculo
-        if (propertyData.tipoPropiedad === 'apartamento') {
+        // Para departamentos, duplicar el área para el cálculo
+        if (propertyData.tipoPropiedad === 'departamento') {
           areaTotalParaCalculo = areaTotal * 2;
         }
         
@@ -1891,7 +1914,7 @@ const PropertyValuation = () => {
                     <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].constructionAreas}</h3>
                     
                     {/* Para apartamentos, solo mostrar área total construida */}
-                    {propertyData.tipoPropiedad === 'apartamento' ? (
+                    {propertyData.tipoPropiedad === 'departamento' ? (
                       <div className="max-w-xs">
                         <Label htmlFor="areaPrimerNivel">{translations[selectedLanguage].totalBuiltArea} ({translations[selectedLanguage].sqm})</Label>
                         <Input
@@ -1902,7 +1925,7 @@ const PropertyValuation = () => {
                           placeholder="0"
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                          Para apartamentos, ingrese el área total construida
+                          Para departamentos, ingrese el área total construida
                         </p>
                       </div>
                     ) : (
@@ -1961,7 +1984,7 @@ const PropertyValuation = () => {
                       </div>
                     )}
                     
-                    {propertyData.tipoPropiedad !== 'apartamento' && (
+                    {propertyData.tipoPropiedad !== 'departamento' && (
                       <div className="bg-muted p-3 rounded-lg">
                         <p className="text-sm font-medium">
                           Área Total Construida: {(propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0)} {translations[selectedLanguage].sqm}
@@ -1971,8 +1994,8 @@ const PropertyValuation = () => {
                   </>
                 )}
                 
-                {/* Área del terreno - no mostrar para apartamentos */}
-                {propertyData.tipoPropiedad !== 'apartamento' && (
+                {/* Área del terreno - no mostrar para departamentos */}
+                {propertyData.tipoPropiedad !== 'departamento' && (
                   <div className="mt-6">
                     <div className="flex items-center gap-2 mb-2">
                       <Label htmlFor="areaTerreno" className="text-base font-medium">{translations[selectedLanguage].landArea} ({translations[selectedLanguage].sqm})</Label>
