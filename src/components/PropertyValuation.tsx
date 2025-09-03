@@ -423,7 +423,7 @@ const PropertyValuation = () => {
         areaTercerNivel: 0,
         areaCuartoNivel: 0,
         areaTerreno: 0,
-        tipoPropiedad: '',  // Cambiado de 'casa' a vacío
+        tipoPropiedad: 'casa',
         antiguedad: 0,
         ubicacion: '',
         estadoGeneral: '',
@@ -444,7 +444,6 @@ const PropertyValuation = () => {
     };
   };
 
-  // SIEMPRE inicializar con datos limpios - NO persistir entre sesiones
   const initialData = getInitialData();
   
   const [propertyData, setPropertyData] = useState<PropertyData>(initialData.propertyData);
@@ -462,7 +461,7 @@ const PropertyValuation = () => {
   const [selectedComparatives, setSelectedComparatives] = useState<ComparativeProperty[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
-  const [activeTab, setActiveTab] = useState('ubicacion'); // Siempre iniciar en ubicación
+  const [activeTab, setActiveTab] = useState('ubicacion');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
   const [adjustmentPercentage, setAdjustmentPercentage] = useState(0);
   const [finalAdjustedValue, setFinalAdjustedValue] = useState<number | null>(null);
@@ -472,25 +471,29 @@ const PropertyValuation = () => {
   // Fallback to 'es' if the selected language is not available in translations
   const selectedLanguage = (rawLanguage in translations) ? rawLanguage : 'es';
 
-  // useEffect para asegurar que SIEMPRE inicie limpio (nuevo avalúo para cada usuario)
+  // Geolocation on component mount
   useEffect(() => {
-    // Forzar estado limpio al montar el componente
-    const cleanData = getInitialData();
-    setPropertyData(cleanData.propertyData);
-    setValuation(null);
-    setBaseValuation(null);
-    setComparativeProperties([]);
-    setSelectedComparatives([]);
-    setIsCalculating(false);
-    setActiveTab('ubicacion');
-    setAdjustmentPercentage(0);
-    setFinalAdjustedValue(null);
-    setPropertyImages([]);
-    setMultipleValuations([]);
-    setSelectedCurrency(cleanData.selectedCurrency);
-    
-    // NO cargar geolocalización automáticamente - dejar completamente limpio
-  }, []); // Solo ejecutar una vez al montar
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setPropertyData(prev => ({
+            ...prev,
+            latitud: latitude,
+            longitud: longitude
+          }));
+          
+          toast({
+            title: "Ubicación Detectada",
+            description: `Se estableció la ubicación en ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+          });
+        },
+        (error) => {
+          // Silent error - no need to show user
+        }
+      );
+    }
+  }, [toast]);
 
   const convertCurrency = (amount: number, targetCurrency: Currency): number => {
     if (!targetCurrency || targetCurrency.rate <= 0) return amount;
@@ -542,7 +545,7 @@ const PropertyValuation = () => {
   };
 
   const startNewValuation = () => {
-    // Reiniciar propertyData a valores completamente limpios
+    // Reiniciar propertyData a valores iniciales
     setPropertyData({
       areaSotano: 0,
       areaPrimerNivel: 0,
@@ -550,7 +553,7 @@ const PropertyValuation = () => {
       areaTercerNivel: 0,
       areaCuartoNivel: 0,
       areaTerreno: 0,
-      tipoPropiedad: '',  // Vacío para forzar selección
+      tipoPropiedad: 'casa',
       antiguedad: 0,
       ubicacion: '',
       estadoGeneral: '',
@@ -566,23 +569,15 @@ const PropertyValuation = () => {
     setComparativeProperties([]);
     setSelectedComparatives([]);
     setIsCalculating(false);
-    setActiveTab('ubicacion'); // Volver al primer paso
+    setActiveTab('ubicacion');
     setAdjustmentPercentage(0);
     setFinalAdjustedValue(null);
     setPropertyImages([]);
     setMultipleValuations([]);
-    
-    // Reiniciar currency a USD por defecto
-    setSelectedCurrency({
-      code: 'USD',
-      name: 'Dólar Estadounidense',
-      symbol: '$',
-      rate: 1
-    });
 
     toast({
-      title: "Sistema Reiniciado",
-      description: "Todos los campos están limpios. Comience un nuevo avalúo desde el Paso 1: Ubicación.",
+      title: "Nuevo Valúo Iniciado",
+      description: "Todos los datos han sido reiniciados. Puede comenzar un nuevo valúo.",
     });
   };
 
@@ -1719,7 +1714,6 @@ const PropertyValuation = () => {
             size="sm"
           >
             <Shuffle className="mr-2 h-4 w-4" />
-            Reiniciar Todo
             Comenzar de Nuevo
           </Button>
         </Card>
