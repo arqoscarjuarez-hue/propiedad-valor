@@ -1049,7 +1049,8 @@ const PropertyValuation = () => {
     const step2Complete = propertyData.tipoPropiedad && propertyData.tipoPropiedad !== '';
     
     // Paso 3: Áreas
-    const hasValidLandArea = propertyData.areaTerreno && propertyData.areaTerreno > 0;
+    // Para departamentos, no requiere área de terreno
+    const hasValidLandArea = propertyData.tipoPropiedad === 'departamento' ? true : (propertyData.areaTerreno && propertyData.areaTerreno > 0);
     let hasValidBuiltArea = true;
     if (propertyData.tipoPropiedad !== 'terreno') {
       hasValidBuiltArea = (
