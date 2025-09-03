@@ -565,8 +565,8 @@ const PropertyValuation = () => {
       ubicacion: '',
       estadoGeneral: '',
       
-      latitud: 0,
-      longitud: 0,
+      latitud: undefined,
+      longitud: undefined,
       direccionCompleta: ''
     });
     
