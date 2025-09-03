@@ -1028,7 +1028,8 @@ const PropertyValuation = () => {
   // Función para validar el progreso paso a paso
   const getStepCompletion = () => {
     // Paso 1: Ubicación
-    const hasValidCoordinates = propertyData.latitud && propertyData.longitud;
+    const hasValidCoordinates = propertyData.latitud && propertyData.longitud && 
+                                (propertyData.latitud !== 0 || propertyData.longitud !== 0);
     const step1Complete = hasValidCoordinates;
     
     // Paso 2: Tipo de propiedad
