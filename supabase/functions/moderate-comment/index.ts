@@ -50,12 +50,12 @@ serve(async (req) => {
       });
     }
 
-    // Solo guardar comentarios aprobados
+    // Save approved comments only
     const { data, error } = await supabase
       .from('comments')
       .insert({
         content,
-        user_id,
+        user_id: user_id, // Now expects UUID format
         is_approved: isApproved,
         moderation_status: moderationStatus,
         moderation_flags: moderationFlags,

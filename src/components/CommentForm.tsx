@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
 import { commentTranslations } from "@/translations/commentTranslations";
 import { createAutoReply } from "@/utils/autoReply";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +15,7 @@ interface CommentFormProps {
 
 export function CommentForm({ onCommentAdded }: CommentFormProps) {
   const { selectedLanguage } = useLanguage();
+  const { user } = useAuth();
   const t = commentTranslations[selectedLanguage];
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,6 +23,15 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Autenticación requerida",
+        description: "Debes iniciar sesión para comentar.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     if (!content.trim()) {
       toast({
@@ -31,17 +42,24 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
       return;
     }
 
+    // Input validation and sanitization
+    const sanitizedContent = content.trim();
+    if (sanitizedContent.length > 1000) {
+      toast({
+        title: "Comentario muy largo",
+        description: "El comentario no puede exceder 1000 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // For demo purposes, we'll use a friendly user identifier
-      // In a real app, you'd get this from auth
-      const user_id = "visitante";
-
       const { data, error } = await supabase.functions.invoke('moderate-comment', {
         body: {
-          content: content.trim(),
-          user_id,
+          content: sanitizedContent,
+          user_id: user.id,
         }
       });
 
@@ -71,16 +89,19 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             description: message,
           });
           
-          // Crear respuesta automática después de un breve delay
+          // Generate auto-reply with system user
           if (data.comment && data.comment.id) {
             setTimeout(async () => {
-              // Crear respuesta automática en segundo plano
-              const autoReplySuccess = await createAutoReply(data.comment.id, content.trim(), selectedLanguage);
-              if (autoReplySuccess) {
-                // Respuesta automática creada exitosamente
-              }
-              onCommentAdded(); // Refrescar la lista para mostrar la respuesta automática
-            }, 2000); // Esperar 2 segundos antes de crear la respuesta
+              // Create auto-reply with system user (special UUID)
+              const autoReplyContent = `Gracias por tu comentario. Nuestro equipo lo revisará pronto.`;
+              await supabase.functions.invoke('moderate-comment', {
+                body: {
+                  content: autoReplyContent,
+                  user_id: '00000000-0000-0000-0000-000000000000', // System user
+                },
+              });
+              onCommentAdded(); // Refresh to show auto-reply
+            }, 2000);
           }
         }
         
@@ -100,6 +121,24 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
     }
   };
 
+  if (!user) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.addComment}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center">
+          <p className="text-muted-foreground mb-4">
+            Debes iniciar sesión para comentar
+          </p>
+          <Button onClick={() => window.location.href = '/auth'}>
+            Iniciar Sesión
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -113,10 +152,16 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             placeholder={t.commentPlaceholder}
             rows={4}
             disabled={isSubmitting}
+            maxLength={1000}
           />
-          <Button type="submit" disabled={isSubmitting || !content.trim()}>
-            {isSubmitting ? t.sending : t.publishComment}
-          </Button>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">
+              {content.length}/1000 caracteres
+            </span>
+            <Button type="submit" disabled={isSubmitting || !content.trim()}>
+              {isSubmitting ? t.sending : t.publishComment}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
