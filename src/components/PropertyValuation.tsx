@@ -721,14 +721,21 @@ const PropertyValuation = () => {
           areaTotalParaCalculo = areaTotal * 2;
         }
         
-        const valorConstruccion = convertCurrency(
-          areaTotalParaCalculo * basePrice * propertyTypeFactor * locationFactor * conditionFactor,
-          selectedCurrency
-        );
+        // Cálculo del valor de construcción
+        const valorConstruccion = areaTotalParaCalculo * basePrice * propertyTypeFactor * locationFactor * conditionFactor;
         
-        setValuation(valorConstruccion);
-        setBaseValuation(valorConstruccion);
-        setFinalAdjustedValue(valorConstruccion);
+        // Para casas, agregar valor del terreno
+        let valorTotal = valorConstruccion;
+        if (propertyData.tipoPropiedad === 'casa' && propertyData.areaTerreno > 0) {
+          const valorTerreno = propertyData.areaTerreno * basePrice * 0.4 * locationFactor; // Terreno vale 40% del precio de construcción
+          valorTotal = valorConstruccion + valorTerreno;
+        }
+        
+        const valorFinal = convertCurrency(valorTotal, selectedCurrency);
+        
+        setValuation(valorFinal);
+        setBaseValuation(valorFinal);
+        setFinalAdjustedValue(valorFinal);
       }
       
       // Generar propiedades comparativas
