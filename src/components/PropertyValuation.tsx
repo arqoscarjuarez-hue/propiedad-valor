@@ -566,8 +566,8 @@ const PropertyValuation = () => {
       ubicacion: '',
       estadoGeneral: '',
       
-      latitud: undefined,
-      longitud: undefined,
+      latitud: 19.4326, // Ciudad de México por defecto
+      longitud: -99.1332,
       direccionCompleta: ''
     });
     
@@ -2257,20 +2257,12 @@ const PropertyValuation = () => {
                         {translations[selectedLanguage].mapInstructions}
                       </p>
                       
-                      {/* Usar el componente SimpleLocationMap */}
-                      {propertyData.latitud && propertyData.longitud ? (
-                        <SimpleLocationMap
-                          initialLat={propertyData.latitud}
-                          initialLng={propertyData.longitud}
-                          onLocationChange={handleLocationSelect}
-                        />
-                      ) : (
-                        <div className="text-center p-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                          <p className="text-muted-foreground">
-                            {translations[selectedLanguage].clickOnMap}
-                          </p>
-                        </div>
-                      )}
+                       {/* Usar el componente SimpleLocationMap siempre */}
+                       <SimpleLocationMap
+                         initialLat={propertyData.latitud || 19.4326}
+                         initialLng={propertyData.longitud || -99.1332}
+                         onLocationChange={handleLocationSelect}
+                       />
                    </TabsContent>
                    
                     <TabsContent value="editar" className="space-y-4 mt-4">
