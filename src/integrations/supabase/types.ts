@@ -76,6 +76,45 @@ export type Database = {
           },
         ]
       }
+      market_adjustments: {
+        Row: {
+          country: string
+          created_at: string
+          created_by: string | null
+          effective_from: string
+          factor: number
+          id: string
+          notes: string | null
+          property_type: string
+          source: string | null
+          updated_at: string
+        }
+        Insert: {
+          country: string
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          factor: number
+          id?: string
+          notes?: string | null
+          property_type?: string
+          source?: string | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          factor?: number
+          id?: string
+          notes?: string | null
+          property_type?: string
+          source?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -183,6 +222,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      detect_country: {
+        Args: { center_lat: number; center_lng: number }
+        Returns: string
+      }
       find_area_prioritized_comparables: {
         Args: {
           center_lat: number
@@ -415,6 +458,10 @@ export type Database = {
           time_adjustment_factor: number
           total_area: number
         }[]
+      }
+      get_market_factor: {
+        Args: { detected_country: string; prop_type: string }
+        Returns: number
       }
       get_property_comparables_public: {
         Args: { limit_rows?: number; offset_rows?: number }
