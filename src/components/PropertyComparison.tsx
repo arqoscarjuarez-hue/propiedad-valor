@@ -23,7 +23,6 @@ interface Property {
   size: number;
   bedrooms: number;
   bathrooms: number;
-  age: number;
   condition: string;
   location: string;
   score: number;
@@ -202,22 +201,6 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
                             <div className="flex items-center gap-2">
                               {property.size}m²
                               {getComparisonIcon(currentProperty.size, property.size)}
-                            </div>
-                          </td>
-                        ))}
-                      </tr>
-                      <tr>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Antigüedad
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                          {currentProperty.age} años
-                        </td>
-                        {selectedComparables.map((property) => (
-                          <td key={property.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                            <div className="flex items-center gap-2">
-                              {property.age} años
-                              {getComparisonIcon(currentProperty.age, property.age, true)}
                             </div>
                           </td>
                         ))}

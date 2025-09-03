@@ -77,8 +77,6 @@ const translations = {
     propertyCharacteristics: 'Características de la Propiedad',
     temporalInfo: 'Información Temporal',
     qualityAndCondition: 'Calidad y Estado de la Propiedad',
-    constructionAge: 'Antigüedad de la Construcción',
-    yearsSinceConstruction: 'Años desde la construcción original',
     
     // Location Quality options
     excellentZone: 'Excelente',
@@ -163,8 +161,6 @@ const translations = {
     errorTitle: 'Error',
     errorUpdatingData: 'Error al actualizar los datos de la propiedad',
     errorMinimumArea: 'Debe ingresar al menos un área de construcción mayor a 0',
-    age: 'Antigüedad (años)',
-    ageDescription: 'Años desde construcción',
     locationQuality: 'Calidad de Ubicación',
     locationDescription: 'Evalúa la zona y accesos',
     environmentalFactors: 'Factores Ambientales y Riesgos',
@@ -371,7 +367,6 @@ interface PropertyData {
   tipoPropiedad: string;
   
   // Características
-  antiguedad: number;
   ubicacion: string;
   estadoGeneral: string;
   tipoAcceso?: string;
@@ -392,7 +387,7 @@ interface ComparativeProperty {
   areaConstruida: number;
   areaTerreno: number;
   tipoPropiedad: string;
-  antiguedad: number;
+  
   ubicacion: string;
   estadoGeneral: string;
   precio: number;
@@ -424,7 +419,6 @@ const PropertyValuation = () => {
         areaCuartoNivel: 0,
         areaTerreno: 0,
         tipoPropiedad: '',
-        antiguedad: 0,
         ubicacion: '',
         estadoGeneral: '',
         tipoAcceso: '',
@@ -554,7 +548,6 @@ const PropertyValuation = () => {
       areaCuartoNivel: 0,
       areaTerreno: 0,
       tipoPropiedad: 'casa',
-      antiguedad: 0,
       ubicacion: '',
       estadoGeneral: '',
       tipoAcceso: '',
@@ -666,8 +659,6 @@ const PropertyValuation = () => {
       
       const conditionFactor = conditionFactors[propertyData.estadoGeneral as keyof typeof conditionFactors] || 1.0;
       
-      // Factor de antigüedad
-      const ageFactor = Math.max(0.3, 1 - (propertyData.antiguedad * 0.01)); // Reducción del 1% por año
       
       // Lógica específica para terrenos
       if (propertyData.tipoPropiedad === 'terreno') {
@@ -709,7 +700,7 @@ const PropertyValuation = () => {
       } else {
         // Lógica para propiedades construidas
         const valorConstruccion = convertCurrency(
-          areaTotal * basePrice * propertyTypeFactor * locationFactor * conditionFactor * ageFactor,
+          areaTotal * basePrice * propertyTypeFactor * locationFactor * conditionFactor,
           selectedCurrency
         );
         
@@ -781,7 +772,7 @@ const PropertyValuation = () => {
             areaConstruida: 0, // Terrenos no tienen área construida
             areaTerreno: areaTerrenoFinal,
             tipoPropiedad: 'terreno',
-            antiguedad: 0, // Terrenos no tienen antigüedad de construcción
+            
             ubicacion: propertyData.ubicacion,
             estadoGeneral: 'nuevo', // Terrenos se consideran en buen estado
             // Campos específicos para terrenos
@@ -807,31 +798,31 @@ const PropertyValuation = () => {
               case 'casa':
                 return {
                   areaVariation: 0.6 + (Math.random() * 0.8), // ±40% para casas
-                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 10), // ±5 años
+                  
                   terrenoVariation: 0.7 + (Math.random() * 0.6) // ±30% terreno
                 };
               case 'departamento':
                 return {
                   areaVariation: 0.7 + (Math.random() * 0.6), // ±30% para departamentos
-                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 8), // ±4 años
+                  
                   terrenoVariation: 0.9 + (Math.random() * 0.2) // ±10% terreno (departamentos tienen menos variación)
                 };
               case 'comercial':
                 return {
                   areaVariation: 0.5 + (Math.random() * 1.0), // ±50% para comerciales
-                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 12), // ±6 años
+                  
                   terrenoVariation: 0.6 + (Math.random() * 0.8) // ±40% terreno
                 };
               case 'bodega':
                 return {
                   areaVariation: 0.4 + (Math.random() * 1.2), // ±60% para bodegas
-                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 15), // ±7-8 años
+                  
                   terrenoVariation: 0.5 + (Math.random() * 1.0) // ±50% terreno
                 };
               default:
                 return {
                   areaVariation: 0.6 + (Math.random() * 0.8),
-                  antiguedadVariation: Math.floor((Math.random() - 0.5) * 8),
+                  
                   terrenoVariation: 0.8 + (Math.random() * 0.4)
                 };
             }
@@ -841,7 +832,7 @@ const PropertyValuation = () => {
           
           // Aplicar variaciones
           const areaComparable = Math.round(areaTotal * variations.areaVariation);
-          const antiguedadComparable = Math.max(0, propertyData.antiguedad + variations.antiguedadVariation);
+          
           const terrenoComparable = Math.round(propertyData.areaTerreno * variations.terrenoVariation);
           
           // Generar descripción específica por tipo
@@ -866,7 +857,7 @@ const PropertyValuation = () => {
             areaConstruida: areaComparable,
             areaTerreno: terrenoComparable,
             tipoPropiedad: tipoComparable, // Mantener exactamente el mismo tipo
-            antiguedad: antiguedadComparable,
+            
             ubicacion: propertyData.ubicacion,
             estadoGeneral: propertyData.estadoGeneral,
             precio: convertCurrency(baseValue * (1 + variation) * 0.85, selectedCurrency), // Aplicar descuento del 15%
@@ -889,7 +880,7 @@ const PropertyValuation = () => {
           areaConstruida: isTerreno ? 0 : areaTotal,
           areaTerreno: propertyData.areaTerreno,
           tipoPropiedad: propertyData.tipoPropiedad,
-          antiguedad: isTerreno ? 0 : propertyData.antiguedad,
+          
           ubicacion: propertyData.ubicacion,
           estadoGeneral: isTerreno ? 'nuevo' : propertyData.estadoGeneral,
           // Campos específicos para terrenos
@@ -1193,7 +1184,7 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].type}: ${propertyData.tipoPropiedad}`,
         `${translations[selectedLanguage].totalBuiltArea}: ${areaTotal} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].landArea}: ${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}`,
-        `${translations[selectedLanguage].propertyAge}: ${propertyData.antiguedad} ${translations[selectedLanguage].years}`,
+        
         `${translations[selectedLanguage].locationQuality}: ${propertyData.ubicacion}`
       ];
 
@@ -1426,12 +1417,6 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ text: `${translations[selectedLanguage].landArea}: `, bold: true }),
                 new TextRun({ text: `${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}` })
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].propertyAge}: `, bold: true }),
-                new TextRun({ text: `${propertyData.antiguedad} ${translations[selectedLanguage].years}` })
               ]
             }),
             new Paragraph({
@@ -2083,30 +2068,7 @@ const PropertyValuation = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="mb-6">
-                    <h4 className="text-md font-medium text-foreground mb-3 border-b pb-2">{translations[selectedLanguage].temporalInfo}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="antiguedad" className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {translations[selectedLanguage].constructionAge} ({translations[selectedLanguage].years})
-                        </Label>
-                        <Input
-                          id="antiguedad"
-                          type="number"
-                          value={propertyData.antiguedad || ''}
-                           onChange={(e) => {
-                             const value = e.target.value;
-                             handleInputChange('antiguedad', value === '' ? 0 : parseFloat(value) || 0);
-                           }}
-                          placeholder="0"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].yearsSinceConstruction}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                ) : null}
 
                {/* Calidad y Estado */}
                <div className="mb-6">
@@ -2204,9 +2166,6 @@ const PropertyValuation = () => {
                <div className="bg-muted p-4 rounded-lg">
                  <h4 className="text-sm font-semibold mb-2">{translations[selectedLanguage].characteristicsSummary}</h4>
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-                   <div>
-                     <span className="font-medium">{translations[selectedLanguage].propertyAge}</span> {propertyData.antiguedad || 0} {translations[selectedLanguage].years}
-                   </div>
                    {propertyData.tipoPropiedad === 'terreno' ? (
                      <>
                        <div>
@@ -2412,7 +2371,7 @@ const PropertyValuation = () => {
                 size: propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel + propertyData.areaSotano,
                 bedrooms: 0,
                 bathrooms: 0,
-                age: propertyData.antiguedad,
+                
                 condition: propertyData.estadoGeneral,
                 location: propertyData.ubicacion,
                 score: 0,
@@ -2426,7 +2385,7 @@ const PropertyValuation = () => {
                 size: comp.areaConstruida,
                 bedrooms: 0,
                 bathrooms: 0,
-                age: comp.antiguedad,
+                
                 condition: comp.estadoGeneral,
                 location: comp.ubicacion,
                 score: comp.rating || 0,
