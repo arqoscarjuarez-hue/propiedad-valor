@@ -2505,6 +2505,43 @@ const PropertyValuation = () => {
   const [isCalculating, setIsCalculating] = useState(false); // Estado para loading del cálculo
   const [showDemo, setShowDemo] = useState(false); // Estado para mostrar demo
 
+  // Obtener ubicación actual del usuario automáticamente
+  useEffect(() => {
+    // Solo obtener ubicación si no hay datos guardados o si lat/lng son 0
+    const shouldGetLocation = !savedData.propertyData || 
+      (propertyData.latitud === 0 && propertyData.longitud === 0);
+    
+    if (shouldGetLocation && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          
+          setPropertyData(prev => ({
+            ...prev,
+            latitud: lat,
+            longitud: lng
+          }));
+          
+          // Mostrar toast informativo
+          toast({
+            title: "Ubicación Detectada",
+            description: "Se ha establecido tu ubicación actual automáticamente",
+          });
+        },
+        (error) => {
+          // Silenciar error, no es crítico
+          console.debug('Geolocation not available or denied:', error);
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 600000 // 10 minutos
+        }
+      );
+    }
+  }, []);
+
   // Guardar datos del último avalúo completado
   useEffect(() => {
     if (valuation && valuation > 0) {
