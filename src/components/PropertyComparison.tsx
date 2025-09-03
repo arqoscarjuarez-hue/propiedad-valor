@@ -40,7 +40,7 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
   comparableProperties 
 }) => {
   const [selectedProperties, setSelectedProperties] = useState<string[]>(
-    comparableProperties.slice(0, 2).map(p => p.id)
+    comparableProperties.slice(0, 4).map(p => p.id)
   );
 
   const getComparisonIcon = (current: number, comparable: number, reverse = false) => {
@@ -90,7 +90,7 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
                 Seleccionar Propiedades para Comparar
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {comparableProperties.map((property) => (
                   <Card 
                     key={property.id}
@@ -102,7 +102,7 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
                     onClick={() => {
                       if (selectedProperties.includes(property.id)) {
                         setSelectedProperties(prev => prev.filter(id => id !== property.id));
-                      } else if (selectedProperties.length < 3) {
+                      } else if (selectedProperties.length < 4) {
                         setSelectedProperties(prev => [...prev, property.id]);
                       }
                     }}
