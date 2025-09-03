@@ -724,10 +724,19 @@ const PropertyValuation = () => {
         // Cálculo del valor de construcción
         const valorConstruccion = areaTotalParaCalculo * basePrice * propertyTypeFactor * locationFactor * conditionFactor;
         
-        // Para casas, agregar valor del terreno
+        // Para casas, comercial y bodega, agregar valor del terreno
         let valorTotal = valorConstruccion;
-        if (propertyData.tipoPropiedad === 'casa' && propertyData.areaTerreno > 0) {
-          const valorTerreno = propertyData.areaTerreno * basePrice * 0.4 * locationFactor; // Terreno vale 40% del precio de construcción
+        if (['casa', 'comercial', 'bodega'].includes(propertyData.tipoPropiedad) && propertyData.areaTerreno > 0) {
+          let factorTerreno = 0.4; // Terreno vale 40% del precio de construcción por defecto
+          
+          // Ajustar factor según tipo de propiedad
+          if (propertyData.tipoPropiedad === 'comercial') {
+            factorTerreno = 0.6; // Terreno comercial vale más
+          } else if (propertyData.tipoPropiedad === 'bodega') {
+            factorTerreno = 0.3; // Terreno industrial vale menos
+          }
+          
+          const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * locationFactor;
           valorTotal = valorConstruccion + valorTerreno;
         }
         
