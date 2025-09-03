@@ -66,7 +66,7 @@ const translations = {
     
     // Tipos de propiedad
     propertyTypeTitle: 'Tipo de Propiedad',
-    selectPropertyType: 'Selecciona el tipo de propiedad',
+    selectPropertyType: 'Seleccionar',
     house: 'Casa',
     apartment: 'Apartamento',
     land: 'Terreno',
