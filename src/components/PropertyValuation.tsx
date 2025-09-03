@@ -2406,77 +2406,66 @@ interface ComparativeProperty {
 const PropertyValuation = () => {
   const { toast } = useToast();
   
-  // Cargar datos del último avalúo desde localStorage
-  const loadSavedData = () => {
-    try {
-      const savedData = localStorage.getItem('lastPropertyValuation');
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        return {
-          propertyData: parsed.propertyData || null,
-          selectedCurrency: parsed.selectedCurrency || null,
-          valuation: parsed.valuation || null,
-          baseValuation: parsed.baseValuation || null,
-          comparativeProperties: parsed.comparativeProperties || []
-        };
-      }
-    } catch (error) {
-      // Silenciar logs de error para localStorage en producción
-    }
+  // Función para obtener datos iniciales limpios (nuevo avalúo siempre)
+  const getInitialData = () => {
     return {
-      propertyData: null,
-      
-      selectedCurrency: null,
+      propertyData: {
+        areaSotano: 0,
+        areaPrimerNivel: 0,
+        areaSegundoNivel: 0,
+        areaTercerNivel: 0,
+        areaCuartoNivel: 0,
+        areaTerreno: 0,
+        tipoPropiedad: 'casa',
+        recamaras: 0,
+        salas: 0,
+        comedor: 0,
+        cocina: 0,
+        bodega: 0,
+        areaServicio: 0,
+        cochera: 0,
+        banos: 0,
+        otros: 0,
+        antiguedad: 0,
+        ubicacion: '',
+        estadoGeneral: '',
+        tipoAcceso: '',
+        latitud: 0,
+        longitud: 0,
+        direccionCompleta: '',
+        servicios: {
+          agua: false,
+          electricidad: false,
+          gas: false,
+          drenaje: false,
+          internet: false,
+          cable: false,
+          telefono: false,
+          seguridad: false,
+          alberca: false,
+          jardin: false,
+          elevador: false,
+          aireAcondicionado: false,
+          calefaccion: false,
+          panelesSolares: false,
+          tinaco: false,
+        }
+      },
+      selectedCurrency: {
+        code: 'USD',
+        name: 'Dólar Estadounidense',
+        symbol: '$',
+        rate: 1
+      },
       valuation: null,
       baseValuation: null,
       comparativeProperties: []
     };
   };
 
-  const savedData = loadSavedData();
+  const initialData = getInitialData();
   
-  const [propertyData, setPropertyData] = useState<PropertyData>(savedData.propertyData || {
-    areaSotano: 0,
-    areaPrimerNivel: 0,
-    areaSegundoNivel: 0,
-    areaTercerNivel: 0,
-    areaCuartoNivel: 0,
-    areaTerreno: 0,
-    tipoPropiedad: 'casa',
-    recamaras: 0,
-    salas: 0,
-    comedor: 0,
-    cocina: 0,
-    bodega: 0,
-    areaServicio: 0,
-    cochera: 0,
-    banos: 0,
-    otros: 0,
-    antiguedad: 0,
-    ubicacion: '',
-    estadoGeneral: '',
-    tipoAcceso: '',
-    latitud: 0,
-    longitud: 0,
-    direccionCompleta: '',
-    servicios: {
-      agua: false,
-      electricidad: false,
-      gas: false,
-      drenaje: false,
-      internet: false,
-      cable: false,
-      telefono: false,
-      seguridad: false,
-      alberca: false,
-      jardin: false,
-      elevador: false,
-      aireAcondicionado: false,
-      calefaccion: false,
-      panelesSolares: false,
-      tinaco: false,
-    }
-  });
+  const [propertyData, setPropertyData] = useState<PropertyData>(initialData.propertyData);
   
   const [valuation, setValuation] = useState<number | null>(null);
   const [baseValuation, setBaseValuation] = useState<number | null>(null);
@@ -2486,18 +2475,13 @@ const PropertyValuation = () => {
     valor: number;
     comparatives: ComparativeProperty[];
   }>>([]);
-  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>(savedData.comparativeProperties);
+  const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
   
   // Estados para manejo de comparables
   const [allComparativeProperties, setAllComparativeProperties] = useState<ComparativeProperty[]>([]);
   const [selectedComparatives, setSelectedComparatives] = useState<number[]>([0, 1, 2]); // Por defecto los primeros 3
   
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(savedData.selectedCurrency || {
-    code: 'USD',
-    name: 'Dólar Estadounidense',
-    symbol: '$',
-    rate: 1
-  });
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState('ubicacion');
   const [propertyImages, setPropertyImages] = useState<Array<{ file: File; preview: string }>>([]);
@@ -2507,11 +2491,8 @@ const PropertyValuation = () => {
 
   // Obtener ubicación actual del usuario automáticamente
   useEffect(() => {
-    // Solo obtener ubicación si no hay datos guardados o si lat/lng son 0
-    const shouldGetLocation = !savedData.propertyData || 
-      (propertyData.latitud === 0 && propertyData.longitud === 0);
-    
-    if (shouldGetLocation && navigator.geolocation) {
+    // Siempre obtener ubicación ya que iniciamos con datos limpios
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude;
