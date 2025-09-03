@@ -54,7 +54,8 @@ export const validateStep2 = (propertyData: PropertyData): boolean => {
  * Valida completitud del paso 3: Áreas
  */
 export const validateStep3 = (propertyData: PropertyData): boolean => {
-  const hasValidLandArea = validateArea(propertyData.areaTerreno);
+  // Para apartamentos, no validar área de terreno
+  const hasValidLandArea = propertyData.tipoPropiedad === 'apartamento' ? true : validateArea(propertyData.areaTerreno);
   
   let hasValidBuiltArea = true;
   if (propertyData.tipoPropiedad !== 'terreno') {

@@ -57,6 +57,7 @@ const translations = {
     
     // Sección de áreas
     constructionAreas: 'Áreas de Construcción (m²)',
+    totalBuiltArea: 'Área Total Construida',
     basement: 'Sótano',
     firstFloor: 'Primer Nivel',
     secondFloor: 'Segundo Nivel',
@@ -242,7 +243,6 @@ const translations = {
     propertyLocationPDF: 'UBICACIÓN DEL INMUEBLE',
     generalInfo: 'INFORMACIÓN GENERAL',
     type: 'Tipo',
-    totalBuiltArea: 'Área Total Construida',
     propertyAreas: 'ÁREAS DE LA PROPIEDAD',
     estimatedValuePDF: 'VALOR ESTIMADO',
     pricePerSqm: 'Precio por m²',
@@ -593,7 +593,8 @@ const PropertyValuation = () => {
         return;
       }
       
-      if (propertyData.areaTerreno <= 0) {
+      // Para apartamentos, no validar área de terreno
+      if (propertyData.tipoPropiedad !== 'apartamento' && propertyData.areaTerreno <= 0) {
         toast({
           title: translations[selectedLanguage].errorTitle,
           description: "Debe ingresar un área de terreno mayor a 0",
@@ -690,8 +691,15 @@ const PropertyValuation = () => {
         
       } else {
         // Lógica para propiedades construidas
+        let areaTotalParaCalculo = areaTotal;
+        
+        // Para apartamentos, duplicar el área para el cálculo
+        if (propertyData.tipoPropiedad === 'apartamento') {
+          areaTotalParaCalculo = areaTotal * 2;
+        }
+        
         const valorConstruccion = convertCurrency(
-          areaTotal * basePrice * propertyTypeFactor * locationFactor * conditionFactor,
+          areaTotalParaCalculo * basePrice * propertyTypeFactor * locationFactor * conditionFactor,
           selectedCurrency
         );
         
@@ -1881,19 +1889,11 @@ const PropertyValuation = () => {
                 {propertyData.tipoPropiedad !== 'terreno' && (
                   <>
                     <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].constructionAreas}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="areaSotano">{translations[selectedLanguage].basement} ({translations[selectedLanguage].sqm})</Label>
-                        <Input
-                          id="areaSotano"
-                          type="number"
-                          value={propertyData.areaSotano || ''}
-                          onChange={(e) => handleInputChange('areaSotano', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="areaPrimerNivel">{translations[selectedLanguage].firstFloor} ({translations[selectedLanguage].sqm})</Label>
+                    
+                    {/* Para apartamentos, solo mostrar área total construida */}
+                    {propertyData.tipoPropiedad === 'apartamento' ? (
+                      <div className="max-w-xs">
+                        <Label htmlFor="areaPrimerNivel">{translations[selectedLanguage].totalBuiltArea} ({translations[selectedLanguage].sqm})</Label>
                         <Input
                           id="areaPrimerNivel"
                           type="number"
@@ -1901,71 +1901,102 @@ const PropertyValuation = () => {
                           onChange={(e) => handleInputChange('areaPrimerNivel', parseFloat(e.target.value) || 0)}
                           placeholder="0"
                         />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Para apartamentos, ingrese el área total construida
+                        </p>
                       </div>
-                      <div>
-                        <Label htmlFor="areaSegundoNivel">{translations[selectedLanguage].secondFloor} ({translations[selectedLanguage].sqm})</Label>
-                        <Input
-                          id="areaSegundoNivel"
-                          type="number"
-                          value={propertyData.areaSegundoNivel || ''}
-                          onChange={(e) => handleInputChange('areaSegundoNivel', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
+                    ) : (
+                      /* Para otras propiedades, mostrar campos individuales */
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="areaSotano">{translations[selectedLanguage].basement} ({translations[selectedLanguage].sqm})</Label>
+                          <Input
+                            id="areaSotano"
+                            type="number"
+                            value={propertyData.areaSotano || ''}
+                            onChange={(e) => handleInputChange('areaSotano', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="areaPrimerNivel">{translations[selectedLanguage].firstFloor} ({translations[selectedLanguage].sqm})</Label>
+                          <Input
+                            id="areaPrimerNivel"
+                            type="number"
+                            value={propertyData.areaPrimerNivel || ''}
+                            onChange={(e) => handleInputChange('areaPrimerNivel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="areaSegundoNivel">{translations[selectedLanguage].secondFloor} ({translations[selectedLanguage].sqm})</Label>
+                          <Input
+                            id="areaSegundoNivel"
+                            type="number"
+                            value={propertyData.areaSegundoNivel || ''}
+                            onChange={(e) => handleInputChange('areaSegundoNivel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="areaTercerNivel">{translations[selectedLanguage].thirdFloor} ({translations[selectedLanguage].sqm})</Label>
+                          <Input
+                            id="areaTercerNivel"
+                            type="number"
+                            value={propertyData.areaTercerNivel || ''}
+                            onChange={(e) => handleInputChange('areaTercerNivel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="areaCuartoNivel">{translations[selectedLanguage].fourthFloor} ({translations[selectedLanguage].sqm})</Label>
+                          <Input
+                            id="areaCuartoNivel"
+                            type="number"
+                            value={propertyData.areaCuartoNivel || ''}
+                            onChange={(e) => handleInputChange('areaCuartoNivel', parseFloat(e.target.value) || 0)}
+                            placeholder="0"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="areaTercerNivel">{translations[selectedLanguage].thirdFloor} ({translations[selectedLanguage].sqm})</Label>
-                        <Input
-                          id="areaTercerNivel"
-                          type="number"
-                          value={propertyData.areaTercerNivel || ''}
-                          onChange={(e) => handleInputChange('areaTercerNivel', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="areaCuartoNivel">{translations[selectedLanguage].fourthFloor} ({translations[selectedLanguage].sqm})</Label>
-                        <Input
-                          id="areaCuartoNivel"
-                          type="number"
-                          value={propertyData.areaCuartoNivel || ''}
-                          onChange={(e) => handleInputChange('areaCuartoNivel', parseFloat(e.target.value) || 0)}
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
+                    )}
                     
-                    <div className="bg-muted p-3 rounded-lg">
-                      <p className="text-sm font-medium">
-                        Área Total Construida: {(propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0)} {translations[selectedLanguage].sqm}
-                      </p>
-                    </div>
+                    {propertyData.tipoPropiedad !== 'apartamento' && (
+                      <div className="bg-muted p-3 rounded-lg">
+                        <p className="text-sm font-medium">
+                          Área Total Construida: {(propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0)} {translations[selectedLanguage].sqm}
+                        </p>
+                      </div>
+                    )}
                   </>
                 )}
                 
-                {/* Área del terreno - siempre mostrar */}
-                <div className="mt-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Label htmlFor="areaTerreno" className="text-base font-medium">{translations[selectedLanguage].landArea} ({translations[selectedLanguage].sqm})</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-xs">
-                          <p className="text-sm">{translations[selectedLanguage].landAreaTooltip}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                {/* Área del terreno - no mostrar para apartamentos */}
+                {propertyData.tipoPropiedad !== 'apartamento' && (
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Label htmlFor="areaTerreno" className="text-base font-medium">{translations[selectedLanguage].landArea} ({translations[selectedLanguage].sqm})</Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p className="text-sm">{translations[selectedLanguage].landAreaTooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <Input
+                      id="areaTerreno"
+                      type="number"
+                      value={propertyData.areaTerreno || ''}
+                      onChange={(e) => handleInputChange('areaTerreno', parseFloat(e.target.value) || 0)}
+                      placeholder="0"
+                      className="max-w-xs"
+                    />
                   </div>
-                  <Input
-                    id="areaTerreno"
-                    type="number"
-                    value={propertyData.areaTerreno || ''}
-                    onChange={(e) => handleInputChange('areaTerreno', parseFloat(e.target.value) || 0)}
-                    placeholder="0"
-                    className="max-w-xs"
-                  />
-                </div>
+                )}
                 
                 {/* Navegación paso a paso */}
                 <div className="flex justify-between pt-4 border-t">
