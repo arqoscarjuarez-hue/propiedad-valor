@@ -101,14 +101,6 @@ const translations = {
     wasteCondition: 'EN DESECHO - Demolición parcial necesaria',
     affectsPropertyValue: 'Afecta directamente el valor de la propiedad',
     
-    // Access Type options
-    accessType: 'Tipo de acceso',
-    accessTypePlaceholder: 'Selecciona el tipo de acceso',
-    mainStreet: 'Calle principal',
-    vehicularPassage: 'Pasaje vehicular',
-    pedestrianPassage: 'Pasaje peatonal',
-    rightOfWay: 'Servidumbre de paso',
-    affectsAccessibility: 'Afecta la accesibilidad de la propiedad',
     
     // Características específicas de terreno
     landCharacteristics: 'Características del Terreno',
@@ -369,7 +361,7 @@ interface PropertyData {
   // Características
   ubicacion: string;
   estadoGeneral: string;
-  tipoAcceso?: string;
+  
   
   // Características específicas de terreno
   topografia?: string;
@@ -421,7 +413,6 @@ const PropertyValuation = () => {
         tipoPropiedad: '',
         ubicacion: '',
         estadoGeneral: '',
-        tipoAcceso: '',
         latitud: 0,
         longitud: 0,
         direccionCompleta: ''
@@ -550,7 +541,7 @@ const PropertyValuation = () => {
       tipoPropiedad: 'casa',
       ubicacion: '',
       estadoGeneral: '',
-      tipoAcceso: '',
+      
       latitud: 0,
       longitud: 0,
       direccionCompleta: ''
@@ -2141,24 +2132,6 @@ const PropertyValuation = () => {
                       </div>
                     )}
                     
-                    <div>
-                      <Label htmlFor="tipoAcceso">{translations[selectedLanguage].accessType}</Label>
-                      <Select 
-                        value={propertyData.tipoAcceso || ''} 
-                        onValueChange={(value) => handleInputChange('tipoAcceso', value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={translations[selectedLanguage].accessTypePlaceholder} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="calle-principal">{translations[selectedLanguage].mainStreet}</SelectItem>
-                          <SelectItem value="pasaje-vehicular">{translations[selectedLanguage].vehicularPassage}</SelectItem>
-                          <SelectItem value="pasaje-peatonal">{translations[selectedLanguage].pedestrianPassage}</SelectItem>
-                          <SelectItem value="servidumbre">{translations[selectedLanguage].rightOfWay}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground mt-1">{translations[selectedLanguage].affectsAccessibility}</p>
-                    </div>
                  </div>
                </div>
 
@@ -2184,13 +2157,6 @@ const PropertyValuation = () => {
                    )}
                    <div>
                      <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
-                   </div>
-                   <div className="md:col-span-2">
-                     <span className="font-medium">{translations[selectedLanguage].accessType}:</span> {
-                       propertyData.tipoAcceso ? 
-                       (translations[selectedLanguage] as any)[propertyData.tipoAcceso] || propertyData.tipoAcceso
-                       : translations[selectedLanguage].notSpecified
-                     }
                    </div>
                  </div>
                </div>
