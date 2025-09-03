@@ -401,6 +401,35 @@ interface ComparativeProperty {
 const PropertyValuation = () => {
   const { toast } = useToast();
   
+  // Función para obtener la ubicación del usuario
+  const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
+    return new Promise((resolve) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            });
+          },
+          (error) => {
+            console.log('Error obteniendo ubicación:', error);
+            // Fallback a Ciudad de México si falla la geolocalización
+            resolve({ lat: 19.4326, lng: -99.1332 });
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000 // 5 minutos
+          }
+        );
+      } else {
+        // Fallback si no hay geolocalización disponible
+        resolve({ lat: 19.4326, lng: -99.1332 });
+      }
+    });
+  };
+  
   // Función para obtener datos iniciales limpios (nuevo avalúo siempre)
   const getInitialData = () => {
     return {
@@ -414,8 +443,8 @@ const PropertyValuation = () => {
         tipoPropiedad: '',
         ubicacion: '',
         estadoGeneral: '',
-        latitud: 0,
-        longitud: 0,
+        latitud: 19.4326, // Valor inicial, se actualizará con geolocalización
+        longitud: -99.1332,
         direccionCompleta: ''
       },
       selectedCurrency: {
@@ -457,29 +486,20 @@ const PropertyValuation = () => {
   // Fallback to 'es' if the selected language is not available in translations
   const selectedLanguage = (rawLanguage in translations) ? rawLanguage : 'es';
 
-  // Geolocation on component mount
+  // useEffect para obtener ubicación del usuario al cargar
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setPropertyData(prev => ({
-            ...prev,
-            latitud: latitude,
-            longitud: longitude
-          }));
-          
-          toast({
-            title: "Ubicación Detectada",
-            description: `Se estableció la ubicación en ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-          });
-        },
-        (error) => {
-          // Silent error - no need to show user
-        }
-      );
-    }
-  }, [toast]);
+    const initializeUserLocation = async () => {
+      const userLocation = await getUserLocation();
+      setPropertyData(prev => ({
+        ...prev,
+        latitud: userLocation.lat,
+        longitud: userLocation.lng
+      }));
+    };
+    
+    initializeUserLocation();
+  }, []);
+
 
   const convertCurrency = (amount: number, targetCurrency: Currency): number => {
     if (!targetCurrency || targetCurrency.rate <= 0) return amount;
@@ -553,8 +573,11 @@ const PropertyValuation = () => {
     }));
   };
 
-  const startNewValuation = () => {
-    // Reiniciar propertyData a valores iniciales
+  const startNewValuation = async () => {
+    // Obtener ubicación del usuario para el nuevo valúo
+    const userLocation = await getUserLocation();
+    
+    // Reiniciar propertyData a valores iniciales con ubicación del usuario
     setPropertyData({
       areaSotano: 0,
       areaPrimerNivel: 0,
@@ -566,8 +589,8 @@ const PropertyValuation = () => {
       ubicacion: '',
       estadoGeneral: '',
       
-      latitud: 19.4326, // Ciudad de México por defecto
-      longitud: -99.1332,
+      latitud: userLocation.lat,
+      longitud: userLocation.lng,
       direccionCompleta: ''
     });
     
@@ -585,7 +608,7 @@ const PropertyValuation = () => {
 
     toast({
       title: "Nuevo Valúo Iniciado",
-      description: "Todos los datos han sido reiniciados. Puede comenzar un nuevo valúo.",
+      description: "Todos los datos han sido reiniciados. Ubicación establecida automáticamente.",
     });
   };
 
