@@ -52,16 +52,6 @@ serve(async (req) => {
         )
       }
 
-      case 'get-api-key': {
-        // Return the API key for client-side Google Maps initialization
-        return new Response(
-          JSON.stringify({ apiKey: GOOGLE_MAPS_API_KEY }),
-          { 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200 
-          }
-        )
-      }
 
       case 'places-search': {
         const { query, lat, lng, radius = 5000 } = data
