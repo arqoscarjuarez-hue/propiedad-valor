@@ -10,15 +10,6 @@ export interface PropertyData {
   areaCuartoNivel: number;
   areaTerreno: number;
   tipoPropiedad: string;
-  recamaras: number;
-  salas: number;
-  comedor: number;
-  cocina: number;
-  bodega: number;
-  areaServicio: number;
-  cochera: number;
-  banos: number;
-  otros: number;
   antiguedad: number;
   ubicacion: string;
   estadoGeneral: string;
@@ -26,9 +17,6 @@ export interface PropertyData {
   latitud: number;
   longitud: number;
   direccionCompleta: string;
-  servicios: {
-    [key: string]: boolean;
-  };
   topografia?: string;
   tipoValoracion?: string;
 }
@@ -84,26 +72,9 @@ export const validateStep3 = (propertyData: PropertyData): boolean => {
 };
 
 /**
- * Valida completitud del paso 4: Espacios
+ * Valida completitud del paso 4: Características
  */
 export const validateStep4 = (propertyData: PropertyData): boolean => {
-  if (propertyData.tipoPropiedad === 'terreno') {
-    return true; // Los terrenos no requieren espacios
-  }
-  
-  // Para propiedades construidas, debe tener al menos un espacio básico
-  return (
-    propertyData.recamaras > 0 || 
-    propertyData.banos > 0 || 
-    propertyData.cocina > 0 ||
-    propertyData.salas > 0
-  );
-};
-
-/**
- * Valida completitud del paso 5: Características
- */
-export const validateStep5 = (propertyData: PropertyData): boolean => {
   const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
   const hasValidCondition = propertyData.estadoGeneral && propertyData.estadoGeneral.trim() !== '';
   
@@ -111,9 +82,9 @@ export const validateStep5 = (propertyData: PropertyData): boolean => {
 };
 
 /**
- * Valida completitud del paso 6: Valuación
+ * Valida completitud del paso 5: Valuación
  */
-export const validateStep6 = (valuation: number | null): boolean => {
+export const validateStep5 = (valuation: number | null): boolean => {
   return valuation !== null && valuation > 0;
 };
 
@@ -125,8 +96,7 @@ export const getStepCompletion = (propertyData: PropertyData, valuation: number 
   const step2 = validateStep2(propertyData) && step1;
   const step3 = validateStep3(propertyData) && step2;
   const step4 = validateStep4(propertyData) && step3;
-  const step5 = validateStep5(propertyData) && step4;
-  const step6 = validateStep6(valuation) && step5;
+  const step5 = validateStep5(valuation) && step4;
   
   return {
     step1,
@@ -134,8 +104,7 @@ export const getStepCompletion = (propertyData: PropertyData, valuation: number 
     step3,
     step4,
     step5,
-    step6,
-    allComplete: step6
+    allComplete: step5
   };
 };
 
