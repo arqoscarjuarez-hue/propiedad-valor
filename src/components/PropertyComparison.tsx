@@ -14,6 +14,7 @@ import {
   ArrowDownRight,
   Equal
 } from 'lucide-react';
+import { formatCurrency, type Currency } from '@/components/CurrencySelector';
 
 interface Property {
   id: string;
@@ -32,11 +33,13 @@ interface Property {
 interface PropertyComparisonProps {
   currentProperty: Property;
   comparableProperties: Property[];
+  selectedCurrency: Currency;
 }
 
 const PropertyComparison: React.FC<PropertyComparisonProps> = ({ 
   currentProperty, 
-  comparableProperties 
+  comparableProperties,
+  selectedCurrency 
 }) => {
   const [selectedProperties, setSelectedProperties] = useState<string[]>(
     comparableProperties.slice(0, 4).map(p => p.id)
@@ -61,6 +64,14 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
   const selectedComparables = comparableProperties.filter(p => 
     selectedProperties.includes(p.id)
   );
+
+  // Function to convert price from USD to selected currency
+  const convertPrice = (priceInUSD: number): number => {
+    if (selectedCurrency.code === 'USD') {
+      return priceInUSD;
+    }
+    return priceInUSD * (selectedCurrency.rate || 1);
+  };
 
   return (
     <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
@@ -120,7 +131,7 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
                           </Badge>
                         </div>
                         <div className="text-lg font-bold text-green-600">
-                          ${property.price.toLocaleString()}
+                          {formatCurrency(convertPrice(property.price), selectedCurrency)}
                         </div>
                         <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                           <span>{property.size}m²</span>
@@ -159,12 +170,12 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
                           Precio
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                          ${currentProperty.price.toLocaleString()}
+                          {formatCurrency(convertPrice(currentProperty.price), selectedCurrency)}
                         </td>
                         {selectedComparables.map((property) => (
                           <td key={property.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                             <div className="flex items-center gap-2">
-                              ${property.price.toLocaleString()}
+                              {formatCurrency(convertPrice(property.price), selectedCurrency)}
                               {getComparisonIcon(currentProperty.price, property.price)}
                             </div>
                           </td>
@@ -175,12 +186,12 @@ const PropertyComparison: React.FC<PropertyComparisonProps> = ({
                           Precio/m²
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                          ${Math.round(currentProperty.price / currentProperty.size).toLocaleString()}
+                          {formatCurrency(convertPrice(Math.round(currentProperty.price / currentProperty.size)), selectedCurrency)}
                         </td>
                         {selectedComparables.map((property) => (
                           <td key={property.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                             <div className="flex items-center gap-2">
-                              ${Math.round(property.price / property.size).toLocaleString()}
+                              {formatCurrency(convertPrice(Math.round(property.price / property.size)), selectedCurrency)}
                               {getComparisonIcon(
                                 currentProperty.price / currentProperty.size, 
                                 property.price / property.size

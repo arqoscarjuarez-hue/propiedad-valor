@@ -2391,6 +2391,7 @@ const PropertyValuation = () => {
                 score: comp.rating || 0,
                 features: []
               }))}
+              selectedCurrency={selectedCurrency}
             />
           )}
 
