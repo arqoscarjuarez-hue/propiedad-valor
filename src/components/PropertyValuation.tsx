@@ -37,6 +37,7 @@ import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 
 import PropertyComparison from './PropertyComparison';
+import { sanitizeNumericInput } from '@/utils/validation';
 
 // Traducciones / Translations
 const translations = {
@@ -1938,7 +1939,7 @@ const PropertyValuation = () => {
                           id="areaPrimerNivel"
                           type="number"
                           value={propertyData.areaPrimerNivel || ''}
-                          onChange={(e) => handleInputChange('areaPrimerNivel', parseFloat(e.target.value) || 0)}
+                           onChange={(e) => handleInputChange('areaPrimerNivel', sanitizeNumericInput(e.target.value))}
                           placeholder="0"
                         />
                         <p className="text-xs text-muted-foreground mt-1">
@@ -1954,7 +1955,7 @@ const PropertyValuation = () => {
                             id="areaSotano"
                             type="number"
                             value={propertyData.areaSotano || ''}
-                            onChange={(e) => handleInputChange('areaSotano', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleInputChange('areaSotano', sanitizeNumericInput(e.target.value))}
                             placeholder="0"
                           />
                         </div>
@@ -1964,7 +1965,7 @@ const PropertyValuation = () => {
                             id="areaPrimerNivel"
                             type="number"
                             value={propertyData.areaPrimerNivel || ''}
-                            onChange={(e) => handleInputChange('areaPrimerNivel', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleInputChange('areaPrimerNivel', sanitizeNumericInput(e.target.value))}
                             placeholder="0"
                           />
                         </div>
@@ -1974,7 +1975,7 @@ const PropertyValuation = () => {
                             id="areaSegundoNivel"
                             type="number"
                             value={propertyData.areaSegundoNivel || ''}
-                            onChange={(e) => handleInputChange('areaSegundoNivel', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleInputChange('areaSegundoNivel', sanitizeNumericInput(e.target.value))}
                             placeholder="0"
                           />
                         </div>
@@ -1984,7 +1985,7 @@ const PropertyValuation = () => {
                             id="areaTercerNivel"
                             type="number"
                             value={propertyData.areaTercerNivel || ''}
-                            onChange={(e) => handleInputChange('areaTercerNivel', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleInputChange('areaTercerNivel', sanitizeNumericInput(e.target.value))}
                             placeholder="0"
                           />
                         </div>
@@ -1994,7 +1995,7 @@ const PropertyValuation = () => {
                             id="areaCuartoNivel"
                             type="number"
                             value={propertyData.areaCuartoNivel || ''}
-                            onChange={(e) => handleInputChange('areaCuartoNivel', parseFloat(e.target.value) || 0)}
+                            onChange={(e) => handleInputChange('areaCuartoNivel', sanitizeNumericInput(e.target.value))}
                             placeholder="0"
                           />
                         </div>
@@ -2031,7 +2032,7 @@ const PropertyValuation = () => {
                       id="areaTerreno"
                       type="number"
                       value={propertyData.areaTerreno || ''}
-                      onChange={(e) => handleInputChange('areaTerreno', parseFloat(e.target.value) || 0)}
+                      onChange={(e) => handleInputChange('areaTerreno', sanitizeNumericInput(e.target.value))}
                       placeholder="0"
                       className="max-w-xs"
                     />

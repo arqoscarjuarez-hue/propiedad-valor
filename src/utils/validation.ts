@@ -114,10 +114,12 @@ export const getStepCompletion = (propertyData: PropertyData, valuation: number 
  */
 export const sanitizeNumericInput = (value: string | number): number => {
   if (typeof value === 'string') {
-    const numValue = parseFloat(value);
-    return isNaN(numValue) ? 0 : Math.max(0, numValue);
+    // Limpiar la cadena de caracteres no numéricos excepto el punto decimal
+    const cleanedValue = value.replace(/[^\d.]/g, '');
+    const numValue = parseFloat(cleanedValue);
+    return isNaN(numValue) || numValue < 0 ? 0 : numValue;
   } else if (typeof value === 'number') {
-    return isNaN(value) ? 0 : Math.max(0, value);
+    return isNaN(value) || value < 0 ? 0 : value;
   }
   return 0;
 };
