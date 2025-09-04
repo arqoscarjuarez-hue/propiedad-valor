@@ -697,15 +697,16 @@ const PropertyValuation = () => {
       
       // Factores de ubicación - Curva ascendente con incrementos decrecientes
       const locationFactors = {
-        'mala': 0.01,                    // Base mínima (1% del valor)
+        // Para terrenos (Factores Ambientales y Riesgos)
+        'mala': 0.01,                    // Deficiente - Base mínima (1% del valor)
         'vientos-fuertes': 0.16,         // +0.15
         'erosion-suelo': 0.29,           // +0.13
         'riesgo-hidrico': 0.40,          // +0.11
         'regular': 0.49,                 // +0.09
-        'media': 0.56,                   // +0.07
-        'buena': 0.61,                   // +0.05
-        'clima-favorable': 0.64,         // +0.03
-        'drenaje-excelente': 0.66,       // +0.02
+        'media': 0.56,                   // +0.07 (para propiedades no-terreno)
+        'clima-favorable': 0.61,         // +0.05
+        'drenaje-excelente': 0.64,       // +0.03
+        'buena': 0.66,                   // +0.02
         'excelente': 0.67                // +0.01 (máximo con menor incremento)
       };
       
