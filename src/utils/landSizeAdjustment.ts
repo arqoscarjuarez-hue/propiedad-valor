@@ -24,14 +24,14 @@ export const getLandSizeFactor = (
   if (areaSqm < 100) {
     let smallLotFactor = 1.0;
     
-    // Aplicar ajustes por características incluso en terrenos pequeños
+    // Aplicar ajustes por características incluso en terrenos pequeños - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'plano': 1.00,                    // Sin ajuste - topografía ideal
-        'pendiente-suave': 0.98,          // Ligera reducción
-        'pendiente-moderada': 0.95,       // Reducción moderada
-        'pendiente-pronunciada': 0.90,    // Reducción significativa
-        'irregular': 0.88                 // Mayor reducción
+        'irregular': 0.75,                // Base más baja
+        'pendiente-pronunciada': 0.85,    // +0.10
+        'pendiente-moderada': 0.93,       // +0.08
+        'pendiente-suave': 0.99,          // +0.06
+        'plano': 1.00                     // +0.01 (topografía ideal)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -68,14 +68,14 @@ export const getLandSizeFactor = (
     const factor = 1.0 - ((areaSqm - 100) / (2000 - 100)) * 0.50;
     let mediumLotFactor = Math.max(factor, 0.50);
     
-    // Aplicar ajustes por características del terreno
+    // Aplicar ajustes por características del terreno - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'plano': 1.00,                    // Sin ajuste
-        'pendiente-suave': 0.98,          // Ligera reducción
-        'pendiente-moderada': 0.95,       // Reducción moderada
-        'pendiente-pronunciada': 0.90,    // Reducción significativa
-        'irregular': 0.88                 // Mayor reducción
+        'irregular': 0.75,                // Base más baja
+        'pendiente-pronunciada': 0.85,    // +0.10
+        'pendiente-moderada': 0.93,       // +0.08
+        'pendiente-suave': 0.99,          // +0.06
+        'plano': 1.00                     // +0.01 (topografía ideal)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -116,14 +116,14 @@ export const getLandSizeFactor = (
   // Aplicar ajustes adicionales basados en características del terreno
   let adjustedFactor = finalFactor;
   
-  // Ajuste por topografía: terrenos con topografía compleja requieren factores diferentes
+  // Ajuste por topografía: terrenos con topografía compleja requieren factores diferentes - Curva ascendente
   if (topografia) {
     const topographyAdjustments = {
-      'plano': 1.00,                    // Sin ajuste - topografía ideal
-      'pendiente-suave': 0.98,          // Ligera reducción - drenaje natural
-      'pendiente-moderada': 0.95,       // Reducción moderada - costos adicionales
-      'pendiente-pronunciada': 0.90,    // Reducción significativa - ingeniería especializada
-      'irregular': 0.88                 // Mayor reducción - desarrollo muy costoso
+      'irregular': 0.75,                // Base más baja - desarrollo muy costoso
+      'pendiente-pronunciada': 0.85,    // +0.10 - ingeniería especializada
+      'pendiente-moderada': 0.93,       // +0.08 - costos adicionales
+      'pendiente-suave': 0.99,          // +0.06 - drenaje natural
+      'plano': 1.00                     // +0.01 - topografía ideal
     };
     
     const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
