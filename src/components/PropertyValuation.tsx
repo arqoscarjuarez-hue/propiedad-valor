@@ -735,17 +735,30 @@ const PropertyValuation = () => {
         console.log('📍 Factor ubicación:', locationFactor);
         console.log('🔧 Factor condición:', conditionFactor);
         
-        // Aplicar todos los factores específicos del terreno dentro de getLandSizeFactor
+        // Factores de tipo de valoración para terrenos
+        const valuationTypeFactors = {
+          'residencial': 1.0,
+          'comercial': 1.28,     // Valor comercial premium
+          'industrial': 1.12,    // Valor industrial alto
+          'recreativo': 0.92,    // Valor recreativo menor
+          'agricola': 0.68       // Valor agrícola más bajo
+        };
+        
+        const valuationTypeFactor = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
+        
+        // Aplicar factores de tamaño y características del terreno (sin tipo de valoración para evitar duplicación)
         const landSizeFactor = getLandSizeFactor(
           propertyData.areaTerreno,
           propertyData.topografia, 
-          propertyData.tipoValoracion
+          undefined // No pasar tipoValoracion aquí para evitar duplicación
         );
         
         console.log('📏 Factor tamaño+características:', landSizeFactor);
+        console.log('🏗️ Factor tipo valoración:', valuationTypeFactor, '(', propertyData.tipoValoracion, ')');
         
         const valorTerreno = propertyData.areaTerreno * basePrice * factorTerrenoBase * 
-                           propertyTypeFactor * locationFactor * conditionFactor * landSizeFactor;
+                           propertyTypeFactor * locationFactor * conditionFactor * 
+                           landSizeFactor * valuationTypeFactor;
         
         console.log('💵 Valor terreno calculado:', valorTerreno.toLocaleString('es-ES', {
           style: 'currency',
