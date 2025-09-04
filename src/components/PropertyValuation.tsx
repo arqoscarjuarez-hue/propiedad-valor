@@ -905,7 +905,7 @@ const PropertyValuation = () => {
           const areaTerrenoFinal = Math.max(areaMinima, Math.min(areaMaxima, areaTerrenoComparable));
           
           // Generar características específicas de terreno
-          const topografias = ['plano', 'pendiente-suave', 'pendiente-moderada', 'pendiente-pronunciada', 'irregular'];
+          const topografias = ['plano', 'ondulado', 'pendiente-suave', 'rocoso', 'pendiente-moderada', 'pendiente-pronunciada', 'muy-irregular', 'irregular', 'pantanoso'];
           const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
           const topografiaComparable = topografias[Math.floor(Math.random() * topografias.length)];
           const tipoValoracionComparable = tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)];
@@ -2192,10 +2192,22 @@ const PropertyValuation = () => {
                                 <span className="text-xs text-muted-foreground">Ideal para construcción, fácil acceso y menor costo</span>
                               </div>
                             </SelectItem>
+                            <SelectItem value="ondulado">
+                              <div className="flex flex-col">
+                                <span className="font-medium">Ondulado</span>
+                                <span className="text-xs text-muted-foreground">Terreno con ligeras ondulaciones, buena construcción</span>
+                              </div>
+                            </SelectItem>
                             <SelectItem value="pendiente-suave">
                               <div className="flex flex-col">
                                 <span className="font-medium">{translations[selectedLanguage].gentleSlope}</span>
                                 <span className="text-xs text-muted-foreground">Bueno para construcción, buen drenaje natural</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="rocoso">
+                              <div className="flex flex-col">
+                                <span className="font-medium">Rocoso</span>
+                                <span className="text-xs text-muted-foreground">Terreno con afloramientos rocosos, requiere excavación</span>
                               </div>
                             </SelectItem>
                             <SelectItem value="pendiente-moderada">
@@ -2210,10 +2222,22 @@ const PropertyValuation = () => {
                                 <span className="text-xs text-muted-foreground">Difícil para construir, necesita estudios especiales</span>
                               </div>
                             </SelectItem>
+                            <SelectItem value="muy-irregular">
+                              <div className="flex flex-col">
+                                <span className="font-medium">Muy Irregular</span>
+                                <span className="text-xs text-muted-foreground">Terreno muy complejo, alta inversión para nivelar</span>
+                              </div>
+                            </SelectItem>
                             <SelectItem value="irregular">
                               <div className="flex flex-col">
                                 <span className="font-medium">{translations[selectedLanguage].irregular}</span>
                                 <span className="text-xs text-muted-foreground">Terreno complejo, mayor inversión para desarrollar</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="pantanoso">
+                              <div className="flex flex-col">
+                                <span className="font-medium">Pantanoso</span>
+                                <span className="text-xs text-muted-foreground">Terreno húmedo, requiere drenaje especializado</span>
                               </div>
                             </SelectItem>
                           </SelectContent>
