@@ -697,16 +697,16 @@ const PropertyValuation = () => {
       
       // Factores de ubicación - Curva ascendente con incrementos decrecientes
       const locationFactors = {
-        'mala': 0.00,                    // Base más baja
-        'vientos-fuertes': 0.15,         // +0.15
-        'erosion-suelo': 0.28,           // +0.13
-        'riesgo-hidrico': 0.39,          // +0.11
-        'regular': 0.48,                 // +0.09
-        'media': 0.55,                   // +0.07
-        'buena': 0.60,                   // +0.05
-        'clima-favorable': 0.63,         // +0.03
-        'drenaje-excelente': 0.65,       // +0.02
-        'excelente': 0.66                // +0.01 (máximo con menor incremento)
+        'mala': 0.10,                    // Base mínima lógica (10% del valor)
+        'vientos-fuertes': 0.25,         // +0.15
+        'erosion-suelo': 0.38,           // +0.13
+        'riesgo-hidrico': 0.49,          // +0.11
+        'regular': 0.58,                 // +0.09
+        'media': 0.65,                   // +0.07
+        'buena': 0.70,                   // +0.05
+        'clima-favorable': 0.73,         // +0.03
+        'drenaje-excelente': 0.75,       // +0.02
+        'excelente': 0.76                // +0.01 (máximo con menor incremento)
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
