@@ -803,18 +803,37 @@ const valorTerreno = convertCurrency(
             'agricola': 0.68
           };
 
-          const factorTopografiaFinal = topographyFactors[propertyData.topografia as keyof typeof topographyFactors] || 1.0;
-          const factorTipoValoracionFinal = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
-
+          // Para terrenos, aplicamos todos los factores dentro de getLandSizeFactor 
+          // para evitar duplicación
           const landSizeFactor = getLandSizeFactor(
             propertyData.areaTerreno, 
             propertyData.topografia, 
             propertyData.tipoValoracion
           );
+          
+          console.log('🧮 Cálculo de terreno:');
+          console.log('📐 Área terreno:', propertyData.areaTerreno, 'm²');
+          console.log('💰 Precio base:', basePrice);
+          console.log('🏠 Factor terreno:', factorTerreno);
+          console.log('🏗️ Factor tipo propiedad:', propertyTypeFactor);
+          console.log('📍 Factor ubicación:', locationFactor);
+          console.log('🔧 Factor condición:', conditionFactor);
+          console.log('📏 Factor tamaño+características:', landSizeFactor);
+          
           const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * 
-                               propertyTypeFactor * locationFactor * conditionFactor *
-                               factorTopografiaFinal * factorTipoValoracionFinal * landSizeFactor;
+                               propertyTypeFactor * locationFactor * conditionFactor * landSizeFactor;
+          
+          console.log('💵 Valor terreno calculado:', valorTerreno.toLocaleString('es-ES', {
+            style: 'currency',
+            currency: 'USD'
+          }));
+          
           valorTotal = valorConstruccion + valorTerreno;
+          
+          console.log('🎯 Valor total final:', valorTotal.toLocaleString('es-ES', {
+            style: 'currency', 
+            currency: 'USD'
+          }));
         }
         
         const valorFinal = convertCurrency(valorTotal, selectedCurrency);
