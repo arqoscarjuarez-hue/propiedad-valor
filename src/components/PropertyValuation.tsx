@@ -697,16 +697,16 @@ const PropertyValuation = () => {
       
       // Factores de ubicación
       const locationFactors = {
-        'excelente': 1.3,
-        'drenaje-excelente': 1.25,
-        'clima-favorable': 1.2,
-        'buena': 1.1,
+        'excelente': 1.18,
+        'drenaje-excelente': 1.14,
+        'clima-favorable': 1.10,
+        'buena': 1.06,
         'media': 1.0,
-        'regular': 0.8,
-        'riesgo-hidrico': 0.75,
-        'erosion-suelo': 0.7,
-        'vientos-fuertes': 0.65,
-        'mala': 0.6
+        'regular': 0.94,
+        'riesgo-hidrico': 0.90,
+        'erosion-suelo': 0.86,
+        'vientos-fuertes': 0.82,
+        'mala': 0.78
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
