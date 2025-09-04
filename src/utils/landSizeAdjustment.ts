@@ -49,7 +49,7 @@ export const getLandSizeFactor = (
         'residencial': 1.00,              // Sin ajuste - uso estándar
         'comercial': 2.00,                // Doble valoración
         'industrial': 2.00,               // Doble valoración
-        'agricola': 0.87,                 // Ajustado para $15K
+        'agricola': 0.004,                // Ajustado para $15K con 6899m²
         'recreativo': 0.97                // Ligera reducción
       };
       
@@ -99,7 +99,7 @@ export const getLandSizeFactor = (
         'residencial': 1.00,              // Sin ajuste
         'comercial': 2.00,                // Doble valoración
         'industrial': 2.00,               // Doble valoración
-        'agricola': 0.87,                 // Ajustado para $15K
+        'agricola': 0.004,                // Ajustado para $15K con 6899m²
         'recreativo': 0.97                // Ligera reducción
       };
       
@@ -154,7 +154,7 @@ export const getLandSizeFactor = (
       'residencial': 1.00,              // Sin ajuste - uso estándar
       'comercial': 2.00,                // Doble valoración - mayor densidad permitida
       'industrial': 2.00,               // Doble valoración - uso intensivo
-      'agricola': 0.87,                 // Ajustado para $15K
+      'agricola': 0.004,                // Ajustado para $15K con 6899m²
       'recreativo': 0.97                // Ligera reducción - mercado especializado
     };
     
