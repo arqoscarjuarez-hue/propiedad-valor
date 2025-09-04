@@ -744,8 +744,8 @@ const PropertyValuation = () => {
         // Factores de tipo de valoración para terrenos
         const valuationTypeFactors = {
           'residencial': 0.65,
-          'comercial': 1.28,     // Valor comercial premium
-          'industrial': 1.24,    // Valor industrial premium
+          'comercial': 2.00,     // Doble valoración (solicitado)
+          'industrial': 2.00,    // Doble valoración (solicitado)
           'recreativo': 0.61,    // Valor recreativo menor
           'agricola': 0.43       // Valor agrícola más bajo
         };
@@ -812,8 +812,8 @@ const PropertyValuation = () => {
 
           const valuationTypeFactors = {
             'residencial': 0.65,
-            'comercial': 1.28,
-            'industrial': 1.24,
+            'comercial': 2.00,
+            'industrial': 2.00,
             'recreativo': 0.61,
             'agricola': 0.43
           };
