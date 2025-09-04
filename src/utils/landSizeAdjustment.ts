@@ -27,7 +27,7 @@ export const getLandSizeFactor = (
     // Aplicar ajustes por características incluso en terrenos pequeños - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'zona-humeda': 0.10,              // Base más baja - requiere drenaje especializado
+        'zona-humeda': 0.001,              // Base más baja - requiere drenaje especializado
         'topografia-irregular': 0.25,     // +0.15 - relieve heterogéneo
         'afloramiento-rocoso': 0.38,      // +0.13 - excavación especializada
         'pendiente-escarpada': 0.49,      // +0.11 - desarrollo muy complejo
@@ -60,7 +60,8 @@ export const getLandSizeFactor = (
     }
     
     // Asegurar rangos razonables
-    smallLotFactor = Math.max(0.8, Math.min(1.1, smallLotFactor));
+    const minClampSmall = topografia === 'zona-humeda' ? 0.001 : 0.8;
+    smallLotFactor = Math.max(minClampSmall, Math.min(1.1, smallLotFactor));
     
     console.log(`✅ Area < 100m² (${areaSqm}m²), factor con características: ${smallLotFactor.toFixed(3)}`);
     return smallLotFactor;
@@ -75,7 +76,7 @@ export const getLandSizeFactor = (
     // Aplicar ajustes por características del terreno - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'zona-humeda': 0.10,              // Base más baja - requiere drenaje especializado
+        'zona-humeda': 0.001,              // Base más baja - requiere drenaje especializado
         'topografia-irregular': 0.25,     // +0.15 - relieve heterogéneo
         'afloramiento-rocoso': 0.38,      // +0.13 - excavación especializada
         'pendiente-escarpada': 0.49,      // +0.11 - desarrollo muy complejo
@@ -108,7 +109,8 @@ export const getLandSizeFactor = (
     }
     
     // Asegurar rangos razonables para terrenos medianos
-    mediumLotFactor = Math.max(0.4, Math.min(1.1, mediumLotFactor));
+    const minClampMedium = topografia === 'zona-humeda' ? 0.001 : 0.4;
+    mediumLotFactor = Math.max(minClampMedium, Math.min(1.1, mediumLotFactor));
     
     console.log(`📉 Area ${areaSqm}m² - Linear reduction from 1.0 to 0.50`);
     console.log(`📉 Raw factor calculation: 1.0 - ((${areaSqm} - 100) / 1900) × 0.50 = ${factor}`);
@@ -127,7 +129,7 @@ export const getLandSizeFactor = (
   // Ajuste por topografía: terrenos con topografía compleja requieren factores diferentes - Curva ascendente
   if (topografia) {
     const topographyAdjustments = {
-      'zona-humeda': 0.10,              // Base más baja - requiere drenaje especializado
+      'zona-humeda': 0.001,              // Base más baja - requiere drenaje especializado
       'topografia-irregular': 0.25,     // +0.15 - relieve heterogéneo
       'afloramiento-rocoso': 0.38,      // +0.13 - excavación especializada
       'pendiente-escarpada': 0.49,      // +0.11 - desarrollo muy complejo
@@ -161,7 +163,8 @@ export const getLandSizeFactor = (
   }
   
   // Asegurar que el factor final esté dentro de rangos razonables
-  adjustedFactor = Math.max(0.3, Math.min(1.2, adjustedFactor));
+  const minClampLarge = topografia === 'zona-humeda' ? 0.001 : 0.3;
+  adjustedFactor = Math.max(minClampLarge, Math.min(1.2, adjustedFactor));
   
   console.log(`📉 Large area ${areaSqm}m² - Fixed at maximum reduction`);
   console.log(`📉 Base factor: ${finalFactor}`);
