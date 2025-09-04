@@ -1896,7 +1896,7 @@ const valorTerreno = convertCurrency(
             <TabsList className="grid w-full md:grid-cols-5 grid-cols-2 h-auto gap-1 bg-muted/50">
                <TabsTrigger 
                  value="ubicacion" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-2 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-1 ${
                    getStepCompletion().step1 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : 'hover:bg-muted/80'
@@ -1908,7 +1908,7 @@ const valorTerreno = convertCurrency(
                </TabsTrigger>
                <TabsTrigger 
                  value="tipo" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-1 ${
                    getStepCompletion().step2 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : getStepCompletion().step1 
@@ -1923,7 +1923,7 @@ const valorTerreno = convertCurrency(
                </TabsTrigger>
                <TabsTrigger 
                  value="areas" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-2 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-1 ${
                    getStepCompletion().step3 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : getStepCompletion().step2 
@@ -1938,7 +1938,7 @@ const valorTerreno = convertCurrency(
                </TabsTrigger>
                <TabsTrigger 
                  value="caracteristicas" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-1 ${
                    getStepCompletion().step4 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : getStepCompletion().step3 
