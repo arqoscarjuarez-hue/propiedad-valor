@@ -132,7 +132,7 @@ const translations = {
     steepSlopeExp: 'Pendiente Pronunciada (25-40%): -20% - Requiere ingeniería especializada',
     irregularExp: 'Terreno Irregular (>40%): -25% - Desarrollo muy costoso',
     commercialUseExp: 'Uso Comercial: +28% - Mayor potencial de ingresos',
-    industrialUseExp: 'Uso Industrial: +12% - Infraestructura especializada',
+    industrialUseExp: 'Uso Industrial: +24% - Infraestructura especializada',
     residentialUseExp: 'Uso Residencial: 0% - Valor base estándar',
     recreationalUseExp: 'Uso Recreativo: -8% - Mercado especializado',
     agriculturalUseExp: 'Uso Agrícola: -32% - Valor extensivo menor',
@@ -739,7 +739,7 @@ const PropertyValuation = () => {
         const valuationTypeFactors = {
           'residencial': 1.0,
           'comercial': 1.28,     // Valor comercial premium
-          'industrial': 1.12,    // Valor industrial alto
+          'industrial': 1.24,    // Valor industrial premium
           'recreativo': 0.92,    // Valor recreativo menor
           'agricola': 0.68       // Valor agrícola más bajo
         };
@@ -807,7 +807,7 @@ const PropertyValuation = () => {
           const valuationTypeFactors = {
             'residencial': 1.0,
             'comercial': 1.28,
-            'industrial': 1.12,
+            'industrial': 1.24,
             'recreativo': 0.92,
             'agricola': 0.68
           };
