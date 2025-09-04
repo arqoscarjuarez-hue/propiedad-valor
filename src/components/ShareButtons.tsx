@@ -14,7 +14,7 @@ import {
   Instagram,
   Music
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +32,7 @@ export function ShareButtons({
   description = "Sistema de valuación inmobiliaria más avanzado y confiable de América. Obtén avalúos profesionales instantáneos."
 }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const { toast } = useToast();
+  
   
   const currentUrl = window.location.href;
   const encodedUrl = encodeURIComponent(currentUrl);
@@ -109,17 +109,10 @@ export function ShareButtons({
     try {
       await navigator.clipboard.writeText(currentUrl);
       setCopied(true);
-      toast({
-        title: "¡Enlace copiado!",
-        description: "El enlace se ha copiado al portapapeles",
-      });
+      console.log("Enlace copiado al portapapeles");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast({
-        title: "Error",
-        description: "No se pudo copiar el enlace",
-        variant: "destructive"
-      });
+      console.error("No se pudo copiar el enlace");
     }
   };
 

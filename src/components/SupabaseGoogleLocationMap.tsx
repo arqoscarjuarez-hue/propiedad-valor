@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Settings, Shield, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 import { supabase } from '@/integrations/supabase/client';
 
 /// <reference types="google.maps" />
@@ -32,7 +32,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const { toast } = useToast();
+  
 
   // Función para obtener API key desde Supabase Edge Function
   const getGoogleMapsApiKey = async (): Promise<string> => {
@@ -168,20 +168,13 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
         setCurrentAddress(initialAddress);
       }
 
-      toast({
-        title: "Google Maps Cargado",
-        description: "Mapa cargado de forma segura desde Supabase. Haz clic o arrastra el marcador para ubicar la propiedad.",
-      });
+      console.log("Google Maps Cargado desde Supabase");
 
     } catch (error) {
       console.error('Error loading Google Maps:', error);
       setError(error instanceof Error ? error.message : 'Error desconocido');
       
-      toast({
-        title: "Error al Cargar Google Maps",
-        description: "Verifica que el API key esté configurado correctamente en Supabase",
-        variant: "destructive"
-      });
+      console.error("Error al Cargar Google Maps");
     } finally {
       setLoading(false);
     }
@@ -200,10 +193,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
           onLocationChange(lat, lng, address);
         }
         
-        toast({
-          title: "Ubicación Actualizada",
-          description: address,
-        });
+        console.log("Ubicación Actualizada:", address);
       }
     } catch (error) {
       console.error('Error en geocodificación:', error);
@@ -234,19 +224,11 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
         
         handleLocationUpdate(lat, lng);
       } else {
-        toast({
-          title: "Dirección no encontrada",
-          description: "No se pudo encontrar la dirección especificada",
-          variant: "destructive"
-        });
+        console.error("Dirección no encontrada");
       }
     } catch (error) {
       console.error('Error searching address:', error);
-      toast({
-        title: "Error de búsqueda",
-        description: "Error al buscar la dirección",
-        variant: "destructive"
-      });
+      console.error("Error al buscar la dirección");
     }
   };
 

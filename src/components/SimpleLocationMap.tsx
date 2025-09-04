@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Search, Navigation, Zap, Info, Move } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 
 // Leaflet imports
 declare global {
@@ -34,7 +34,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
-  const { toast } = useToast();
+  
 
   // Actualizar posición cuando cambien las props iniciales
   useEffect(() => {
@@ -156,24 +156,13 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           onLocationChange(lat, lng, address);
         }
 
-        toast({
-          title: "Ubicación Encontrada",
-          description: address,
-        });
+        console.log("Ubicación Encontrada:", address);
       } else {
-        toast({
-          title: "No se encontró la dirección",
-          description: "Intenta con una dirección más específica",
-          variant: "destructive"
-        });
+        console.error("No se encontró la dirección");
       }
     } catch (error) {
       console.error('Error searching location:', error);
-      toast({
-        title: "Error de búsqueda",
-        description: "Error al buscar la ubicación",
-        variant: "destructive"
-      });
+      console.error("Error al buscar la ubicación");
     } finally {
       setLoading(false);
     }
@@ -298,18 +287,11 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Obtener dirección para estas coordenadas
       await reverseGeocode(lat, lng);
 
-      toast({
-        title: "Coordenadas Encontradas",
-        description: `Ubicación: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-      });
+      console.log(`Coordenadas Encontradas: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
 
     } catch (error) {
       console.error('Error parsing coordinates:', error);
-      toast({
-        title: "Error en Coordenadas",
-        description: error instanceof Error ? error.message : "Formato inválido. Usa: latitud, longitud",
-        variant: "destructive"
-      });
+      console.error("Error en Coordenadas:", error instanceof Error ? error.message : "Formato inválido");
     } finally {
       setLoading(false);
     }
@@ -330,10 +312,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           onLocationChange(lat, lng, data.display_name);
         }
 
-        toast({
-          title: "Ubicación Actualizada",
-          description: data.display_name,
-        });
+        console.log("Ubicación Actualizada:", data.display_name);
       }
     } catch (error) {
       console.error('Error reverse geocoding:', error);
@@ -354,11 +333,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   // Obtener ubicación actual del usuario
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      toast({
-        title: "Geolocalización no disponible",
-        description: "Tu navegador no soporta geolocalización",
-        variant: "destructive"
-      });
+      console.error("Geolocalización no disponible");
       return;
     }
 
@@ -370,19 +345,12 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
         handlePositionChange(lat, lng);
         setLoading(false);
         
-        toast({
-          title: "Ubicación Actual Obtenida",
-          description: "Se ha centrado el mapa en tu ubicación",
-        });
+        console.log("Ubicación Actual Obtenida");
       },
       (error) => {
         console.error('Error getting location:', error);
         setLoading(false);
-        toast({
-          title: "Error de Geolocalización",
-          description: "No se pudo obtener tu ubicación actual",
-          variant: "destructive"
-        });
+        console.error("Error de Geolocalización");
       }
     );
   };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { commentTranslations } from "@/translations/commentTranslations";
@@ -19,37 +19,25 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
   const t = commentTranslations[selectedLanguage];
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!user) {
-      toast({
-        title: "Autenticación requerida",
-        description: "Debes iniciar sesión para comentar.",
-        variant: "destructive",
-      });
+      console.error("Autenticación requerida. Debes iniciar sesión para comentar.");
       return;
     }
     
     if (!content.trim()) {
-      toast({
-        title: t.error,
-        description: t.writeCommentError,
-        variant: "destructive",
-      });
+      console.error(t.writeCommentError);
       return;
     }
 
     // Input validation and sanitization
     const sanitizedContent = content.trim();
     if (sanitizedContent.length > 1000) {
-      toast({
-        title: "Comentario muy largo",
-        description: "El comentario no puede exceder 1000 caracteres.",
-        variant: "destructive",
-      });
+      console.error("El comentario no puede exceder 1000 caracteres.");
       return;
     }
 
@@ -74,20 +62,13 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         setContent("");
         
         if (data.moderated) {
-          toast({
-            title: t.commentModerated,
-            description: t.moderatedDescription,
-            variant: "destructive",
-          });
+          console.log(t.commentModerated, t.moderatedDescription);
         } else {
           const message = data.note ? 
             `${t.publishedWithNote}. ${data.note}` : 
             t.publishedDescription;
           
-          toast({
-            title: t.commentPublished,
-            description: message,
-          });
+          console.log(t.commentPublished, message);
           
           // Generate auto-reply with system user
           if (data.comment && data.comment.id) {
@@ -111,11 +92,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
       }
     } catch (error) {
       // Error enviando comentario
-      toast({
-        title: t.error,
-        description: t.sendError,
-        variant: "destructive",
-      });
+      console.error(t.error, t.sendError);
     } finally {
       setIsSubmitting(false);
     }

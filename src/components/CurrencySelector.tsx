@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, DollarSign, RefreshCw } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 
 export interface Currency {
   code: string;
@@ -81,7 +81,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const { toast } = useToast();
+  
 
   const updateExchangeRates = async () => {
     setLoading(true);
@@ -111,18 +111,12 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       }
 
       setLastUpdate(new Date());
-      toast({
-        title: exchangeRateUpdated,
-        description: `${lastUpdateText}: ${new Date().toLocaleTimeString()}`,
-      });
+      // Tipos de cambio actualizados silenciosamente
+      console.log(`${exchangeRateUpdated}: ${new Date().toLocaleTimeString()}`);
 
     } catch (error) {
       // Error actualizando tipos de cambio
-      toast({
-        title: errorTitle,
-        description: exchangeRateError,
-        variant: "destructive"
-      });
+      console.error(errorTitle, exchangeRateError);
     } finally {
       setLoading(false);
     }

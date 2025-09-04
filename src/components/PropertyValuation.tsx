@@ -26,7 +26,7 @@ import {
   AlignmentType 
 } from 'docx';
 import { saveAs } from 'file-saver';
-import { useToast } from '@/hooks/use-toast';
+
 import { useLanguage } from '@/hooks/useLanguage';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import LocationMap from './LocationMap';
@@ -400,7 +400,7 @@ interface ComparativeProperty {
 }
 
 const PropertyValuation = () => {
-  const { toast } = useToast();
+  
   
   // Función para obtener la ubicación del usuario
   const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
@@ -423,12 +423,8 @@ const PropertyValuation = () => {
         (error) => {
           console.log('Error de geolocalización:', error.message);
           console.log('Código de error:', error.code);
-          // Mostrar toast con el error específico
-          toast({
-            title: "Ubicación no disponible",
-            description: `No se pudo detectar la ubicación. Usando Ciudad de México como referencia.`,
-            variant: "destructive"
-          });
+          // Ubicación no disponible, usando referencia silenciosamente
+          console.log("Ubicación no disponible. Usando Ciudad de México como referencia.");
           resolve({ lat: 19.4326, lng: -99.1332 });
         },
         {
@@ -511,13 +507,10 @@ const PropertyValuation = () => {
           longitud: userLocation.lng
         }));
         
-        // Solo mostrar toast si realmente detectó la ubicación del usuario
+        // Ubicación detectada silenciosamente
         const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
         if (isUserLocation) {
-          toast({
-            title: "Ubicación Detectada",
-            description: `Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`,
-          });
+          console.log(`Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`);
         }
       } catch (error) {
         console.error('Error inicializando ubicación:', error);
@@ -558,10 +551,8 @@ const PropertyValuation = () => {
     setComparativeProperties(convertedComparatives);
     setSelectedComparatives(convertedComparatives.slice(0, 3));
     
-    toast({
-      title: translations[selectedLanguage].currencyChanged,
-      description: `${translations[selectedLanguage].valuationNowIn} ${currency.name}`,
-    });
+    // Moneda cambiada silenciosamente
+    console.log(`${translations[selectedLanguage].currencyChanged}: ${currency.name}`);
   };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
@@ -640,20 +631,15 @@ const PropertyValuation = () => {
       // Mostrar notificación de éxito con las coordenadas
       const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
       
-      toast({
-        title: "Nuevo Valúo Iniciado",
-        description: isUserLocation 
-          ? `Ubicación detectada: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
-          : "Usando ubicación de referencia (Ciudad de México)",
-      });
+      // Nuevo valúo iniciado silenciosamente
+      console.log(isUserLocation 
+        ? `Ubicación detectada: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+        : "Usando ubicación de referencia (Ciudad de México)");
       
     } catch (error) {
       console.error('Error al iniciar nuevo valúo:', error);
-      toast({
-        title: "Error",
-        description: "Hubo un problema al detectar la ubicación. Intente nuevamente.",
-        variant: "destructive"
-      });
+      // Error silencioso
+      console.error("Hubo un problema al detectar la ubicación.");
     }
   };
 
@@ -676,30 +662,22 @@ const PropertyValuation = () => {
       
       // Validación mejorada
       if (propertyData.tipoPropiedad !== 'terreno' && areaTotal <= 0) {
-        toast({
-          title: translations[selectedLanguage].errorTitle,
-          description: translations[selectedLanguage].errorMinimumArea,
-          variant: "destructive"
-        });
+        // Error de área mínima - manejo silencioso
+        console.error(translations[selectedLanguage].errorMinimumArea);
         setIsCalculating(false);
         return;
       }
       
       // Para departamentos, no validar área de terreno
       if (propertyData.tipoPropiedad !== 'departamento' && propertyData.areaTerreno <= 0) {
-        toast({
-          title: translations[selectedLanguage].errorTitle,
-          description: "Debe ingresar un área de terreno mayor a 0",
-          variant: "destructive"
-        });
+        // Error de área de terreno - manejo silencioso
+        console.error("Debe ingresar un área de terreno mayor a 0");
         setIsCalculating(false);
         return;
       }
 
-      toast({
-        title: translations[selectedLanguage].calculatingValuation,
-        description: translations[selectedLanguage].generatingReport,
-      });
+      // Generando reporte silenciosamente
+      console.log(translations[selectedLanguage].generatingReport);
 
       // Sin bonificación por espacios ya que se eliminaron
       
@@ -847,17 +825,12 @@ const valorTerreno = convertCurrency(
       setComparativeProperties(comparables);
       setSelectedComparatives(comparables.slice(0, 3));
       
-      toast({
-        title: translations[selectedLanguage].valuationCompleted,
-        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(convertCurrency(basePrice, selectedCurrency), selectedCurrency)} - 3 ${translations[selectedLanguage].comparables}`,
-      });
+      // Valuación completada silenciosamente
+      console.log(`${translations[selectedLanguage].valuationCompleted}: ${formatCurrency(convertCurrency(basePrice, selectedCurrency), selectedCurrency)}`);
       
     } catch (error) {
-      toast({
-        title: translations[selectedLanguage].errorGeneric,
-        description: translations[selectedLanguage].errorCalculatingValuation,
-        variant: "destructive"
-      });
+      // Error en cálculo - manejo silencioso
+      console.error(translations[selectedLanguage].errorCalculatingValuation);
     } finally {
       setIsCalculating(false);
     }
@@ -1200,45 +1173,32 @@ const valorTerreno = convertCurrency(
     setFinalAdjustedValue(newValue);
     setAdjustmentPercentage(percentage);
     
-    toast({
-      title: translations[selectedLanguage].priceAdjusted,
-      description: `${translations[selectedLanguage].adjustment}: ${percentage > 0 ? '+' : ''}${percentage}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(newValue, selectedCurrency)}`,
-    });
+    // Precio ajustado silenciosamente
+    console.log(`${translations[selectedLanguage].priceAdjusted}: ${percentage > 0 ? '+' : ''}${percentage}%`);
   };
 
   const regenerateComparatives = async () => {
     if (!baseValuation) return;
     
     try {
-      toast({
-        title: translations[selectedLanguage].searchingComparables,
-        description: "Generando nuevas propiedades cercanas...",
-      });
+      // Búsqueda de comparables iniciada silenciosamente
+      console.log("Generando nuevas propiedades cercanas...");
       
       const newComparables = await generateComparativeProperties(baseValuation);
       setComparativeProperties(newComparables);
       setSelectedComparatives(newComparables.slice(0, 3));
       
-      toast({
-        title: translations[selectedLanguage].comparativesUpdated,
-        description: translations[selectedLanguage].newComparativesGenerated,
-      });
+      // Comparativas actualizadas silenciosamente
+      console.log(translations[selectedLanguage].newComparativesGenerated);
     } catch (error) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: "Error al generar nuevas comparativas",
-        variant: "destructive"
-      });
+      // Error al generar comparativas - manejo silencioso
+      console.error("Error al generar nuevas comparativas");
     }
   };
 
   const generatePDF = async () => {
     if (!valuation) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorPDFGeneration,
-        variant: "destructive"
-      });
+      console.error(translations[selectedLanguage].errorPDFGeneration);
       return;
     }
 
@@ -1446,26 +1406,17 @@ const valorTerreno = convertCurrency(
       const fileName = `avaluo-${propertyData.tipoPropiedad}-${Date.now()}.pdf`;
       doc.save(fileName);
 
-      toast({
-        title: translations[selectedLanguage].pdfGenerated,
-        description: translations[selectedLanguage].pdfGeneratedDesc,
-      });
+      // PDF generado silenciosamente
+      console.log(translations[selectedLanguage].pdfGenerated);
     } catch (error) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorGeneratingPDF,
-        variant: "destructive"
-      });
+      // Error generando PDF - manejo silencioso
+      console.error(translations[selectedLanguage].errorGeneratingPDF);
     }
   };
 
   const generateWord = async () => {
     if (!valuation) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorWordGeneration,
-        variant: "destructive"
-      });
+      console.error(translations[selectedLanguage].errorWordGeneration);
       return;
     }
 
@@ -1715,16 +1666,11 @@ const valorTerreno = convertCurrency(
       const fileName = `avaluo-inmobiliario-${Date.now()}.docx`;
       saveAs(buffer, fileName);
 
-      toast({
-        title: "Documento Word Generado",
-        description: "El avalúo completo se ha descargado correctamente",
-      });
+      // Documento Word generado silenciosamente
+      console.log("El avalúo completo se ha descargado correctamente");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "No se pudo generar el documento Word",
-        variant: "destructive"
-      });
+      // Error generando Word - manejo silencioso
+      console.error("No se pudo generar el documento Word");
     }
   };
 

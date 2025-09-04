@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Settings } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface LocationMapProps {
@@ -27,7 +27,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
   const [mapboxToken, setMapboxToken] = useState('');
   const [isMapReady, setIsMapReady] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
-  const { toast } = useToast();
+  
 
   useEffect(() => {
     if (!mapContainer.current || !mapboxToken) return;
@@ -73,17 +73,10 @@ const LocationMap: React.FC<LocationMapProps> = ({
       });
 
       setIsMapReady(true);
-      toast({
-        title: "Mapa Cargado",
-        description: "Haz clic en el mapa o arrastra el marcador para ubicar la propiedad",
-      });
+      console.log("Mapa Cargado - Haz clic en el mapa o arrastra el marcador");
 
     } catch (error) {
-      toast({
-        title: "Error de Mapbox",
-        description: "Verifica que tu token de Mapbox sea válido",
-        variant: "destructive"
-      });
+      console.error("Error de Mapbox - Verifica tu token");
     }
 
     return () => {
@@ -106,10 +99,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
         onLocationChange(lat, lng, address);
       }
       
-      toast({
-        title: "Ubicación Actualizada",
-        description: address,
-      });
+      console.log("Ubicación Actualizada:", address);
     } catch (error) {
       console.error('Error en geocodificación:', error);
       const coords = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
@@ -123,20 +113,12 @@ const LocationMap: React.FC<LocationMapProps> = ({
 
   const handleTokenSubmit = () => {
     if (!mapboxToken.trim()) {
-      toast({
-        title: "Token Requerido",
-        description: "Por favor ingresa tu token público de Mapbox",
-        variant: "destructive"
-      });
+      console.error("Token Requerido - Ingresa tu token de Mapbox");
       return;
     }
     
     if (!mapboxToken.startsWith('pk.')) {
-      toast({
-        title: "Token Inválido",
-        description: "El token público de Mapbox debe comenzar con 'pk.'",
-        variant: "destructive"
-      });
+      console.error("Token Inválido - Debe comenzar con 'pk.'");
       return;
     }
   };

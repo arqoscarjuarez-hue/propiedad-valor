@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Settings, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+
 
 /// <reference types="google.maps" />
 
@@ -33,7 +33,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   
-  const { toast } = useToast();
+  
 
   // Cargar API key desde localStorage al montar
   useEffect(() => {
@@ -123,18 +123,11 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
         setCurrentAddress(initialAddress);
       }
 
-      toast({
-        title: "Google Maps Cargado",
-        description: "Haz clic en el mapa o arrastra el marcador para ubicar la propiedad",
-      });
+      console.log("Google Maps Cargado - Haz clic en el mapa o arrastra el marcador para ubicar la propiedad");
 
     } catch (error) {
       console.warn('Error loading Google Maps:', error instanceof Error ? error.message : 'Unknown error');
-      toast({
-        title: "Error al Cargar Google Maps",
-        description: "Verifica que tu API key sea válida y tenga permisos para Maps JavaScript API",
-        variant: "destructive"
-      });
+      console.error("Error al Cargar Google Maps - Verifica que tu API key sea válida");
     } finally {
       setLoading(false);
     }
@@ -156,10 +149,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
           onLocationChange(lat, lng, address);
         }
         
-        toast({
-          title: "Ubicación Actualizada",
-          description: address,
-        });
+        console.log("Ubicación Actualizada:", address);
       }
     } catch (error) {
       console.warn('Geocoding error:', error instanceof Error ? error.message : 'Unknown error');
@@ -174,11 +164,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
 
   const handleApiKeySubmit = () => {
     if (!googleMapsApiKey.trim()) {
-      toast({
-        title: "API Key Requerida",
-        description: "Por favor ingresa tu API key de Google Maps",
-        variant: "destructive"
-      });
+      console.error("API Key Requerida - Por favor ingresa tu API key de Google Maps");
       return;
     }
 
@@ -186,11 +172,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
       initializeGoogleMaps(googleMapsApiKey);
     } catch (error) {
       console.error('Error initializing Google Maps:', error);
-      toast({
-        title: "Error de Inicialización",
-        description: "Error al inicializar Google Maps. Verifica tu conexión.",
-        variant: "destructive"
-      });
+      console.error("Error de Inicialización - Error al inicializar Google Maps");
     }
   };
 
@@ -217,21 +199,13 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
         
         handleLocationUpdate(lat, lng);
       } else {
-        toast({
-          title: "Dirección no encontrada",
-          description: "No se pudo encontrar la dirección especificada",
-          variant: "destructive"
-        });
+        console.error("Dirección no encontrada");
       }
     } catch (error) {
       console.warn('Address search error:', error instanceof Error ? error.message : 'Unknown error');
-      toast({
-        title: "Error de búsqueda",
-        description: error.message === 'Búsqueda timeout' 
-          ? "La búsqueda tomó demasiado tiempo. Intenta nuevamente." 
-          : "Error al buscar la dirección",
-        variant: "destructive"
-      });
+      console.error("Error de búsqueda:", error.message === 'Búsqueda timeout' 
+        ? "La búsqueda tomó demasiado tiempo" 
+        : "Error al buscar la dirección");
     }
   };
 
