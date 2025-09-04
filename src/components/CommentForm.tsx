@@ -70,18 +70,26 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           
           console.log(t.commentPublished, message);
           
-          // Generate auto-reply with system user
+          // Generate auto-reply with system user (secure implementation)
           if (data.comment && data.comment.id) {
             setTimeout(async () => {
-              // Create auto-reply with system user (special UUID)
-              const autoReplyContent = `Gracias por tu comentario. Nuestro equipo lo revisará pronto.`;
-              await supabase.functions.invoke('moderate-comment', {
-                body: {
-                  content: autoReplyContent,
-                  user_id: '00000000-0000-0000-0000-000000000000', // System user
-                },
-              });
-              onCommentAdded(); // Refresh to show auto-reply
+              try {
+                const autoReplyContent = commentTranslations[selectedLanguage].autoReply;
+                const { error: autoReplyError } = await supabase.functions.invoke('moderate-comment', {
+                  body: {
+                    content: autoReplyContent,
+                    user_id: '00000000-0000-0000-0000-000000000000', // System user UUID
+                  },
+                });
+                
+                if (autoReplyError) {
+                  console.error('Auto-reply failed:', autoReplyError);
+                } else {
+                  onCommentAdded(); // Refresh to show auto-reply
+                }
+              } catch (error) {
+                console.error('Auto-reply creation failed:', error);
+              }
             }, 2000);
           }
         }
