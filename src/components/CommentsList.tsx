@@ -8,12 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 interface Comment {
   id: string;
   content: string;
-  user_id: string;
   is_approved: boolean;
-  moderation_status: string;
-  moderation_flags: string[] | null;
+  anonymous_author: string;
   created_at: string;
-  parent_comment_id?: string | null;
 }
 
 interface CommentsListProps {
@@ -29,18 +26,15 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
   const fetchComments = async () => {
     try {
       const { data, error } = await supabase
-        .from('comments')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .rpc('get_anonymized_comments');
 
       if (error) {
-        // Error en consulta de Supabase
         throw error;
       }
       
       setComments(data || []);
     } catch (error) {
-      // Error obteniendo comentarios
+      console.error('Error fetching comments:', error);
     } finally {
       setLoading(false);
     }
@@ -65,19 +59,15 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
   return (
     <div className="space-y-4">
       {comments.map((comment) => {
-        const isSystemReply = comment.user_id === 'sistema-automatico';
-        const isReply = comment.parent_comment_id !== null;
+        const isSystemReply = comment.anonymous_author === 'Sistema';
         
         return (
-          <div key={comment.id} className={isReply ? "ml-8 mt-2" : ""}>
+          <div key={comment.id}>
             <Card className={`${comment.is_approved ? '' : 'opacity-50 border-destructive'} ${isSystemReply ? 'bg-primary/5 border-primary/20' : ''}`}>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">
-                    {isSystemReply ? t.systemResponse : 
-                     comment.user_id === 'visitante' ? 'Visitante' : 
-                     comment.user_id === 'sistema-automatico' ? t.systemResponse : 
-                     `${t.user}`}
+                    {comment.anonymous_author}
                   </span>
                   <div className="flex gap-2">
                     {isSystemReply && (
@@ -86,13 +76,8 @@ export function CommentsList({ refreshTrigger }: CommentsListProps) {
                       </Badge>
                     )}
                     <Badge variant={comment.is_approved ? "default" : "destructive"}>
-                      {comment.moderation_status}
+                      {comment.is_approved ? 'Aprobado' : 'Pendiente'}
                     </Badge>
-                    {comment.moderation_flags && comment.moderation_flags.length > 0 && (
-                      <Badge variant="outline">
-                        {t.flagged}: {comment.moderation_flags.join(', ')}
-                      </Badge>
-                    )}
                   </div>
                 </div>
               </CardHeader>
