@@ -905,7 +905,7 @@ const PropertyValuation = () => {
           const areaTerrenoFinal = Math.max(areaMinima, Math.min(areaMaxima, areaTerrenoComparable));
           
           // Generar características específicas de terreno
-          const topografias = ['plano', 'ondulado', 'pendiente-suave', 'rocoso', 'pendiente-moderada', 'pendiente-pronunciada', 'muy-irregular', 'irregular', 'pantanoso'];
+          const topografias = ['terreno-plano', 'ondulado-suave', 'pendiente-leve', 'pendiente-moderada', 'pendiente-fuerte', 'pendiente-escarpada', 'afloramiento-rocoso', 'topografia-irregular', 'zona-humeda'];
           const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
           const topografiaComparable = topografias[Math.floor(Math.random() * topografias.length)];
           const tipoValoracionComparable = tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)];
@@ -2186,58 +2186,58 @@ const PropertyValuation = () => {
                             <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="plano">
+                            <SelectItem value="terreno-plano">
                               <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].flat}</span>
-                                <span className="text-xs text-muted-foreground">Ideal para construcción, fácil acceso y menor costo</span>
+                                <span className="font-medium">Terreno Plano (0-2% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Superficie nivelada, óptima para construcción y desarrollo</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="ondulado">
+                            <SelectItem value="ondulado-suave">
                               <div className="flex flex-col">
-                                <span className="font-medium">Ondulado</span>
-                                <span className="text-xs text-muted-foreground">Terreno con ligeras ondulaciones, buena construcción</span>
+                                <span className="font-medium">Ondulado Suave (2-5% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Relieve ondulado moderado, buen drenaje natural</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="pendiente-suave">
+                            <SelectItem value="pendiente-leve">
                               <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].gentleSlope}</span>
-                                <span className="text-xs text-muted-foreground">Bueno para construcción, buen drenaje natural</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="rocoso">
-                              <div className="flex flex-col">
-                                <span className="font-medium">Rocoso</span>
-                                <span className="text-xs text-muted-foreground">Terreno con afloramientos rocosos, requiere excavación</span>
+                                <span className="font-medium">Pendiente Leve (5-10% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Inclinación suave, favorable para construcción residencial</span>
                               </div>
                             </SelectItem>
                             <SelectItem value="pendiente-moderada">
                               <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].moderateSlope}</span>
-                                <span className="text-xs text-muted-foreground">Requiere nivelación, costos de construcción mayores</span>
+                                <span className="font-medium">Pendiente Moderada (10-20% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Requiere nivelación parcial, costos de construcción mayores</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="pendiente-pronunciada">
+                            <SelectItem value="pendiente-fuerte">
                               <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].steepSlope}</span>
-                                <span className="text-xs text-muted-foreground">Difícil para construir, necesita estudios especiales</span>
+                                <span className="font-medium">Pendiente Fuerte (20-35% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Terreno inclinado, requiere ingeniería especializada</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="muy-irregular">
+                            <SelectItem value="pendiente-escarpada">
                               <div className="flex flex-col">
-                                <span className="font-medium">Muy Irregular</span>
-                                <span className="text-xs text-muted-foreground">Terreno muy complejo, alta inversión para nivelar</span>
+                                <span className="font-medium">Pendiente Escarpada (&gt;35% pendiente)</span>
+                                <span className="text-xs text-muted-foreground">Terreno muy empinado, desarrollo complejo y costoso</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="irregular">
+                            <SelectItem value="afloramiento-rocoso">
                               <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].irregular}</span>
-                                <span className="text-xs text-muted-foreground">Terreno complejo, mayor inversión para desarrollar</span>
+                                <span className="font-medium">Afloramiento Rocoso</span>
+                                <span className="text-xs text-muted-foreground">Presencia de roca expuesta, requiere excavación especializada</span>
                               </div>
                             </SelectItem>
-                            <SelectItem value="pantanoso">
+                            <SelectItem value="topografia-irregular">
                               <div className="flex flex-col">
-                                <span className="font-medium">Pantanoso</span>
-                                <span className="text-xs text-muted-foreground">Terreno húmedo, requiere drenaje especializado</span>
+                                <span className="font-medium">Topografía Irregular</span>
+                                <span className="text-xs text-muted-foreground">Relieve heterogéneo, múltiples niveles y desniveles</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="zona-humeda">
+                              <div className="flex flex-col">
+                                <span className="font-medium">Zona Húmeda</span>
+                                <span className="text-xs text-muted-foreground">Terreno con alto nivel freático, requiere sistema de drenaje</span>
                               </div>
                             </SelectItem>
                           </SelectContent>

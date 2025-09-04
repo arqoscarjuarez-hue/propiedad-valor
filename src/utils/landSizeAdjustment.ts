@@ -27,15 +27,15 @@ export const getLandSizeFactor = (
     // Aplicar ajustes por características incluso en terrenos pequeños - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'pantanoso': 0.68,                // Base más baja - requiere drenaje especializado
-        'muy-irregular': 0.72,            // +0.04 - terreno muy complejo
-        'irregular': 0.75,                // +0.03 - terreno complejo
-        'pendiente-pronunciada': 0.85,    // +0.10 - difícil construcción
-        'rocoso': 0.88,                   // +0.03 - requiere excavación
-        'pendiente-moderada': 0.93,       // +0.05 - costos adicionales
-        'ondulado': 0.96,                 // +0.03 - ligeras ondulaciones
-        'pendiente-suave': 0.99,          // +0.03 - buen drenaje
-        'plano': 1.00                     // +0.01 - topografía ideal
+        'zona-humeda': 0.68,              // Base más baja - requiere drenaje especializado
+        'topografia-irregular': 0.72,     // +0.04 - relieve heterogéneo
+        'afloramiento-rocoso': 0.75,      // +0.03 - excavación especializada
+        'pendiente-escarpada': 0.80,      // +0.05 - desarrollo muy complejo
+        'pendiente-fuerte': 0.85,         // +0.05 - ingeniería especializada
+        'pendiente-moderada': 0.90,       // +0.05 - costos adicionales
+        'pendiente-leve': 0.95,           // +0.05 - favorable para construcción
+        'ondulado-suave': 0.98,           // +0.03 - buen drenaje natural
+        'terreno-plano': 1.00             // +0.02 - óptimo para desarrollo
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -75,15 +75,15 @@ export const getLandSizeFactor = (
     // Aplicar ajustes por características del terreno - Curva ascendente
     if (topografia) {
       const topographyAdjustments = {
-        'pantanoso': 0.68,                // Base más baja - requiere drenaje especializado
-        'muy-irregular': 0.72,            // +0.04 - terreno muy complejo
-        'irregular': 0.75,                // +0.03 - terreno complejo
-        'pendiente-pronunciada': 0.85,    // +0.10 - difícil construcción
-        'rocoso': 0.88,                   // +0.03 - requiere excavación
-        'pendiente-moderada': 0.93,       // +0.05 - costos adicionales
-        'ondulado': 0.96,                 // +0.03 - ligeras ondulaciones
-        'pendiente-suave': 0.99,          // +0.03 - buen drenaje
-        'plano': 1.00                     // +0.01 - topografía ideal
+        'zona-humeda': 0.68,              // Base más baja - requiere drenaje especializado
+        'topografia-irregular': 0.72,     // +0.04 - relieve heterogéneo
+        'afloramiento-rocoso': 0.75,      // +0.03 - excavación especializada
+        'pendiente-escarpada': 0.80,      // +0.05 - desarrollo muy complejo
+        'pendiente-fuerte': 0.85,         // +0.05 - ingeniería especializada
+        'pendiente-moderada': 0.90,       // +0.05 - costos adicionales
+        'pendiente-leve': 0.95,           // +0.05 - favorable para construcción
+        'ondulado-suave': 0.98,           // +0.03 - buen drenaje natural
+        'terreno-plano': 1.00             // +0.02 - óptimo para desarrollo
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -127,15 +127,15 @@ export const getLandSizeFactor = (
   // Ajuste por topografía: terrenos con topografía compleja requieren factores diferentes - Curva ascendente
   if (topografia) {
     const topographyAdjustments = {
-      'pantanoso': 0.68,                // Base más baja - requiere drenaje especializado
-      'muy-irregular': 0.72,            // +0.04 - terreno muy complejo
-      'irregular': 0.75,                // +0.03 - terreno complejo
-      'pendiente-pronunciada': 0.85,    // +0.10 - difícil construcción
-      'rocoso': 0.88,                   // +0.03 - requiere excavación
-      'pendiente-moderada': 0.93,       // +0.05 - costos adicionales
-      'ondulado': 0.96,                 // +0.03 - ligeras ondulaciones
-      'pendiente-suave': 0.99,          // +0.03 - buen drenaje
-      'plano': 1.00                     // +0.01 - topografía ideal
+      'zona-humeda': 0.68,              // Base más baja - requiere drenaje especializado
+      'topografia-irregular': 0.72,     // +0.04 - relieve heterogéneo
+      'afloramiento-rocoso': 0.75,      // +0.03 - excavación especializada
+      'pendiente-escarpada': 0.80,      // +0.05 - desarrollo muy complejo
+      'pendiente-fuerte': 0.85,         // +0.05 - ingeniería especializada
+      'pendiente-moderada': 0.90,       // +0.05 - costos adicionales
+      'pendiente-leve': 0.95,           // +0.05 - favorable para construcción
+      'ondulado-suave': 0.98,           // +0.03 - buen drenaje natural
+      'terreno-plano': 1.00             // +0.02 - óptimo para desarrollo
     };
     
     const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
