@@ -698,13 +698,14 @@ const PropertyValuation = () => {
       // Factores de ubicación
       const locationFactors = {
         'excelente': 1.3,
-        'estable-sismico': 1.25,
+        'drenaje-excelente': 1.25,
         'clima-favorable': 1.2,
         'buena': 1.1,
         'media': 1.0,
         'regular': 0.8,
         'riesgo-hidrico': 0.75,
-        'actividad-sismica': 0.7,
+        'erosion-suelo': 0.7,
+        'vientos-fuertes': 0.65,
         'mala': 0.6
       };
       
@@ -2297,10 +2298,10 @@ const PropertyValuation = () => {
                     <span className="text-xs text-muted-foreground">Riesgos mínimos, terreno estable y bien drenado</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="estable-sismico">
+                <SelectItem value="drenaje-excelente">
                   <div className="flex flex-col">
-                    <span className="font-medium">Estable Sísmico</span>
-                    <span className="text-xs text-muted-foreground">Zona con baja actividad sísmica, suelo firme y estable</span>
+                    <span className="font-medium">Drenaje Excelente</span>
+                    <span className="text-xs text-muted-foreground">Terreno con excelente drenaje natural, no se encharca</span>
                   </div>
                 </SelectItem>
                 <SelectItem value="clima-favorable">
@@ -2321,10 +2322,16 @@ const PropertyValuation = () => {
                     <span className="text-xs text-muted-foreground">Zona con antecedentes de inundaciones ocasionales</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="actividad-sismica">
+                <SelectItem value="erosion-suelo">
                   <div className="flex flex-col">
-                    <span className="font-medium">Actividad Sísmica</span>
-                    <span className="text-xs text-muted-foreground">Zona con moderada actividad sísmica registrada</span>
+                    <span className="font-medium">Erosión de Suelo</span>
+                    <span className="text-xs text-muted-foreground">Terreno susceptible a erosión por lluvias intensas</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="vientos-fuertes">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Vientos Fuertes</span>
+                    <span className="text-xs text-muted-foreground">Zona expuesta a vientos fuertes o temporadas de huracanes</span>
                   </div>
                 </SelectItem>
                 <SelectItem value="mala">
