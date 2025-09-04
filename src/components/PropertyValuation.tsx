@@ -724,43 +724,39 @@ const PropertyValuation = () => {
       
       // Lógica específica para terrenos
       if (propertyData.tipoPropiedad === 'terreno') {
-        // Factores de topografía para terrenos
-        const topographyFactors = {
-          'plano': 1.12,
-          'pendiente-suave': 1.03,
-          'pendiente-moderada': 0.93,
-          'pendiente-pronunciada': 0.80,
-          'irregular': 0.75
-        };
+        // Factor de precio base para terrenos (mucho menor que construcciones)
+        const factorTerrenoBase = 0.25; // Los terrenos valen 25% del precio de construcción base
         
-        // Factores de tipo de valoración para terrenos
-        const valuationTypeFactors = {
-          'residencial': 1.0,
-          'comercial': 1.28,
-          'industrial': 1.12,
-          'recreativo': 0.92,
-          'agricola': 0.68
-        };
+        console.log('🏞️ === CÁLCULO DE TERRENO PURO ===');
+        console.log('📐 Área terreno:', propertyData.areaTerreno, 'm²');
+        console.log('💰 Precio base construcción:', basePrice);
+        console.log('🏞️ Factor terreno base:', factorTerrenoBase);
+        console.log('🏗️ Factor tipo propiedad:', propertyTypeFactor);
+        console.log('📍 Factor ubicación:', locationFactor);
+        console.log('🔧 Factor condición:', conditionFactor);
         
-        const factorTopografiaFinal = topographyFactors[propertyData.topografia as keyof typeof topographyFactors] || 1.0;
-        const factorTipoValoracionFinal = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
+        // Aplicar todos los factores específicos del terreno dentro de getLandSizeFactor
+        const landSizeFactor = getLandSizeFactor(
+          propertyData.areaTerreno,
+          propertyData.topografia, 
+          propertyData.tipoValoracion
+        );
         
-const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
-
-const valorTerreno = convertCurrency(
-  propertyData.areaTerreno * basePrice * 
-                 propertyTypeFactor * 
-                 locationFactor * 
-                 conditionFactor * 
-                 factorTopografiaFinal *
-                 factorTipoValoracionFinal *
-                 landSizeFactor,
-  selectedCurrency
-);
+        console.log('📏 Factor tamaño+características:', landSizeFactor);
         
-        setValuation(valorTerreno);
-        setBaseValuation(valorTerreno);
-        setFinalAdjustedValue(valorTerreno);
+        const valorTerreno = propertyData.areaTerreno * basePrice * factorTerrenoBase * 
+                           propertyTypeFactor * locationFactor * conditionFactor * landSizeFactor;
+        
+        console.log('💵 Valor terreno calculado:', valorTerreno.toLocaleString('es-ES', {
+          style: 'currency',
+          currency: 'USD'
+        }));
+        
+        const valorFinal = convertCurrency(valorTerreno, selectedCurrency);
+        
+        setValuation(valorFinal);
+        setBaseValuation(valorFinal);
+        setFinalAdjustedValue(valorFinal);
         
       } else {
         // Lógica para propiedades construidas
