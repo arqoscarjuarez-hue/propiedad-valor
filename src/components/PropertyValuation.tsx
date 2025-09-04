@@ -38,6 +38,7 @@ import { ShareButtons } from './ShareButtons';
 
 import PropertyComparison from './PropertyComparison';
 import { sanitizeNumericInput } from '@/utils/validation';
+import { getLandSizeFactor } from '@/utils/landSizeAdjustment';
 
 // Traducciones / Translations
 const translations = {
@@ -766,15 +767,18 @@ const PropertyValuation = () => {
         const factorTopografiaFinal = topographyFactors[propertyData.topografia as keyof typeof topographyFactors] || 1.0;
         const factorTipoValoracionFinal = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
         
-        const valorTerreno = convertCurrency(
-          propertyData.areaTerreno * basePrice * 
-                         propertyTypeFactor * 
-                         locationFactor * 
-                         conditionFactor * 
-                         factorTopografiaFinal *
-                         factorTipoValoracionFinal,
-          selectedCurrency
-        );
+const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
+
+const valorTerreno = convertCurrency(
+  propertyData.areaTerreno * basePrice * 
+                 propertyTypeFactor * 
+                 locationFactor * 
+                 conditionFactor * 
+                 factorTopografiaFinal *
+                 factorTipoValoracionFinal *
+                 landSizeFactor,
+  selectedCurrency
+);
         
         setValuation(valorTerreno);
         setBaseValuation(valorTerreno);
@@ -804,7 +808,8 @@ const PropertyValuation = () => {
             factorTerreno = 0.3; // Terreno industrial vale menos
           }
           
-          const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * locationFactor;
+const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
+          const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * locationFactor * landSizeFactor;
           valorTotal = valorConstruccion + valorTerreno;
         }
         
