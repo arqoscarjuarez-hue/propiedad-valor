@@ -808,7 +808,7 @@ const valorTerreno = convertCurrency(
             factorTerreno = 0.3; // Terreno industrial vale menos
           }
           
-const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
+          const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
           const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * locationFactor * landSizeFactor;
           valorTotal = valorConstruccion + valorTerreno;
         }
@@ -1066,7 +1066,7 @@ const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
         return [];
       }
     } catch (error) {
-        // Error al buscar propiedades - continuar con datos simulados
+      console.warn('Error al buscar propiedades cercanas, usando datos simulados:', error);
       return [];
     }
   };

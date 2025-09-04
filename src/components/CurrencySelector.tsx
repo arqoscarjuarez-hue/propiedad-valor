@@ -90,7 +90,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
       
       if (!response.ok) {
-        throw new Error('Error al obtener tipos de cambio');
+        throw new Error(`Error al obtener tipos de cambio: ${response.status}`);
       }
 
       const data = await response.json();

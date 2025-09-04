@@ -57,10 +57,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
       if (error && error.code !== '23505') { // Ignore duplicate key errors
-        console.error('Error creating profile:', error);
+        console.warn('Profile creation failed:', error.message);
       }
     } catch (error) {
-      console.error('Error creating profile:', error);
+      console.warn('Profile creation failed:', error instanceof Error ? error.message : 'Unknown error');
     }
   };
 

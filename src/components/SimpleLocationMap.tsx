@@ -192,7 +192,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       const numbers = input.match(/\d+(?:\.\d+)?/g);
       
       if (!numbers || numbers.length < 3) {
-        throw new Error('Se requieren al menos 3 números: grados, minutos, segundos');
+        throw new Error('Se requieren al menos 3 componentes: grados, minutos, segundos');
       }
       
       const degrees = parseFloat(numbers[0]);

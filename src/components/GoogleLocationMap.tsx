@@ -129,7 +129,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
       });
 
     } catch (error) {
-      console.error('Error loading Google Maps:', error);
+      console.warn('Error loading Google Maps:', error instanceof Error ? error.message : 'Unknown error');
       toast({
         title: "Error al Cargar Google Maps",
         description: "Verifica que tu API key sea válida y tenga permisos para Maps JavaScript API",
@@ -162,7 +162,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
         });
       }
     } catch (error) {
-      console.error('Error en geocodificación:', error);
+      console.warn('Geocoding error:', error instanceof Error ? error.message : 'Unknown error');
       const coords = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
       setCurrentAddress(coords);
       
@@ -224,7 +224,7 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
         });
       }
     } catch (error) {
-      console.error('Error searching address:', error);
+      console.warn('Address search error:', error instanceof Error ? error.message : 'Unknown error');
       toast({
         title: "Error de búsqueda",
         description: error.message === 'Búsqueda timeout' 

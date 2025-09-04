@@ -2,52 +2,88 @@
  * Utilidades de validación para el sistema de valuación
  */
 
-export interface PropertyData {
-  areaSotano: number;
-  areaPrimerNivel: number;
-  areaSegundoNivel: number;
-  areaTercerNivel: number;
-  areaCuartoNivel: number;
-  areaTerreno: number;
-  tipoPropiedad: string;
-  antiguedad: number;
-  ubicacion: string;
-  estadoGeneral: string;
-  tipoAcceso: string;
-  latitud: number;
-  longitud: number;
-  direccionCompleta: string;
-  topografia?: string;
-  tipoValoracion?: string;
-}
+import { PropertyData, ValidationResult } from '../types/global';
+import { VALIDATION_PATTERNS, VALID_PROPERTY_TYPES, LIMITS } from '../constants/appConstants';
+import { handleValidationError } from './errorHandler';
+import { logger } from './logging';
 
 /**
  * Valida las coordenadas geográficas
  */
-export const validateCoordinates = (lat: number, lng: number): boolean => {
-  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 && lat !== 0 && lng !== 0;
+export const validateCoordinates = (lat: number, lng: number): ValidationResult => {
+  const errors: string[] = [];
+  
+  if (isNaN(lat) || isNaN(lng)) {
+    errors.push('Las coordenadas deben ser números válidos');
+  }
+  
+  if (lat < VALIDATION_PATTERNS.COORDINATES.LAT_MIN || lat > VALIDATION_PATTERNS.COORDINATES.LAT_MAX) {
+    errors.push(`La latitud debe estar entre ${VALIDATION_PATTERNS.COORDINATES.LAT_MIN} y ${VALIDATION_PATTERNS.COORDINATES.LAT_MAX} grados`);
+  }
+  
+  if (lng < VALIDATION_PATTERNS.COORDINATES.LNG_MIN || lng > VALIDATION_PATTERNS.COORDINATES.LNG_MAX) {
+    errors.push(`La longitud debe estar entre ${VALIDATION_PATTERNS.COORDINATES.LNG_MIN} y ${VALIDATION_PATTERNS.COORDINATES.LNG_MAX} grados`);
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 };
 
 /**
  * Valida que el área sea un número positivo válido
  */
-export const validateArea = (area: number): boolean => {
-  return !isNaN(area) && area > 0 && area < 999999; // Límite razonable
+export const validateArea = (area: number): ValidationResult => {
+  const errors: string[] = [];
+  
+  if (isNaN(area)) {
+    errors.push('El área debe ser un número válido');
+  } else if (area < 0) {
+    errors.push('El área no puede ser negativa');
+  } else if (area > LIMITS.MAX_AREA) {
+    errors.push(`El área no puede ser mayor a ${LIMITS.MAX_AREA} m²`);
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 };
 
 /**
  * Valida completitud del paso 1: Ubicación
  */
 export const validateStep1 = (propertyData: PropertyData): boolean => {
-  return validateCoordinates(propertyData.latitud, propertyData.longitud);
+  if (!propertyData.latitud || !propertyData.longitud) {
+    logger.debug('Step 1 validation failed: missing coordinates');
+    return false;
+  }
+  
+  const coordinatesValidation = validateCoordinates(propertyData.latitud, propertyData.longitud);
+  if (!coordinatesValidation.isValid) {
+    logger.debug('Step 1 validation failed: invalid coordinates', 'VALIDATION', coordinatesValidation.errors);
+    return false;
+  }
+  
+  return true;
 };
 
 /**
  * Valida completitud del paso 2: Tipo de propiedad
  */
 export const validateStep2 = (propertyData: PropertyData): boolean => {
-  const validTypes = ['casa', 'departamento', 'terreno', 'comercial', 'bodega'];
-  return propertyData.tipoPropiedad && validTypes.includes(propertyData.tipoPropiedad);
+  if (!propertyData.tipoPropiedad) {
+    logger.debug('Step 2 validation failed: missing property type');
+    return false;
+  }
+  
+  const isValid = VALID_PROPERTY_TYPES.includes(propertyData.tipoPropiedad as any);
+  if (!isValid) {
+    logger.debug('Step 2 validation failed: invalid property type', 'VALIDATION', { type: propertyData.tipoPropiedad });
+  }
+  
+  return isValid;
 };
 
 /**
@@ -55,7 +91,14 @@ export const validateStep2 = (propertyData: PropertyData): boolean => {
  */
 export const validateStep3 = (propertyData: PropertyData): boolean => {
   // Para departamentos, no validar área de terreno
-  const hasValidLandArea = propertyData.tipoPropiedad === 'departamento' ? true : validateArea(propertyData.areaTerreno);
+  let hasValidLandArea = true;
+  if (propertyData.tipoPropiedad !== 'departamento') {
+    const landValidation = validateArea(propertyData.areaTerreno);
+    hasValidLandArea = landValidation.isValid;
+    if (!hasValidLandArea) {
+      logger.debug('Step 3 validation failed: invalid land area', 'VALIDATION', landValidation.errors);
+    }
+  }
   
   let hasValidBuiltArea = true;
   if (propertyData.tipoPropiedad !== 'terreno') {
@@ -67,6 +110,9 @@ export const validateStep3 = (propertyData: PropertyData): boolean => {
       (propertyData.areaCuartoNivel || 0)
     );
     hasValidBuiltArea = totalBuiltArea > 0;
+    if (!hasValidBuiltArea) {
+      logger.debug('Step 3 validation failed: no built area defined');
+    }
   }
   
   return hasValidLandArea && hasValidBuiltArea;
@@ -127,15 +173,37 @@ export const sanitizeNumericInput = (value: string | number): number => {
 /**
  * Valida email básico
  */
-export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+export const validateEmail = (email: string): ValidationResult => {
+  const errors: string[] = [];
+  
+  if (!email) {
+    errors.push('El email es requerido');
+  } else if (!VALIDATION_PATTERNS.EMAIL.test(email)) {
+    errors.push('El formato del email no es válido');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 };
 
 /**
  * Valida teléfono básico (números, espacios, guiones, paréntesis)
  */
-export const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^[\d\s\-\(\)\+]+$/;
-  return phoneRegex.test(phone) && phone.length >= 10;
+export const validatePhone = (phone: string): ValidationResult => {
+  const errors: string[] = [];
+  
+  if (!phone) {
+    errors.push('El teléfono es requerido');
+  } else if (!VALIDATION_PATTERNS.PHONE.test(phone)) {
+    errors.push('El teléfono solo puede contener números, espacios, guiones y paréntesis');
+  } else if (phone.length < LIMITS.MIN_PHONE_LENGTH) {
+    errors.push(`El teléfono debe tener al menos ${LIMITS.MIN_PHONE_LENGTH} caracteres`);
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 };
