@@ -808,9 +808,30 @@ const valorTerreno = convertCurrency(
             factorTerreno = 0.3; // Terreno industrial vale menos
           }
           
+          // Factores de topografía y tipo de valoración aplicables al terreno en propiedades construidas
+          const topographyFactors = {
+            'plano': 1.12,
+            'pendiente-suave': 1.03,
+            'pendiente-moderada': 0.93,
+            'pendiente-pronunciada': 0.80,
+            'irregular': 0.75
+          };
+
+          const valuationTypeFactors = {
+            'residencial': 1.0,
+            'comercial': 1.28,
+            'industrial': 1.12,
+            'recreativo': 0.92,
+            'agricola': 0.68
+          };
+
+          const factorTopografiaFinal = topographyFactors[propertyData.topografia as keyof typeof topographyFactors] || 1.0;
+          const factorTipoValoracionFinal = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
+
           const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
           const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * 
-                               propertyTypeFactor * locationFactor * conditionFactor * landSizeFactor;
+                               propertyTypeFactor * locationFactor * conditionFactor *
+                               factorTopografiaFinal * factorTipoValoracionFinal * landSizeFactor;
           valorTotal = valorConstruccion + valorTerreno;
         }
         
