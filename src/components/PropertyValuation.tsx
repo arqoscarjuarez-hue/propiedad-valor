@@ -133,9 +133,9 @@ const translations = {
     irregularExp: 'Terreno Irregular (>40%): -25% - Desarrollo muy costoso',
     commercialUseExp: 'Uso Comercial: +28% - Mayor potencial de ingresos',
     industrialUseExp: 'Uso Industrial: +24% - Infraestructura especializada',
-    residentialUseExp: 'Uso Residencial: -28% - Valor base estándar residencial',
-    recreationalUseExp: 'Uso Recreativo: -32% - Mercado especializado',
-    agriculturalUseExp: 'Uso Agrícola: -52% - Valor extensivo menor',
+    residentialUseExp: 'Uso Residencial: -35% - Valor base estándar residencial',
+    recreationalUseExp: 'Uso Recreativo: -39% - Mercado especializado',
+    agriculturalUseExp: 'Uso Agrícola: -57% - Valor extensivo menor',
     
     // Summary sections
     characteristicsSummary: 'Resumen de Características:',
@@ -737,11 +737,11 @@ const PropertyValuation = () => {
         
         // Factores de tipo de valoración para terrenos
         const valuationTypeFactors = {
-          'residencial': 0.72,
+          'residencial': 0.65,
           'comercial': 1.28,     // Valor comercial premium
           'industrial': 1.24,    // Valor industrial premium
-          'recreativo': 0.68,    // Valor recreativo menor
-          'agricola': 0.48       // Valor agrícola más bajo
+          'recreativo': 0.61,    // Valor recreativo menor
+          'agricola': 0.43       // Valor agrícola más bajo
         };
         
         const valuationTypeFactor = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
@@ -805,11 +805,11 @@ const PropertyValuation = () => {
           };
 
           const valuationTypeFactors = {
-            'residencial': 0.72,
+            'residencial': 0.65,
             'comercial': 1.28,
             'industrial': 1.24,
-            'recreativo': 0.68,
-            'agricola': 0.48
+            'recreativo': 0.61,
+            'agricola': 0.43
           };
 
           // Para terrenos, aplicamos todos los factores dentro de getLandSizeFactor 
