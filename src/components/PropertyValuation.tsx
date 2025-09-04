@@ -1893,17 +1893,18 @@ const valorTerreno = convertCurrency(
               console.error('Error changing tab:', error);
             }
           }} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 h-auto gap-1 bg-muted/50">
+            <TabsList className="grid w-full md:grid-cols-5 grid-cols-2 h-auto gap-1 bg-muted/50">
                <TabsTrigger 
                  value="ubicacion" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-2 ${
                    getStepCompletion().step1 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : 'hover:bg-muted/80'
                  }`}
                >
                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mb-1" />
-                 {translations[selectedLanguage].location}
+                 <span className="hidden sm:inline">{translations[selectedLanguage].location}</span>
+                 <span className="sm:hidden">Ubicación</span>
                </TabsTrigger>
                <TabsTrigger 
                  value="tipo" 
@@ -1917,11 +1918,12 @@ const valorTerreno = convertCurrency(
                  disabled={!getStepCompletion().step1}
                >
                  <Home className="h-3 w-3 sm:h-4 sm:w-4 mb-1" />
-                 {translations[selectedLanguage].propertyType}
+                 <span className="hidden sm:inline">{translations[selectedLanguage].propertyType}</span>
+                 <span className="sm:hidden">Tipo</span>
                </TabsTrigger>
                <TabsTrigger 
                  value="areas" 
-                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-2 ${
                    getStepCompletion().step3 
                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' 
                      : getStepCompletion().step2 
@@ -1931,7 +1933,8 @@ const valorTerreno = convertCurrency(
                  disabled={!getStepCompletion().step2}
                >
                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 mb-1" />
-                 {translations[selectedLanguage].areas}
+                 <span className="hidden sm:inline">{translations[selectedLanguage].areas}</span>
+                 <span className="sm:hidden">Áreas</span>
                </TabsTrigger>
                <TabsTrigger 
                  value="caracteristicas" 
@@ -1945,12 +1948,13 @@ const valorTerreno = convertCurrency(
                  disabled={!getStepCompletion().step3}
                >
                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mb-1" />
-                 {translations[selectedLanguage].characteristics}
+                 <span className="hidden sm:inline">{translations[selectedLanguage].characteristics}</span>
+                 <span className="sm:hidden">Características</span>
                </TabsTrigger>
                <TabsTrigger 
                  value="valuacion" 
                  disabled={!getStepCompletion().step4}
-                 className={`h-8 sm:h-10 text-xs sm:text-sm touch-manipulation transition-all ${
+                 className={`flex flex-col items-center justify-center p-2 sm:p-3 h-14 sm:h-16 text-xs sm:text-sm transition-all duration-200 md:col-span-1 col-span-2 ${
                    !getStepCompletion().step4 
                      ? 'opacity-50 cursor-not-allowed bg-gray-100 dark:bg-gray-800' 
                      : getStepCompletion().step5
@@ -1961,7 +1965,8 @@ const valorTerreno = convertCurrency(
                  <span className="font-bold mr-1">
                    {getStepCompletion().step5 ? '✓' : '5'}
                  </span> 
-                 {translations[selectedLanguage].calculate}
+                 <span className="hidden sm:inline">{translations[selectedLanguage].calculate}</span>
+                 <span className="sm:hidden">Calcular</span>
                </TabsTrigger>
               </TabsList>
 
