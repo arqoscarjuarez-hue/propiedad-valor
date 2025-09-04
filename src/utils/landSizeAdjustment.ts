@@ -1,7 +1,7 @@
 /**
  * Land size diminishing factor: larger parcels tend to have lower unit price.
- * 1.7% reduction per 100 m² from 100 to 2000 m², then 0.5% per 250 m².
- * Minimum floor factor of 0.50.
+ * Linear reduction from 1.0 (at 100m²) to 0.50 (at 2000m²), then fixed at 0.50.
+ * Maximum reduction factor: 0.50 (50% off base price).
  */
 export const getLandSizeFactor = (areaSqm: number): number => {
   console.log('🔍 Land Size Factor Calculation:');
@@ -18,29 +18,22 @@ export const getLandSizeFactor = (areaSqm: number): number => {
     return 1.0;
   }
   
-  // 1.7% reduction per 100 m² from 100 to 2000 m²
+  // Linear reduction from 1.0 (at 100m²) to 0.50 (at 2000m²)
   if (areaSqm <= 2000) {
-    const hundreds = Math.floor(areaSqm / 100) - 1; // Subtract 1 because first 100m² has no reduction
-    const factor = 1 - (hundreds * 0.017);
+    // Linear interpolation: factor = 1.0 - ((area - 100) / (2000 - 100)) * (1.0 - 0.50)
+    const factor = 1.0 - ((areaSqm - 100) / (2000 - 100)) * 0.50;
     const finalFactor = Math.max(factor, 0.50);
-    console.log(`📉 Area ${areaSqm}m² - Hundreds above 100: ${hundreds}`);
-    console.log(`📉 Raw factor calculation: 1 - (${hundreds} × 0.017) = ${factor}`);
-    console.log(`📉 Final factor (with 0.50 floor): ${finalFactor}`);
+    console.log(`📉 Area ${areaSqm}m² - Linear reduction from 1.0 to 0.50`);
+    console.log(`📉 Raw factor calculation: 1.0 - ((${areaSqm} - 100) / 1900) × 0.50 = ${factor}`);
+    console.log(`📉 Final factor: ${finalFactor}`);
     console.log(`📉 Price reduction: ${((1 - finalFactor) * 100).toFixed(1)}% off base price`);
     return finalFactor;
   }
   
-  // After 2000 m²: 0.5% reduction per 250 m² intervals (with floor 0.50)
-  const excess = areaSqm - 2000;
-  const intervals = Math.floor(excess / 250);
-  const factorAt2000 = Math.max(1 - ((Math.floor(2000 / 100) - 1) * 0.017), 0.50); // floor applied
-  const factor = factorAt2000 - (intervals * 0.005);
-  const finalFactor = Math.max(factor, 0.50);
+  // After 2000 m²: fixed at 0.50 (no further reduction)
+  const finalFactor = 0.50;
   
-  console.log(`📉 Large area ${areaSqm}m² - Excess beyond 2000: ${excess}m²`);
-  console.log(`📉 Additional intervals of 250m²: ${intervals}`);
-  console.log(`📉 Factor at 2000m²: ${factorAt2000}`);
-  console.log(`📉 Additional reduction: ${intervals} × 0.005 = ${intervals * 0.005}`);
+  console.log(`📉 Large area ${areaSqm}m² - Fixed at maximum reduction`);
   console.log(`📉 Final factor: ${finalFactor}`);
   console.log(`📉 Total price reduction: ${((1 - finalFactor) * 100).toFixed(1)}% off base price`);
   return finalFactor;
