@@ -276,6 +276,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_audit_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       detect_country: {
         Args: { center_lat: number; center_lng: number }
         Returns: string
