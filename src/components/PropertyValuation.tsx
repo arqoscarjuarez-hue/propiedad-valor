@@ -2167,11 +2167,36 @@ const PropertyValuation = () => {
                             <SelectValue placeholder={translations[selectedLanguage].selectTopography} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="plano">{translations[selectedLanguage].flat}</SelectItem>
-                            <SelectItem value="pendiente-suave">{translations[selectedLanguage].gentleSlope}</SelectItem>
-                            <SelectItem value="pendiente-moderada">{translations[selectedLanguage].moderateSlope}</SelectItem>
-                            <SelectItem value="pendiente-pronunciada">{translations[selectedLanguage].steepSlope}</SelectItem>
-                            <SelectItem value="irregular">{translations[selectedLanguage].irregular}</SelectItem>
+                            <SelectItem value="plano">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].flat}</span>
+                                <span className="text-xs text-muted-foreground">Sin pendientes significativas (0-3%)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="pendiente-suave">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].gentleSlope}</span>
+                                <span className="text-xs text-muted-foreground">Pendiente ligera (3-8%)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="pendiente-moderada">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].moderateSlope}</span>
+                                <span className="text-xs text-muted-foreground">Pendiente notable (8-15%)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="pendiente-pronunciada">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].steepSlope}</span>
+                                <span className="text-xs text-muted-foreground">Pendiente fuerte (15-30%)</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="irregular">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].irregular}</span>
+                                <span className="text-xs text-muted-foreground">Terreno accidentado o no uniforme</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
