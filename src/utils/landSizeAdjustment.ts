@@ -5,16 +5,16 @@
  */
 export const getLandSizeFactor = (areaSqm: number): number => {
   console.log('🔍 Land Size Factor Calculation:');
-  console.log('Area input:', areaSqm, 'm²');
+  console.log('📊 Area input:', areaSqm, 'm²');
   
   if (!areaSqm || areaSqm <= 0) {
-    console.log('Invalid area, returning factor 1.0');
+    console.log('❌ Invalid area, returning factor 1.0');
     return 1;
   }
   
   // No reduction for lots under 100 m²
   if (areaSqm < 100) {
-    console.log('Area < 100m², no reduction, factor: 1.0');
+    console.log('✅ Area < 100m², no reduction, factor: 1.0');
     return 1.0;
   }
   
@@ -23,7 +23,10 @@ export const getLandSizeFactor = (areaSqm: number): number => {
     const hundreds = Math.floor(areaSqm / 100) - 1; // Subtract 1 because first 100m² has no reduction
     const factor = 1 - (hundreds * 0.10);
     const finalFactor = Math.max(factor, 0.75);
-    console.log(`Area ${areaSqm}m² - Hundreds above 100: ${hundreds}, Raw factor: ${factor}, Final factor: ${finalFactor}`);
+    console.log(`📉 Area ${areaSqm}m² - Hundreds above 100: ${hundreds}`);
+    console.log(`📉 Raw factor calculation: 1 - (${hundreds} × 0.10) = ${factor}`);
+    console.log(`📉 Final factor (with 0.75 floor): ${finalFactor}`);
+    console.log(`📉 Price reduction: ${((1 - finalFactor) * 100).toFixed(1)}% off base price`);
     return finalFactor;
   }
   
@@ -34,6 +37,11 @@ export const getLandSizeFactor = (areaSqm: number): number => {
   const factor = factorAt2000 - (intervals * 0.005);
   const finalFactor = Math.max(factor, 0.75);
   
-  console.log(`Area ${areaSqm}m² - Excess: ${excess}m², Intervals: ${intervals}, Factor at 2000: ${factorAt2000}, Final factor: ${finalFactor}`);
+  console.log(`📉 Large area ${areaSqm}m² - Excess beyond 2000: ${excess}m²`);
+  console.log(`📉 Additional intervals of 250m²: ${intervals}`);
+  console.log(`📉 Factor at 2000m²: ${factorAt2000}`);
+  console.log(`📉 Additional reduction: ${intervals} × 0.005 = ${intervals * 0.005}`);
+  console.log(`📉 Final factor: ${finalFactor}`);
+  console.log(`📉 Total price reduction: ${((1 - finalFactor) * 100).toFixed(1)}% off base price`);
   return finalFactor;
 };
