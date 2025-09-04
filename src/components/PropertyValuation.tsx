@@ -725,7 +725,7 @@ const PropertyValuation = () => {
       // Lógica específica para terrenos
       if (propertyData.tipoPropiedad === 'terreno') {
         // Factor de precio base para terrenos (mucho menor que construcciones)
-        const factorTerrenoBase = 0.25; // Los terrenos valen 25% del precio de construcción base
+        const factorTerrenoBase = 0.5; // Ajuste IVS/RICS: base de terreno ~50% del precio de construcción
         
         console.log('🏞️ === CÁLCULO DE TERRENO PURO ===');
         console.log('📐 Área terreno:', propertyData.areaTerreno, 'm²');
@@ -757,7 +757,7 @@ const PropertyValuation = () => {
         console.log('🏗️ Factor tipo valoración:', valuationTypeFactor, '(', propertyData.tipoValoracion, ')');
         
         const valorTerreno = propertyData.areaTerreno * basePrice * factorTerrenoBase * 
-                           propertyTypeFactor * locationFactor * conditionFactor * 
+                           locationFactor * conditionFactor * 
                            landSizeFactor * valuationTypeFactor;
         
         console.log('💵 Valor terreno calculado:', valorTerreno.toLocaleString('es-ES', {
