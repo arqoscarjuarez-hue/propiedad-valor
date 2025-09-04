@@ -532,6 +532,16 @@ export type Database = {
           total_area: number
         }[]
       }
+      get_anonymized_comments: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          anonymous_author: string
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+        }[]
+      }
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
@@ -557,7 +567,19 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      log_security_event: {
+        Args: {
+          event_details?: Json
+          event_type: string
+          user_id_param?: string
+        }
+        Returns: undefined
+      }
       validate_coordinates: {
+        Args: { lat: number; lng: number }
+        Returns: boolean
+      }
+      validate_coordinates_secure: {
         Args: { lat: number; lng: number }
         Returns: boolean
       }
