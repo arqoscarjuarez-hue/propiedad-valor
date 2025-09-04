@@ -35,7 +35,7 @@ export const getLandSizeFactor = (
         'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
         'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
         'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-        'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
+        'terreno-plano': 1.5              // +0.525 - óptimo para desarrollo (ajustado para $15K)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -61,7 +61,8 @@ export const getLandSizeFactor = (
     
     // Asegurar rangos razonables
     const minClampSmall = topografia === 'zona-humeda' ? 0.001 : 0.8;
-    smallLotFactor = Math.max(minClampSmall, Math.min(1.1, smallLotFactor));
+    const maxClampSmall = topografia === 'terreno-plano' ? 2.0 : 1.1;
+    smallLotFactor = Math.max(minClampSmall, Math.min(maxClampSmall, smallLotFactor));
     
     console.log(`✅ Area < 100m² (${areaSqm}m²), factor con características: ${smallLotFactor.toFixed(3)}`);
     return smallLotFactor;
@@ -84,7 +85,7 @@ export const getLandSizeFactor = (
         'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
         'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
         'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-        'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
+        'terreno-plano': 1.5              // +0.525 - óptimo para desarrollo (ajustado para $15K)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -110,7 +111,8 @@ export const getLandSizeFactor = (
     
     // Asegurar rangos razonables para terrenos medianos
     const minClampMedium = topografia === 'zona-humeda' ? 0.001 : 0.4;
-    mediumLotFactor = Math.max(minClampMedium, Math.min(1.1, mediumLotFactor));
+    const maxClampMedium = topografia === 'terreno-plano' ? 2.0 : 1.1;
+    mediumLotFactor = Math.max(minClampMedium, Math.min(maxClampMedium, mediumLotFactor));
     
     console.log(`📉 Area ${areaSqm}m² - Linear reduction from 1.0 to 0.50`);
     console.log(`📉 Raw factor calculation: 1.0 - ((${areaSqm} - 100) / 1900) × 0.50 = ${factor}`);
@@ -137,7 +139,7 @@ export const getLandSizeFactor = (
       'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
       'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
       'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-      'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
+      'terreno-plano': 1.5              // +0.525 - óptimo para desarrollo (ajustado para $15K)
     };
     
     const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -164,7 +166,8 @@ export const getLandSizeFactor = (
   
   // Asegurar que el factor final esté dentro de rangos razonables
   const minClampLarge = topografia === 'zona-humeda' ? 0.001 : 0.3;
-  adjustedFactor = Math.max(minClampLarge, Math.min(1.2, adjustedFactor));
+  const maxClampLarge = topografia === 'terreno-plano' ? 2.0 : 1.2;
+  adjustedFactor = Math.max(minClampLarge, Math.min(maxClampLarge, adjustedFactor));
   
   console.log(`📉 Large area ${areaSqm}m² - Fixed at maximum reduction`);
   console.log(`📉 Base factor: ${finalFactor}`);
