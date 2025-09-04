@@ -32,6 +32,30 @@ export type Database = {
         }
         Relationships: []
       }
+      comment_rate_limits: {
+        Row: {
+          comment_count: number | null
+          created_at: string | null
+          id: string
+          user_id: string
+          window_start: string | null
+        }
+        Insert: {
+          comment_count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id: string
+          window_start?: string | null
+        }
+        Update: {
+          comment_count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string
@@ -214,6 +238,36 @@ export type Database = {
           state?: string | null
           total_area?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      security_audit_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -459,6 +513,25 @@ export type Database = {
           total_area: number
         }[]
       }
+      find_secure_comparables: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          max_distance_km?: number
+          prop_type: string
+          target_area?: number
+        }
+        Returns: {
+          approximate_latitude: number
+          approximate_longitude: number
+          distance_km: number
+          general_location: string
+          id: string
+          price_range: string
+          property_type: string
+          total_area: number
+        }[]
+      }
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
@@ -482,6 +555,10 @@ export type Database = {
       }
       is_authorized: {
         Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      validate_coordinates: {
+        Args: { lat: number; lng: number }
         Returns: boolean
       }
     }

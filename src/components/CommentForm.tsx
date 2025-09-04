@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { commentTranslations } from "@/translations/commentTranslations";
-import { createAutoReply } from "@/utils/autoReply";
 import { supabase } from "@/integrations/supabase/client";
 
 interface CommentFormProps {
