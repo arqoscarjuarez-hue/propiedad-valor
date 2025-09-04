@@ -806,7 +806,11 @@ const valorTerreno = convertCurrency(
           const factorTopografiaFinal = topographyFactors[propertyData.topografia as keyof typeof topographyFactors] || 1.0;
           const factorTipoValoracionFinal = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
 
-          const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
+          const landSizeFactor = getLandSizeFactor(
+            propertyData.areaTerreno, 
+            propertyData.topografia, 
+            propertyData.tipoValoracion
+          );
           const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * 
                                propertyTypeFactor * locationFactor * conditionFactor *
                                factorTopografiaFinal * factorTipoValoracionFinal * landSizeFactor;
