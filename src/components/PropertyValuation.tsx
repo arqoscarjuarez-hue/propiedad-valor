@@ -2265,13 +2265,33 @@ const PropertyValuation = () => {
                         <SelectTrigger>
                           <SelectValue placeholder={propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].locationQualityPlaceholder} />
                         </SelectTrigger>
-          <SelectContent>
+           <SelectContent>
              {propertyData.tipoPropiedad === 'terreno' ? (
                <>
-                 <SelectItem value="excelente">{translations[selectedLanguage].environmentalExcellent}</SelectItem>
-                 <SelectItem value="buena">{translations[selectedLanguage].environmentalGood}</SelectItem>
-                 <SelectItem value="regular">{translations[selectedLanguage].environmentalRegular}</SelectItem>
-                 <SelectItem value="mala">{translations[selectedLanguage].environmentalPoor}</SelectItem>
+                 <SelectItem value="excelente">
+                   <div className="flex flex-col">
+                     <span className="font-medium">Excelente</span>
+                     <span className="text-xs text-muted-foreground">Zona segura, sin riesgo de inundaciones o deslizamientos</span>
+                   </div>
+                 </SelectItem>
+                 <SelectItem value="buena">
+                   <div className="flex flex-col">
+                     <span className="font-medium">Buena</span>
+                     <span className="text-xs text-muted-foreground">Riesgos mínimos, terreno estable y bien drenado</span>
+                   </div>
+                 </SelectItem>
+                 <SelectItem value="regular">
+                   <div className="flex flex-col">
+                     <span className="font-medium">Regular</span>
+                     <span className="text-xs text-muted-foreground">Algunos riesgos menores, puede necesitar precauciones</span>
+                   </div>
+                 </SelectItem>
+                 <SelectItem value="mala">
+                   <div className="flex flex-col">
+                     <span className="font-medium">Deficiente</span>
+                     <span className="text-xs text-muted-foreground">Alto riesgo de inundación, deslizamiento o problemas ambientales</span>
+                   </div>
+                 </SelectItem>
                </>
              ) : (
                <>
@@ -2282,7 +2302,7 @@ const PropertyValuation = () => {
                  <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
                </>
              )}
-          </SelectContent>
+           </SelectContent>
                       </Select>
                       <p className="text-xs text-muted-foreground mt-1">{propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].evaluateServices}</p>
                     </div>
