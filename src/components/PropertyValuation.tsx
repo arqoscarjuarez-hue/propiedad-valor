@@ -2210,11 +2210,36 @@ const PropertyValuation = () => {
                             <SelectValue placeholder={translations[selectedLanguage].selectValuationType} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="residencial">{translations[selectedLanguage].residentialUse}</SelectItem>
-                            <SelectItem value="comercial">{translations[selectedLanguage].commercialUse}</SelectItem>
-                            <SelectItem value="industrial">{translations[selectedLanguage].industrialUse}</SelectItem>
-                            <SelectItem value="agricola">{translations[selectedLanguage].agriculturalUse}</SelectItem>
-                            <SelectItem value="recreativo">{translations[selectedLanguage].recreationalUse}</SelectItem>
+                            <SelectItem value="residencial">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].residentialUse}</span>
+                                <span className="text-xs text-muted-foreground">Para viviendas unifamiliares o multifamiliares</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="comercial">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].commercialUse}</span>
+                                <span className="text-xs text-muted-foreground">Para oficinas, tiendas o centros comerciales</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="industrial">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].industrialUse}</span>
+                                <span className="text-xs text-muted-foreground">Para fábricas, bodegas o manufactura</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="agricola">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].agriculturalUse}</span>
+                                <span className="text-xs text-muted-foreground">Para cultivos, ganadería o uso agrícola</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="recreativo">
+                              <div className="flex flex-col">
+                                <span className="font-medium">{translations[selectedLanguage].recreationalUse}</span>
+                                <span className="text-xs text-muted-foreground">Para parques, deportes o entretenimiento</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
