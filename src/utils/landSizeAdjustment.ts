@@ -35,7 +35,7 @@ export const getLandSizeFactor = (
         'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
         'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
         'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-        'terreno-plano': 0.75             // +0.02 - óptimo para desarrollo
+        'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -83,7 +83,7 @@ export const getLandSizeFactor = (
         'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
         'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
         'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-        'terreno-plano': 0.75             // +0.02 - óptimo para desarrollo
+        'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
       };
       
       const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
@@ -135,7 +135,7 @@ export const getLandSizeFactor = (
       'pendiente-moderada': 0.65,       // +0.07 - costos adicionales
       'pendiente-leve': 0.70,           // +0.05 - favorable para construcción
       'ondulado-suave': 0.73,           // +0.03 - buen drenaje natural
-      'terreno-plano': 0.75             // +0.02 - óptimo para desarrollo
+      'terreno-plano': 0.975            // +0.245 - óptimo para desarrollo (30% aumento)
     };
     
     const topographyFactor = topographyAdjustments[topografia as keyof typeof topographyAdjustments] || 1.0;
