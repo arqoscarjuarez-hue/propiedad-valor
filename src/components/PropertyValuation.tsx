@@ -404,29 +404,38 @@ const PropertyValuation = () => {
   // Función para obtener la ubicación del usuario
   const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
     return new Promise((resolve) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            resolve({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            });
-          },
-          (error) => {
-            console.log('Error obteniendo ubicación:', error);
-            // Fallback a Ciudad de México si falla la geolocalización
-            resolve({ lat: 19.4326, lng: -99.1332 });
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 300000 // 5 minutos
-          }
-        );
-      } else {
-        // Fallback si no hay geolocalización disponible
+      console.log('Iniciando detección de ubicación...');
+      
+      if (!navigator.geolocation) {
+        console.log('Geolocalización no disponible');
         resolve({ lat: 19.4326, lng: -99.1332 });
+        return;
       }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          console.log('Ubicación detectada:', lat, lng);
+          resolve({ lat, lng });
+        },
+        (error) => {
+          console.log('Error de geolocalización:', error.message);
+          console.log('Código de error:', error.code);
+          // Mostrar toast con el error específico
+          toast({
+            title: "Ubicación no disponible",
+            description: `No se pudo detectar la ubicación. Usando Ciudad de México como referencia.`,
+            variant: "destructive"
+          });
+          resolve({ lat: 19.4326, lng: -99.1332 });
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000, // Aumenté el timeout
+          maximumAge: 60000 // 1 minuto de cache
+        }
+      );
     });
   };
   
@@ -489,12 +498,29 @@ const PropertyValuation = () => {
   // useEffect para obtener ubicación del usuario al cargar
   useEffect(() => {
     const initializeUserLocation = async () => {
-      const userLocation = await getUserLocation();
-      setPropertyData(prev => ({
-        ...prev,
-        latitud: userLocation.lat,
-        longitud: userLocation.lng
-      }));
+      console.log('Inicializando ubicación del usuario...');
+      
+      try {
+        const userLocation = await getUserLocation();
+        console.log('Ubicación inicial obtenida:', userLocation);
+        
+        setPropertyData(prev => ({
+          ...prev,
+          latitud: userLocation.lat,
+          longitud: userLocation.lng
+        }));
+        
+        // Solo mostrar toast si realmente detectó la ubicación del usuario
+        const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+        if (isUserLocation) {
+          toast({
+            title: "Ubicación Detectada",
+            description: `Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`,
+          });
+        }
+      } catch (error) {
+        console.error('Error inicializando ubicación:', error);
+      }
     };
     
     initializeUserLocation();
@@ -574,42 +600,60 @@ const PropertyValuation = () => {
   };
 
   const startNewValuation = async () => {
-    // Obtener ubicación del usuario para el nuevo valúo
-    const userLocation = await getUserLocation();
+    console.log('Iniciando nuevo valúo...');
     
-    // Reiniciar propertyData a valores iniciales con ubicación del usuario
-    setPropertyData({
-      areaSotano: 0,
-      areaPrimerNivel: 0,
-      areaSegundoNivel: 0,
-      areaTercerNivel: 0,
-      areaCuartoNivel: 0,
-      areaTerreno: 0,
-      tipoPropiedad: 'casa',
-      ubicacion: '',
-      estadoGeneral: '',
+    try {
+      // Obtener ubicación del usuario para el nuevo valúo
+      const userLocation = await getUserLocation();
+      console.log('Ubicación obtenida para nuevo valúo:', userLocation);
       
-      latitud: userLocation.lat,
-      longitud: userLocation.lng,
-      direccionCompleta: ''
-    });
-    
-    // Reiniciar todos los demás estados
-    setValuation(null);
-    setBaseValuation(null);
-    setComparativeProperties([]);
-    setSelectedComparatives([]);
-    setIsCalculating(false);
-    setActiveTab('ubicacion');
-    setAdjustmentPercentage(0);
-    setFinalAdjustedValue(null);
-    setPropertyImages([]);
-    setMultipleValuations([]);
+      // Reiniciar propertyData a valores iniciales con ubicación del usuario
+      setPropertyData({
+        areaSotano: 0,
+        areaPrimerNivel: 0,
+        areaSegundoNivel: 0,
+        areaTercerNivel: 0,
+        areaCuartoNivel: 0,
+        areaTerreno: 0,
+        tipoPropiedad: 'casa',
+        ubicacion: '',
+        estadoGeneral: '',
+        
+        latitud: userLocation.lat,
+        longitud: userLocation.lng,
+        direccionCompleta: ''
+      });
+      
+      // Reiniciar todos los demás estados
+      setValuation(null);
+      setBaseValuation(null);
+      setComparativeProperties([]);
+      setSelectedComparatives([]);
+      setIsCalculating(false);
+      setActiveTab('ubicacion');
+      setAdjustmentPercentage(0);
+      setFinalAdjustedValue(null);
+      setPropertyImages([]);
+      setMultipleValuations([]);
 
-    toast({
-      title: "Nuevo Valúo Iniciado",
-      description: "Todos los datos han sido reiniciados. Ubicación establecida automáticamente.",
-    });
+      // Mostrar notificación de éxito con las coordenadas
+      const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+      
+      toast({
+        title: "Nuevo Valúo Iniciado",
+        description: isUserLocation 
+          ? `Ubicación detectada: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+          : "Usando ubicación de referencia (Ciudad de México)",
+      });
+      
+    } catch (error) {
+      console.error('Error al iniciar nuevo valúo:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema al detectar la ubicación. Intente nuevamente.",
+        variant: "destructive"
+      });
+    }
   };
 
   // Función para validar que todos los pasos estén completos
