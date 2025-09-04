@@ -809,7 +809,8 @@ const valorTerreno = convertCurrency(
           }
           
           const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
-          const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * locationFactor * landSizeFactor;
+          const valorTerreno = propertyData.areaTerreno * basePrice * factorTerreno * 
+                               propertyTypeFactor * locationFactor * conditionFactor * landSizeFactor;
           valorTotal = valorConstruccion + valorTerreno;
         }
         
