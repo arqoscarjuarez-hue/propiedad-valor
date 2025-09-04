@@ -36,6 +36,12 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   const markerRef = useRef<any>(null);
   const { toast } = useToast();
 
+  // Actualizar posición cuando cambien las props iniciales
+  useEffect(() => {
+    console.log('Props changed - updating position to:', initialLat, initialLng);
+    setPosition([initialLat, initialLng]);
+  }, [initialLat, initialLng]);
+
   // Función para convertir coordenadas decimales a formato DMS
   const convertToDMS = (decimal: number, isLatitude: boolean): string => {
     const direction = isLatitude 
