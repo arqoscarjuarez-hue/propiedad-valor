@@ -747,7 +747,7 @@ const PropertyValuation = () => {
           'comercial': 2.00,     // Doble valoración (solicitado)
           'industrial': 2.00,    // Doble valoración (solicitado)
           'recreativo': 0.61,    // Valor recreativo menor
-          'agricola': 0.004      // Ajustado para $15K con 6899m²
+          'agricola': 0.011      // Ajustado para $15K con 6899m²
         };
         
         const valuationTypeFactor = valuationTypeFactors[propertyData.tipoValoracion as keyof typeof valuationTypeFactors] || 1.0;
@@ -815,7 +815,7 @@ const PropertyValuation = () => {
             'comercial': 2.00,
             'industrial': 2.00,
             'recreativo': 0.61,
-            'agricola': 0.004
+            'agricola': 0.011
           };
 
           // Para terrenos, aplicamos todos los factores dentro de getLandSizeFactor 
