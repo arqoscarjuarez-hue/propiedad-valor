@@ -1,7 +1,7 @@
 /**
  * Land size diminishing factor: larger parcels tend to have lower unit price.
  * 1.7% reduction per 100 m² from 100 to 2000 m², then 0.5% per 250 m².
- * Minimum floor factor of 0.75.
+ * Minimum floor factor of 0.50.
  */
 export const getLandSizeFactor = (areaSqm: number): number => {
   console.log('🔍 Land Size Factor Calculation:');
@@ -22,20 +22,20 @@ export const getLandSizeFactor = (areaSqm: number): number => {
   if (areaSqm <= 2000) {
     const hundreds = Math.floor(areaSqm / 100) - 1; // Subtract 1 because first 100m² has no reduction
     const factor = 1 - (hundreds * 0.017);
-    const finalFactor = Math.max(factor, 0.75);
+    const finalFactor = Math.max(factor, 0.50);
     console.log(`📉 Area ${areaSqm}m² - Hundreds above 100: ${hundreds}`);
     console.log(`📉 Raw factor calculation: 1 - (${hundreds} × 0.017) = ${factor}`);
-    console.log(`📉 Final factor (with 0.75 floor): ${finalFactor}`);
+    console.log(`📉 Final factor (with 0.50 floor): ${finalFactor}`);
     console.log(`📉 Price reduction: ${((1 - finalFactor) * 100).toFixed(1)}% off base price`);
     return finalFactor;
   }
   
-  // After 2000 m²: 0.5% reduction per 250 m² intervals (with floor 0.75)
+  // After 2000 m²: 0.5% reduction per 250 m² intervals (with floor 0.50)
   const excess = areaSqm - 2000;
   const intervals = Math.floor(excess / 250);
-  const factorAt2000 = Math.max(1 - ((Math.floor(2000 / 100) - 1) * 0.017), 0.75); // floor applied
+  const factorAt2000 = Math.max(1 - ((Math.floor(2000 / 100) - 1) * 0.017), 0.50); // floor applied
   const factor = factorAt2000 - (intervals * 0.005);
-  const finalFactor = Math.max(factor, 0.75);
+  const finalFactor = Math.max(factor, 0.50);
   
   console.log(`📉 Large area ${areaSqm}m² - Excess beyond 2000: ${excess}m²`);
   console.log(`📉 Additional intervals of 250m²: ${intervals}`);
