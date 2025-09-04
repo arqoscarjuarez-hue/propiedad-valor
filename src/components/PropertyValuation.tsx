@@ -698,9 +698,13 @@ const PropertyValuation = () => {
       // Factores de ubicación
       const locationFactors = {
         'excelente': 1.3,
+        'estable-sismico': 1.25,
+        'clima-favorable': 1.2,
         'buena': 1.1,
         'media': 1.0,
         'regular': 0.8,
+        'riesgo-hidrico': 0.75,
+        'actividad-sismica': 0.7,
         'mala': 0.6
       };
       
@@ -2281,30 +2285,54 @@ const PropertyValuation = () => {
            <SelectContent>
              {propertyData.tipoPropiedad === 'terreno' ? (
                <>
-                 <SelectItem value="excelente">
-                   <div className="flex flex-col">
-                     <span className="font-medium">Excelente</span>
-                     <span className="text-xs text-muted-foreground">Zona segura, sin riesgo de inundaciones o deslizamientos</span>
-                   </div>
-                 </SelectItem>
-                 <SelectItem value="buena">
-                   <div className="flex flex-col">
-                     <span className="font-medium">Buena</span>
-                     <span className="text-xs text-muted-foreground">Riesgos mínimos, terreno estable y bien drenado</span>
-                   </div>
-                 </SelectItem>
-                 <SelectItem value="regular">
-                   <div className="flex flex-col">
-                     <span className="font-medium">Regular</span>
-                     <span className="text-xs text-muted-foreground">Algunos riesgos menores, puede necesitar precauciones</span>
-                   </div>
-                 </SelectItem>
-                 <SelectItem value="mala">
-                   <div className="flex flex-col">
-                     <span className="font-medium">Deficiente</span>
-                     <span className="text-xs text-muted-foreground">Alto riesgo de inundación, deslizamiento o problemas ambientales</span>
-                   </div>
-                 </SelectItem>
+                <SelectItem value="excelente">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Excelente</span>
+                    <span className="text-xs text-muted-foreground">Zona segura, sin riesgo de inundaciones o deslizamientos</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="buena">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Buena</span>
+                    <span className="text-xs text-muted-foreground">Riesgos mínimos, terreno estable y bien drenado</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="estable-sismico">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Estable Sísmico</span>
+                    <span className="text-xs text-muted-foreground">Zona con baja actividad sísmica, suelo firme y estable</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="clima-favorable">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Clima Favorable</span>
+                    <span className="text-xs text-muted-foreground">Condiciones climáticas ideales, sin extremos temperaturas</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="regular">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Regular</span>
+                    <span className="text-xs text-muted-foreground">Algunos riesgos menores, puede necesitar precauciones</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="riesgo-hidrico">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Riesgo Hídrico</span>
+                    <span className="text-xs text-muted-foreground">Zona con antecedentes de inundaciones ocasionales</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="actividad-sismica">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Actividad Sísmica</span>
+                    <span className="text-xs text-muted-foreground">Zona con moderada actividad sísmica registrada</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="mala">
+                  <div className="flex flex-col">
+                    <span className="font-medium">Deficiente</span>
+                    <span className="text-xs text-muted-foreground">Alto riesgo de inundación, deslizamiento o problemas ambientales</span>
+                  </div>
+                </SelectItem>
                </>
              ) : (
                <>
