@@ -280,6 +280,14 @@ export type Database = {
         Args: { center_lat: number; center_lng: number }
         Returns: string
       }
+      enhanced_security_audit: {
+        Args: {
+          operation_type: string
+          table_affected?: string
+          user_context?: Json
+        }
+        Returns: undefined
+      }
       find_area_prioritized_comparables: {
         Args: {
           center_lat: number
@@ -574,6 +582,10 @@ export type Database = {
           user_id_param?: string
         }
         Returns: undefined
+      }
+      user_can_comment: {
+        Args: { user_id_param: string }
+        Returns: boolean
       }
       validate_coordinates: {
         Args: { lat: number; lng: number }
