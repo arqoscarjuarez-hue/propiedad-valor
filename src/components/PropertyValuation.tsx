@@ -717,7 +717,7 @@ const PropertyValuation = () => {
         'estrato-6-medio-bajo': 0.40,    // Zona medio-bajo
         'estrato-7-bajo-alto': 0.40,     // Zona bajo-alto
         'estrato-8-bajo-medio': 0.30,    // Zona bajo-medio
-        'estrato-9-bajo': 0.20,          // Zona bajo
+        'estrato-9-bajo-bajo': 0.20,     // Zona bajo-bajo
         'estrato-10-marginal': 0.10      // Zona marginal
       };
       
@@ -2425,10 +2425,10 @@ const PropertyValuation = () => {
                       <span className="text-xs text-muted-foreground">Zona bajo-medio, popular</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-9-bajo">
+                  <SelectItem value="estrato-9-bajo-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 9 - Bajo (Factor: 0.20)</span>
-                      <span className="text-xs text-muted-foreground">Zona bajo, vivienda social</span>
+                      <span className="font-medium">Estrato 9 - Bajo-Bajo (Factor: 0.20)</span>
+                      <span className="text-xs text-muted-foreground">Zona bajo-bajo, vivienda social</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-10-marginal">
