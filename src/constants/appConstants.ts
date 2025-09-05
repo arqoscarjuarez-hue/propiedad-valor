@@ -25,19 +25,19 @@ export const PROPERTY_TYPES = {
 // Valid property types array
 export const VALID_PROPERTY_TYPES = Object.values(PROPERTY_TYPES);
 
-// Location quality options
+// Location quality options with social stratum logic
 export const LOCATION_QUALITY = {
-  EXCELLENT: 'excelente',
-  GOOD: 'buena',
-  MEDIUM: 'media',
-  REGULAR: 'regular',
-  BAD: 'mala',
-  // Social stratum options
-  HIGH_STRATUM: 'estrato-alto',
-  MEDIUM_HIGH_STRATUM: 'estrato-medio-alto',
-  MEDIUM_STRATUM: 'estrato-medio',
-  MEDIUM_LOW_STRATUM: 'estrato-medio-bajo',
-  LOW_STRATUM: 'estrato-bajo'
+  // Social Stratum Scale (decreasing curve - higher stratum = higher factor)
+  STRATUM_1_ELITE: 'estrato-1-elite',           // Factor: 1.45 - Zona exclusiva, residencial de lujo
+  STRATUM_2_HIGH: 'estrato-2-alto',             // Factor: 1.35 - Zona residencial alta, plusvalía premium  
+  STRATUM_3_MEDIUM_HIGH: 'estrato-3-medio-alto', // Factor: 1.20 - Zona residencial media-alta, buena ubicación
+  STRATUM_4_MEDIUM: 'estrato-4-medio',          // Factor: 1.00 - Zona residencial media, equilibrio precio-valor
+  STRATUM_5_MEDIUM_LOW: 'estrato-5-medio-bajo', // Factor: 0.85 - Zona residencial media-baja, accesible
+  STRATUM_6_LOW: 'estrato-6-bajo',              // Factor: 0.70 - Zona popular, vivienda social
+  STRATUM_7_SOCIAL: 'estrato-7-social',         // Factor: 0.60 - Zona de interés social, vivienda subsidiada
+  STRATUM_8_MARGINAL: 'estrato-8-marginal',     // Factor: 0.50 - Zona marginal, servicios limitados
+  STRATUM_9_PERIPHERAL: 'estrato-9-periferico', // Factor: 0.40 - Zona periférica, infraestructura básica
+  STRATUM_10_RURAL: 'estrato-10-rural'          // Factor: 0.35 - Zona rural o alejada, servicios mínimos
 } as const;
 
 // General condition options

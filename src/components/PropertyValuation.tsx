@@ -693,7 +693,7 @@ const PropertyValuation = () => {
       
       const propertyTypeFactor = propertyTypeFactors[propertyData.tipoPropiedad as keyof typeof propertyTypeFactors] || 1.0;
       
-      // Factores de ubicación - Curva ascendente con incrementos decrecientes
+      // Factores de ubicación - Social Stratum Scale (decreasing curve - higher stratum = higher factor)
       const locationFactors = {
         // Para terrenos (Factores Ambientales y Riesgos)
         'mala': 0.01,                    // Deficiente - Base mínima (1% del valor)
@@ -705,7 +705,19 @@ const PropertyValuation = () => {
         'clima-favorable': 0.61,         // +0.05
         'drenaje-excelente': 0.64,       // +0.03
         'buena': 0.66,                   // +0.02
-        'excelente': 0.67                // +0.01 (máximo con menor incremento)
+        'excelente': 0.67,               // +0.01 (máximo con menor incremento)
+        
+        // Para casas (Estratos Sociales) - Curva decreciente
+        'estrato-10-rural': 0.35,        // Factor más bajo - Zona rural
+        'estrato-9-periferico': 0.40,    // Zona periférica
+        'estrato-8-marginal': 0.50,      // Zona marginal  
+        'estrato-7-social': 0.60,        // Zona de interés social
+        'estrato-6-bajo': 0.70,          // Zona popular
+        'estrato-5-medio-bajo': 0.85,    // Zona media-baja
+        'estrato-4-medio': 1.00,         // Zona media (base)
+        'estrato-3-medio-alto': 1.20,    // Zona media-alta
+        'estrato-2-alto': 1.35,          // Zona alta
+        'estrato-1-elite': 1.45          // Factor más alto - Zona élite
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
@@ -2358,39 +2370,64 @@ const PropertyValuation = () => {
                </>
               ) : (
                 <>
-                  <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
-                  <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
-                  <SelectItem value="media">{translations[selectedLanguage].mediumZone}</SelectItem>
-                  <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
-                  <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
-                  <SelectItem value="estrato-alto">
+                  <SelectItem value="estrato-1-elite">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato Alto</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial exclusiva, nivel socioeconómico alto</span>
+                      <span className="font-medium">Estrato 1 - Élite (Factor: 1.45)</span>
+                      <span className="text-xs text-muted-foreground">Zona exclusiva, residencial de lujo, máxima plusvalía</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-medio-alto">
+                  <SelectItem value="estrato-2-alto">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato Medio-Alto</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial de clase media alta, buena plusvalía</span>
+                      <span className="font-medium">Estrato 2 - Alto (Factor: 1.35)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial alta, plusvalía premium</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-medio">
+                  <SelectItem value="estrato-3-medio-alto">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato Medio</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial de clase media, equilibrio precio-calidad</span>
+                      <span className="font-medium">Estrato 3 - Medio-Alto (Factor: 1.20)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial media-alta, buena ubicación</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-medio-bajo">
+                  <SelectItem value="estrato-4-medio">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato Medio-Bajo</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial de clase media baja, accesible</span>
+                      <span className="font-medium">Estrato 4 - Medio (Factor: 1.00)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial media, equilibrio precio-valor</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-bajo">
+                  <SelectItem value="estrato-5-medio-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato Bajo</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial popular, vivienda social</span>
+                      <span className="font-medium">Estrato 5 - Medio-Bajo (Factor: 0.85)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial media-baja, accesible</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-6-bajo">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 6 - Bajo (Factor: 0.70)</span>
+                      <span className="text-xs text-muted-foreground">Zona popular, vivienda social</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-7-social">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 7 - Social (Factor: 0.60)</span>
+                      <span className="text-xs text-muted-foreground">Zona de interés social, vivienda subsidiada</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-8-marginal">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 8 - Marginal (Factor: 0.50)</span>
+                      <span className="text-xs text-muted-foreground">Zona marginal, servicios limitados</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-9-periferico">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 9 - Periférico (Factor: 0.40)</span>
+                      <span className="text-xs text-muted-foreground">Zona periférica, infraestructura básica</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-10-rural">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 10 - Rural (Factor: 0.35)</span>
+                      <span className="text-xs text-muted-foreground">Zona rural o alejada, servicios mínimos</span>
                     </div>
                   </SelectItem>
                 </>
