@@ -709,7 +709,7 @@ const PropertyValuation = () => {
         
         // Para casas (Estratos Sociales) - Curva decreciente
         'estrato-1-elite': 1.50,         // Zona élite
-        'estrato-2-alto': 1.35,          // Zona alto
+        'estrato-2-alto-alto': 1.35,     // Zona alto-alto
         'estrato-3-alto-medio': 1.20,    // Zona alto-medio
         'estrato-4-alto-bajo': 1.00,     // Zona alto-bajo (base)
         'estrato-5-medio-alto': 0.50,    // Zona medio-alto
@@ -2377,10 +2377,10 @@ const PropertyValuation = () => {
                       <span className="text-xs text-muted-foreground">Zona exclusiva, residencial de lujo, máxima plusvalía</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-2-alto">
+                  <SelectItem value="estrato-2-alto-alto">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 2 - Alto (Factor: 1.35)</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial alta, plusvalía premium</span>
+                      <span className="font-medium">Estrato 2 - Alto-Alto (Factor: 1.35)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial alto-alto, plusvalía premium</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-3-alto-medio">
