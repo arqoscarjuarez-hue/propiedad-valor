@@ -2397,43 +2397,43 @@ const PropertyValuation = () => {
                   </SelectItem>
                   <SelectItem value="estrato-5-medio-alto">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 5 - Medio-Alto (Factor: 0.50)</span>
-                      <span className="text-xs text-muted-foreground">Zona residencial medio-alto, accesible</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="estrato-6-medio-bajo">
-                    <div className="flex flex-col">
-                      <span className="font-medium">Estrato 6 - Medio-Bajo (Factor: 0.40)</span>
-                      <span className="text-xs text-muted-foreground">Zona medio-bajo, transición</span>
+                      <span className="font-medium">Estrato 5 - Medio-Alto (Factor: 0.80)</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial medio-alto</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-6-medio-medio">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 6 - Medio-Medio (Factor: 0.45)</span>
+                      <span className="font-medium">Estrato 6 - Medio-Medio (Factor: 0.60)</span>
                       <span className="text-xs text-muted-foreground">Zona medio-medio, equilibrio</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-7-bajo-alto">
+                  <SelectItem value="estrato-7-medio-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 7 - Bajo-Alto (Factor: 0.40)</span>
+                      <span className="font-medium">Estrato 7 - Medio-Bajo (Factor: 0.50)</span>
+                      <span className="text-xs text-muted-foreground">Zona medio-bajo, accesible</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-8-bajo-alto">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 8 - Bajo-Alto (Factor: 0.40)</span>
                       <span className="text-xs text-muted-foreground">Zona bajo-alto, transición</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-8-bajo-medio">
+                  <SelectItem value="estrato-9-bajo-medio">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 8 - Bajo-Medio (Factor: 0.30)</span>
+                      <span className="font-medium">Estrato 9 - Bajo-Medio (Factor: 0.30)</span>
                       <span className="text-xs text-muted-foreground">Zona bajo-medio, popular</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-9-bajo-bajo">
+                  <SelectItem value="estrato-10-bajo-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 9 - Bajo-Bajo (Factor: 0.20)</span>
+                      <span className="font-medium">Estrato 10 - Bajo-Bajo (Factor: 0.20)</span>
                       <span className="text-xs text-muted-foreground">Zona bajo-bajo, vivienda social</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="estrato-10-marginal">
+                  <SelectItem value="estrato-11-marginal">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 10 - Marginal (Factor: 0.10)</span>
+                      <span className="font-medium">Estrato 11 - Marginal (Factor: 0.10)</span>
                       <span className="text-xs text-muted-foreground">Zona marginal, servicios limitados</span>
                     </div>
                   </SelectItem>
