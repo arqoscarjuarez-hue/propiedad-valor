@@ -2403,7 +2403,7 @@ const PropertyValuation = () => {
                   </SelectItem>
                   <SelectItem value="estrato-6-medio-medio">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 6 - Medio-Medio (Factor: 0.60)</span>
+                      <span className="font-medium">Estrato 6 - Medio-Medio (Factor: 0.65)</span>
                       <span className="text-xs text-muted-foreground">Zona medio-medio, equilibrio</span>
                     </div>
                   </SelectItem>
