@@ -2356,15 +2356,45 @@ const PropertyValuation = () => {
                   </div>
                 </SelectItem>
                </>
-             ) : (
-               <>
-                 <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
-                 <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
-                 <SelectItem value="media">{translations[selectedLanguage].mediumZone}</SelectItem>
-                 <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
-                 <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
-               </>
-             )}
+              ) : (
+                <>
+                  <SelectItem value="excelente">{translations[selectedLanguage].excellentZone}</SelectItem>
+                  <SelectItem value="buena">{translations[selectedLanguage].goodZone}</SelectItem>
+                  <SelectItem value="media">{translations[selectedLanguage].mediumZone}</SelectItem>
+                  <SelectItem value="regular">{translations[selectedLanguage].regularZone}</SelectItem>
+                  <SelectItem value="mala">{translations[selectedLanguage].badZone}</SelectItem>
+                  <SelectItem value="estrato-alto">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato Alto</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial exclusiva, nivel socioeconómico alto</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-medio-alto">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato Medio-Alto</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial de clase media alta, buena plusvalía</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-medio">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato Medio</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial de clase media, equilibrio precio-calidad</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-medio-bajo">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato Medio-Bajo</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial de clase media baja, accesible</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-bajo">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato Bajo</span>
+                      <span className="text-xs text-muted-foreground">Zona residencial popular, vivienda social</span>
+                    </div>
+                  </SelectItem>
+                </>
+              )}
            </SelectContent>
                       </Select>
                       <p className="text-xs text-muted-foreground mt-1">{propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalDescription : translations[selectedLanguage].evaluateServices}</p>

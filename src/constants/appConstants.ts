@@ -31,7 +31,13 @@ export const LOCATION_QUALITY = {
   GOOD: 'buena',
   MEDIUM: 'media',
   REGULAR: 'regular',
-  BAD: 'mala'
+  BAD: 'mala',
+  // Social stratum options
+  HIGH_STRATUM: 'estrato-alto',
+  MEDIUM_HIGH_STRATUM: 'estrato-medio-alto',
+  MEDIUM_STRATUM: 'estrato-medio',
+  MEDIUM_LOW_STRATUM: 'estrato-medio-bajo',
+  LOW_STRATUM: 'estrato-bajo'
 } as const;
 
 // General condition options
