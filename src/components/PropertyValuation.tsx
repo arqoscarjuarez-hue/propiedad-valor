@@ -718,7 +718,7 @@ const PropertyValuation = () => {
         'estrato-8-bajo-alto': 0.40,     // Zona bajo-alto
         'estrato-9-bajo-medio': 0.30,    // Zona bajo-medio
         'estrato-10-bajo-bajo': 0.20,    // Zona bajo-bajo
-        'estrato-11-marginal': 0.10      // Zona marginal
+        'estrato-11-marginal': 0.05      // Zona marginal
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
@@ -2433,7 +2433,7 @@ const PropertyValuation = () => {
                   </SelectItem>
                   <SelectItem value="estrato-11-marginal">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 11 - Marginal (Factor: 0.10)</span>
+                      <span className="font-medium">Estrato 11 - Marginal (Factor: 0.05)</span>
                       <span className="text-xs text-muted-foreground">Zona marginal, servicios limitados</span>
                     </div>
                   </SelectItem>
