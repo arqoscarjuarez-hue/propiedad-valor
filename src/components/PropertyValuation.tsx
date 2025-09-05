@@ -709,13 +709,13 @@ const PropertyValuation = () => {
         
         // Para casas (Estratos Sociales) - Curva decreciente
         'estrato-8-marginal': 0.10,      // Zona marginal  
-        'estrato-7-social': 0.60,        // Zona de interés social
-        'estrato-6-bajo': 0.70,          // Zona popular
-        'estrato-5-medio-bajo': 0.85,    // Zona media-baja
+        'estrato-7-social': 0.30,        // Zona de interés social
+        'estrato-6-bajo': 0.50,          // Zona popular
+        'estrato-5-medio-bajo': 0.70,    // Zona media-baja
         'estrato-4-medio': 1.00,         // Zona media (base)
         'estrato-3-medio-alto': 1.20,    // Zona media-alta
         'estrato-2-alto': 1.35,          // Zona alta
-        'estrato-1-elite': 1.45          // Factor más alto - Zona élite
+        'estrato-1-elite': 1.50          // Factor más alto - Zona élite
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
@@ -2370,7 +2370,7 @@ const PropertyValuation = () => {
                 <>
                   <SelectItem value="estrato-1-elite">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 1 - Élite (Factor: 1.45)</span>
+                      <span className="font-medium">Estrato 1 - Élite (Factor: 1.50)</span>
                       <span className="text-xs text-muted-foreground">Zona exclusiva, residencial de lujo, máxima plusvalía</span>
                     </div>
                   </SelectItem>
@@ -2394,19 +2394,19 @@ const PropertyValuation = () => {
                   </SelectItem>
                   <SelectItem value="estrato-5-medio-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 5 - Medio-Bajo (Factor: 0.85)</span>
+                      <span className="font-medium">Estrato 5 - Medio-Bajo (Factor: 0.70)</span>
                       <span className="text-xs text-muted-foreground">Zona residencial media-baja, accesible</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-6-bajo">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 6 - Bajo (Factor: 0.70)</span>
+                      <span className="font-medium">Estrato 6 - Bajo (Factor: 0.50)</span>
                       <span className="text-xs text-muted-foreground">Zona popular, vivienda social</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-7-social">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 7 - Social (Factor: 0.60)</span>
+                      <span className="font-medium">Estrato 7 - Social (Factor: 0.30)</span>
                       <span className="text-xs text-muted-foreground">Zona de interés social, vivienda subsidiada</span>
                     </div>
                   </SelectItem>
