@@ -35,9 +35,7 @@ export const LOCATION_QUALITY = {
   STRATUM_5_MEDIUM_LOW: 'estrato-5-medio-bajo', // Factor: 0.85 - Zona residencial media-baja, accesible
   STRATUM_6_LOW: 'estrato-6-bajo',              // Factor: 0.70 - Zona popular, vivienda social
   STRATUM_7_SOCIAL: 'estrato-7-social',         // Factor: 0.60 - Zona de interés social, vivienda subsidiada
-  STRATUM_8_MARGINAL: 'estrato-8-marginal',     // Factor: 0.50 - Zona marginal, servicios limitados
-  STRATUM_9_PERIPHERAL: 'estrato-9-periferico', // Factor: 0.40 - Zona periférica, infraestructura básica
-  STRATUM_10_RURAL: 'estrato-10-rural'          // Factor: 0.35 - Zona rural o alejada, servicios mínimos
+  STRATUM_8_MARGINAL: 'estrato-8-marginal'      // Factor: 0.50 - Zona marginal, servicios limitados
 } as const;
 
 // General condition options

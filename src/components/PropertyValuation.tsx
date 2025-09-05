@@ -708,8 +708,6 @@ const PropertyValuation = () => {
         'excelente': 0.67,               // +0.01 (máximo con menor incremento)
         
         // Para casas (Estratos Sociales) - Curva decreciente
-        'estrato-10-rural': 0.35,        // Factor más bajo - Zona rural
-        'estrato-9-periferico': 0.40,    // Zona periférica
         'estrato-8-marginal': 0.50,      // Zona marginal  
         'estrato-7-social': 0.60,        // Zona de interés social
         'estrato-6-bajo': 0.70,          // Zona popular
@@ -2416,18 +2414,6 @@ const PropertyValuation = () => {
                     <div className="flex flex-col">
                       <span className="font-medium">Estrato 8 - Marginal (Factor: 0.50)</span>
                       <span className="text-xs text-muted-foreground">Zona marginal, servicios limitados</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="estrato-9-periferico">
-                    <div className="flex flex-col">
-                      <span className="font-medium">Estrato 9 - Periférico (Factor: 0.40)</span>
-                      <span className="text-xs text-muted-foreground">Zona periférica, infraestructura básica</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="estrato-10-rural">
-                    <div className="flex flex-col">
-                      <span className="font-medium">Estrato 10 - Rural (Factor: 0.35)</span>
-                      <span className="text-xs text-muted-foreground">Zona rural o alejada, servicios mínimos</span>
                     </div>
                   </SelectItem>
                 </>
