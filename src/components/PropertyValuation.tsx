@@ -36,7 +36,7 @@ import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 
-import PropertyComparison from './PropertyComparison';
+
 import { sanitizeNumericInput } from '@/utils/validation';
 import { getLandSizeFactor } from '@/utils/landSizeAdjustment';
 
@@ -2661,40 +2661,6 @@ const PropertyValuation = () => {
             </CardContent>
           </Card>
 
-          {/* Comparables */}
-          {comparativeProperties.length > 0 && (
-            <PropertyComparison 
-              currentProperty={{
-                id: 'current',
-                address: propertyData.direccionCompleta || '',
-                type: propertyData.tipoPropiedad,
-                price: valuation || 0,
-                size: propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel + propertyData.areaSotano,
-                bedrooms: 0,
-                bathrooms: 0,
-                
-                condition: propertyData.estadoGeneral,
-                location: propertyData.ubicacion,
-                score: 0,
-                features: []
-              }}
-              comparableProperties={comparativeProperties.map(comp => ({
-                id: comp.id,
-                address: comp.address,
-                type: comp.tipoPropiedad,
-                price: comp.precio,
-                size: comp.areaConstruida,
-                bedrooms: 0,
-                bathrooms: 0,
-                
-                condition: comp.estadoGeneral,
-                location: comp.ubicacion,
-                score: comp.rating || 0,
-                features: []
-              }))}
-              selectedCurrency={selectedCurrency}
-            />
-          )}
 
           {/* Share section */}
           <Card>
