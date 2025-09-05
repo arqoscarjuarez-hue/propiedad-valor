@@ -9,6 +9,38 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 
+// HIBP Pwned Passwords check (k-Anonymity)
+async function sha1(message: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(message);
+  const digest = await crypto.subtle.digest('SHA-1', data);
+  const hashArray = Array.from(new Uint8Array(digest));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+async function checkPwnedPassword(password: string): Promise<number> {
+  try {
+    const hash = await sha1(password);
+    const prefix = hash.slice(0, 5);
+    const suffix = hash.slice(5);
+    const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+    if (!res.ok) return 0;
+    const text = await res.text();
+    const lines = text.split('\n');
+    for (const line of lines) {
+      const [hashSuffix, countStr] = line.trim().split(':');
+      if (hashSuffix === suffix) {
+        const count = parseInt(countStr, 10);
+        return isNaN(count) ? 0 : count;
+      }
+    }
+    return 0;
+  } catch {
+    // Si falla la verificación, no bloqueamos el registro
+    return 0;
+  }
+}
+
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,6 +106,17 @@ export default function Auth() {
       toast({
         title: "Error",
         description: "La contraseña debe tener al menos 6 caracteres.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Verificación HIBP (contraseñas filtradas)
+    const pwnedCount = await checkPwnedPassword(password);
+    if (pwnedCount > 0) {
+      toast({
+        title: "Contraseña vulnerable",
+        description: `Esta contraseña aparece en ${pwnedCount.toLocaleString()} filtraciones conocidas. Por seguridad, elige otra.`,
         variant: "destructive",
       });
       return;
