@@ -713,6 +713,7 @@ const PropertyValuation = () => {
         'estrato-6-bajo': 0.30,          // Zona popular
         'estrato-5-bajo-alto': 0.40,     // Zona bajo-alto
         'estrato-5-medio-bajo': 0.50,    // Zona media-baja
+        'estrato-4-bajo-medio': 0.40,    // Zona bajo-medio
         'estrato-4-medio': 1.00,         // Zona media (base)
         'estrato-3-medio-alto': 1.20,    // Zona media-alta
         'estrato-2-alto': 1.35,          // Zona alta
@@ -2385,6 +2386,12 @@ const PropertyValuation = () => {
                     <div className="flex flex-col">
                       <span className="font-medium">Estrato 3 - Medio-Alto (Factor: 1.20)</span>
                       <span className="text-xs text-muted-foreground">Zona residencial media-alta, buena ubicación</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="estrato-4-bajo-medio">
+                    <div className="flex flex-col">
+                      <span className="font-medium">Estrato 4 - Bajo-Medio (Factor: 0.40)</span>
+                      <span className="text-xs text-muted-foreground">Zona bajo-medio, transición</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="estrato-4-medio">
