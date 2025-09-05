@@ -708,7 +708,7 @@ const PropertyValuation = () => {
         'excelente': 0.67,               // +0.01 (máximo con menor incremento)
         
         // Para casas (Estratos Sociales) - Curva decreciente
-        'estrato-8-marginal': 0.50,      // Zona marginal  
+        'estrato-8-marginal': 0.10,      // Zona marginal  
         'estrato-7-social': 0.60,        // Zona de interés social
         'estrato-6-bajo': 0.70,          // Zona popular
         'estrato-5-medio-bajo': 0.85,    // Zona media-baja
@@ -2412,7 +2412,7 @@ const PropertyValuation = () => {
                   </SelectItem>
                   <SelectItem value="estrato-8-marginal">
                     <div className="flex flex-col">
-                      <span className="font-medium">Estrato 8 - Marginal (Factor: 0.50)</span>
+                      <span className="font-medium">Estrato 8 - Marginal (Factor: 0.10)</span>
                       <span className="text-xs text-muted-foreground">Zona marginal, servicios limitados</span>
                     </div>
                   </SelectItem>
