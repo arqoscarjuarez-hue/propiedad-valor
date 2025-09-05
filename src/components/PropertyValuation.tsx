@@ -712,13 +712,13 @@ const PropertyValuation = () => {
         'estrato-2-alto-alto': 1.35,     // Zona alto-alto
         'estrato-3-alto-medio': 1.20,    // Zona alto-medio
         'estrato-4-alto-bajo': 1.00,     // Zona alto-bajo (base)
-        'estrato-5-medio-alto': 0.50,    // Zona medio-alto
-        'estrato-6-medio-medio': 0.45,   // Zona medio-medio
-        'estrato-6-medio-bajo': 0.40,    // Zona medio-bajo
-        'estrato-7-bajo-alto': 0.40,     // Zona bajo-alto
-        'estrato-8-bajo-medio': 0.30,    // Zona bajo-medio
-        'estrato-9-bajo-bajo': 0.20,     // Zona bajo-bajo
-        'estrato-10-marginal': 0.10      // Zona marginal
+        'estrato-5-medio-alto': 0.80,    // Zona medio-alto
+        'estrato-6-medio-medio': 0.60,   // Zona medio-medio
+        'estrato-7-medio-bajo': 0.50,    // Zona medio-bajo
+        'estrato-8-bajo-alto': 0.40,     // Zona bajo-alto
+        'estrato-9-bajo-medio': 0.30,    // Zona bajo-medio
+        'estrato-10-bajo-bajo': 0.20,    // Zona bajo-bajo
+        'estrato-11-marginal': 0.10      // Zona marginal
       };
       
       const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
