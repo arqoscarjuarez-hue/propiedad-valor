@@ -120,7 +120,6 @@ const translations = {
     commercialUse: 'Comercial',
     industrialUse: 'Industrial',
     agriculturalUse: 'Agrícola',
-    recreationalUse: 'Recreativo',
     
     // Explicaciones de estándares internacionales para terrenos
     internationalStandards: 'Estándares Internacionales IVS/RICS',
@@ -134,7 +133,6 @@ const translations = {
     commercialUseExp: 'Uso Comercial: +28% - Mayor potencial de ingresos',
     industrialUseExp: 'Uso Industrial: +24% - Infraestructura especializada',
     residentialUseExp: 'Uso Residencial: -35% - Valor base estándar residencial',
-    recreationalUseExp: 'Uso Recreativo: -39% - Mercado especializado',
     agriculturalUseExp: 'Uso Agrícola: -57% - Valor extensivo menor',
     
     // Summary sections
@@ -746,7 +744,6 @@ const PropertyValuation = () => {
           'residencial': 0.65,
           'comercial': 2.00,     // Doble valoración (solicitado)
           'industrial': 2.00,    // Doble valoración (solicitado)
-          'recreativo': 0.61,    // Valor recreativo menor
           'agricola': 0.011      // Ajustado para $15K con 6899m²
         };
         
@@ -814,7 +811,6 @@ const PropertyValuation = () => {
             'residencial': 0.65,
             'comercial': 2.00,
             'industrial': 2.00,
-            'recreativo': 0.61,
             'agricola': 0.011
           };
 
@@ -906,7 +902,7 @@ const PropertyValuation = () => {
           
           // Generar características específicas de terreno
           const topografias = ['terreno-plano', 'ondulado-suave', 'pendiente-leve', 'pendiente-moderada', 'pendiente-fuerte', 'pendiente-escarpada', 'afloramiento-rocoso', 'topografia-irregular', 'zona-humeda'];
-          const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola', 'recreativo'];
+          const tiposValoracion = ['residencial', 'comercial', 'industrial', 'agricola'];
           const topografiaComparable = topografias[Math.floor(Math.random() * topografias.length)];
           const tipoValoracionComparable = tiposValoracion[Math.floor(Math.random() * tiposValoracion.length)];
           
@@ -2275,12 +2271,6 @@ const PropertyValuation = () => {
                               <div className="flex flex-col">
                                 <span className="font-medium">{translations[selectedLanguage].agriculturalUse}</span>
                                 <span className="text-xs text-muted-foreground">Para cultivos, ganadería o uso agrícola</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="recreativo">
-                              <div className="flex flex-col">
-                                <span className="font-medium">{translations[selectedLanguage].recreationalUse}</span>
-                                <span className="text-xs text-muted-foreground">Para parques, deportes o entretenimiento</span>
                               </div>
                             </SelectItem>
                           </SelectContent>

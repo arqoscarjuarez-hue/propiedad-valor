@@ -59,8 +59,7 @@ export const VALUATION_TYPES = {
   RESIDENTIAL: 'residencial',
   COMMERCIAL: 'comercial',
   INDUSTRIAL: 'industrial',
-  AGRICULTURAL: 'agricola',
-  RECREATIONAL: 'recreativo'
+  AGRICULTURAL: 'agricola'
 } as const;
 
 // API endpoints

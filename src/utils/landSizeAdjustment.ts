@@ -49,8 +49,7 @@ export const getLandSizeFactor = (
         'residencial': 1.00,              // Sin ajuste - uso estándar
         'comercial': 2.00,                // Doble valoración
         'industrial': 2.00,               // Doble valoración
-        'agricola': 0.011,                // Ajustado para $15K con 6899m²
-        'recreativo': 0.97                // Ligera reducción
+        'agricola': 0.011                 // Ajustado para $15K con 6899m²
       };
       
       const valuationTypeFactor = valuationTypeAdjustments[tipoValoracion as keyof typeof valuationTypeAdjustments] || 1.0;
@@ -99,8 +98,7 @@ export const getLandSizeFactor = (
         'residencial': 1.00,              // Sin ajuste
         'comercial': 2.00,                // Doble valoración
         'industrial': 2.00,               // Doble valoración
-        'agricola': 0.011,                // Ajustado para $15K con 6899m²
-        'recreativo': 0.97                // Ligera reducción
+        'agricola': 0.011                 // Ajustado para $15K con 6899m²
       };
       
       const valuationTypeFactor = valuationTypeAdjustments[tipoValoracion as keyof typeof valuationTypeAdjustments] || 1.0;
@@ -154,8 +152,7 @@ export const getLandSizeFactor = (
       'residencial': 1.00,              // Sin ajuste - uso estándar
       'comercial': 2.00,                // Doble valoración - mayor densidad permitida
       'industrial': 2.00,               // Doble valoración - uso intensivo
-      'agricola': 0.011,                // Ajustado para $15K con 6899m²
-      'recreativo': 0.97                // Ligera reducción - mercado especializado
+      'agricola': 0.011                 // Ajustado para $15K con 6899m²
     };
     
     const valuationTypeFactor = valuationTypeAdjustments[tipoValoracion as keyof typeof valuationTypeAdjustments] || 1.0;
