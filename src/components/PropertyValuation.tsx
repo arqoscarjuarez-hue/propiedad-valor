@@ -2690,21 +2690,19 @@ const PropertyValuation = () => {
                 </div>
                 
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold mb-2">{translations[selectedLanguage].priceAdjustment}</h3>
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => adjustValue(-10)}>-10%</Button>
-                      <Button size="sm" variant="outline" onClick={() => adjustValue(-5)}>-5%</Button>
-                      <Button size="sm" variant="outline" onClick={() => adjustValue(0)}>0%</Button>
-                      <Button size="sm" variant="outline" onClick={() => adjustValue(5)}>+5%</Button>
-                      <Button size="sm" variant="outline" onClick={() => adjustValue(10)}>+10%</Button>
-                    </div>
-                    {adjustmentPercentage !== 0 && (
-                      <p className="text-sm text-muted-foreground">
-                        {translations[selectedLanguage].adjustmentLabel}: {adjustmentPercentage > 0 ? '+' : ''}{adjustmentPercentage}%
-                      </p>
-                    )}
-                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Valor Máximo de Venta</h3>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {formatCurrency(Math.round((finalAdjustedValue || valuation) * 1.1), selectedCurrency)}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">+10% del valor estimado</p>
+                </div>
+                
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold mb-2">Valor Mínimo de Venta</h3>
+                  <p className="text-3xl font-bold text-red-600 dark:text-red-400">
+                    {formatCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency)}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">-10% del valor estimado</p>
                 </div>
                 
                 <div className="text-center">
