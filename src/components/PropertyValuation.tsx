@@ -2702,7 +2702,9 @@ const PropertyValuation = () => {
                     {formatCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency)}
                   </p>
                 </div>
-                
+              </div>
+              
+              <div className="flex justify-center mt-6">
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">{translations[selectedLanguage].downloadDocuments}</h3>
                   <div className="space-y-2">
