@@ -2672,11 +2672,20 @@ const PropertyValuation = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">{translations[selectedLanguage].estimatedValue}</h3>
                   <p className="text-3xl font-bold text-primary">
                     {formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}
+                  </p>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold mb-2">Alquiler Mensual Estimado</h3>
+                  <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                    {formatCurrency(Math.round(((finalAdjustedValue || valuation) * 0.007) / 12), selectedCurrency)}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Basado en tasa de capitalización del 8.4% anual
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {translations[selectedLanguage].basedOnComparablesText}
