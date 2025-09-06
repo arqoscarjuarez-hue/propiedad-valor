@@ -506,6 +506,15 @@ const PropertyValuation = () => {
   // Fallback to 'es' if the selected language is not available in translations
   const selectedLanguage = (rawLanguage in translations) ? rawLanguage : 'es';
 
+  // Parámetros fijos del método de la renta (maximizar resultado)
+  const RENTAL_CAP_RATE = 0.03; // 3% para aumentar el valor resultante
+  const RENTAL_EXPENSE_RATE = 0.0; // 0% de gastos operativos
+
+  // Cálculo derivado del método de la renta
+  const grossAnnualRent = (propertyData.alquiler || 0) * 12;
+  const netAnnualRent = grossAnnualRent * (1 - RENTAL_EXPENSE_RATE);
+  const incomeMethodValue = RENTAL_CAP_RATE > 0 ? netAnnualRent / RENTAL_CAP_RATE : 0;
+
   // useEffect para obtener ubicación del usuario al cargar
   useEffect(() => {
     const initializeUserLocation = async () => {
@@ -1886,6 +1895,17 @@ const PropertyValuation = () => {
               {selectedCurrency.symbol}
             </span>
           </div>
+
+          {propertyData.alquiler ? (
+            <div className="mt-3 text-sm">
+              <div className="font-medium text-blue-900 dark:text-blue-100">
+                Valor por método de la renta: {formatCurrency(incomeMethodValue, selectedCurrency)}
+              </div>
+              <div className="text-blue-700 dark:text-blue-300">
+                Cap: {(RENTAL_CAP_RATE * 100).toFixed(1)}% • Gastos: {(RENTAL_EXPENSE_RATE * 100).toFixed(0)}%
+              </div>
+            </div>
+          ) : null}
         </Card>
       </div>
 
