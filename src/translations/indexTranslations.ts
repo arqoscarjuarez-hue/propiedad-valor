@@ -208,6 +208,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Optimisé pour mobile',
     copyright: '© 2024 Système d\'Évaluation Professionnel. Évaluation de Propriétés.',
     certification: 'Méthodologie certifiée • Rapports de qualité bancaire • Précision garantie',
+    // Rental valuation method
+    rentalMethodTitle: 'Évaluation par la Méthode de Revenu',
+    rentalMethodDescription: 'Si vous connaissez le loyer de la propriété que vous voulez évaluer, veuillez entrer le montant',
+    rentalAmountPlaceholder: 'Entrez le montant du loyer mensuel',
     // HeroSection
     heroMainTitle: 'Évaluation et Estimation',
     heroSubtitle: 'Immobilier en Ligne',
@@ -290,6 +294,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Mobile optimiert',
     copyright: '© 2024 Professionelles Bewertungssystem. Immobilienbewertung.',
     certification: 'Zertifizierte Methodik • Bankqualifizierte Berichte • Garantierte Genauigkeit',
+    // Rental valuation method
+    rentalMethodTitle: 'Bewertung nach Ertragsmethode',
+    rentalMethodDescription: 'Wenn Sie die Miete der Immobilie kennen, die Sie bewerten möchten, geben Sie bitte den Betrag ein',
+    rentalAmountPlaceholder: 'Monatliche Miete eingeben',
     // HeroSection
     heroMainTitle: 'Bewertung und Schätzung',
     heroSubtitle: 'Online Immobilien',
@@ -372,6 +380,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Ottimizzato per mobile',
     copyright: '© 2024 Sistema di Valutazione Professionale. Valutazione Immobiliare.',
     certification: 'Metodologia certificata • Rapporti qualità bancaria • Precisione garantita',
+    // Rental valuation method
+    rentalMethodTitle: 'Valutazione con Metodo del Reddito',
+    rentalMethodDescription: 'Se conosci l\'affitto della proprietà che vuoi valutare, inserisci l\'importo',
+    rentalAmountPlaceholder: 'Inserisci l\'importo dell\'affitto mensile',
     // HeroSection
     heroMainTitle: 'Valutazione e Stima',
     heroSubtitle: 'Immobiliare Online',
@@ -454,6 +466,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Otimizado para mobile',
     copyright: '© 2024 Sistema de Avaliação Profissional. Avaliação de Propriedades.',
     certification: 'Metodologia certificada • Relatórios qualidade bancária • Precisão garantida',
+    // Rental valuation method
+    rentalMethodTitle: 'Avaliação pelo Método da Renda',
+    rentalMethodDescription: 'Se você conhece o aluguel da propriedade que quer avaliar, por favor digite o valor',
+    rentalAmountPlaceholder: 'Digite o valor do aluguel mensal',
     // HeroSection
     heroMainTitle: 'Avaliação e Estimativa',
     heroSubtitle: 'Imobiliário Online',
