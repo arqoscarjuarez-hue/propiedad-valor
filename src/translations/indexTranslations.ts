@@ -38,7 +38,7 @@ export const indexTranslations = {
     certification: 'Metodología certificada • Reportes de calidad bancaria • Precisión garantizada',
     // Rental valuation method
     rentalMethodTitle: 'Valúo por el Método de la Renta',
-    rentalMethodDescription: 'Si conoce el alquiler de la propiedad que quiere valuar, por favor escriba el monto',
+    rentalMethodDescription: 'Si conoce el alquiler mensual de la propiedad que quiere valuar, por favor escriba el monto',
     rentalAmountPlaceholder: 'Ingrese el monto del alquiler mensual',
     // HeroSection
     heroMainTitle: 'Avalúo y Valuación',
