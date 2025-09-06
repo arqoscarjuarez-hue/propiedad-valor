@@ -2726,16 +2726,18 @@ const PropertyValuation = () => {
           {/* Share section */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center justify-center gap-2">
                 <Share2 className="h-5 w-5" />
                 {translations[selectedLanguage].shareValuation}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ShareButtons 
-                title={`Valuación de ${propertyData.tipoPropiedad}`}
-                description={`Valor estimado: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`}
-              />
+              <div className="flex justify-center">
+                <ShareButtons 
+                  title={`Valuación de ${propertyData.tipoPropiedad}`}
+                  description={`Valor estimado: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`}
+                />
+              </div>
             </CardContent>
           </Card>
         </div>
