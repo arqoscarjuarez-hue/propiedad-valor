@@ -506,9 +506,9 @@ const PropertyValuation = () => {
   // Fallback to 'es' if the selected language is not available in translations
   const selectedLanguage = (rawLanguage in translations) ? rawLanguage : 'es';
 
-  // Parámetros fijos del método de la renta (maximizar resultado)
-  const RENTAL_CAP_RATE = 0.03; // 3% para aumentar el valor resultante
-  const RENTAL_EXPENSE_RATE = 0.0; // 0% de gastos operativos
+  // Parámetros fijos del método de la renta (ajustados para ~81,600 USD con $400/mes)
+  const RENTAL_CAP_RATE = 0.05; // 5%
+  const RENTAL_EXPENSE_RATE = 0.15; // 15%
 
   // Cálculo derivado del método de la renta
   const grossAnnualRent = (propertyData.alquiler || 0) * 12;
