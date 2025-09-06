@@ -144,6 +144,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           email: string | null
+          email_visible: boolean | null
           id: string
           updated_at: string
           user_id: string
@@ -152,6 +153,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          email_visible?: boolean | null
           id?: string
           updated_at?: string
           user_id: string
@@ -160,6 +162,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          email_visible?: boolean | null
           id?: string
           updated_at?: string
           user_id?: string
@@ -554,6 +557,15 @@ export type Database = {
           is_approved: boolean
         }[]
       }
+      get_anonymized_profile: {
+        Args: { profile_user_id: string }
+        Returns: {
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+        }[]
+      }
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
@@ -584,6 +596,15 @@ export type Database = {
           event_details?: Json
           event_type: string
           user_id_param?: string
+        }
+        Returns: undefined
+      }
+      log_sensitive_operation: {
+        Args: {
+          additional_data?: Json
+          operation_type: string
+          record_id?: string
+          table_name?: string
         }
         Returns: undefined
       }
