@@ -1934,7 +1934,7 @@ const PropertyValuation = () => {
               <span className={`font-medium text-xs ${getStepCompletion().step2 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
                 Paso 2: Tipo de Propiedad
               </span>
-              <p className="text-xs text-muted-foreground mt-1">Seleccione si es casa, apartamento, terreno o comercial</p>
+              <p className="text-xs text-muted-foreground mt-1">Seleccione si es casa o apartamento</p>
             </div>
           </div>
           
