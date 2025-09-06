@@ -1976,7 +1976,7 @@ const PropertyValuation = () => {
               <p className="text-xs text-muted-foreground mt-1">
                 {getStepCompletion().step5
                   ? 'Su avalúo profesional está completado' 
-                  : 'Obtenga su avalúo profesional con comparables'
+                  : 'Obtenga el resultado de su avalúo profesional'
                 }
               </p>
             </div>
