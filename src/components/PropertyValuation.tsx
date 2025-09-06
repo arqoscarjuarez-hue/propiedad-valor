@@ -315,6 +315,11 @@ const translations = {
       // Disclaimer
       disclaimerText: 'Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.',
       
+      // Método de la renta
+      rentalMethodTitle: 'Valúo por el Método de la Renta',
+      rentalMethodDescription: 'Si conoce el alquiler de la propiedad que quiere valuar, por favor escriba el monto',
+      rentalAmountPlaceholder: 'Ingrese el monto del alquiler mensual',
+      
       // Tooltips y explicaciones
       landAreaTooltip: 'Indique el área del terreno únicamente en metros cuadrados (m²). Para departamentos en niveles superiores al primero, el área de terreno deberá ser igual al área de construcción total.',
       observationsPlaceholder: 'Información adicional sobre el inmueble (máximo 500 caracteres)',
@@ -340,9 +345,16 @@ const translations = {
      basedOnComparablesText: 'Basado en 3 comparables',
      originalBaseValue: 'Valor base original',
      adjustmentLabel: 'Ajuste',
-     newValueLabel: 'Nuevo valor'
-   }
-};
+      newValueLabel: 'Nuevo valor'
+    },
+    en: {
+      // Método de la renta
+      rentalMethodTitle: 'Valuation by Income Method',
+      rentalMethodDescription: 'If you know the rental income of the property you want to value, please enter the amount',
+      rentalAmountPlaceholder: 'Enter monthly rental amount',
+      disclaimerText: 'This valuation is an estimate based on the data provided. It is recommended to consult with a certified appraiser for official valuations.',
+    }
+  };
 
 type Language = keyof typeof translations;
 
