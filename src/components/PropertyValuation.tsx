@@ -2170,9 +2170,6 @@ const PropertyValuation = () => {
                   <SelectContent>
                     <SelectItem value="casa">{translations[selectedLanguage].house}</SelectItem>
                     <SelectItem value="departamento">{translations[selectedLanguage].apartment}</SelectItem>
-                    <SelectItem value="terreno">{translations[selectedLanguage].land}</SelectItem>
-                    <SelectItem value="comercial">{translations[selectedLanguage].commercial}</SelectItem>
-                    <SelectItem value="bodega">{translations[selectedLanguage].warehouse}</SelectItem>
                   </SelectContent>
                 </Select>
               </TabsContent>
