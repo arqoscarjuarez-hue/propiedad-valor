@@ -2682,10 +2682,10 @@ const PropertyValuation = () => {
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">Alquiler Mensual Estimado</h3>
                   <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                    {formatCurrency(Math.round(((finalAdjustedValue || valuation) * 0.007) / 12), selectedCurrency)}
+                    {formatCurrency(Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12), selectedCurrency)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Basado en tasa de capitalización del 8.4% anual
+                    Fórmula inversa del método de la renta (Cap rate 5%, gastos 15%)
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {translations[selectedLanguage].basedOnComparablesText}
