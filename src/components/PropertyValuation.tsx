@@ -1961,7 +1961,7 @@ const PropertyValuation = () => {
               <span className={`font-medium text-xs ${getStepCompletion().step4 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
                 Paso 4: Características
               </span>
-              <p className="text-xs text-muted-foreground mt-1">Antigüedad, calidad de ubicación y estado general</p>
+              <p className="text-xs text-muted-foreground mt-1">Calidad de ubicación y estado general de conservación</p>
             </div>
           </div>
           
