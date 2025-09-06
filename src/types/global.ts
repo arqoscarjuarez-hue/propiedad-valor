@@ -30,6 +30,9 @@ export interface PropertyData {
   latitud?: number;
   longitud?: number;
   direccionCompleta?: string;
+  
+  // Rental method
+  alquiler?: number;
 }
 
 // Comparative property interface

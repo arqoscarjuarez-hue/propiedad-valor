@@ -36,6 +36,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Optimizado para móviles',
     copyright: '© 2024 Sistema profesional de avalúos. Evaluación de propiedades.',
     certification: 'Metodología certificada • Reportes de calidad bancaria • Precisión garantizada',
+    // Rental valuation method
+    rentalMethodTitle: 'Valúo por el Método de la Renta',
+    rentalMethodDescription: 'Si conoce el alquiler de la propiedad que quiere valuar, por favor escriba el monto',
+    rentalAmountPlaceholder: 'Ingrese el monto del alquiler mensual',
     // HeroSection
     heroMainTitle: 'Avalúo y Valuación',
     heroSubtitle: 'Inmobiliaria Online',
@@ -118,6 +122,10 @@ export const indexTranslations = {
     mobileOptimized: '📱 Mobile optimized',
     copyright: '© 2024 Professional Appraisal System. Property Evaluation.',
     certification: 'Certified methodology • Bank-quality reports • Guaranteed precision',
+    // Rental valuation method
+    rentalMethodTitle: 'Valuation by Income Method',
+    rentalMethodDescription: 'If you know the rental income of the property you want to value, please enter the amount',
+    rentalAmountPlaceholder: 'Enter monthly rental amount',
     // HeroSection
     heroMainTitle: 'Appraisal and Valuation',
     heroSubtitle: 'Online Real Estate',

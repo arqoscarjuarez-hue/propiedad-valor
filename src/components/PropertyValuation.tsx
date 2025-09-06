@@ -371,6 +371,9 @@ interface PropertyData {
   latitud?: number;
   longitud?: number;
   direccionCompleta?: string;
+  
+  // Método de la renta
+  alquiler?: number;
 }
 
 interface ComparativeProperty {
@@ -449,7 +452,8 @@ const PropertyValuation = () => {
         estadoGeneral: '',
         latitud: 19.4326, // Valor inicial, se actualizará con geolocalización
         longitud: -99.1332,
-        direccionCompleta: ''
+        direccionCompleta: '',
+        alquiler: 0
       },
       selectedCurrency: {
         code: 'USD',
@@ -1844,6 +1848,32 @@ const PropertyValuation = () => {
           <p className="text-xs text-muted-foreground leading-relaxed">
             {translations[selectedLanguage].disclaimerText}
           </p>
+        </Card>
+      </div>
+
+      {/* Valúo por el Método de la Renta */}
+      <div className="mb-6">
+        <Card className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-blue-200 dark:border-blue-800">
+          <h4 className="text-md font-semibold mb-3 text-blue-900 dark:text-blue-100 flex items-center gap-2">
+            💰 {translations[selectedLanguage].rentalMethodTitle}
+          </h4>
+          <p className="text-sm text-blue-700 dark:text-blue-300 mb-4">
+            {translations[selectedLanguage].rentalMethodDescription}
+          </p>
+          <div className="flex gap-2 items-center">
+            <div className="flex-1">
+              <Input
+                type="number"
+                placeholder={translations[selectedLanguage].rentalAmountPlaceholder}
+                value={propertyData.alquiler || ''}
+                onChange={(e) => handleInputChange('alquiler', sanitizeNumericInput(e.target.value))}
+                className="border-blue-300 focus:border-blue-500 focus:ring-blue-500/20"
+              />
+            </div>
+            <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+              {selectedCurrency.symbol}
+            </span>
+          </div>
         </Card>
       </div>
 
