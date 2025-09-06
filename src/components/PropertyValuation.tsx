@@ -1875,10 +1875,10 @@ const PropertyValuation = () => {
       {/* Valúo por el Método de la Renta */}
       <div className="mb-6">
         <Card className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-blue-200 dark:border-blue-800">
-          <h4 className="text-md font-semibold mb-3 text-blue-900 dark:text-blue-100 flex items-center gap-2">
+          <h4 className="text-md font-semibold mb-3 text-blue-900 dark:text-blue-100 flex items-center justify-center gap-2">
             💰 {translations[selectedLanguage].rentalMethodTitle}
           </h4>
-          <p className="text-sm text-blue-700 dark:text-blue-300 mb-4">
+          <p className="text-sm text-blue-700 dark:text-blue-300 mb-4 text-center">
             {translations[selectedLanguage].rentalMethodDescription}
           </p>
           <div className="flex gap-2 items-center">
