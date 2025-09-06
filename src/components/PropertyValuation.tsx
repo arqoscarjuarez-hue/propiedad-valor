@@ -2694,7 +2694,6 @@ const PropertyValuation = () => {
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     {formatCurrency(Math.round((finalAdjustedValue || valuation) * 1.1), selectedCurrency)}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">+10% del valor estimado</p>
                 </div>
                 
                 <div className="text-center">
@@ -2702,7 +2701,6 @@ const PropertyValuation = () => {
                   <p className="text-3xl font-bold text-red-600 dark:text-red-400">
                     {formatCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency)}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">-10% del valor estimado</p>
                 </div>
                 
                 <div className="text-center">
