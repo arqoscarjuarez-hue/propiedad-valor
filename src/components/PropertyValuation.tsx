@@ -1908,6 +1908,7 @@ const PropertyValuation = () => {
 
       {/* Secuencia de Valuación */}
       <div className="mb-6 p-4 bg-muted rounded-lg">
+        <h4 className="text-md font-semibold mb-2 text-center">💰 Valúo por el método Comparativo</h4>
         <h4 className="text-md font-semibold mb-4 text-center">🏠 Secuencia de Valuación</h4>
         <p className="text-xs text-muted-foreground mb-4 text-center">Complete los pasos en orden para obtener su valuación profesional</p>
         
