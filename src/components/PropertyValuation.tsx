@@ -1901,9 +1901,6 @@ const PropertyValuation = () => {
               <div className="font-medium text-blue-900 dark:text-blue-100">
                 Valor por método de la renta: {formatCurrency(incomeMethodValue, selectedCurrency)}
               </div>
-              <div className="text-blue-700 dark:text-blue-300">
-                Cap: {(RENTAL_CAP_RATE * 100).toFixed(1)}% • Gastos: {(RENTAL_EXPENSE_RATE * 100).toFixed(0)}%
-              </div>
             </div>
           ) : null}
         </Card>
