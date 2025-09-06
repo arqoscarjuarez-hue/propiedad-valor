@@ -1897,8 +1897,8 @@ const PropertyValuation = () => {
           </div>
 
           {propertyData.alquiler ? (
-            <div className="mt-3 text-sm">
-              <div className="font-medium text-blue-900 dark:text-blue-100">
+            <div className="mt-4 p-3 bg-white/50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50 dark:border-blue-700/50">
+              <div className="text-lg font-bold text-blue-900 dark:text-blue-100 text-center">
                 Valor por método de la renta: {formatCurrency(incomeMethodValue, selectedCurrency)}
               </div>
             </div>
