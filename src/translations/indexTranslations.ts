@@ -513,6 +513,28 @@ export const indexTranslations = {
     statsProperties: 'Propriedades Avaliadas',
     statsPrecision: 'Precisão Média',
     statsCountries: 'Países Cobertos',
-    statsAvailability: 'Disponibilidade'
+    statsAvailability: 'Disponibilidade',
+    
+    // PropertyValuation translations
+    // UI Labels principales
+    propertyValuator: 'Avaliador de Propriedades',
+    professionalSystem: 'Sistema profissional de avaliação imobiliária',
+    languageSelector: 'Idioma / Language',
+    propertyData: 'Dados da Propriedade',
+    
+    // Pestañas principales
+    areas: 'Áreas',
+    propertyType: 'Tipo',
+    characteristics: 'Características',
+    location: 'Localização',
+    valuation: 'Ajuste de Valor',
+    
+    // Currency selector
+    exchangeRateUpdated: 'Taxas de Câmbio Atualizadas',
+    exchangeRateError: 'Não foi possível atualizar as taxas de câmbio. Serão usadas as taxas anteriores.',
+    exchangeRateNote: 'As taxas de câmbio são obtidas da ExchangeRate-API e atualizadas em tempo real.',
+    exchangeRateLabel: 'Taxa de câmbio',
+    lastUpdateText: 'Última atualização',
+    currencyValuation: 'Moeda de Avaliação'
   }
 };
