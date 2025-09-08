@@ -29,11 +29,11 @@ export function LanguageSelector() {
         <Button 
           variant="outline" 
           size="sm"
-          className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border"
+          className="flex items-center gap-1 sm:gap-2 bg-background/95 hover:bg-muted/50 border-border min-w-[80px] sm:min-w-[100px]"
         >
-          <Globe className="h-4 w-4" />
-          <span className="text-lg">{currentLanguage.flag}</span>
-          <span className="font-medium text-sm">{currentLanguage.name}</span>
+          <Globe className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+          <span className="text-sm sm:text-lg">{currentLanguage.flag}</span>
+          <span className="font-medium text-xs sm:text-sm truncate">{currentLanguage.name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[9999]">
