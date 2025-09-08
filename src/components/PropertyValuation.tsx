@@ -495,6 +495,7 @@ const PropertyValuation = () => {
   const [comparativeProperties, setComparativeProperties] = useState<ComparativeProperty[]>([]);
   const [selectedComparatives, setSelectedComparatives] = useState<ComparativeProperty[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [hasBeenCalculated, setHasBeenCalculated] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [activeTab, setActiveTab] = useState('ubicacion');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
@@ -916,6 +917,7 @@ const PropertyValuation = () => {
       console.error(translations[selectedLanguage].errorCalculatingValuation);
     } finally {
       setIsCalculating(false);
+      setHasBeenCalculated(true); // Marcar que ya se realizó la valuación
     }
   };
 
@@ -2676,9 +2678,11 @@ const PropertyValuation = () => {
                     disabled={!isFormValid() || isCalculating} 
                     size="lg" 
                     className={`w-full sm:w-auto transition-all duration-300 ${
-                      isFormValid() && !isCalculating 
+                      isFormValid() && !isCalculating && !hasBeenCalculated
                         ? 'animate-pulse bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25 border-primary' 
-                        : ''
+                        : hasBeenCalculated 
+                          ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
+                          : ''
                     }`}
                   >
                     {isCalculating ? "Calculando..." : translations[selectedLanguage].realizarValuacion}
