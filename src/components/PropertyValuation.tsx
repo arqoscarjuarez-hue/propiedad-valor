@@ -2587,7 +2587,16 @@ const PropertyValuation = () => {
               <TabsContent value="valuacion" className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Calcular Valuación</h3>
                 <div className="text-center">
-                  <Button onClick={calculateValuation} disabled={!isFormValid() || isCalculating} size="lg" className="w-full sm:w-auto">
+                  <Button 
+                    onClick={calculateValuation} 
+                    disabled={!isFormValid() || isCalculating} 
+                    size="lg" 
+                    className={`w-full sm:w-auto transition-all duration-300 ${
+                      isFormValid() && !isCalculating 
+                        ? 'animate-pulse bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25 border-primary' 
+                        : ''
+                    }`}
+                  >
                     {isCalculating ? "Calculando..." : translations[selectedLanguage].realizarValuacion}
                   </Button>
                 </div>
