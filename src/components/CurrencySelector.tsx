@@ -25,47 +25,38 @@ interface CurrencySelectorProps {
 }
 
 const popularCurrencies = [
+  // América del Norte
   { code: 'USD', name: 'Dólar Estadounidense', symbol: '$' },
-  { code: 'EUR', name: 'Euro', symbol: '€' },
-  { code: 'MXN', name: 'Peso Mexicano', symbol: '$' },
-  { code: 'GBP', name: 'Libra Esterlina', symbol: '£' },
-  { code: 'JPY', name: 'Yen Japonés', symbol: '¥' },
   { code: 'CAD', name: 'Dólar Canadiense', symbol: 'C$' },
-  { code: 'AUD', name: 'Dólar Australiano', symbol: 'A$' },
-  { code: 'CHF', name: 'Franco Suizo', symbol: 'CHF' },
-  { code: 'CNY', name: 'Yuan Chino', symbol: '¥' },
+  
+  // América Latina
+  { code: 'MXN', name: 'Peso Mexicano', symbol: '$' },
   { code: 'BRL', name: 'Real Brasileño', symbol: 'R$' },
   { code: 'ARS', name: 'Peso Argentino', symbol: '$' },
   { code: 'COP', name: 'Peso Colombiano', symbol: '$' },
   { code: 'CLP', name: 'Peso Chileno', symbol: '$' },
   { code: 'PEN', name: 'Sol Peruano', symbol: 'S/' },
-  { code: 'INR', name: 'Rupia India', symbol: '₹' },
-  { code: 'KRW', name: 'Won Surcoreano', symbol: '₩' },
-  { code: 'SGD', name: 'Dólar de Singapur', symbol: 'S$' },
-  { code: 'HKD', name: 'Dólar de Hong Kong', symbol: 'HK$' },
-  { code: 'NZD', name: 'Dólar Neozelandés', symbol: 'NZ$' },
+  { code: 'UYU', name: 'Peso Uruguayo', symbol: '$U' },
+  { code: 'BOB', name: 'Boliviano', symbol: 'Bs.' },
+  { code: 'PYG', name: 'Guaraní Paraguayo', symbol: '₲' },
+  { code: 'VES', name: 'Bolívar Venezolano', symbol: 'Bs.S' },
+  { code: 'CRC', name: 'Colón Costarricense', symbol: '₡' },
+  { code: 'GTQ', name: 'Quetzal Guatemalteco', symbol: 'Q' },
+  { code: 'HNL', name: 'Lempira Hondureño', symbol: 'L' },
+  { code: 'NIO', name: 'Córdoba Nicaragüense', symbol: 'C$' },
+  { code: 'PAB', name: 'Balboa Panameño', symbol: 'B/.' },
+  { code: 'DOP', name: 'Peso Dominicano', symbol: 'RD$' },
+  
+  // Europa
+  { code: 'EUR', name: 'Euro', symbol: '€' },
+  { code: 'GBP', name: 'Libra Esterlina', symbol: '£' },
+  { code: 'CHF', name: 'Franco Suizo', symbol: 'CHF' },
   { code: 'SEK', name: 'Corona Sueca', symbol: 'kr' },
   { code: 'NOK', name: 'Corona Noruega', symbol: 'kr' },
   { code: 'DKK', name: 'Corona Danesa', symbol: 'kr' },
   { code: 'PLN', name: 'Zloty Polaco', symbol: 'zł' },
   { code: 'CZK', name: 'Corona Checa', symbol: 'Kč' },
-  { code: 'HUF', name: 'Forint Húngaro', symbol: 'Ft' },
-  { code: 'RUB', name: 'Rublo Ruso', symbol: '₽' },
-  { code: 'TRY', name: 'Lira Turca', symbol: '₺' },
-  { code: 'ZAR', name: 'Rand Sudafricano', symbol: 'R' },
-  { code: 'EGP', name: 'Libra Egipcia', symbol: 'E£' },
-  { code: 'SAR', name: 'Riyal Saudí', symbol: 'SR' },
-  { code: 'AED', name: 'Dirham de EAU', symbol: 'د.إ' },
-  { code: 'QAR', name: 'Riyal Qatarí', symbol: 'QR' },
-  { code: 'KWD', name: 'Dinar Kuwaití', symbol: 'KD' },
-  { code: 'BHD', name: 'Dinar de Baréin', symbol: 'BD' },
-  { code: 'OMR', name: 'Rial Omaní', symbol: 'OMR' },
-  { code: 'ILS', name: 'Shekel Israelí', symbol: '₪' },
-  { code: 'THB', name: 'Baht Tailandés', symbol: '฿' },
-  { code: 'MYR', name: 'Ringgit Malayo', symbol: 'RM' },
-  { code: 'IDR', name: 'Rupia Indonesia', symbol: 'Rp' },
-  { code: 'PHP', name: 'Peso Filipino', symbol: '₱' },
-  { code: 'VND', name: 'Dong Vietnamita', symbol: '₫' }
+  { code: 'HUF', name: 'Forint Húngaro', symbol: 'Ft' }
 ];
 
 const CurrencySelector: React.FC<CurrencySelectorProps> = ({
