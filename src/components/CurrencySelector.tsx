@@ -217,19 +217,6 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           </Button>
         </div>
 
-        {selectedCurrency.code !== 'USD' && (
-          <div className="p-2 sm:p-3 bg-muted rounded-lg">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
-              <span className="text-xs sm:text-sm font-medium">{exchangeRateLabel}:</span>
-              <span className="font-mono font-medium text-xs sm:text-sm break-all">
-                1 USD = {selectedCurrency.rate?.toLocaleString(undefined, { 
-                  minimumFractionDigits: 2, 
-                  maximumFractionDigits: 6 
-                })} {selectedCurrency.code}
-              </span>
-            </div>
-          </div>
-        )}
 
       </CardContent>
     </Card>
