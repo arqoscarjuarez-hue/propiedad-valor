@@ -1898,14 +1898,19 @@ const PropertyValuation = () => {
 
           {propertyData.alquiler ? (
             <div className="mt-4 p-3 bg-white/50 dark:bg-blue-900/20 rounded-lg border border-blue-200/50 dark:border-blue-700/50">
-              <div className="text-lg font-bold text-blue-900 dark:text-blue-100 text-center">
-                Valor por método de la renta: {formatCurrency(incomeMethodValue, selectedCurrency)}
+              <div className="text-center">
+                <h4 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">Valor por método de la renta:</h4>
+                <p className="text-3xl font-bold text-primary mb-3">
+                  {formatCurrency(incomeMethodValue, selectedCurrency)}
+                </p>
               </div>
-              <div className="mt-2 text-sm text-blue-800 dark:text-blue-200 text-center">
-                Valor Máximo de Venta: {formatCurrency(incomeMethodValue * 1.1, selectedCurrency)}
-              </div>
-              <div className="text-sm text-blue-800 dark:text-blue-200 text-center">
-                Valor Mínimo de Venta: {formatCurrency(incomeMethodValue * 0.9, selectedCurrency)}
+              <div className="text-center">
+                <p className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-1">
+                  Valor Máximo de Venta: {formatCurrency(incomeMethodValue * 1.1, selectedCurrency)}
+                </p>
+                <p className="text-xl font-semibold text-blue-800 dark:text-blue-200">
+                  Valor Mínimo de Venta: {formatCurrency(incomeMethodValue * 0.9, selectedCurrency)}
+                </p>
               </div>
             </div>
           ) : null}
