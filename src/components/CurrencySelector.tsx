@@ -202,6 +202,13 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
             </SelectContent>
           </Select>
         </div>
+        
+        {/* Mostrar nombre de la moneda seleccionada */}
+        <div className="text-center mt-3">
+          <p className="text-sm font-medium text-muted-foreground">
+            Moneda seleccionada: <span className="text-foreground font-semibold">{selectedCurrency.name}</span>
+          </p>
+        </div>
 
 
       </CardContent>
