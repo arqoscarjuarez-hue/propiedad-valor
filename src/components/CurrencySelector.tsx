@@ -212,15 +212,6 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           </div>
         )}
 
-        {lastUpdate && (
-          <p className="text-xs text-muted-foreground text-center">
-            {lastUpdateText}: {lastUpdate && lastUpdate.toLocaleString()}
-          </p>
-        )}
-
-        <div className="text-xs text-muted-foreground">
-          <p>{exchangeRateNote}</p>
-        </div>
       </CardContent>
     </Card>
   );
