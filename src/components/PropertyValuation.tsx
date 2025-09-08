@@ -2245,6 +2245,34 @@ const PropertyValuation = () => {
 
               <TabsContent value="tipo" className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].propertyTypeTitle}</h3>
+                {/* Indicador de progreso para Tipo */}
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border mb-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('ubicacion')}
+                  >
+                    ← Anterior
+                  </Button>
+                  <div className="text-center">
+                    {getStepCompletion().step2 ? (
+                      <p className="text-sm text-green-600 dark:text-green-400">
+                        ✅ <strong>Paso 2 completado</strong> - Tipo de propiedad seleccionado
+                      </p>
+                    ) : (
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        🏠 Seleccione si es casa o apartamento
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('areas')}
+                    disabled={!getStepCompletion().step2}
+                  >
+                    Siguiente →
+                  </Button>
+                </div>
+                
                 <Select value={propertyData.tipoPropiedad} onValueChange={(value) => handleInputChange('tipoPropiedad', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder={translations[selectedLanguage].selectPropertyType} />
@@ -2258,6 +2286,34 @@ const PropertyValuation = () => {
 
               <TabsContent value="caracteristicas" className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].characteristics}</h3>
+                
+                {/* Indicador de progreso para Características */}
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border mb-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('areas')}
+                  >
+                    ← Anterior
+                  </Button>
+                  <div className="text-center">
+                    {getStepCompletion().step4 ? (
+                      <p className="text-sm text-green-600 dark:text-green-400">
+                        ✅ <strong>Paso 4 completado</strong> - Características registradas
+                      </p>
+                    ) : (
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        📝 Complete la ubicación y características
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('valuacion')}
+                    disabled={!getStepCompletion().step4}
+                  >
+                    Siguiente →
+                  </Button>
+                </div>
                 
                 {/* Mostrar características específicas para terrenos */}
                 {propertyData.tipoPropiedad === 'terreno' ? (
@@ -2586,6 +2642,34 @@ const PropertyValuation = () => {
 
               <TabsContent value="valuacion" className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">Calcular Valuación</h3>
+                
+                {/* Indicador de progreso para Valuación */}
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border mb-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('caracteristicas')}
+                  >
+                    ← Anterior
+                  </Button>
+                  <div className="text-center">
+                    {getStepCompletion().step5 ? (
+                      <p className="text-sm text-green-600 dark:text-green-400">
+                        ✅ <strong>Paso 5 completado</strong> - Valuación realizada exitosamente
+                      </p>
+                    ) : getStepCompletion().step4 ? (
+                      <p className="text-xs text-blue-700 dark:text-blue-300">
+                        🎯 ¡Todo listo! Presione el botón para realizar la valuación
+                      </p>
+                    ) : (
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        ⚠️ Complete todos los pasos anteriores para continuar
+                      </p>
+                    )}
+                  </div>
+                  <div className="w-20"> {/* Spacer para balance visual */}
+                  </div>
+                </div>
+                
                 <div className="text-center">
                   <Button 
                     onClick={calculateValuation} 
@@ -2604,6 +2688,29 @@ const PropertyValuation = () => {
 
                  <TabsContent value="ubicacion" className="space-y-4 mt-6">
                   <h3 className="text-lg font-semibold text-foreground mb-4">{translations[selectedLanguage].locationSketch}</h3>
+                  
+                  {/* Indicador de progreso para Ubicación */}
+                  <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
+                    <div className="text-center">
+                      {getStepCompletion().step1 ? (
+                        <p className="text-sm text-green-600 dark:text-green-400">
+                          ✅ <strong>Paso 1 completado</strong> - Ubicación registrada correctamente
+                        </p>
+                      ) : (
+                        <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                          📍 Seleccione la ubicación en el mapa o ingrese coordenadas
+                        </p>
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setActiveTab('tipo')}
+                      disabled={!getStepCompletion().step1}
+                      className="ml-4"
+                    >
+                      Siguiente →
+                    </Button>
+                  </div>
                   
                   <Tabs defaultValue="mapa" className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
