@@ -201,20 +201,6 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
               ))}
             </SelectContent>
           </Select>
-          
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={updateExchangeRates}
-            disabled={loading}
-            className="h-9 w-9 sm:h-10 sm:w-10"
-          >
-            {loading ? (
-              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-            ) : (
-              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
-            )}
-          </Button>
         </div>
 
 
