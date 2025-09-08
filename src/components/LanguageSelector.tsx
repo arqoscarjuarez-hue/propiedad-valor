@@ -30,12 +30,7 @@ export function LanguageSelector() {
 
   return (
     <Card>
-      <CardHeader className="pb-2 sm:pb-3">
-        <CardTitle className="text-base sm:text-lg">
-          <span className="text-sm sm:text-base">Idioma / Language</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 sm:space-y-4">
+      <CardContent className="space-y-3 sm:space-y-4 pt-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
