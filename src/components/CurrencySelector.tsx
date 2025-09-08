@@ -39,7 +39,6 @@ const popularCurrencies = [
   { code: 'UYU', name: 'Peso Uruguayo', symbol: '$U' },
   { code: 'BOB', name: 'Boliviano', symbol: 'Bs.' },
   { code: 'PYG', name: 'Guaraní Paraguayo', symbol: '₲' },
-  { code: 'VES', name: 'Bolívar Venezolano', symbol: 'Bs.S' },
   { code: 'CRC', name: 'Colón Costarricense', symbol: '₡' },
   { code: 'GTQ', name: 'Quetzal Guatemalteco', symbol: 'Q' },
   { code: 'HNL', name: 'Lempira Hondureño', symbol: 'L' },
