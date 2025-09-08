@@ -1770,9 +1770,6 @@ const PropertyValuation = () => {
             <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
               ✓
             </div>
-            <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
-              {translations[selectedLanguage].languageSelector}
-            </Label>
           </div>
           <LanguageSelector />
         </Card>
