@@ -246,7 +246,7 @@ const translations = {
     propertyAreas: 'ÁREAS DE LA PROPIEDAD',
     estimatedValuePDF: 'VALOR ESTIMADO',
     pricePerSqm: 'Precio por m²',
-    basedOnComparables: 'Basado en 3 comparables',
+    basedOnComparables: '',
     mapLocation: 'UBICACIÓN EN MAPA',
     address: 'Dirección',
     viewInGoogleMaps: 'Ver ubicación en Google Maps',
@@ -342,7 +342,7 @@ const translations = {
      lastUpdateText: 'Última actualización',
      // Valuation results panel
      valuationResultsTitle: 'Resultado de Valuación',
-     basedOnComparablesText: 'Basado en 3 comparables',
+     basedOnComparablesText: '',
      originalBaseValue: 'Valor base original',
      adjustmentLabel: 'Ajuste',
       newValueLabel: 'Nuevo valor'
