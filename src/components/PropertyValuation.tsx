@@ -1901,6 +1901,12 @@ const PropertyValuation = () => {
               <div className="text-lg font-bold text-blue-900 dark:text-blue-100 text-center">
                 Valor por método de la renta: {formatCurrency(incomeMethodValue, selectedCurrency)}
               </div>
+              <div className="mt-2 text-sm text-blue-800 dark:text-blue-200 text-center">
+                Valor Máximo de Venta: {formatCurrency(incomeMethodValue * 1.1, selectedCurrency)}
+              </div>
+              <div className="text-sm text-blue-800 dark:text-blue-200 text-center">
+                Valor Mínimo de Venta: {formatCurrency(incomeMethodValue * 0.9, selectedCurrency)}
+              </div>
             </div>
           ) : null}
         </Card>
