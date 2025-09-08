@@ -23,6 +23,10 @@ export function LanguageSelector() {
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
   
   const currentLanguage = languages.find(lang => lang.code === selectedLanguage) || languages[0]; // Español por defecto
+  
+  // Debug: verificar qué se está mostrando
+  console.log('LanguageSelector - currentLanguage:', currentLanguage);
+  console.log('LanguageSelector - botón muestra solo:', '🌐', currentLanguage.flag);
 
   return (
     <Card>
