@@ -1905,10 +1905,10 @@ const PropertyValuation = () => {
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-1">
+                <p className="text-xl font-semibold text-green-600 dark:text-green-400 mb-1">
                   Valor Máximo de Venta: {formatCurrency(incomeMethodValue * 1.1, selectedCurrency)}
                 </p>
-                <p className="text-xl font-semibold text-blue-800 dark:text-blue-200">
+                <p className="text-xl font-semibold text-red-600 dark:text-red-400">
                   Valor Mínimo de Venta: {formatCurrency(incomeMethodValue * 0.9, selectedCurrency)}
                 </p>
               </div>
