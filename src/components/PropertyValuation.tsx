@@ -900,6 +900,17 @@ const PropertyValuation = () => {
       // Valuación completada silenciosamente
       console.log(`${translations[selectedLanguage].valuationCompleted}: ${formatCurrency(convertCurrency(basePrice, selectedCurrency), selectedCurrency)}`);
       
+      // Scroll automático al resultado de valuación después de completar
+      setTimeout(() => {
+        const resultElement = document.getElementById('valuation-results');
+        if (resultElement) {
+          resultElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 500); // Pequeño delay para asegurar que el DOM se haya actualizado
+      
     } catch (error) {
       // Error en cálculo - manejo silencioso
       console.error(translations[selectedLanguage].errorCalculatingValuation);
@@ -2673,7 +2684,7 @@ const PropertyValuation = () => {
 
       {/* Resultados de valuación, comparables y ajustes */}
       {valuation && (
-        <div className="space-y-6">
+        <div id="valuation-results" className="space-y-6">
           {/* Panel de resultados */}
           <Card>
             <CardHeader>
