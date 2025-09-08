@@ -545,35 +545,17 @@ const PropertyValuation = () => {
   }, []);
 
 
-  const convertCurrency = (amount: number, targetCurrency: Currency): number => {
-    if (!targetCurrency || targetCurrency.rate <= 0) return amount;
-    return amount / targetCurrency.rate;
+  const convertCurrency = (amountInUSD: number, targetCurrency: Currency): number => {
+    if (!targetCurrency || targetCurrency.rate <= 0) return amountInUSD;
+    // Multiplicar por la tasa para convertir de USD a la moneda objetivo
+    return amountInUSD * targetCurrency.rate;
   };
 
   const handleCurrencyChange = (currency: Currency) => {
     setSelectedCurrency(currency);
     
-    if (valuation) {
-      const convertedValuation = convertCurrency(valuation, currency);
-      setValuation(convertedValuation);
-    }
-    
-    if (baseValuation) {
-      const convertedBaseValuation = convertCurrency(baseValuation, currency);
-      setBaseValuation(convertedBaseValuation);
-    }
-    
-    if (finalAdjustedValue) {
-      const convertedFinalValue = convertCurrency(finalAdjustedValue, currency);
-      setFinalAdjustedValue(convertedFinalValue);
-    }
-    
-    const convertedComparatives = comparativeProperties.map(comp => ({
-      ...comp,
-      precio: convertCurrency(comp.precio, currency)
-    }));
-    setComparativeProperties(convertedComparatives);
-    setSelectedComparatives(convertedComparatives.slice(0, 3));
+    // Los valores internos se mantienen en USD, solo cambiamos la moneda de visualización
+    // La conversión se aplica automáticamente en formatCurrency cuando se muestran los valores
     
     // Moneda cambiada silenciosamente
     console.log(`${translations[selectedLanguage].currencyChanged}: ${currency.name}`);
@@ -1914,15 +1896,15 @@ const PropertyValuation = () => {
               <div className="text-center">
                 <h4 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">Valor estimado de la propiedad:</h4>
                 <p className="text-3xl font-bold text-primary mb-3">
-                  {formatCurrency(incomeMethodValue, selectedCurrency)}
+                  {formatCurrency(convertCurrency(incomeMethodValue, selectedCurrency), selectedCurrency)}
                 </p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-semibold text-green-600 dark:text-green-400 mb-1">
-                  Valor Máximo de Venta: {formatCurrency(incomeMethodValue * 1.1, selectedCurrency)}
+                  Valor Máximo de Venta: {formatCurrency(convertCurrency(incomeMethodValue * 1.1, selectedCurrency), selectedCurrency)}
                 </p>
                 <p className="text-xl font-semibold text-red-600 dark:text-red-400">
-                  Valor Mínimo de Venta: {formatCurrency(incomeMethodValue * 0.9, selectedCurrency)}
+                  Valor Mínimo de Venta: {formatCurrency(convertCurrency(incomeMethodValue * 0.9, selectedCurrency), selectedCurrency)}
                 </p>
               </div>
             </div>
@@ -2818,13 +2800,13 @@ const PropertyValuation = () => {
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">{translations[selectedLanguage].estimatedValue}</h3>
                   <p className="text-3xl font-bold text-primary">
-                    {formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}
+                    {formatCurrency(convertCurrency(finalAdjustedValue || valuation, selectedCurrency), selectedCurrency)}
                   </p>
                 </div>
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">Alquiler Mensual Estimado</h3>
                   <p className="text-3xl font-bold text-green-600 dark:text-green-400">
-                    {formatCurrency(Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12), selectedCurrency)}
+                    {formatCurrency(convertCurrency(Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12), selectedCurrency), selectedCurrency)}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {translations[selectedLanguage].basedOnComparablesText}
@@ -2834,14 +2816,14 @@ const PropertyValuation = () => {
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">Valor Máximo de Venta</h3>
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {formatCurrency(Math.round((finalAdjustedValue || valuation) * 1.1), selectedCurrency)}
+                    {formatCurrency(convertCurrency(Math.round((finalAdjustedValue || valuation) * 1.1), selectedCurrency), selectedCurrency)}
                   </p>
                 </div>
                 
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">Valor Mínimo de Venta</h3>
                   <p className="text-3xl font-bold text-red-600 dark:text-red-400">
-                    {formatCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency)}
+                    {formatCurrency(convertCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency), selectedCurrency)}
                   </p>
                 </div>
               </div>
@@ -2877,7 +2859,7 @@ const PropertyValuation = () => {
               <div className="flex justify-center">
                 <ShareButtons 
                   title={`Valuación de ${propertyData.tipoPropiedad}`}
-                  description={`Valor estimado: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`}
+                  description={`Valor estimado: ${formatCurrency(convertCurrency(finalAdjustedValue || valuation, selectedCurrency), selectedCurrency)}`}
                 />
               </div>
             </CardContent>

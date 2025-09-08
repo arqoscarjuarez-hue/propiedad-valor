@@ -128,12 +128,30 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
     }
   }, []);
 
-  const handleCurrencySelect = (currencyCode: string) => {
+  const handleCurrencySelect = async (currencyCode: string) => {
     const currency = popularCurrencies.find(c => c.code === currencyCode);
     if (currency) {
+      // Obtener la tasa de cambio actual
+      let currentRate = 1;
+      if (currency.code !== 'USD') {
+        try {
+          const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+          if (response.ok) {
+            const data = await response.json();
+            currentRate = data.rates[currency.code] || 1;
+          }
+        } catch (error) {
+          console.error('Error obteniendo tasa de cambio:', error);
+          // Usar tasa por defecto si hay error
+          currentRate = currency.code === 'EUR' ? 0.85 : 
+                       currency.code === 'MXN' ? 18 : 
+                       currency.code === 'GBP' ? 0.75 : 1;
+        }
+      }
+      
       onCurrencyChange({
         ...currency,
-        rate: currency.code === 'USD' ? 1 : (selectedCurrency.rate || 1)
+        rate: currentRate
       });
     }
   };
