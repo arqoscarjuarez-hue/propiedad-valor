@@ -2698,7 +2698,7 @@ const PropertyValuation = () => {
                     <div className="text-center">
                       {getStepCompletion().step1 ? (
                         <p className="text-sm text-green-600 dark:text-green-400">
-                          ✅ <strong>Paso 1 completado</strong> - Ubicación registrada correctamente
+                          ✅ <strong>Paso 1 completado</strong> - Colocar correctamente la ubicación del inmueble, en el mapa
                         </p>
                       ) : (
                         <p className="text-xs text-yellow-700 dark:text-yellow-300">
