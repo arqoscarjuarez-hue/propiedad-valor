@@ -21,7 +21,7 @@ const languages = [
 export function LanguageSelector() {
   const { selectedLanguage, setSelectedLanguage } = useLanguage();
   
-  const currentLanguage = languages.find(lang => lang.code === selectedLanguage);
+  const currentLanguage = languages.find(lang => lang.code === selectedLanguage) || languages[0]; // Español por defecto
 
   return (
     <DropdownMenu>
@@ -32,8 +32,8 @@ export function LanguageSelector() {
           className="flex items-center gap-2 bg-background/95 hover:bg-muted/50 border-border"
         >
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentLanguage?.flag}</span>
-          <span className="hidden md:inline">{currentLanguage?.name}</span>
+          <span className="text-lg">{currentLanguage.flag}</span>
+          <span className="font-medium text-sm">{currentLanguage.name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40 bg-background/95 backdrop-blur-sm border shadow-lg z-[9999]">
