@@ -157,27 +157,27 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <DollarSign className="h-5 w-5" />
-          {title}
+      <CardHeader className="pb-2 sm:pb-3">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">{title}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 sm:space-y-4">
         <div className="flex gap-2">
           <Select value={selectedCurrency.code} onValueChange={handleCurrencySelect}>
-            <SelectTrigger className="flex-1">
+            <SelectTrigger className="flex-1 text-xs sm:text-sm">
               <SelectValue>
-                {selectedCurrency.symbol} {selectedCurrency.name} ({selectedCurrency.code})
+                <span className="truncate">{selectedCurrency.symbol} {selectedCurrency.name} ({selectedCurrency.code})</span>
               </SelectValue>
             </SelectTrigger>
-            <SelectContent className="max-h-60">
+            <SelectContent className="max-h-60 z-50">
               {popularCurrencies.map((currency) => (
                 <SelectItem key={currency.code} value={currency.code}>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm">{currency.symbol}</span>
-                    <span>{currency.name}</span>
-                    <span className="text-muted-foreground">({currency.code})</span>
+                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                    <span className="font-mono text-xs sm:text-sm">{currency.symbol}</span>
+                    <span className="truncate">{currency.name}</span>
+                    <span className="text-muted-foreground text-xs">({currency.code})</span>
                   </div>
                 </SelectItem>
               ))}
@@ -186,23 +186,24 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           
           <Button 
             variant="outline" 
-            size="icon" 
+            size="sm"
             onClick={updateExchangeRates}
             disabled={loading}
+            className="h-9 w-9 sm:h-10 sm:w-10"
           >
             {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
             ) : (
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
             )}
           </Button>
         </div>
 
         {selectedCurrency.code !== 'USD' && (
-          <div className="p-3 bg-muted rounded-lg">
-            <div className="flex justify-between items-center text-sm">
-              <span>{exchangeRateLabel} (USD → {selectedCurrency.code}):</span>
-              <span className="font-mono font-medium">
+          <div className="p-2 sm:p-3 bg-muted rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+              <span className="text-xs sm:text-sm font-medium">{exchangeRateLabel}:</span>
+              <span className="font-mono font-medium text-xs sm:text-sm break-all">
                 1 USD = {selectedCurrency.rate?.toLocaleString(undefined, { 
                   minimumFractionDigits: 2, 
                   maximumFractionDigits: 6 
