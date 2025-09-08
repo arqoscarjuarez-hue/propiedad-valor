@@ -176,8 +176,7 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   return (
     <Card>
       <CardHeader className="pb-2 sm:pb-3">
-        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-          <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
+        <CardTitle className="text-base sm:text-lg">
           <span className="text-sm sm:text-base">{title}</span>
         </CardTitle>
       </CardHeader>
