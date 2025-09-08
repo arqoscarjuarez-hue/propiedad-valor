@@ -45,6 +45,15 @@ const popularCurrencies = [
   { code: 'NIO', name: 'Córdoba Nicaragüense', symbol: 'C$' },
   { code: 'PAB', name: 'Balboa Panameño', symbol: 'B/.' },
   { code: 'DOP', name: 'Peso Dominicano', symbol: 'RD$' },
+  { code: 'CUP', name: 'Peso Cubano', symbol: '$' },
+  { code: 'JMD', name: 'Dólar Jamaiquino', symbol: 'J$' },
+  { code: 'TTD', name: 'Dólar de Trinidad y Tobago', symbol: 'TT$' },
+  { code: 'BBD', name: 'Dólar de Barbados', symbol: 'Bds$' },
+  { code: 'BSD', name: 'Dólar de Bahamas', symbol: 'B$' },
+  { code: 'BZD', name: 'Dólar de Belice', symbol: 'BZ$' },
+  { code: 'GYD', name: 'Dólar Guyanés', symbol: 'G$' },
+  { code: 'SRD', name: 'Dólar de Suriname', symbol: 'Sr$' },
+  { code: 'HTG', name: 'Gourde Haitiano', symbol: 'G' },
   
   // Europa
   { code: 'EUR', name: 'Euro', symbol: '€' },
