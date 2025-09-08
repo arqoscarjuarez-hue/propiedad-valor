@@ -547,7 +547,12 @@ const PropertyValuation = () => {
 
   const convertCurrency = (amountInUSD: number, targetCurrency: Currency): number => {
     if (!targetCurrency || targetCurrency.rate <= 0) return amountInUSD;
-    // Multiplicar por la tasa para convertir de USD a la moneda objetivo
+    
+    // La API devuelve tasas en formato: 1 USD = X unidades de la moneda objetivo
+    // Ejemplos:
+    // - EUR: 0.854 (1 USD = 0.854 EUR, euro vale MÁS que USD)
+    // - MXN: 18.71 (1 USD = 18.71 MXN, peso vale MENOS que USD)
+    // Para convertir: USD_amount × rate = amount_in_target_currency
     return amountInUSD * targetCurrency.rate;
   };
 
