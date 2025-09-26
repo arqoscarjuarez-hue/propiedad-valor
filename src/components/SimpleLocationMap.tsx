@@ -118,18 +118,45 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   // Actualizar mapa cuando cambia la posición
   useEffect(() => {
     if (leafletMapRef.current && window.L) {
-      leafletMapRef.current.setView([position[0], position[1]], 15);
-      if (markerRef.current) {
-        markerRef.current.setLatLng([position[0], position[1]]);
+      try {
+        leafletMapRef.current.setView([position[0], position[1]], 15);
+        if (markerRef.current) {
+          markerRef.current.setLatLng([position[0], position[1]]);
+        }
+      } catch (e) {
+        console.warn('Error updating map position:', e);
       }
     }
   }, [position]);
 
   // Efecto para asegurar que el mapa se inicialice correctamente
   useEffect(() => {
-    if (window.L && !leafletMapRef.current && mapRef.current) {
+    let mounted = true;
+    
+    const initializeMap = () => {
+      if (!mounted || !window.L || leafletMapRef.current || !mapRef.current) return;
       initMap();
+    };
+    
+    if (window.L) {
+      initializeMap();
     }
+    
+    return () => {
+      mounted = false;
+      // Cleanup leaflet map
+      if (leafletMapRef.current) {
+        try {
+          leafletMapRef.current.remove();
+        } catch (e) {
+          console.warn('Error cleaning up leaflet map:', e);
+        }
+        leafletMapRef.current = null;
+      }
+      if (markerRef.current) {
+        markerRef.current = null;
+      }
+    };
   }, [window.L]);
 
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
