@@ -281,7 +281,7 @@ const PropertyValuation = () => {
       const conditionFactor = conditionFactors[propertyData.estadoGeneral as keyof typeof conditionFactors] || 1;
       
       // Ajuste por tamaño del terreno
-      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno, areaTotal);
+      const landSizeFactor = getLandSizeFactor(parseFloat(propertyData.areaTerreno) || 0);
 
       const constructionValue = areaTotal * pricePerSqm * locationFactor * conditionFactor;
       const landValue = propertyData.areaTerreno * 120 * locationFactor;
@@ -694,8 +694,7 @@ const PropertyValuation = () => {
                   </div>
                   
                   {/* Demo button */}
-                  <DemoWalkthrough>
-                    <Button 
+                   <Button
                       variant="secondary" 
                       size="sm" 
                       className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/20 text-xs sm:text-sm"
@@ -703,7 +702,6 @@ const PropertyValuation = () => {
                       <Play className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       {t.viewDemo}
                     </Button>
-                  </DemoWalkthrough>
                 </div>
               </div>
             </div>
@@ -856,18 +854,16 @@ const PropertyValuation = () => {
                       {/* Mapa */}
                       <div className="h-64 sm:h-80 bg-muted rounded-lg overflow-hidden">
                         <SupabaseGoogleLocationMap
-                          initialPosition={propertyData.latitud && propertyData.longitud ? {
-                            lat: propertyData.latitud,
-                            lng: propertyData.longitud
-                          } : undefined}
-                          onLocationSelect={(lat, lng, address) => {
+                          initialLat={propertyData.latitud}
+                          initialLng={propertyData.longitud}
+                          onLocationChange={(lat, lng, address) => {
                             handleInputChange('latitud', lat);
                             handleInputChange('longitud', lng);
                             if (address) {
                               handleInputChange('direccionCompleta', address);
                             }
                           }}
-                          instructions={t.clickOnMap}
+                          
                         />
                       </div>
                     </div>
