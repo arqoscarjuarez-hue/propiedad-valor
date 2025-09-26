@@ -234,20 +234,43 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Cargar mapa al montar el componente
   useEffect(() => {
-    initializeGoogleMaps();
+    let mounted = true;
+    
+    const initMap = async () => {
+      if (!mounted) return;
+      await initializeGoogleMaps();
+    };
+    
+    initMap();
     
     // Cleanup function to prevent DOM manipulation errors
     return () => {
+      mounted = false;
+      
+      // Remove event listeners first
       if (marker.current) {
+        google.maps?.event?.clearInstanceListeners?.(marker.current);
         marker.current.setMap(null);
         marker.current = null;
       }
+      
       if (map.current) {
+        google.maps?.event?.clearInstanceListeners?.(map.current);
         map.current = null;
       }
+      
+      // Clear container safely
       if (mapContainer.current) {
-        mapContainer.current.innerHTML = '';
+        try {
+          mapContainer.current.innerHTML = '';
+        } catch (e) {
+          console.warn('Could not clear map container:', e);
+        }
       }
+      
+      setIsMapReady(false);
+      setLoading(false);
+      setError(null);
     };
   }, []);
 
