@@ -235,6 +235,20 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   // Cargar mapa al montar el componente
   useEffect(() => {
     initializeGoogleMaps();
+    
+    // Cleanup function to prevent DOM manipulation errors
+    return () => {
+      if (marker.current) {
+        marker.current.setMap(null);
+        marker.current = null;
+      }
+      if (map.current) {
+        map.current = null;
+      }
+      if (mapContainer.current) {
+        mapContainer.current.innerHTML = '';
+      }
+    };
   }, []);
 
   if (error) {
