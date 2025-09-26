@@ -281,7 +281,7 @@ const PropertyValuation = () => {
       const conditionFactor = conditionFactors[propertyData.estadoGeneral as keyof typeof conditionFactors] || 1;
       
       // Ajuste por tamaño del terreno
-      const landSizeFactor = getLandSizeFactor(parseFloat(propertyData.areaTerreno) || 0);
+      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno, propertyData.topografia, propertyData.tipoPropiedad);
 
       const constructionValue = areaTotal * pricePerSqm * locationFactor * conditionFactor;
       const landValue = propertyData.areaTerreno * 120 * locationFactor;
@@ -1408,16 +1408,11 @@ const PropertyValuation = () => {
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2">
                             <Share2 className="h-5 w-5" />
-                            {t.shareValuation}
+                            {t.startValuation}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <ShareButtons
-                            valuation={finalAdjustedValue || valuation}
-                            currency={selectedCurrency}
-                            propertyType={propertyData.tipoPropiedad}
-                            language={selectedLanguage}
-                          />
+                    <ShareButtons />
                         </CardContent>
                       </Card>
                     </div>
