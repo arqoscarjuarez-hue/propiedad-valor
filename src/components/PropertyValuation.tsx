@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
+import DemoWalkthrough from '@/components/DemoWalkthrough';
 
 import jsPDF from 'jspdf';
 import { 
@@ -28,7 +29,10 @@ import { saveAs } from 'file-saver';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import LocationMap from './LocationMap';
+import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
+import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 import { indexTranslations } from '@/translations/indexTranslations';
@@ -277,7 +281,7 @@ const PropertyValuation = () => {
       const conditionFactor = conditionFactors[propertyData.estadoGeneral as keyof typeof conditionFactors] || 1;
       
       // Ajuste por tamaño del terreno
-      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno, propertyData.topografia, propertyData.tipoPropiedad);
+      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno, areaTotal);
 
       const constructionValue = areaTotal * pricePerSqm * locationFactor * conditionFactor;
       const landValue = propertyData.areaTerreno * 120 * locationFactor;
@@ -690,7 +694,8 @@ const PropertyValuation = () => {
                   </div>
                   
                   {/* Demo button */}
-                   <Button
+                  <DemoWalkthrough>
+                    <Button 
                       variant="secondary" 
                       size="sm" 
                       className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/20 text-xs sm:text-sm"
@@ -698,6 +703,7 @@ const PropertyValuation = () => {
                       <Play className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       {t.viewDemo}
                     </Button>
+                  </DemoWalkthrough>
                 </div>
               </div>
             </div>
@@ -850,16 +856,18 @@ const PropertyValuation = () => {
                       {/* Mapa */}
                       <div className="h-64 sm:h-80 bg-muted rounded-lg overflow-hidden">
                         <SupabaseGoogleLocationMap
-                          initialLat={propertyData.latitud}
-                          initialLng={propertyData.longitud}
-                          onLocationChange={(lat, lng, address) => {
+                          initialPosition={propertyData.latitud && propertyData.longitud ? {
+                            lat: propertyData.latitud,
+                            lng: propertyData.longitud
+                          } : undefined}
+                          onLocationSelect={(lat, lng, address) => {
                             handleInputChange('latitud', lat);
                             handleInputChange('longitud', lng);
                             if (address) {
                               handleInputChange('direccionCompleta', address);
                             }
                           }}
-                          
+                          instructions={t.clickOnMap}
                         />
                       </div>
                     </div>
@@ -1404,11 +1412,16 @@ const PropertyValuation = () => {
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2">
                             <Share2 className="h-5 w-5" />
-                            {t.startValuation}
+                            {t.shareValuation}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                    <ShareButtons />
+                          <ShareButtons
+                            valuation={finalAdjustedValue || valuation}
+                            currency={selectedCurrency}
+                            propertyType={propertyData.tipoPropiedad}
+                            language={selectedLanguage}
+                          />
                         </CardContent>
                       </Card>
                     </div>
