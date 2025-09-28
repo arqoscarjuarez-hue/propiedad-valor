@@ -242,7 +242,6 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   // Cargar mapa al montar el componente
   useEffect(() => {
     let mounted = true;
-    let cleanupTimeout: NodeJS.Timeout;
     
     const initMap = async () => {
       if (!mounted) return;
@@ -255,46 +254,41 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     return () => {
       mounted = false;
       
-      // Clear the cleanup timeout if it exists
-      if (cleanupTimeout) {
-        clearTimeout(cleanupTimeout);
+      // Only attempt cleanup if Google Maps was actually loaded
+      if (typeof google !== 'undefined' && google.maps) {
+        // Remove event listeners first
+        if (marker.current) {
+          try {
+            google.maps.event.clearInstanceListeners(marker.current);
+            marker.current.setMap(null);
+          } catch (e) {
+            console.warn('Error cleaning up marker:', e);
+          }
+          marker.current = null;
+        }
+        
+        if (map.current) {
+          try {
+            google.maps.event.clearInstanceListeners(map.current);
+          } catch (e) {
+            console.warn('Error cleaning up map:', e);
+          }
+          map.current = null;
+        }
       }
       
-      // Use a timeout to ensure cleanup happens after React's DOM operations
-      cleanupTimeout = setTimeout(() => {
+      // Clear container safely and only if it exists
+      if (mapContainer.current && mapContainer.current.parentNode) {
         try {
-          // Only attempt cleanup if Google Maps was actually loaded
-          if (typeof google !== 'undefined' && google.maps) {
-            // Remove event listeners first
-            if (marker.current) {
-              try {
-                google.maps.event.clearInstanceListeners(marker.current);
-                marker.current.setMap(null);
-              } catch (e) {
-                // Silently ignore cleanup errors
-              }
-              marker.current = null;
-            }
-            
-            if (map.current) {
-              try {
-                google.maps.event.clearInstanceListeners(map.current);
-              } catch (e) {
-                // Silently ignore cleanup errors
-              }
-              map.current = null;
-            }
-          }
-          
-          // Don't manipulate DOM directly - let React handle it
-          // Just reset state
-          setIsMapReady(false);
-          setLoading(false);
-          setError(null);
+          mapContainer.current.innerHTML = '';
         } catch (e) {
-          // Silently ignore all cleanup errors to prevent console spam
+          console.warn('Could not clear map container:', e);
         }
-      }, 100);
+      }
+      
+      setIsMapReady(false);
+      setLoading(false);
+      setError(null);
     };
   }, []);
 
