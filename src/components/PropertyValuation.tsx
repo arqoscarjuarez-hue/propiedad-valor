@@ -29,6 +29,7 @@ import { saveAs } from 'file-saver';
 import { useLanguage } from '@/hooks/useLanguage';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
+import ErrorBoundary from './ErrorBoundary';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 import { indexTranslations } from '@/translations/indexTranslations';
@@ -849,19 +850,21 @@ const PropertyValuation = () => {
                       
                       {/* Mapa */}
                       <div className="h-64 sm:h-80 bg-muted rounded-lg overflow-hidden">
-                        <SupabaseGoogleLocationMap
-                          key={`map-${propertyData.latitud}-${propertyData.longitud}`}
-                          initialLat={propertyData.latitud}
-                          initialLng={propertyData.longitud}
-                          onLocationChange={(lat, lng, address) => {
-                            handleInputChange('latitud', lat);
-                            handleInputChange('longitud', lng);
-                            if (address) {
-                              handleInputChange('direccionCompleta', address);
-                            }
-                          }}
-                          
-                        />
+                        <ErrorBoundary>
+                          <SupabaseGoogleLocationMap
+                            key={`map-${propertyData.latitud}-${propertyData.longitud}`}
+                            initialLat={propertyData.latitud}
+                            initialLng={propertyData.longitud}
+                            onLocationChange={(lat, lng, address) => {
+                              handleInputChange('latitud', lat);
+                              handleInputChange('longitud', lng);
+                              if (address) {
+                                handleInputChange('direccionCompleta', address);
+                              }
+                            }}
+                           
+                          />
+                        </ErrorBoundary>
                       </div>
                     </div>
                   ) : (
