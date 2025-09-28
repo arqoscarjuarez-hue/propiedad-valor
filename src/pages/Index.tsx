@@ -386,8 +386,8 @@ interface SupabaseGoogleLocationMapProps {
 
 const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 19.4326,
-  initialLng = -99.1332,
+  initialLat = 13.6929,  // San Salvador, El Salvador
+  initialLng = -89.2182,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);

@@ -198,8 +198,8 @@ const translations = {
      coordinatesNote: 'Las coordenadas del mapa se mantienen sin cambios',
      latitude: 'Latitud',
      longitude: 'Longitud',
-     latitudePlaceholder: 'Ej: 19.4326',
-     longitudePlaceholder: 'Ej: -99.1332',
+      latitudePlaceholder: 'Ej: 13.6929',
+      longitudePlaceholder: 'Ej: -89.2182',
     
     
     // Botones de acción
@@ -404,7 +404,7 @@ const PropertyValuation = () => {
       
       if (!navigator.geolocation) {
         console.log('Geolocalización no disponible');
-        resolve({ lat: 19.4326, lng: -99.1332 });
+         resolve({ lat: 13.6929, lng: -89.2182 }); // San Salvador, El Salvador
         return;
       }
 
@@ -420,7 +420,7 @@ const PropertyValuation = () => {
           console.log('Código de error:', error.code);
           // Ubicación no disponible, usando referencia silenciosamente
           console.log("Ubicación no disponible. Usando Ciudad de México como referencia.");
-          resolve({ lat: 19.4326, lng: -99.1332 });
+          resolve({ lat: 13.6929, lng: -89.2182 }); // San Salvador por defecto
         },
         {
           enableHighAccuracy: true,
@@ -444,8 +444,8 @@ const PropertyValuation = () => {
         tipoPropiedad: '',
         ubicacion: '',
         estadoGeneral: '',
-        latitud: 19.4326, // Valor inicial, se actualizará con geolocalización
-        longitud: -99.1332,
+        latitud: 13.6929, // San Salvador, El Salvador - se actualizará con geolocalización
+        longitud: -89.2182,
         direccionCompleta: '',
         alquiler: 0
       },
@@ -520,7 +520,7 @@ const PropertyValuation = () => {
         }));
         
         // Ubicación detectada silenciosamente
-        const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+        const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
         if (isUserLocation) {
           console.log(`Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`);
         }
@@ -620,7 +620,7 @@ const PropertyValuation = () => {
       setMultipleValuations([]);
 
       // Mostrar notificación de éxito con las coordenadas
-      const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+      const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
       
       // Nuevo valúo iniciado silenciosamente
       console.log(isUserLocation 
@@ -890,8 +890,8 @@ const PropertyValuation = () => {
 
   const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
-    const lat = propertyData.latitud || 19.4326;
-    const lng = propertyData.longitud || -99.1332;
+    const lat = propertyData.latitud || 13.6929;  // San Salvador por defecto
+    const lng = propertyData.longitud || -89.2182;
     
     // Primero intentar buscar propiedades reales
     let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables);
@@ -2662,8 +2662,8 @@ const PropertyValuation = () => {
                       
                        {/* Usar el componente SimpleLocationMap siempre */}
                        <SimpleLocationMap
-                         initialLat={propertyData.latitud || 19.4326}
-                         initialLng={propertyData.longitud || -99.1332}
+                          initialLat={propertyData.latitud || 13.6929}
+                          initialLng={propertyData.longitud || -89.2182}
                          onLocationChange={handleLocationSelect}
                        />
                    </TabsContent>
