@@ -235,14 +235,10 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   // Cargar mapa al montar el componente
   useEffect(() => {
     let mounted = true;
-    let currentMap: google.maps.Map | null = null;
-    let currentMarker: google.maps.Marker | null = null;
     
     const initMap = async () => {
       if (!mounted) return;
       await initializeGoogleMaps();
-      currentMap = map.current;
-      currentMarker = marker.current;
     };
     
     initMap();
@@ -251,37 +247,25 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     return () => {
       mounted = false;
       
-      // Clean up in the correct order to prevent DOM errors
-      try {
-        // Remove event listeners first
-        if (currentMarker && typeof google !== 'undefined' && google.maps?.event) {
-          google.maps.event.clearInstanceListeners(currentMarker);
-          currentMarker.setMap(null);
-        }
-        
-        if (currentMap && typeof google !== 'undefined' && google.maps?.event) {
-          google.maps.event.clearInstanceListeners(currentMap);
-        }
-        
-        // Reset refs
+      // Remove event listeners first
+      if (marker.current) {
+        google.maps?.event?.clearInstanceListeners?.(marker.current);
+        marker.current.setMap(null);
         marker.current = null;
+      }
+      
+      if (map.current) {
+        google.maps?.event?.clearInstanceListeners?.(map.current);
         map.current = null;
-        
-        // Only clear container if it still exists and has a parent
-        if (mapContainer.current && mapContainer.current.parentNode) {
-          try {
-            // Use a more gentle approach to clear the container
-            while (mapContainer.current.firstChild) {
-              mapContainer.current.removeChild(mapContainer.current.firstChild);
-            }
-          } catch (e) {
-            // Silently handle any remaining DOM errors
-            console.debug('Map container already cleaned up');
-          }
+      }
+      
+      // Clear container safely
+      if (mapContainer.current) {
+        try {
+          mapContainer.current.innerHTML = '';
+        } catch (e) {
+          console.warn('Could not clear map container:', e);
         }
-      } catch (e) {
-        // Silently handle cleanup errors
-        console.debug('Map cleanup completed with minor warnings');
       }
       
       setIsMapReady(false);
