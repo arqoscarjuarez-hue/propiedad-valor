@@ -176,7 +176,8 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   return (
     <Card>
       <CardHeader className="pb-2 sm:pb-3">
-        <CardTitle className="text-base sm:text-lg">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="text-sm sm:text-base">{title}</span>
         </CardTitle>
       </CardHeader>
@@ -200,13 +201,20 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
               ))}
             </SelectContent>
           </Select>
-        </div>
-        
-        {/* Mostrar nombre de la moneda seleccionada */}
-        <div className="text-center mt-3">
-          <p className="text-sm font-semibold text-foreground">
-            {selectedCurrency.name}
-          </p>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={updateExchangeRates}
+            disabled={loading}
+            className="h-9 w-9 sm:h-10 sm:w-10"
+          >
+            {loading ? (
+              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
+            )}
+          </Button>
         </div>
 
 

@@ -234,54 +234,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Cargar mapa al montar el componente
   useEffect(() => {
-    let mounted = true;
-    
-    const initMap = async () => {
-      if (!mounted) return;
-      await initializeGoogleMaps();
-    };
-    
-    initMap();
-    
-    // Cleanup function to prevent DOM manipulation errors
-    return () => {
-      mounted = false;
-      
-      // Remove event listeners first
-      if (marker.current && typeof google !== 'undefined' && google.maps?.event) {
-        try {
-          google.maps.event.clearInstanceListeners(marker.current);
-          marker.current.setMap(null);
-        } catch (e) {
-          console.warn('Error cleaning marker:', e);
-        }
-        marker.current = null;
-      }
-      
-      if (map.current && typeof google !== 'undefined' && google.maps?.event) {
-        try {
-          google.maps.event.clearInstanceListeners(map.current);
-        } catch (e) {
-          console.warn('Error cleaning map:', e);
-        }
-        map.current = null;
-      }
-      
-      // Clear container safely - let React handle the outer wrapper
-      if (mapContainer.current) {
-        try {
-          // Don't manipulate DOM directly, let React handle it
-          // Just clear the ref
-          mapContainer.current = null;
-        } catch (e) {
-          console.warn('Error clearing map container ref:', e);
-        }
-      }
-      
-      setIsMapReady(false);
-      setLoading(false);
-      setError(null);
-    };
+    initializeGoogleMaps();
   }, []);
 
   if (error) {
@@ -355,26 +308,24 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
         </div>
       )}
 
-      <div className="w-full h-96 rounded-lg border overflow-hidden">
-        <div 
-          ref={mapContainer} 
-          className={`w-full h-full ${
-            !isMapReady ? 'bg-muted flex items-center justify-center' : ''
-          }`}
-        >
-          {!isMapReady && !loading && !error && (
-            <div className="text-center text-muted-foreground">
-              <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>Inicializando Google Maps...</p>
-            </div>
-          )}
-          {loading && (
-            <div className="text-center text-muted-foreground">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p>Cargando Google Maps de forma segura...</p>
-            </div>
-          )}
-        </div>
+      <div 
+        ref={mapContainer} 
+        className={`w-full h-96 rounded-lg border ${
+          !isMapReady ? 'bg-muted flex items-center justify-center' : ''
+        }`}
+      >
+        {!isMapReady && !loading && !error && (
+          <div className="text-center text-muted-foreground">
+            <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
+            <p>Inicializando Google Maps...</p>
+          </div>
+        )}
+        {loading && (
+          <div className="text-center text-muted-foreground">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+            <p>Cargando Google Maps de forma segura...</p>
+          </div>
+        )}
       </div>
 
       {isMapReady && (
