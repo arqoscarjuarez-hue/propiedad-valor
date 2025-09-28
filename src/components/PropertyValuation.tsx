@@ -10,7 +10,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { supabase } from '@/integrations/supabase/client';
-import DemoWalkthrough from '@/components/DemoWalkthrough';
 
 import jsPDF from 'jspdf';
 import { 
@@ -29,10 +28,7 @@ import { saveAs } from 'file-saver';
 
 import { useLanguage } from '@/hooks/useLanguage';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import LocationMap from './LocationMap';
-import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
-import SimpleLocationMap from './SimpleLocationMap';
 import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 import { indexTranslations } from '@/translations/indexTranslations';
@@ -281,7 +277,7 @@ const PropertyValuation = () => {
       const conditionFactor = conditionFactors[propertyData.estadoGeneral as keyof typeof conditionFactors] || 1;
       
       // Ajuste por tamaño del terreno
-      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno);
+      const landSizeFactor = getLandSizeFactor(propertyData.areaTerreno, propertyData.topografia, propertyData.tipoPropiedad);
 
       const constructionValue = areaTotal * pricePerSqm * locationFactor * conditionFactor;
       const landValue = propertyData.areaTerreno * 120 * locationFactor;
@@ -694,15 +690,14 @@ const PropertyValuation = () => {
                   </div>
                   
                   {/* Demo button */}
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/20 text-xs sm:text-sm"
-                    onClick={() => {/* TODO: Add demo functionality */}}
-                  >
-                    <Play className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    {t.viewDemo}
-                  </Button>
+                   <Button
+                      variant="secondary" 
+                      size="sm" 
+                      className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground border-primary-foreground/20 text-xs sm:text-sm"
+                    >
+                      <Play className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                      {t.viewDemo}
+                    </Button>
                 </div>
               </div>
             </div>
@@ -864,6 +859,7 @@ const PropertyValuation = () => {
                               handleInputChange('direccionCompleta', address);
                             }
                           }}
+                          
                         />
                       </div>
                     </div>
@@ -989,7 +985,7 @@ const PropertyValuation = () => {
                       {/* Para apartamentos, solo mostrar área total construida */}
                       {propertyData.tipoPropiedad === 'departamento' ? (
                         <div className="max-w-xs">
-                          <Label htmlFor="areaPrimerNivel">{t.totalBuiltArea} (m²)</Label>
+                          <Label htmlFor="areaPrimerNivel">{t.totalBuiltArea} ({t.sqm})</Label>
                           <Input
                             id="areaPrimerNivel"
                             type="number"
@@ -1005,7 +1001,7 @@ const PropertyValuation = () => {
                         /* Para otras propiedades, mostrar campos individuales */
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="areaSotano">{t.basement} (m²)</Label>
+                            <Label htmlFor="areaSotano">{t.basement} ({t.sqm})</Label>
                             <Input
                               id="areaSotano"
                               type="number"
@@ -1015,7 +1011,7 @@ const PropertyValuation = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="areaPrimerNivel">{t.firstFloor} (m²)</Label>
+                            <Label htmlFor="areaPrimerNivel">{t.firstFloor} ({t.sqm})</Label>
                             <Input
                               id="areaPrimerNivel"
                               type="number"
@@ -1025,7 +1021,7 @@ const PropertyValuation = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="areaSegundoNivel">{t.secondFloor} (m²)</Label>
+                            <Label htmlFor="areaSegundoNivel">{t.secondFloor} ({t.sqm})</Label>
                             <Input
                               id="areaSegundoNivel"
                               type="number"
@@ -1035,7 +1031,7 @@ const PropertyValuation = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="areaTercerNivel">{t.thirdFloor} (m²)</Label>
+                            <Label htmlFor="areaTercerNivel">{t.thirdFloor} ({t.sqm})</Label>
                             <Input
                               id="areaTercerNivel"
                               type="number"
@@ -1045,7 +1041,7 @@ const PropertyValuation = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="areaCuartoNivel">{t.fourthFloor} (m²)</Label>
+                            <Label htmlFor="areaCuartoNivel">{t.fourthFloor} ({t.sqm})</Label>
                             <Input
                               id="areaCuartoNivel"
                               type="number"
@@ -1060,7 +1056,7 @@ const PropertyValuation = () => {
                       {propertyData.tipoPropiedad !== 'departamento' && (
                         <div className="bg-muted p-3 rounded-lg">
                           <p className="text-sm font-medium">
-                            Área Total Construida: {(propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0)} m²
+                            Área Total Construida: {(propertyData.areaSotano || 0) + (propertyData.areaPrimerNivel || 0) + (propertyData.areaSegundoNivel || 0) + (propertyData.areaTercerNivel || 0) + (propertyData.areaCuartoNivel || 0)} {t.sqm}
                           </p>
                         </div>
                       )}
@@ -1071,14 +1067,14 @@ const PropertyValuation = () => {
                   {propertyData.tipoPropiedad !== 'departamento' && (
                     <div className="mt-6">
                       <div className="flex items-center gap-2 mb-2">
-                        <Label htmlFor="areaTerreno" className="text-base font-medium">{t.landArea} (m²)</Label>
+                        <Label htmlFor="areaTerreno" className="text-base font-medium">{t.landArea} ({t.sqm})</Label>
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
                               <Info className="h-4 w-4 text-muted-foreground" />
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              <p className="text-sm">Indique el área del terreno únicamente en metros cuadrados (m²)</p>
+                              <p className="text-sm">{t.landAreaTooltip}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -1193,11 +1189,11 @@ const PropertyValuation = () => {
                           <SelectItem value="bueno">{t.good}</SelectItem>
                           <SelectItem value="medio">{t.medium}</SelectItem>
                           <SelectItem value="regular">{t.regular}</SelectItem>
-                          <SelectItem value="reparaciones-sencillas">Reparaciones Sencillas</SelectItem>
-                          <SelectItem value="reparaciones-medias">Reparaciones Medias</SelectItem>
-                          <SelectItem value="reparaciones-importantes">Reparaciones Importantes</SelectItem>
-                          <SelectItem value="danos-graves">Daños Graves</SelectItem>
-                          <SelectItem value="en-desecho">En Desecho</SelectItem>
+                          <SelectItem value="reparaciones-sencillas">{t.simpleRepairs}</SelectItem>
+                          <SelectItem value="reparaciones-medias">{t.mediumRepairs}</SelectItem>
+                          <SelectItem value="reparaciones-importantes">{t.importantRepairs}</SelectItem>
+                          <SelectItem value="danos-graves">{t.seriousDamage}</SelectItem>
+                          <SelectItem value="en-desecho">{t.waste}</SelectItem>
                         </SelectContent>
                       </Select>
                       <p className="text-xs text-muted-foreground mt-1">{t.affectsPropertyValue}</p>
@@ -1208,7 +1204,7 @@ const PropertyValuation = () => {
                 {/* Valuación Tab */}
                 <TabsContent value="valuacion" className="space-y-6 mt-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <h3 className="text-lg font-semibold text-foreground">Valúo por el Método Comparativo</h3>
+                    <h3 className="text-lg font-semibold text-foreground">{t.valuationMethodComparative}</h3>
                     
                     <div className="flex flex-wrap gap-2">
                       <Button
@@ -1251,7 +1247,7 @@ const PropertyValuation = () => {
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2 text-green-800 dark:text-green-200">
                             <Star className="h-5 w-5" />
-                            Resultados de Valuación
+                            {t.valuationResultsTitle}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -1263,7 +1259,7 @@ const PropertyValuation = () => {
                               </p>
                               {baseValuation && (
                                 <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                  Basado en {selectedComparatives.length} {t.comparables}
+                                  {t.basedOnComparablesText} {selectedComparatives.length} {t.comparables}
                                 </p>
                               )}
                             </div>
@@ -1306,15 +1302,15 @@ const PropertyValuation = () => {
                               {adjustmentPercentage !== 0 && (
                                 <div className="mt-4 p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
                                   <div className="flex justify-between text-sm">
-                                    <span className="text-green-700 dark:text-green-300">Valor Base Original:</span>
+                                    <span className="text-green-700 dark:text-green-300">{t.originalBaseValue}:</span>
                                     <span className="text-green-800 dark:text-green-200">{formatCurrency(convertCurrency(baseValuation, selectedCurrency), selectedCurrency)}</span>
                                   </div>
                                   <div className="flex justify-between text-sm">
-                                    <span className="text-green-700 dark:text-green-300">{t.adjustment}:</span>
+                                    <span className="text-green-700 dark:text-green-300">{t.adjustmentLabel}:</span>
                                     <span className="text-green-800 dark:text-green-200">{adjustmentPercentage > 0 ? '+' : ''}{adjustmentPercentage}%</span>
                                   </div>
                                   <div className="flex justify-between text-sm font-medium border-t border-green-200 dark:border-green-700 pt-2 mt-2">
-                                    <span className="text-green-700 dark:text-green-300">{t.newValue}:</span>
+                                    <span className="text-green-700 dark:text-green-300">{t.newValueLabel}:</span>
                                     <span className="text-green-800 dark:text-green-200">{formatCurrency(convertCurrency(finalAdjustedValue || valuation, selectedCurrency), selectedCurrency)}</span>
                                   </div>
                                 </div>
@@ -1382,7 +1378,7 @@ const PropertyValuation = () => {
                                             <p className="text-xs text-muted-foreground">{comp.descripcion}</p>
                                           </div>
                                         </TableCell>
-                                        <TableCell className="text-right">{comp.areaConstruida} m²</TableCell>
+                                        <TableCell className="text-right">{comp.areaConstruida} {t.sqm}</TableCell>
                                         <TableCell className="text-right font-medium">
                                           {formatCurrency(comp.precio, selectedCurrency)}
                                         </TableCell>
@@ -1408,14 +1404,11 @@ const PropertyValuation = () => {
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2">
                             <Share2 className="h-5 w-5" />
-                            Compartir Valuación
+                            {t.startValuation}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <ShareButtons
-                            title="Valuación de Propiedad"
-                            description={`Valor estimado: ${formatCurrency(convertCurrency(finalAdjustedValue || valuation, selectedCurrency), selectedCurrency)}`}
-                          />
+                    <ShareButtons />
                         </CardContent>
                       </Card>
                     </div>
