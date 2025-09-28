@@ -267,15 +267,14 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
         map.current = null;
       }
       
-      // Clear container safely - only if it still exists and has a parent
+      // Clear container safely - let React handle the outer wrapper
       if (mapContainer.current) {
         try {
-          // Check if the container is still in the DOM before clearing
-          if (mapContainer.current.parentNode && mapContainer.current.isConnected) {
-            mapContainer.current.innerHTML = '';
-          }
+          // Don't manipulate DOM directly, let React handle it
+          // Just clear the ref
+          mapContainer.current = null;
         } catch (e) {
-          console.warn('Could not clear map container:', e);
+          console.warn('Error clearing map container ref:', e);
         }
       }
       
@@ -356,24 +355,26 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
         </div>
       )}
 
-      <div 
-        ref={mapContainer} 
-        className={`w-full h-96 rounded-lg border ${
-          !isMapReady ? 'bg-muted flex items-center justify-center' : ''
-        }`}
-      >
-        {!isMapReady && !loading && !error && (
-          <div className="text-center text-muted-foreground">
-            <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
-            <p>Inicializando Google Maps...</p>
-          </div>
-        )}
-        {loading && (
-          <div className="text-center text-muted-foreground">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-            <p>Cargando Google Maps de forma segura...</p>
-          </div>
-        )}
+      <div className="w-full h-96 rounded-lg border overflow-hidden">
+        <div 
+          ref={mapContainer} 
+          className={`w-full h-full ${
+            !isMapReady ? 'bg-muted flex items-center justify-center' : ''
+          }`}
+        >
+          {!isMapReady && !loading && !error && (
+            <div className="text-center text-muted-foreground">
+              <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>Inicializando Google Maps...</p>
+            </div>
+          )}
+          {loading && (
+            <div className="text-center text-muted-foreground">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+              <p>Cargando Google Maps de forma segura...</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {isMapReady && (
