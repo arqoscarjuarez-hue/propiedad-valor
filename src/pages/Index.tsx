@@ -4,7 +4,7 @@ import { ArrowUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommentSystem } from "@/components/CommentSystem";
 import { ShareButtons } from "@/components/ShareButtons";
-import { LanguageSelector } from "@/components/LanguageSelector";
+
 import { useLanguage } from "@/hooks/useLanguage";
 import { indexTranslations } from "@/translations/indexTranslations";
 
@@ -98,10 +98,7 @@ const Index = () => {
             
             {/* Navigation */}
             <div className="flex items-center space-x-4">
-              {/* Language Selector - Prominente */}
-                <div className="flex items-center gap-3 bg-card/80 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-sm">
-                 <LanguageSelector />
-               </div>
+              {/* Sistema en Español */}
                
                {!showComments && !showValuation && (
                  <div className="hidden lg:block">

@@ -28,12 +28,12 @@ import {
 import { saveAs } from 'file-saver';
 
 import { useLanguage } from '@/hooks/useLanguage';
-import { LanguageSelector } from '@/components/LanguageSelector';
+
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
-import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
+import { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
 
 
@@ -498,7 +498,13 @@ const PropertyValuation = () => {
   const [hasBeenCalculated, setHasBeenCalculated] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [activeTab, setActiveTab] = useState('ubicacion');
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
+  // Fijo en dólares estadounidenses - no permitir cambios
+  const selectedCurrency: Currency = {
+    code: 'USD',
+    name: 'Dólar Estadounidense',
+    symbol: '$',
+    rate: 1
+  };
   const [adjustmentPercentage, setAdjustmentPercentage] = useState(0);
   const [finalAdjustedValue, setFinalAdjustedValue] = useState<number | null>(null);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
@@ -556,15 +562,7 @@ const PropertyValuation = () => {
     return amountInUSD * targetCurrency.rate;
   };
 
-  const handleCurrencyChange = (currency: Currency) => {
-    setSelectedCurrency(currency);
-    
-    // Los valores internos se mantienen en USD, solo cambiamos la moneda de visualización
-    // La conversión se aplica automáticamente en formatCurrency cuando se muestran los valores
-    
-    // Moneda cambiada silenciosamente
-    console.log(`${translations[selectedLanguage].currencyChanged}: ${currency.name}`);
-  };
+  // Moneda fija en USD - no necesitamos función de cambio
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     setPropertyData(prev => {
@@ -1763,42 +1761,8 @@ const PropertyValuation = () => {
       </div>
 
       {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        {/* Paso 1: Selector de Idioma */}
-        <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-              ✓
-            </div>
-            <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
-              {translations[selectedLanguage].languageSelector}
-            </Label>
-          </div>
-          <LanguageSelector />
-        </Card>
-        
-        {/* Paso 2: Selector de Moneda */}
-        <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-              ✓
-            </div>
-            <Label className="text-sm font-bold text-green-900 dark:text-green-100">
-              {translations[selectedLanguage].currencyValuation}
-            </Label>
-          </div>
-          <CurrencySelector
-            selectedCurrency={selectedCurrency}
-            onCurrencyChange={handleCurrencyChange}
-            title=""
-            exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
-            exchangeRateError={translations[selectedLanguage].exchangeRateError}
-            errorTitle={translations[selectedLanguage].errorTitle}
-            lastUpdateText={translations[selectedLanguage].lastUpdateText}
-            exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
-            exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
-          />
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {/* Sistema en Español y Dólares USD */}
 
         {/* Botones de Descarga de Documentos */}
         <Card className="p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-200 dark:border-orange-800">
