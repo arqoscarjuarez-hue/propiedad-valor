@@ -89,7 +89,12 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Inicializar Google Maps
   const initializeGoogleMaps = async () => {
-    if (!mapContainer.current) return;
+    // Esperar a que el DOM esté listo
+    if (!mapContainer.current) {
+      console.log('Map container not ready, retrying...');
+      setTimeout(initializeGoogleMaps, 100);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -105,6 +110,11 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
       });
 
       await loader.load();
+
+      // Verificar nuevamente que el contenedor existe
+      if (!mapContainer.current) {
+        throw new Error('Map container is null after loading Google Maps API');
+      }
 
       // Inicializar el mapa
       map.current = new google.maps.Map(mapContainer.current, {
@@ -234,7 +244,12 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Cargar mapa al montar el componente
   useEffect(() => {
-    initializeGoogleMaps();
+    // Pequeño delay para asegurar que el DOM esté listo
+    const timer = setTimeout(() => {
+      initializeGoogleMaps();
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (error) {
