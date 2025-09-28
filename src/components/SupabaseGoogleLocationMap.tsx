@@ -242,6 +242,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   // Cargar mapa al montar el componente
   useEffect(() => {
     let mounted = true;
+    let cleanupTimeout: NodeJS.Timeout;
     
     const initMap = async () => {
       if (!mounted) return;
@@ -254,41 +255,51 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     return () => {
       mounted = false;
       
-      // Only attempt cleanup if Google Maps was actually loaded
-      if (typeof google !== 'undefined' && google.maps) {
-        // Remove event listeners first
-        if (marker.current) {
-          try {
-            google.maps.event.clearInstanceListeners(marker.current);
-            marker.current.setMap(null);
-          } catch (e) {
-            console.warn('Error cleaning up marker:', e);
+      // Use a timeout to ensure cleanup happens after React's DOM operations
+      cleanupTimeout = setTimeout(() => {
+        try {
+          // Only attempt cleanup if Google Maps was actually loaded
+          if (typeof google !== 'undefined' && google.maps) {
+            // Remove event listeners first
+            if (marker.current) {
+              try {
+                google.maps.event.clearInstanceListeners(marker.current);
+                marker.current.setMap(null);
+              } catch (e) {
+                // Silently ignore cleanup errors
+              }
+              marker.current = null;
+            }
+            
+            if (map.current) {
+              try {
+                google.maps.event.clearInstanceListeners(map.current);
+              } catch (e) {
+                // Silently ignore cleanup errors
+              }
+              map.current = null;
+            }
           }
-          marker.current = null;
+          
+          // Clear container safely and only if it exists and still has a parent
+          if (mapContainer.current) {
+            try {
+              // Only clear if the container is still in the DOM
+              if (document.contains(mapContainer.current)) {
+                mapContainer.current.innerHTML = '';
+              }
+            } catch (e) {
+              // Silently ignore cleanup errors
+            }
+          }
+        } catch (e) {
+          // Silently ignore all cleanup errors to prevent console spam
         }
         
-        if (map.current) {
-          try {
-            google.maps.event.clearInstanceListeners(map.current);
-          } catch (e) {
-            console.warn('Error cleaning up map:', e);
-          }
-          map.current = null;
-        }
-      }
-      
-      // Clear container safely and only if it exists
-      if (mapContainer.current && mapContainer.current.parentNode) {
-        try {
-          mapContainer.current.innerHTML = '';
-        } catch (e) {
-          console.warn('Could not clear map container:', e);
-        }
-      }
-      
-      setIsMapReady(false);
-      setLoading(false);
-      setError(null);
+        setIsMapReady(false);
+        setLoading(false);
+        setError(null);
+      }, 0);
     };
   }, []);
 
