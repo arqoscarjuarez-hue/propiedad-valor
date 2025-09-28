@@ -42,12 +42,14 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
       });
 
       if (error) throw error;
-      if (!data?.apiKey) throw new Error('No API key received from server');
+      if (!data?.apiKey || data.apiKey === '') {
+        throw new Error('Google Maps API key is not configured in Supabase secrets');
+      }
       
       return data.apiKey;
     } catch (error) {
       console.error('Error getting API key:', error);
-      throw new Error('Failed to get Google Maps API key from server');
+      throw new Error('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your Supabase project secrets.');
     }
   };
 
@@ -97,6 +99,11 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     try {
       // Obtener API key desde Supabase
       const apiKey = await getGoogleMapsApiKey();
+      
+      // Validate API key format
+      if (!apiKey || apiKey.length < 10) {
+        throw new Error('Invalid Google Maps API key format');
+      }
 
       const loader = new Loader({
         apiKey: apiKey,
@@ -247,20 +254,31 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     return () => {
       mounted = false;
       
-      // Remove event listeners first
-      if (marker.current) {
-        google.maps?.event?.clearInstanceListeners?.(marker.current);
-        marker.current.setMap(null);
-        marker.current = null;
+      // Only attempt cleanup if Google Maps was actually loaded
+      if (typeof google !== 'undefined' && google.maps) {
+        // Remove event listeners first
+        if (marker.current) {
+          try {
+            google.maps.event.clearInstanceListeners(marker.current);
+            marker.current.setMap(null);
+          } catch (e) {
+            console.warn('Error cleaning up marker:', e);
+          }
+          marker.current = null;
+        }
+        
+        if (map.current) {
+          try {
+            google.maps.event.clearInstanceListeners(map.current);
+          } catch (e) {
+            console.warn('Error cleaning up map:', e);
+          }
+          map.current = null;
+        }
       }
       
-      if (map.current) {
-        google.maps?.event?.clearInstanceListeners?.(map.current);
-        map.current = null;
-      }
-      
-      // Clear container safely
-      if (mapContainer.current) {
+      // Clear container safely and only if it exists
+      if (mapContainer.current && mapContainer.current.parentNode) {
         try {
           mapContainer.current.innerHTML = '';
         } catch (e) {
