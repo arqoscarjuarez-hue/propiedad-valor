@@ -248,21 +248,32 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
       mounted = false;
       
       // Remove event listeners first
-      if (marker.current) {
-        google.maps?.event?.clearInstanceListeners?.(marker.current);
-        marker.current.setMap(null);
+      if (marker.current && typeof google !== 'undefined' && google.maps?.event) {
+        try {
+          google.maps.event.clearInstanceListeners(marker.current);
+          marker.current.setMap(null);
+        } catch (e) {
+          console.warn('Error cleaning marker:', e);
+        }
         marker.current = null;
       }
       
-      if (map.current) {
-        google.maps?.event?.clearInstanceListeners?.(map.current);
+      if (map.current && typeof google !== 'undefined' && google.maps?.event) {
+        try {
+          google.maps.event.clearInstanceListeners(map.current);
+        } catch (e) {
+          console.warn('Error cleaning map:', e);
+        }
         map.current = null;
       }
       
-      // Clear container safely
+      // Clear container safely - only if it still exists and has a parent
       if (mapContainer.current) {
         try {
-          mapContainer.current.innerHTML = '';
+          // Check if the container is still in the DOM before clearing
+          if (mapContainer.current.parentNode && mapContainer.current.isConnected) {
+            mapContainer.current.innerHTML = '';
+          }
         } catch (e) {
           console.warn('Could not clear map container:', e);
         }
