@@ -255,6 +255,11 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
     return () => {
       mounted = false;
       
+      // Clear the cleanup timeout if it exists
+      if (cleanupTimeout) {
+        clearTimeout(cleanupTimeout);
+      }
+      
       // Use a timeout to ensure cleanup happens after React's DOM operations
       cleanupTimeout = setTimeout(() => {
         try {
@@ -281,25 +286,15 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
             }
           }
           
-          // Clear container safely and only if it exists and still has a parent
-          if (mapContainer.current) {
-            try {
-              // Only clear if the container is still in the DOM
-              if (document.contains(mapContainer.current)) {
-                mapContainer.current.innerHTML = '';
-              }
-            } catch (e) {
-              // Silently ignore cleanup errors
-            }
-          }
+          // Don't manipulate DOM directly - let React handle it
+          // Just reset state
+          setIsMapReady(false);
+          setLoading(false);
+          setError(null);
         } catch (e) {
           // Silently ignore all cleanup errors to prevent console spam
         }
-        
-        setIsMapReady(false);
-        setLoading(false);
-        setError(null);
-      }, 0);
+      }, 100);
     };
   }, []);
 

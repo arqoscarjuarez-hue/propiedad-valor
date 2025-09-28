@@ -850,6 +850,7 @@ const PropertyValuation = () => {
                       {/* Mapa */}
                       <div className="h-64 sm:h-80 bg-muted rounded-lg overflow-hidden">
                         <SupabaseGoogleLocationMap
+                          key={`map-${propertyData.latitud}-${propertyData.longitud}`}
                           initialLat={propertyData.latitud}
                           initialLng={propertyData.longitud}
                           onLocationChange={(lat, lng, address) => {
