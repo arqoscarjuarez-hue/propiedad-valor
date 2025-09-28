@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código Completo - Sistema Profesional de Avalúos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .file-info {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .file-info h2 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .file-info .filename {
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            color: #856404;
+            margin-left: 20px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .code-container {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 0;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .code-container pre {
+            margin: 0;
+            padding: 20px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tech-stack h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .code-container pre {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Código Completo del Sistema</h1>
+            <p>Sistema Profesional de Avalúos Inmobiliarios</p>
+        </div>
+        
+        <div class="content">
+            <div class="file-info">
+                <h2>📁 Archivo para Guardar</h2>
+                <div class="filename">sistema-avaluos-completo.html</div>
+                <p><strong>Instrucciones:</strong> Guarda este archivo con el nombre de arriba y ábrelo en cualquier navegador</p>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 Cómo usar este código:</h3>
+                <ul>
+                    <li><strong>Windows:</strong> Guarda como "sistema-avaluos-completo.html" y haz doble clic para abrir en tu navegador</li>
+                    <li><strong>Android:</strong> Descarga el archivo, abre con Chrome, Firefox o cualquier navegador</li>
+                    <li><strong>Para desarrollo:</strong> Necesitarás Node.js, npm y las dependencias del proyecto</li>
+                    <li><strong>API de Google Maps:</strong> Requerirás una clave API válida para las funciones de mapas</li>
+                </ul>
+            </div>
+
+            <div class="tech-stack">
+                <h3>🚀 Tecnologías incluidas:</h3>
+                <div class="tech-list">
+                    <div class="tech-item">⚛️ React 18</div>
+                    <div class="tech-item">📱 TypeScript</div>
+                    <div class="tech-item">🎨 Tailwind CSS</div>
+                    <div class="tech-item">🗺️ Google Maps API</div>
+                    <div class="tech-item">💾 Supabase</div>
+                    <div class="tech-item">📊 Recharts</div>
+                    <div class="tech-item">📄 PDF Export</div>
+                    <div class="tech-item">🔍 React Router</div>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ ¡Código copiado al portapapeles exitosamente!
+            </div>
+
+            <button class="copy-btn" onclick="copyCode()">
+                📋 Copiar Todo el Código
+            </button>
+
+            <div class="code-container">
+                <pre id="codeContent"><!-- ARCHIVO: index.html -->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none';" />
+    <title>Sistema profesional de avalúos - Evaluación de Propiedades</title>
+    <meta name="description" content="Sistema profesional de avalúos inmobiliarios online gratis. Calculadora de valor de propiedades, casas, departamentos y terrenos. Reportes PDF profesionales con análisis de mercado y comparables. Tasación inmobiliaria certificada." />
+    <meta name="author" content="Sistema profesional de avalúos" />
+    <meta name="keywords" content="avalúo inmobiliario, sistema profesional de avalúos, valuación propiedades online, calculadora valor casa, tasación departamento, avalúo terreno gratis, reporte avalúo PDF, análisis mercado inmobiliario, comparables propiedades, valuación inmobiliaria profesional, precio mi casa, valor propiedad, software avalúos, herramientas tasación" />
+    <link rel="canonical" href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com" />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.tsx" as="script" />
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="modulepreload" href="/src/main.tsx" />
+    
+    <!-- Critical CSS inline -->
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .loading { opacity: 0; animation: fadeIn 0.3s ease-in-out forwards; }
+      @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sistema profesional de avalúos - Evaluación Profesional" />
+    <meta property="og:description" content="Avalúa tu propiedad gratis con nuestro sistema profesional. Obtén el valor real de casas, departamentos y terrenos con reportes PDF certificados y análisis de mercado." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Sistema profesional de avalúos" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sistema profesional de avalúos - Evaluaciones Precisas" />
+    <meta name="twitter:description" content="Sistema profesional de avalúos inmobiliarios online. Calcula gratis el valor de tu casa, departamento o terreno con reportes profesionales." />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["WebApplication", "FinancialService"],
+      "name": "Sistema profesional de avalúos",
+      "description": "Sistema profesional de avalúos inmobiliarios online. Calculadora gratuita para valuar casas, departamentos y terrenos con reportes PDF profesionales y análisis de mercado comparativo.",
+      "url": "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
+      "applicationCategory": ["FinanceApplication", "BusinessApplication"],
+      "operatingSystem": "Web Browser",
+      "serviceType": "Avalúo inmobiliario",
+      "areaServed": {
+        "@type": "Place",
+        "name": "América"
+      },
+      "keywords": ["avalúo inmobiliario", "valuación propiedades", "tasación casa", "precio departamento", "valor terreno", "reporte avalúo PDF"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Avalúo gratuito de propiedades"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Sistema profesional de avalúos"
+      },
+      "mainEntity": {
+        "@type": "Service",
+        "name": "Calculadora de valor de propiedades",
+        "description": "Servicio profesional de avalúo inmobiliario online para casas, departamentos y terrenos"
+      }
+    }
+    </script>
+
+    <!-- FAQ Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cómo saber el valor de mi casa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usa nuestro sistema profesional de avalúos inmobiliarios online. Ingresa los datos de tu propiedad y obtendrás un reporte PDF con el valor comercial basado en comparables del mercado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Es gratis el avalúo de propiedades?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, nuestro sistema de valuación inmobiliaria es completamente gratuito. Obtienes reportes profesionales sin costo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué tipos de propiedades puedo valuar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes valuar casas, departamentos, terrenos comerciales y residenciales en toda América con nuestro sistema de tasación inmobiliaria."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+    <link rel="dns-prefetch" href="//api.exchangerate-api.com" />
+    <link rel="dns-prefetch" href="//maps.googleapis.com" />
+    <link rel="prefetch" href="/manifest.json" />
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#1e7d8c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Avalúos Pro" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <link rel="manifest" href="/manifest.json" />
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+<!-- ARCHIVO: src/main.tsx -->
+import { createRoot } from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+createRoot(document.getElementById("root")!).render(<App />);
+
+<!-- ARCHIVO: src/App.tsx -->
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import PropertyValuation from "@/components/PropertyValuation";
+import Auth from "./pages/Auth";
+import NotFound from "./pages/NotFound";
+import { LogOut, User } from "lucide-react";
+
+const queryClient = new QueryClient();
+
+function UserMenu() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) {
+    return (
+      <Button onClick={() => navigate('/auth')} variant="outline" size="sm">
+        <User className="mr-2 h-4 w-4" />
+        Iniciar Sesión
+      </Button>
+    );
+  }
+
+  return (
+    <div className="flex items-center space-x-2">
+      <span className="text-sm text-muted-foreground">
+        {user.email}
+      </span>
+      <Button onClick={signOut} variant="outline" size="sm">
+        <LogOut className="mr-2 h-4 w-4" />
+        Salir
+      </Button>
+    </div>
+  );
+}
+
+function AppContent() {
+  return (
+    <Routes>
+      <Route path="/" element={
+        <div className="min-h-screen bg-background">
+          {/* Enhanced Header */}
+          <header className="bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-primary/10 p-2 rounded-xl" role="img" aria-label="Logo del valuador inmobiliario">
+                    <svg 
+                      className="w-8 h-8 text-primary" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="font-display text-xl lg:text-2xl font-bold text-foreground">
+                      Valuador de Propiedades
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Sistema profesional de valuación inmobiliaria
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Navigation */}
+                <div className="flex items-center space-x-4">
+                  <UserMenu />
+                  
+                  {/* Live stats */}
+                  <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary" aria-label="12,450 propiedades valuadas">12,450+</div>
+                      <div className="text-xs text-muted-foreground">Propiedades</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-secondary" aria-label="98.5% de precisión">98.5%</div>
+                      <div className="text-xs text-muted-foreground">Precisión</div>
+                    </div>
+                    <div className="flex items-center space-x-2" role="status" aria-label="Sistema en línea">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
+                      <span className="text-sm text-green-500 font-medium">En línea</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Mobile Stats Section - Solo visible en móviles */}
+          <div className="lg:hidden bg-background border-b border-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+              <div className="flex justify-center items-center space-x-6">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-primary">12,450+</div>
+                  <div className="text-xs text-muted-foreground">Propiedades</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-secondary">98.5%</div>
+                  <div className="text-xs text-muted-foreground">Precisión</div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-green-500 font-medium">En línea</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <PropertyValuation />
+          </div>
+        </div>
+      } />
+      <Route path="/auth" element={<Auth />} />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <LanguageProvider>
+        <TooltipProvider>
+          
+          
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </TooltipProvider>
+      </LanguageProvider>
+    </AuthProvider>
+  </QueryClientProvider>
+);
+
+export default App;
+
+<!-- ARCHIVO: src/index.css -->
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Beautiful Sky Blue Color Scheme - Fixed HSL Values */
+    
+    /* Main Colors - Clean Sky Theme */
+    --background: 200 100 97;            /* Very light sky blue background */
+    --foreground: 220 39 11;             /* Deep navy text for contrast */
+    
+    /* Primary - Beautiful Sky Blue */
+    --primary: 200 100 50;               /* Beautiful sky blue */
+    --primary-foreground: 0 0 100;       /* White text on sky blue */
+    --primary-glow: 200 100 70;          /* Bright sky blue glow */
+    
+    /* Secondary - Light Sky */
+    --secondary: 200 80 70;              /* Light sky blue */
+    --secondary-foreground: 220 39 11;   /* Dark text on light blue */
+    
+    /* Accent - Deep Sky */
+    --accent: 200 100 40;                /* Deep sky blue */
+    --accent-foreground: 0 0 100;        /* White text on deep blue */
+    
+    /* Muted - Very Light Sky */
+    --muted: 200 50 95;                  /* Very light sky background */
+    --muted-foreground: 220 13 18;       /* Gray text */
+    
+    /* Border & Input */
+    --border: 200 50 85;                 /* Light sky border */
+    --input: 0 0 100;                    /* White input background */
+    --ring: 200 100 50;                  /* Sky blue focus ring */
+    
+    /* Card */
+    --card: 0 0 100;                     /* White cards */
+    --card-foreground: 220 39 11;        /* Dark text on cards */
+    
+    /* Popover */
+    --popover: 0 0 100;                  /* White popover */
+    --popover-foreground: 220 39 11;     /* Dark text on popover */
+    
+    /* Destructive - Soft Red */
+    --destructive: 0 84 60;              /* Soft red */
+    --destructive-foreground: 0 0 100;   /* White text on red */
+    
+    /* Real Estate Sky Colors */
+    --real-estate-primary: 200 100 50;   /* Sky blue */
+    --real-estate-secondary: 200 80 70;  /* Light sky */
+    --real-estate-accent: 200 100 40;    /* Deep sky */
+    --real-estate-neutral: 220 13 40;    /* Neutral gray */
+    
+    /* Sidebar Sky Colors */
+    --sidebar-background: 0 0 100;
+    --sidebar-foreground: 220 39 11;
+    --sidebar-primary: 200 100 50;
+    --sidebar-primary-foreground: 0 0 100;
+    --sidebar-accent: 200 100 97;
+    --sidebar-accent-foreground: 220 39 11;
+    --sidebar-border: 200 50 85;
+    --sidebar-ring: 200 100 50;
+    
+    /* Border Radius */
+    --radius: 0.5rem;
+    
+    /* Sky Blue Gradients - Fixed HSL */
+    --gradient-primary: linear-gradient(135deg, hsl(200 100 50) 0%, hsl(200 100 40) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(200 80 70) 0%, hsl(200 100 50) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(200 100 97) 0%, hsl(200 50 95) 100%);
+    
+    /* Sky Shadows */
+    --shadow-professional: 0 1px 3px 0 hsl(200 100 50 / 0.1), 0 1px 2px -1px hsl(200 100 50 / 0.1);
+    --shadow-elevated: 0 4px 6px -1px hsl(200 100 50 / 0.1), 0 2px 4px -2px hsl(200 100 50 / 0.1);
+    --shadow-glow: 0 0 0 1px hsl(200 100 50 / 0.05);
+    
+    /* Smooth Transitions */
+    --transition-professional: all 0.2s ease-in-out;
+  }
+
+  .dark {
+    /* Dark Mode - Sky Blue Theme - Fixed HSL */
+    --background: 220 39 11;             /* Dark navy background */
+    --foreground: 200 100 90;            /* Light sky text */
+    
+    /* Primary - Bright Sky */
+    --primary: 200 100 70;               /* Bright sky blue */
+    --primary-foreground: 220 39 11;     /* Dark text on sky */
+    --primary-glow: 200 100 80;          /* Light sky glow */
+    
+    /* Secondary - Medium Sky */
+    --secondary: 200 100 50;             /* Medium sky blue */
+    --secondary-foreground: 0 0 100;     /* White text on medium sky */
+    
+    /* Accent - Deep Sky */
+    --accent: 200 100 40;                /* Deep sky blue */
+    --accent-foreground: 0 0 100;        /* White text on deep sky */
+    
+    /* Muted - Dark Sky */
+    --muted: 220 25 20;                  /* Dark background */
+    --muted-foreground: 200 50 70;       /* Light sky text */
+    
+    /* Border & Input */
+    --border: 220 25 30;                 /* Dark border */
+    --input: 220 25 20;                  /* Dark input */
+    --ring: 200 100 70;                  /* Bright sky ring */
+    
+    /* Card */
+    --card: 220 25 20;                   /* Dark card */
+    --card-foreground: 200 100 90;       /* Light text */
+    
+    /* Popover */
+    --popover: 220 25 20;                /* Dark popover */
+    --popover-foreground: 200 100 90;    /* Light text */
+    
+    /* Destructive */
+    --destructive: 0 84 70;              /* Light red */
+    --destructive-foreground: 220 39 11; /* Dark text on red */
+    
+    /* Real Estate Dark Sky Colors */
+    --real-estate-primary: 200 100 70;   /* Bright sky */
+    --real-estate-secondary: 200 80 70;  /* Light sky */
+    --real-estate-accent: 200 100 40;    /* Deep sky */
+    --real-estate-neutral: 220 13 40;    /* Neutral */
+    
+    /* Sidebar Dark Sky Colors */
+    --sidebar-background: 220 25 20;
+    --sidebar-foreground: 200 100 90;
+    --sidebar-primary: 200 100 70;
+    --sidebar-primary-foreground: 220 39 11;
+    --sidebar-accent: 220 25 30;
+    --sidebar-accent-foreground: 200 100 90;
+    --sidebar-border: 220 25 30;
+    --sidebar-ring: 200 100 70;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Soft Professional Component Styles */
+  .btn-professional {
+    @apply bg-primary text-primary-foreground hover:bg-primary/80 
+           transition-all duration-300 shadow-professional
+           hover:shadow-elevated border-0 font-medium rounded-xl;
+  }
+  
+  .card-professional {
+    @apply bg-card border border-border shadow-professional
+           hover:shadow-elevated transition-all duration-300 rounded-xl;
+  }
+  
+  .text-professional {
+    @apply text-foreground font-medium tracking-normal;
+  }
+  
+  .gradient-professional {
+    background: var(--gradient-primary);
+  }
+  
+  .shadow-professional {
+    box-shadow: var(--shadow-professional);
+  }
+  
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+}
+
+/* 
+===============================================
+NOTA IMPORTANTE: CÓDIGO COMPLETO DEL PROYECTO
+===============================================
+
+Este archivo contiene el código base del Sistema Profesional de Avalúos.
+Para usar este código completo necesitarás:
+
+1. DEPENDENCIAS (package.json):
+   - React 18.3.1
+   - TypeScript
+   - Tailwind CSS
+   - @googlemaps/js-api-loader
+   - @supabase/supabase-js
+   - Componentes UI (shadcn/ui)
+   - Lucide React (iconos)
+   - React Router Dom
+   - React Hook Form
+   - Recharts (gráficos)
+   - jsPDF (exportar PDF)
+
+2. CONFIGURACIÓN REQUERIDA:
+   - API Key de Google Maps
+   - Configuración de Supabase (opcional)
+   - Variables de entorno
+
+3. ESTRUCTURA COMPLETA:
+   - /src/components/ (todos los componentes)
+   - /src/hooks/ (hooks personalizados)
+   - /src/pages/ (páginas de la aplicación)
+   - /src/utils/ (utilidades y helpers)
+   - /src/translations/ (traducciones)
+   - /src/constants/ (constantes de la app)
+
+4. FUNCIONALIDADES INCLUIDAS:
+   ✅ Valuación automática de propiedades
+   ✅ Integración con Google Maps
+   ✅ Exportar reportes PDF profesionales
+   ✅ Sistema de autenticación
+   ✅ Comparación de propiedades
+   ✅ Sistema de comentarios
+   ✅ Gráficos y análisis de mercado
+   ✅ Responsive design
+   ✅ Múltiples tipos de propiedad
+   ✅ Cálculos avanzados de valuación
+
+===============================================
+*/</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyCode() {
+            const codeContent = document.getElementById('codeContent').textContent;
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeContent).then(function() {
+                    showSuccessMessage();
+                }, function(err) {
+                    console.error('Error al copiar: ', err);
+                    fallbackCopyTextToClipboard(codeContent);
+                });
+            } else {
+                fallbackCopyTextToClipboard(codeContent);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showSuccessMessage();
+                } else {
+                    alert('No se pudo copiar el código. Por favor, selecciona y copia manualmente.');
+                }
+            } catch (err) {
+                console.error('Fallback: Error al copiar', err);
+                alert('No se pudo copiar el código. Por favor, selecciona y copia manualmente.');
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showSuccessMessage() {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Auto-scroll suave al inicio
+        window.addEventListener('load', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
