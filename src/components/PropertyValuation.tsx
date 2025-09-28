@@ -46,7 +46,7 @@ const translations = {
     // UI Labels principales
     propertyValuator: 'Valuador de Propiedades',
     professionalSystem: 'Sistema profesional de valuación inmobiliaria',
-    languageSelector: 'Idioma / Language',
+    
     propertyData: 'Datos de la Propiedad',
     
     // Pestañas principales
@@ -267,8 +267,6 @@ const translations = {
     comparables: 'comparables',
     comparativesUpdated: 'Comparativas Actualizadas',
     newComparativesGenerated: 'Se han generado nuevas propiedades cercanas',
-    currencyChanged: 'Moneda Cambiada',
-    valuationNowIn: 'Valuación ahora se muestra en',
       priceAdjusted: 'Precio Ajustado',
       adjustment: 'Ajuste',
       newValue: 'Nuevo valor',
@@ -330,16 +328,6 @@ const translations = {
      propertyValuationResults: 'Resultados de Valuación',
      downloadDocuments: 'Descargar Documentos',
      shareValuation: 'Compartir Valuación',
-     currencyValuation: 'Moneda de Valuación',
-     needHelpSystem: '¿Necesitas ayuda para usar el sistema?',
-     multilingual: 'Multiidioma',
-     interfaceReports: 'Toda la interfaz y reportes se traducen automáticamente',
-     // Currency selector
-     exchangeRateUpdated: 'Tipos de Cambio Actualizados',
-     exchangeRateError: 'No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.',
-     exchangeRateNote: 'Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.',
-     exchangeRateLabel: 'Tipo de cambio',
-     lastUpdateText: 'Última actualización',
      // Valuation results panel
      valuationResultsTitle: 'Resultado de Valuación',
      basedOnComparablesText: '',
@@ -347,16 +335,10 @@ const translations = {
      adjustmentLabel: 'Ajuste',
       newValueLabel: 'Nuevo valor'
     },
-    en: {
-      // Método de la renta
-      rentalMethodTitle: 'Valuation by Income Method',
-      rentalMethodDescription: 'If you know the rental income of the property you want to value, please enter the amount',
-      rentalAmountPlaceholder: 'Enter monthly rental amount',
-      disclaimerText: 'This valuation is an estimate based on the data provided. It is recommended to consult with a certified appraiser for official valuations.',
-    }
   };
 
-type Language = keyof typeof translations;
+// Solo español - sistema fijo
+type Language = 'es';
 
 interface PropertyData {
   // Áreas
