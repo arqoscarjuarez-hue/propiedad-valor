@@ -7,34 +7,13 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useLanguage } from "@/hooks/useLanguage";
 import { indexTranslations } from "@/translations/indexTranslations";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components for better performance
-const PropertyValuation = lazy(() => 
-  import("@/components/PropertyValuation").catch(() => ({
-    default: () => <div>Error loading component</div>
-  }))
-);
-const PWAInstallPrompt = lazy(() => 
-  import("@/components/PWAInstallPrompt").catch(() => ({
-    default: () => null
-  }))
-);
-const HeroSection = lazy(() => 
-  import("@/components/HeroSection").catch(() => ({
-    default: () => <div>Error loading component</div>
-  }))
-);
-const FeaturesSection = lazy(() => 
-  import("@/components/FeaturesSection").catch(() => ({
-    default: () => <div>Error loading component</div>
-  }))
-);
-const DemoWalkthrough = lazy(() => 
-  import("@/components/DemoWalkthrough").catch(() => ({
-    default: () => null
-  }))
-);
+const PropertyValuation = lazy(() => import("@/components/PropertyValuation"));
+const PWAInstallPrompt = lazy(() => import("@/components/PWAInstallPrompt"));
+const HeroSection = lazy(() => import("@/components/HeroSection"));
+const FeaturesSection = lazy(() => import("@/components/FeaturesSection"));
+const DemoWalkthrough = lazy(() => import("@/components/DemoWalkthrough"));
 
 const Index = () => {
   const { selectedLanguage } = useLanguage();
@@ -217,20 +196,16 @@ const Index = () => {
 
       {/* Hero Section */}
       {!showValuation && !showComments && (
-        <ErrorBoundary fallback={<Skeleton className="h-[500px] w-full" />}>
-          <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-            <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
+          <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />
+        </Suspense>
       )}
       
       {/* Features Section */}
       {!showValuation && !showComments && (
-        <ErrorBoundary fallback={<Skeleton className="h-[400px] w-full" />}>
-          <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
-            <FeaturesSection />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+          <FeaturesSection />
+        </Suspense>
       )}
 
       {/* SEO Content Section */}
@@ -346,11 +321,9 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          <ErrorBoundary fallback={<Skeleton className="h-[600px] w-full" />}>
-            <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
-              <PropertyValuation />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+            <PropertyValuation />
+          </Suspense>
         </main>
       )}
 
@@ -439,19 +412,15 @@ const Index = () => {
       
       {/* Demo Walkthrough */}
       {showDemo && (
-        <ErrorBoundary fallback={<div className="fixed inset-0 bg-black/50 z-50" />}>
-          <Suspense fallback={<div className="fixed inset-0 bg-black/50 z-50" />}>
-            <DemoWalkthrough onClose={handleCloseDemo} />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<div className="fixed inset-0 bg-black/50 z-50" />}>
+          <DemoWalkthrough onClose={handleCloseDemo} />
+        </Suspense>
       )}
       
       {/* PWA Install Prompt */}
-      <ErrorBoundary fallback={null}>
-        <Suspense fallback={null}>
-          <PWAInstallPrompt />
-        </Suspense>
-      </ErrorBoundary>
+      <Suspense fallback={null}>
+        <PWAInstallPrompt />
+      </Suspense>
     </div>
   );
 };
