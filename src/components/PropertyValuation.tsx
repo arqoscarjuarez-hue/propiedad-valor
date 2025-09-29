@@ -574,6 +574,26 @@ const PropertyValuation = () => {
     initializeUserLocation();
   }, []);
 
+  // useEffect para sincronizar campos de dirección
+  useEffect(() => {
+    // Si direccionCompleta está llena pero ubicacion no, copiarla
+    if (propertyData.direccionCompleta && propertyData.direccionCompleta.trim() !== '' && 
+        (!propertyData.ubicacion || propertyData.ubicacion.trim() === '')) {
+      setPropertyData(prev => ({
+        ...prev,
+        ubicacion: prev.direccionCompleta
+      }));
+    }
+    // Si ubicacion está llena pero direccionCompleta no, copiarla
+    else if (propertyData.ubicacion && propertyData.ubicacion.trim() !== '' && 
+             (!propertyData.direccionCompleta || propertyData.direccionCompleta.trim() === '')) {
+      setPropertyData(prev => ({
+        ...prev,
+        direccionCompleta: prev.ubicacion
+      }));
+    }
+  }, [propertyData.ubicacion, propertyData.direccionCompleta]);
+
 
   const convertCurrency = (amountInUSD: number, targetCurrency: Currency): number => {
     if (!targetCurrency || targetCurrency.rate <= 0) return amountInUSD;
@@ -629,18 +649,31 @@ const PropertyValuation = () => {
   };
 
   const handleLocationSelect = (lat: number, lng: number, address: string = '') => {
+    console.log('handleLocationSelect llamado con:', { lat, lng, address });
+    
     // Detectar si ya se realizó un cálculo y ahora se está cambiando la ubicación
     if (hasBeenCalculated) {
       setHasChangedAfterCalculation(true);
     }
     
-    setPropertyData(prev => ({
-      ...prev,
-      latitud: lat,
-      longitud: lng,
-      direccionCompleta: address || prev.direccionCompleta,
-      ubicacion: address || prev.ubicacion  // Actualizar también el campo ubicacion
-    }));
+    setPropertyData(prev => {
+      const updatedData = {
+        ...prev,
+        latitud: lat,
+        longitud: lng,
+        direccionCompleta: address && address.trim() !== '' ? address : prev.direccionCompleta,
+        ubicacion: address && address.trim() !== '' ? address : prev.ubicacion
+      };
+      
+      console.log('PropertyData actualizado:', {
+        direccionCompleta: updatedData.direccionCompleta,
+        ubicacion: updatedData.ubicacion,
+        latitud: updatedData.latitud,
+        longitud: updatedData.longitud
+      });
+      
+      return updatedData;
+    });
   };
 
   const startNewValuation = async () => {
@@ -733,6 +766,29 @@ const PropertyValuation = () => {
     
     setIsCalculating(true);
     try {
+      // Validar que la dirección esté presente ANTES de continuar
+      const hasValidAddress = propertyData.direccionCompleta && propertyData.direccionCompleta.trim() !== '';
+      const hasValidUbicacion = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
+      
+      if (!hasValidAddress && !hasValidUbicacion) {
+        console.error('ERROR: Debe seleccionar una ubicación válida antes de realizar la valuación');
+        console.log('Current propertyData:', {
+          direccionCompleta: propertyData.direccionCompleta,
+          ubicacion: propertyData.ubicacion,
+          latitud: propertyData.latitud,
+          longitud: propertyData.longitud
+        });
+        setIsCalculating(false);
+        return;
+      }
+      
+      // Si solo uno de los campos de dirección está lleno, copiar al otro
+      if (hasValidAddress && !hasValidUbicacion) {
+        setPropertyData(prev => ({ ...prev, ubicacion: prev.direccionCompleta }));
+      } else if (hasValidUbicacion && !hasValidAddress) {
+        setPropertyData(prev => ({ ...prev, direccionCompleta: prev.ubicacion }));
+      }
+      
       const areaTotal = (propertyData.areaSotano || 0) + 
                        (propertyData.areaPrimerNivel || 0) + 
                        (propertyData.areaSegundoNivel || 0) + 
@@ -1289,8 +1345,18 @@ const PropertyValuation = () => {
     const step3Complete = hasValidLandArea && hasValidBuiltArea;
     
     // Paso 4: Características  
-    const hasValidLocation = propertyData.ubicacion && propertyData.ubicacion.trim() !== '';
+    const hasValidLocation = (propertyData.ubicacion && propertyData.ubicacion.trim() !== '') || 
+                            (propertyData.direccionCompleta && propertyData.direccionCompleta.trim() !== '');
     const step4Complete = hasValidLocation;
+    
+    // Debug para validación de ubicación
+    if (!hasValidLocation) {
+      console.log('Validación de ubicación falló:', {
+        ubicacion: propertyData.ubicacion,
+        direccionCompleta: propertyData.direccionCompleta,
+        hasValidLocation
+      });
+    }
     
     // Paso 5: Valuación
     const step5Complete = valuation && valuation > 0;
