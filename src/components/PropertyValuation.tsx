@@ -1619,6 +1619,26 @@ const PropertyValuation = () => {
       
       yPosition += 15;
       
+      // Valores adicionales del resultado de valuación
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
+      
+      // Alquiler Mensual Estimado
+      const alquilerMensual = Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12);
+      doc.text(`ALQUILER MENSUAL ESTIMADO: ${formatCurrency(alquilerMensual, selectedCurrency)}`, marginLeft, yPosition);
+      yPosition += 8;
+      
+      // Valor Máximo de Venta
+      const valorMaximo = Math.round((finalAdjustedValue || valuation) * 1.1);
+      doc.text(`VALOR MÁXIMO DE VENTA: ${formatCurrency(valorMaximo, selectedCurrency)}`, marginLeft, yPosition);
+      yPosition += 8;
+      
+      // Valor Mínimo de Venta
+      const valorMinimo = Math.round((finalAdjustedValue || valuation) * 0.9);
+      doc.text(`VALOR MÍNIMO DE VENTA: ${formatCurrency(valorMinimo, selectedCurrency)}`, marginLeft, yPosition);
+      yPosition += 15;
+      
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(config.textColor[0], config.textColor[1], config.textColor[2]);
@@ -1861,6 +1881,29 @@ const PropertyValuation = () => {
                 new TextRun({ text: formatCurrency(finalAdjustedValue || valuation, selectedCurrency), bold: true, size: 32 })
               ]
             }),
+            
+            // Valores adicionales del resultado de valuación
+            new Paragraph({ text: "" }), // Espacio
+            new Paragraph({
+              children: [
+                new TextRun({ text: "ALQUILER MENSUAL ESTIMADO: ", bold: true, size: 24 }),
+                new TextRun({ text: formatCurrency(Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12), selectedCurrency), bold: true, size: 24 })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "VALOR MÁXIMO DE VENTA: ", bold: true, size: 24 }),
+                new TextRun({ text: formatCurrency(Math.round((finalAdjustedValue || valuation) * 1.1), selectedCurrency), bold: true, size: 24 })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "VALOR MÍNIMO DE VENTA: ", bold: true, size: 24 }),
+                new TextRun({ text: formatCurrency(Math.round((finalAdjustedValue || valuation) * 0.9), selectedCurrency), bold: true, size: 24 })
+              ]
+            }),
+            new Paragraph({ text: "" }), // Espacio
+            
             ...(propertyData.tipoPropiedad !== 'terreno' && areaTotal > 0 ? [
               new Paragraph({
                 children: [
