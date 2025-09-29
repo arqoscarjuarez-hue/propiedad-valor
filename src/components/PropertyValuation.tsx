@@ -526,11 +526,40 @@ const PropertyValuation = () => {
         const userLocation = await getUserLocation();
         console.log('Ubicación inicial obtenida:', userLocation);
         
+        // Actualizar coordenadas y obtener dirección
         setPropertyData(prev => ({
           ...prev,
           latitud: userLocation.lat,
           longitud: userLocation.lng
         }));
+        
+        // Obtener dirección para las coordenadas iniciales
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.lat}&lng=${userLocation.lng}&zoom=18&addressdetails=1`,
+            {
+              headers: {
+                'User-Agent': 'PropertyValuation-App'
+              }
+            }
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.display_name) {
+              setPropertyData(prev => ({
+                ...prev,
+                latitud: userLocation.lat,
+                longitud: userLocation.lng,
+                direccionCompleta: data.display_name,
+                ubicacion: data.display_name
+              }));
+              console.log('Dirección inicial obtenida:', data.display_name);
+            }
+          }
+        } catch (geocodeError) {
+          console.warn('Error obteniendo dirección inicial:', geocodeError);
+        }
         
         // Ubicación detectada silenciosamente
         const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
@@ -633,11 +662,36 @@ const PropertyValuation = () => {
         tipoPropiedad: 'casa',
         ubicacion: '',
         estadoGeneral: '',
-        
         latitud: userLocation.lat,
         longitud: userLocation.lng,
         direccionCompleta: ''
       });
+      
+      // Obtener dirección para las nuevas coordenadas
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLocation.lat}&lng=${userLocation.lng}&zoom=18&addressdetails=1`,
+          {
+            headers: {
+              'User-Agent': 'PropertyValuation-App'
+            }
+          }
+        );
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.display_name) {
+            setPropertyData(prev => ({
+              ...prev,
+              direccionCompleta: data.display_name,
+              ubicacion: data.display_name
+            }));
+            console.log('Nueva dirección obtenida:', data.display_name);
+          }
+        }
+      } catch (geocodeError) {
+        console.warn('Error obteniendo nueva dirección:', geocodeError);
+      }
       
       // Reiniciar todos los demás estados
       setValuation(null);
@@ -1366,10 +1420,12 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].totalBuiltArea}: ${areaTotal} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].landArea}: ${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].propertyCondition}: ${propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}`,
-        `${translations[selectedLanguage].locationQuality}: ${propertyData.ubicacion}`
+        `${translations[selectedLanguage].locationQuality}: ${propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada'}`
       ];
       
-      // Debug: Verificar que el estado general se está incluyendo
+      // Debug: Verificar direcciones disponibles
+      console.log('PDF - Dirección Completa:', propertyData.direccionCompleta);
+      console.log('PDF - Ubicación:', propertyData.ubicacion);
       console.log('PDF - Estado General de Conservación:', propertyData.estadoGeneral);
 
       generalInfo.forEach(info => {
@@ -1396,10 +1452,10 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(config.textColor[0], config.textColor[1], config.textColor[2]);
       
-      if (propertyData.direccionCompleta) {
-        doc.text(`${translations[selectedLanguage].address}: ${propertyData.direccionCompleta}`, marginLeft, yPosition);
-        yPosition += 6;
-      }
+      // Mostrar dirección completa con fallback
+      const direccionParaMostrar = propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada';
+      doc.text(`${translations[selectedLanguage].address}: ${direccionParaMostrar}`, marginLeft, yPosition);
+      yPosition += 6;
       
       if (propertyData.latitud && propertyData.longitud) {
         doc.text(`${translations[selectedLanguage].coordinatesLabel || 'Coordenadas:'} ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft, yPosition);
