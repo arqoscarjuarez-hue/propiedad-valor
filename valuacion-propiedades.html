@@ -374,11 +374,11 @@
                 'estrato-6-bajo': 0.70,
                 'estrato-7-social': 0.60,
                 'estrato-8-marginal': 0.50,
-                'excelente': 0.67,
-                'buena': 0.66,
-                'media': 0.56,
-                'regular': 0.49,
-                'mala': 0.01
+                'excelente': 1.30,
+                'buena': 1.15,
+                'media': 1.00,
+                'regular': 0.85,
+                'mala': 0.70
             };
 
             // Factores de condición
@@ -400,7 +400,12 @@
                 'departamento': 0.85,
                 'terreno': 0.6,
                 'comercial': 1.2,
-                'bodega': 0.7
+                'bodega': 0.7,
+                'oficina': 1.1,
+                'local': 1.15,
+                'consultorio': 1.0,
+                'restaurant': 1.25,
+                'hotel': 1.4
             };
 
             const locationFactor = locationFactors[propertyData.calidadUbicacion] || 1.0;
@@ -429,10 +434,10 @@
                 const valorConstruccion = areaTotalParaCalculo * basePrice * propertyTypeFactor * locationFactor * conditionFactor;
                 
                 let valorTotal = valorConstruccion;
-                if (['casa', 'comercial', 'bodega'].includes(propertyData.tipoPropiedad) && propertyData.areaTerreno > 0) {
+                if (['casa', 'comercial', 'bodega', 'oficina', 'local', 'consultorio', 'restaurant', 'hotel'].includes(propertyData.tipoPropiedad) && propertyData.areaTerreno > 0) {
                     let factorTerreno = 0.4;
                     
-                    if (propertyData.tipoPropiedad === 'comercial') {
+                    if (['comercial', 'oficina', 'local', 'consultorio', 'restaurant', 'hotel'].includes(propertyData.tipoPropiedad)) {
                         factorTerreno = 0.6;
                     } else if (propertyData.tipoPropiedad === 'bodega') {
                         factorTerreno = 0.3;
@@ -489,7 +494,7 @@
                 titleText = 'VALUACIÓN DE APARTAMENTO';
             } else if (propertyData.tipoPropiedad === 'terreno') {
                 titleText = 'VALUACIÓN DE TERRENO';
-            } else if (propertyData.tipoPropiedad === 'comercial') {
+            } else if (['comercial', 'oficina', 'local', 'consultorio', 'restaurant', 'hotel'].includes(propertyData.tipoPropiedad)) {
                 titleText = 'VALUACIÓN COMERCIAL';
             }
             
@@ -671,7 +676,19 @@
                 longitud: null,
                 topografia: '',
                 tipoValoracion: '',
-                alquiler: 0
+                alquiler: 0,
+                antiguedad: 0,
+                habitaciones: 0,
+                banos: 0,
+                cochera: 0,
+                piscina: false,
+                jardin: false,
+                terraza: false,
+                balcon: false,
+                amueblado: false,
+                aires: 0,
+                calefaccion: false,
+                observaciones: ''
             });
 
             const [valuation, setValuation] = useState(null);
@@ -681,7 +698,7 @@
 
             const handleInputChange = (field, value) => {
                 // Limpiar valor numérico
-                if (['areaSotano', 'areaPrimerNivel', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel', 'areaTerreno', 'alquiler'].includes(field)) {
+                if (['areaSotano', 'areaPrimerNivel', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel', 'areaTerreno', 'alquiler', 'antiguedad', 'habitaciones', 'banos', 'cochera', 'aires'].includes(field)) {
                     value = value.replace(/[^0-9.]/g, '');
                     value = parseFloat(value) || 0;
                 }
@@ -742,7 +759,19 @@
                     longitud: null,
                     topografia: '',
                     tipoValoracion: '',
-                    alquiler: 0
+                    alquiler: 0,
+                    antiguedad: 0,
+                    habitaciones: 0,
+                    banos: 0,
+                    cochera: 0,
+                    piscina: false,
+                    jardin: false,
+                    terraza: false,
+                    balcon: false,
+                    amueblado: false,
+                    aires: 0,
+                    calefaccion: false,
+                    observaciones: ''
                 });
                 setValuation(null);
                 setFinalAdjustedValue(null);
@@ -878,7 +907,7 @@
                                 </div>
 
                                 <div className="summary-card">
-                                    <h3 className="font-bold mb-2">Resumen de Áreas:</h3>
+                                    <h3 className="font-bold mb-2">📊 Resumen de Áreas</h3>
                                     <p>Área Total Construida: {
                                         (propertyData.areaSotano || 0) + 
                                         (propertyData.areaPrimerNivel || 0) + 
@@ -891,31 +920,192 @@
                             </div>
                         </div>
 
-                        {/* Pestaña Tipo */}
+                        {/* Pestaña Tipo de Propiedad */}
                         <div className={`tab-content ${activeTab === 'tipo' ? 'active' : ''}`}>
                             <div className="card">
                                 <h2 className="text-2xl font-bold mb-6 text-gray-800">🏠 Tipo de Propiedad</h2>
                                 
                                 <div className="form-group">
                                     <label className="form-label">Selecciona el tipo de propiedad</label>
-                                    <select
+                                    <select 
                                         className="select-field"
                                         value={propertyData.tipoPropiedad}
                                         onChange={(e) => handleInputChange('tipoPropiedad', e.target.value)}
                                     >
                                         <option value="">Seleccionar tipo</option>
                                         <option value="casa">🏠 Casa</option>
-                                        <option value="departamento">🏢 Apartamento/Departamento</option>
-                                        <option value="terreno">🌿 Terreno</option>
+                                        <option value="departamento">🏢 Departamento/Apartamento</option>
+                                        <option value="terreno">🌱 Terreno</option>
                                         <option value="comercial">🏪 Comercial</option>
-                                        <option value="bodega">🏭 Bodega/Industrial</option>
+                                        <option value="bodega">🏭 Bodega/Almacén</option>
+                                        <option value="oficina">🏢 Oficina</option>
+                                        <option value="local">🏪 Local Comercial</option>
+                                        <option value="consultorio">🏥 Consultorio</option>
+                                        <option value="restaurant">🍽️ Restaurante</option>
+                                        <option value="hotel">🏨 Hotel</option>
                                     </select>
                                 </div>
 
-                                {propertyData.tipoPropiedad && (
-                                    <div className="summary-card">
-                                        <h3 className="font-bold mb-2">Tipo Seleccionado:</h3>
-                                        <span className="badge badge-primary">{propertyData.tipoPropiedad}</span>
+                                {/* Características adicionales para todos los tipos */}
+                                <div className="grid-3">
+                                    <div className="form-group">
+                                        <label className="form-label">Antigüedad (años)</label>
+                                        <input
+                                            type="text"
+                                            className="input-field"
+                                            value={propertyData.antiguedad || ''}
+                                            onChange={(e) => handleInputChange('antiguedad', e.target.value)}
+                                            placeholder="0"
+                                        />
+                                    </div>
+
+                                    {(propertyData.tipoPropiedad === 'casa' || propertyData.tipoPropiedad === 'departamento') && (
+                                        <>
+                                            <div className="form-group">
+                                                <label className="form-label">Habitaciones</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-field"
+                                                    value={propertyData.habitaciones || ''}
+                                                    onChange={(e) => handleInputChange('habitaciones', e.target.value)}
+                                                    placeholder="0"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label">Baños</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-field"
+                                                    value={propertyData.banos || ''}
+                                                    onChange={(e) => handleInputChange('banos', e.target.value)}
+                                                    placeholder="0"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label">Cochera/Garajes</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-field"
+                                                    value={propertyData.cochera || ''}
+                                                    onChange={(e) => handleInputChange('cochera', e.target.value)}
+                                                    placeholder="0"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label">Aires Acondicionados</label>
+                                                <input
+                                                    type="text"
+                                                    className="input-field"
+                                                    value={propertyData.aires || ''}
+                                                    onChange={(e) => handleInputChange('aires', e.target.value)}
+                                                    placeholder="0"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Características específicas para casas y departamentos */}
+                                {(propertyData.tipoPropiedad === 'casa' || propertyData.tipoPropiedad === 'departamento') && (
+                                    <div className="checkbox-group">
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="piscina"
+                                                checked={propertyData.piscina}
+                                                onChange={(e) => handleInputChange('piscina', e.target.checked)}
+                                            />
+                                            <label htmlFor="piscina">🏊‍♂️ Piscina</label>
+                                        </div>
+
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="jardin"
+                                                checked={propertyData.jardin}
+                                                onChange={(e) => handleInputChange('jardin', e.target.checked)}
+                                            />
+                                            <label htmlFor="jardin">🌿 Jardín</label>
+                                        </div>
+
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="terraza"
+                                                checked={propertyData.terraza}
+                                                onChange={(e) => handleInputChange('terraza', e.target.checked)}
+                                            />
+                                            <label htmlFor="terraza">🏡 Terraza</label>
+                                        </div>
+
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="balcon"
+                                                checked={propertyData.balcon}
+                                                onChange={(e) => handleInputChange('balcon', e.target.checked)}
+                                            />
+                                            <label htmlFor="balcon">🪟 Balcón</label>
+                                        </div>
+
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="amueblado"
+                                                checked={propertyData.amueblado}
+                                                onChange={(e) => handleInputChange('amueblado', e.target.checked)}
+                                            />
+                                            <label htmlFor="amueblado">🪑 Amueblado</label>
+                                        </div>
+
+                                        <div className="checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                id="calefaccion"
+                                                checked={propertyData.calefaccion}
+                                                onChange={(e) => handleInputChange('calefaccion', e.target.checked)}
+                                            />
+                                            <label htmlFor="calefaccion">🔥 Calefacción</label>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Características específicas para terrenos */}
+                                {propertyData.tipoPropiedad === 'terreno' && (
+                                    <div className="grid-2">
+                                        <div className="form-group">
+                                            <label className="form-label">Topografía</label>
+                                            <select 
+                                                className="select-field"
+                                                value={propertyData.topografia}
+                                                onChange={(e) => handleInputChange('topografia', e.target.value)}
+                                            >
+                                                <option value="">Seleccionar topografía</option>
+                                                <option value="plano">🟢 Plano (0-5% pendiente)</option>
+                                                <option value="pendiente-suave">🟡 Pendiente Suave (5-15%)</option>
+                                                <option value="pendiente-moderada">🟠 Pendiente Moderada (15-25%)</option>
+                                                <option value="pendiente-pronunciada">🔴 Pendiente Pronunciada (25-40%)</option>
+                                                <option value="irregular">⚫ Irregular (>40%)</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label className="form-label">Tipo de Valoración</label>
+                                            <select 
+                                                className="select-field"
+                                                value={propertyData.tipoValoracion}
+                                                onChange={(e) => handleInputChange('tipoValoracion', e.target.value)}
+                                            >
+                                                <option value="">Seleccionar uso destinado</option>
+                                                <option value="residencial">🏠 Residencial</option>
+                                                <option value="comercial">🏪 Comercial</option>
+                                                <option value="industrial">🏭 Industrial</option>
+                                                <option value="agricola">🌾 Agrícola</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -929,116 +1119,86 @@
                                 <div className="grid-2">
                                     <div className="form-group">
                                         <label className="form-label">Estado General de Conservación</label>
-                                        <div className="form-description">
-                                            Afecta directamente el valor de la propiedad
-                                        </div>
-                                        <select
+                                        <p className="form-description">Afecta directamente el valor de la propiedad</p>
+                                        <select 
                                             className="select-field"
                                             value={propertyData.estadoGeneral}
                                             onChange={(e) => handleInputChange('estadoGeneral', e.target.value)}
                                         >
                                             <option value="">Selecciona el estado de conservación</option>
-                                            <option value="nuevo">EXCELENTE - Construcción nueva o recién remodelada</option>
-                                            <option value="bueno">BUENA - Conservación adecuada, mantenimiento al corriente</option>
-                                            <option value="medio">MEDIO - Conservación promedio, uso normal visible</option>
-                                            <option value="regular">REGULAR - Desgaste visible, necesita mantenimiento</option>
-                                            <option value="reparaciones-sencillas">REPARACIONES SENCILLAS - Pintura, detalles menores</option>
-                                            <option value="reparaciones-medias">REPARACIONES MEDIAS - Cambio de pisos, plomería</option>
-                                            <option value="reparaciones-importantes">REPARACIONES IMPORTANTES - Estructura, instalaciones</option>
-                                            <option value="danos-graves">DAÑOS GRAVES - Problemas estructurales serios</option>
-                                            <option value="en-desecho">EN DESECHO - Demolición parcial necesaria</option>
+                                            <option value="nuevo">🟢 EXCELENTE - Construcción nueva o recién remodelada</option>
+                                            <option value="bueno">🔵 BUENA - Conservación adecuada, mantenimiento al corriente</option>
+                                            <option value="medio">🟡 MEDIO - Conservación promedio, uso normal visible</option>
+                                            <option value="regular">🟠 REGULAR - Desgaste visible, necesita mantenimiento</option>
+                                            <option value="reparaciones-sencillas">🟠 REPARACIONES SENCILLAS - Pintura, detalles menores</option>
+                                            <option value="reparaciones-medias">🔴 REPARACIONES MEDIAS - Cambio de pisos, plomería</option>
+                                            <option value="reparaciones-importantes">🔴 REPARACIONES IMPORTANTES - Estructura, instalaciones</option>
+                                            <option value="danos-graves">⚫ DAÑOS GRAVES - Problemas estructurales serios</option>
+                                            <option value="en-desecho">⚫ EN DESECHO - Demolición parcial necesaria</option>
                                         </select>
                                     </div>
 
                                     <div className="form-group">
-                                        <label className="form-label">
-                                            {propertyData.tipoPropiedad === 'terreno' ? 'Factores Ambientales y Riesgos' : 'Calidad de Ubicación'}
-                                        </label>
-                                        <div className="form-description">
-                                            {propertyData.tipoPropiedad === 'terreno' ? 
-                                                'Evalúa riesgos naturales y condiciones ambientales' : 
-                                                'Evalúa servicios, seguridad, accesibilidad'
-                                            }
-                                        </div>
-                                        <select
+                                        <label className="form-label">Calidad de Ubicación</label>
+                                        <p className="form-description">Evalúa servicios, seguridad, accesibilidad</p>
+                                        <select 
                                             className="select-field"
                                             value={propertyData.calidadUbicacion}
                                             onChange={(e) => handleInputChange('calidadUbicacion', e.target.value)}
                                         >
                                             <option value="">Selecciona la calidad de ubicación</option>
-                                            {propertyData.tipoPropiedad === 'terreno' ? (
-                                                <>
-                                                    <option value="excelente">Excelente - Sin riesgos naturales, topografía favorable</option>
-                                                    <option value="buena">Buena - Riesgos mínimos, condiciones ambientales aceptables</option>
-                                                    <option value="regular">Regular - Algunos riesgos gestionables</option>
-                                                    <option value="mala">Deficiente - Alto riesgo de inundación, deslizamiento u otros peligros</option>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <option value="estrato-1-elite">Estrato 1 - ÉLITE - Zona exclusiva, residencial de lujo</option>
-                                                    <option value="estrato-2-alto">Estrato 2 - ALTO - Zona residencial alta, plusvalía premium</option>
-                                                    <option value="estrato-3-medio-alto">Estrato 3 - MEDIO-ALTO - Zona residencial media-alta</option>
-                                                    <option value="estrato-4-medio">Estrato 4 - MEDIO - Zona residencial media, equilibrio precio-valor</option>
-                                                    <option value="estrato-5-medio-bajo">Estrato 5 - MEDIO-BAJO - Zona residencial media-baja</option>
-                                                    <option value="estrato-6-bajo">Estrato 6 - BAJO - Zona popular, vivienda social</option>
-                                                    <option value="estrato-7-social">Estrato 7 - SOCIAL - Zona de interés social</option>
-                                                    <option value="estrato-8-marginal">Estrato 8 - MARGINAL - Zona marginal, servicios limitados</option>
-                                                </>
-                                            )}
+                                            <option value="estrato-1-elite">🌟 ESTRATO 1 - Zona exclusiva, residencial de lujo</option>
+                                            <option value="estrato-2-alto">⭐ ESTRATO 2 - Zona residencial alta, plusvalía premium</option>
+                                            <option value="estrato-3-medio-alto">🔹 ESTRATO 3 - Zona residencial media-alta, buena ubicación</option>
+                                            <option value="estrato-4-medio">🔸 ESTRATO 4 - Zona residencial media, equilibrio precio-valor</option>
+                                            <option value="estrato-5-medio-bajo">🟡 ESTRATO 5 - Zona residencial media-baja, accesible</option>
+                                            <option value="estrato-6-bajo">🟠 ESTRATO 6 - Zona popular, vivienda social</option>
+                                            <option value="estrato-7-social">🔴 ESTRATO 7 - Zona de interés social, vivienda subsidiada</option>
+                                            <option value="estrato-8-marginal">⚫ ESTRATO 8 - Zona marginal, servicios limitados</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                {/* Características específicas de terreno */}
-                                {propertyData.tipoPropiedad === 'terreno' && (
-                                    <div className="grid-2">
-                                        <div className="form-group">
-                                            <label className="form-label">Topografía</label>
-                                            <div className="form-description">
-                                                Factores según estándares IVS/RICS
-                                            </div>
-                                            <select
-                                                className="select-field"
-                                                value={propertyData.topografia}
-                                                onChange={(e) => handleInputChange('topografia', e.target.value)}
-                                            >
-                                                <option value="">Selecciona el tipo de topografía</option>
-                                                <option value="plano">Terreno Plano (0-5% pendiente): +12% - Facilita construcción</option>
-                                                <option value="pendiente-suave">Pendiente Suave (5-15%): +3% - Drenaje natural adecuado</option>
-                                                <option value="pendiente-moderada">Pendiente Moderada (15-25%): -7% - Costos adicionales</option>
-                                                <option value="pendiente-pronunciada">Pendiente Pronunciada (25-40%): -20% - Requiere ingeniería especializada</option>
-                                                <option value="irregular">Terreno Irregular (>40%): -25% - Desarrollo muy costoso</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label className="form-label">Tipo de Valoración</label>
-                                            <div className="form-description">
-                                                Factores por uso aplicados según estándares internacionales
-                                            </div>
-                                            <select
-                                                className="select-field"
-                                                value={propertyData.tipoValoracion}
-                                                onChange={(e) => handleInputChange('tipoValoracion', e.target.value)}
-                                            >
-                                                <option value="">Selecciona el tipo de valoración</option>
-                                                <option value="residencial">Uso Residencial: -35% - Valor base estándar residencial</option>
-                                                <option value="comercial">Uso Comercial: +28% - Mayor potencial de ingresos</option>
-                                                <option value="industrial">Uso Industrial: +24% - Infraestructura especializada</option>
-                                                <option value="agricola">Uso Agrícola: -57% - Valor extensivo menor</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                )}
+                                <div className="form-group">
+                                    <label className="form-label">Observaciones Adicionales (Opcional)</label>
+                                    <p className="form-description">Información adicional sobre el inmueble (máximo 500 caracteres)</p>
+                                    <textarea
+                                        className="input-field"
+                                        rows="4"
+                                        value={propertyData.observaciones}
+                                        onChange={(e) => handleInputChange('observaciones', e.target.value.slice(0, 500))}
+                                        placeholder="Detalles adicionales sobre la propiedad..."
+                                    />
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        {propertyData.observaciones.length}/500 caracteres
+                                    </p>
+                                </div>
 
                                 <div className="summary-card">
-                                    <h3 className="font-bold mb-2">Resumen de Características:</h3>
-                                    <p>Estado General: {propertyData.estadoGeneral || 'No especificado'}</p>
-                                    <p>Calidad de Ubicación: {propertyData.calidadUbicacion || 'No especificada'}</p>
+                                    <h3 className="font-bold mb-2">📋 Resumen de Características</h3>
+                                    <p><strong>Tipo:</strong> {propertyData.tipoPropiedad || 'No especificado'}</p>
+                                    <p><strong>Antigüedad:</strong> {propertyData.antiguedad || 0} años</p>
+                                    <p><strong>Estado de Conservación:</strong> {propertyData.estadoGeneral || 'No especificado'}</p>
+                                    <p><strong>Calidad de Ubicación:</strong> {propertyData.calidadUbicacion || 'No especificada'}</p>
+                                    
+                                    {(propertyData.tipoPropiedad === 'casa' || propertyData.tipoPropiedad === 'departamento') && (
+                                        <>
+                                            <p><strong>Habitaciones:</strong> {propertyData.habitaciones || 0}</p>
+                                            <p><strong>Baños:</strong> {propertyData.banos || 0}</p>
+                                            <p><strong>Cocheras:</strong> {propertyData.cochera || 0}</p>
+                                            {propertyData.piscina && <span className="badge badge-green">Piscina</span>}
+                                            {propertyData.jardin && <span className="badge badge-green">Jardín</span>}
+                                            {propertyData.terraza && <span className="badge badge-green">Terraza</span>}
+                                            {propertyData.balcon && <span className="badge badge-green">Balcón</span>}
+                                            {propertyData.amueblado && <span className="badge badge-green">Amueblado</span>}
+                                            {propertyData.calefaccion && <span className="badge badge-green">Calefacción</span>}
+                                        </>
+                                    )}
+                                    
                                     {propertyData.tipoPropiedad === 'terreno' && (
                                         <>
-                                            <p>Topografía: {propertyData.topografia || 'No especificada'}</p>
-                                            <p>Tipo de Valoración: {propertyData.tipoValoracion || 'No especificado'}</p>
+                                            <p><strong>Topografía:</strong> {propertyData.topografia || 'No especificada'}</p>
+                                            <p><strong>Tipo de Valoración:</strong> {propertyData.tipoValoracion || 'No especificado'}</p>
                                         </>
                                     )}
                                 </div>
@@ -1048,28 +1208,17 @@
                         {/* Pestaña Ubicación */}
                         <div className={`tab-content ${activeTab === 'ubicacion' ? 'active' : ''}`}>
                             <div className="card">
-                                <h2 className="text-2xl font-bold mb-6 text-gray-800">📍 Ubicación</h2>
+                                <h2 className="text-2xl font-bold mb-6 text-gray-800">📍 Ubicación de la Propiedad</h2>
                                 
-                                <div className="grid-2">
-                                    <div className="form-group">
-                                        <label className="form-label">Dirección Completa</label>
-                                        <input
-                                            type="text"
-                                            className="input-field"
-                                            value={propertyData.direccionCompleta || ''}
-                                            onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
-                                            placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
-                                        />
-                                    </div>
-                                    
-                                    <div className="form-group">
-                                        <label className="form-label">Información adicional (Opcional)</label>
-                                        <input
-                                            type="text"
-                                            className="input-field"
-                                            placeholder="Referencias, características especiales (máximo 500 caracteres)"
-                                        />
-                                    </div>
+                                <div className="form-group">
+                                    <label className="form-label">Dirección Completa</label>
+                                    <input
+                                        type="text"
+                                        className="input-field"
+                                        value={propertyData.direccionCompleta}
+                                        onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                                        placeholder="Ej: Calle 123, Colonia, Ciudad, Estado, CP"
+                                    />
                                 </div>
 
                                 <div className="grid-2">
@@ -1079,46 +1228,41 @@
                                             type="text"
                                             className="input-field"
                                             value={propertyData.latitud || ''}
-                                            onChange={(e) => handleInputChange('latitud', parseFloat(e.target.value) || null)}
+                                            onChange={(e) => handleInputChange('latitud', e.target.value)}
                                             placeholder="Ej: 19.4326"
                                         />
                                     </div>
-                                    
+
                                     <div className="form-group">
                                         <label className="form-label">Longitud</label>
                                         <input
                                             type="text"
                                             className="input-field"
                                             value={propertyData.longitud || ''}
-                                            onChange={(e) => handleInputChange('longitud', parseFloat(e.target.value) || null)}
+                                            onChange={(e) => handleInputChange('longitud', e.target.value)}
                                             placeholder="Ej: -99.1332"
                                         />
                                     </div>
                                 </div>
 
-                                {propertyData.direccionCompleta && (
-                                    <div className="summary-card">
-                                        <h3 className="font-bold mb-2">Dirección Registrada:</h3>
-                                        <p>{propertyData.direccionCompleta}</p>
-                                        {propertyData.latitud && propertyData.longitud && (
-                                            <p>Coordenadas: {propertyData.latitud}, {propertyData.longitud}</p>
-                                        )}
-                                    </div>
-                                )}
+                                <div className="summary-card">
+                                    <h3 className="font-bold mb-2">📍 Información de Ubicación</h3>
+                                    <p><strong>Dirección:</strong> {propertyData.direccionCompleta || 'No especificada'}</p>
+                                    {propertyData.latitud && propertyData.longitud && (
+                                        <p><strong>Coordenadas:</strong> {propertyData.latitud}, {propertyData.longitud}</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         {/* Pestaña Método de Renta */}
                         <div className={`tab-content ${activeTab === 'renta' ? 'active' : ''}`}>
                             <div className="card">
-                                <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 Valúo por el Método de la Renta</h2>
-                                
-                                <div className="form-description mb-4">
-                                    Si conoce el alquiler mensual de la propiedad que quiere valuar, por favor escriba el monto
-                                </div>
+                                <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 Valuación por Método de la Renta</h2>
                                 
                                 <div className="form-group">
-                                    <label className="form-label">Monto del Alquiler Mensual</label>
+                                    <label className="form-label">Alquiler Mensual Conocido (Opcional)</label>
+                                    <p className="form-description">Si conoce el alquiler mensual de la propiedad, ingréselo para obtener una valuación por el método de la renta</p>
                                     <input
                                         type="text"
                                         className="input-field"
@@ -1130,129 +1274,142 @@
 
                                 {propertyData.alquiler > 0 && (
                                     <div className="summary-card">
-                                        <h3 className="font-bold mb-2">Información de Renta:</h3>
-                                        <p>Alquiler Mensual: {formatCurrency(propertyData.alquiler)}</p>
-                                        <p>Alquiler Anual: {formatCurrency(propertyData.alquiler * 12)}</p>
-                                        <p>Valor Estimado por Renta: {formatCurrency((propertyData.alquiler * 12) / RENTAL_CAP_RATE)}</p>
+                                        <h3 className="font-bold mb-2">📊 Estimación por Método de Renta</h3>
+                                        <p><strong>Alquiler Mensual:</strong> {formatCurrency(propertyData.alquiler)}</p>
+                                        <p><strong>Alquiler Anual:</strong> {formatCurrency(propertyData.alquiler * 12)}</p>
+                                        <p><strong>Valor Estimado (Cap Rate 5%):</strong> {formatCurrency((propertyData.alquiler * 12) / RENTAL_CAP_RATE)}</p>
+                                        <p className="text-sm text-gray-600 mt-2">
+                                            *Cálculo basado en cap rate del 5% y gastos operativos del 15%
+                                        </p>
                                     </div>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    {/* Botón de Cálculo */}
-                    <div className="text-center my-8">
-                        <button
+                    {/* Botones de acción */}
+                    <div className="flex flex-wrap gap-4 justify-center mt-8">
+                        <button 
                             className="btn-primary"
                             onClick={calculateValuation}
                             disabled={!isFormValid() || isCalculating}
                         >
                             {isCalculating ? (
                                 <>
-                                    <div className="loading-spinner" style={{display: 'inline-block', width: '20px', height: '20px', marginRight: '8px'}}></div>
-                                    Calculando Valuación...
+                                    <div className="loading-spinner" style={{width: '20px', height: '20px', display: 'inline-block', marginRight: '8px'}}></div>
+                                    Calculando...
                                 </>
                             ) : (
-                                '🧮 Realizar Valuación'
+                                <>📊 Realizar Valuación</>
                             )}
                         </button>
-                    </div>
 
-                    {/* Resultados de Valuación */}
-                    {valuation && (
-                        <div id="valuation-results" className="card">
-                            <h2 className="text-2xl font-bold mb-6 text-gray-800">📊 Resultado de Valuación</h2>
-                            
-                            <div className="grid-3">
-                                <div className="result-card">
-                                    <h3 className="text-xl font-bold text-blue mb-2">Valor Estimado</h3>
-                                    <p className="text-3xl font-bold">{formatCurrency(valuation)}</p>
-                                </div>
-                                
-                                <div className="result-card">
-                                    <h3 className="text-xl font-bold text-green mb-2">Alquiler Mensual</h3>
-                                    <p className="text-2xl font-bold">
-                                        {formatCurrency(Math.round((valuation * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12))}
-                                    </p>
-                                </div>
-                                
-                                <div className="result-card">
-                                    <h3 className="text-xl font-bold text-primary mb-2">Rango de Venta</h3>
-                                    <p className="text-lg">
-                                        Min: {formatCurrency(Math.round(valuation * 0.9))}<br/>
-                                        Max: {formatCurrency(Math.round(valuation * 1.1))}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Ajuste de Precio */}
-                            <div className="card">
-                                <h3 className="text-xl font-bold mb-4">⚖️ Ajuste de Precio</h3>
-                                <div className="form-description mb-4">
-                                    Ajusta el precio final basado en factores adicionales
-                                </div>
-                                
-                                <div className="grid-2">
-                                    <div className="form-group">
-                                        <label className="form-label">Porcentaje de Ajuste (%)</label>
-                                        <input
-                                            type="range"
-                                            min="-30"
-                                            max="30"
-                                            value={adjustmentPercentage}
-                                            onChange={(e) => handleAdjustmentChange(parseFloat(e.target.value))}
-                                            className="input-field"
-                                        />
-                                        <div className="text-center mt-2">
-                                            <span className={adjustmentPercentage >= 0 ? 'text-green' : 'text-red'}>
-                                                {adjustmentPercentage > 0 ? '+' : ''}{adjustmentPercentage}%
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="form-group">
-                                        <label className="form-label">Valor Ajustado</label>
-                                        <div className="result-card">
-                                            <p className="text-2xl font-bold">
-                                                {formatCurrency(finalAdjustedValue)}
-                                            </p>
-                                            {adjustmentPercentage !== 0 && (
-                                                <p className="text-sm">
-                                                    Ajuste: {formatCurrency(finalAdjustedValue - valuation)}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Botones de Acción */}
-                            <div className="text-center space-x-4">
-                                <button
-                                    className="btn-primary"
+                        {valuation && (
+                            <>
+                                <button 
+                                    className="btn-secondary"
                                     onClick={() => generatePDF(propertyData, finalAdjustedValue || valuation)}
                                 >
                                     📄 Descargar PDF
                                 </button>
-                                <button
+                                
+                                <button 
                                     className="btn-secondary"
                                     onClick={startNewValuation}
                                 >
                                     🔄 Nueva Valuación
                                 </button>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Resultados de valuación */}
+                    {valuation && (
+                        <div className="mt-8">
+                            <div className="result-card">
+                                <h3 className="text-2xl font-bold mb-4 text-gray-800">🏆 Resultado de Valuación</h3>
+                                
+                                <div className="grid-3">
+                                    <div className="text-center">
+                                        <p className="text-lg font-semibold text-gray-600">Valor Base</p>
+                                        <p className="text-3xl font-bold text-primary">{formatCurrency(valuation)}</p>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <p className="text-lg font-semibold text-gray-600">Valor Mínimo</p>
+                                        <p className="text-2xl font-bold text-green">{formatCurrency(Math.round(valuation * 0.9))}</p>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <p className="text-lg font-semibold text-gray-600">Valor Máximo</p>
+                                        <p className="text-2xl font-bold text-blue">{formatCurrency(Math.round(valuation * 1.1))}</p>
+                                    </div>
+                                </div>
+
+                                {/* Ajuste de precio */}
+                                <div className="mt-6">
+                                    <h4 className="text-lg font-bold mb-3">🎯 Ajuste de Precio</h4>
+                                    <p className="text-gray-600 mb-3">Ajusta el precio final basado en factores adicionales</p>
+                                    
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <input
+                                            type="range"
+                                            min="-20"
+                                            max="20"
+                                            step="1"
+                                            value={adjustmentPercentage}
+                                            onChange={(e) => handleAdjustmentChange(parseFloat(e.target.value))}
+                                            className="flex-1"
+                                        />
+                                        <span className={`font-bold ${adjustmentPercentage >= 0 ? 'text-green' : 'text-red'}`}>
+                                            {adjustmentPercentage >= 0 ? '+' : ''}{adjustmentPercentage}%
+                                        </span>
+                                    </div>
+
+                                    {adjustmentPercentage !== 0 && (
+                                        <div className="text-center p-4 bg-gray-100 rounded-lg">
+                                            <p className="text-lg font-semibold text-gray-600">Valor Ajustado Final</p>
+                                            <p className="text-3xl font-bold text-primary">{formatCurrency(finalAdjustedValue)}</p>
+                                            <p className="text-sm text-gray-500 mt-2">
+                                                Ajuste de {formatCurrency(finalAdjustedValue - valuation)} 
+                                                ({adjustmentPercentage >= 0 ? '+' : ''}{adjustmentPercentage}%)
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Información adicional */}
+                                <div className="mt-6 grid-2">
+                                    <div className="text-center">
+                                        <p className="text-sm font-semibold text-gray-600">Alquiler Mensual Estimado</p>
+                                        <p className="text-xl font-bold text-primary">
+                                            {formatCurrency(Math.round(((finalAdjustedValue || valuation) * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12))}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <p className="text-sm font-semibold text-gray-600">Precio por m²</p>
+                                        <p className="text-xl font-bold text-primary">
+                                            {formatCurrency(Math.round((finalAdjustedValue || valuation) / propertyData.areaTerreno))}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Disclaimer */}
+                            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <p className="text-sm text-gray-700">
+                                    <strong>⚠️ Disclaimer:</strong> Esta valuación es un estimado basado en los datos proporcionados. 
+                                    Se recomienda consultar con un perito valuador certificado para valuaciones oficiales.
+                                </p>
                             </div>
                         </div>
                     )}
-
-                    {/* Footer */}
-                    <div className="text-center mt-8 text-gray-500 text-sm">
-                        <p>Esta valuación es un estimado basado en los datos proporcionados.</p>
-                        <p>Se recomienda consultar con un valuador certificado para valuaciones oficiales.</p>
-                    </div>
                 </div>
             );
         }
 
+        // Renderizar la aplicación
         ReactDOM.render(<PropertyValuationApp />, document.getElementById('root'));
     </script>
 </body>
