@@ -139,7 +139,7 @@ const translations = {
     characteristicsSummary: 'Resumen de Características:',
     propertyAge: 'Antigüedad:',
     propertyLocation: 'Ubicación:',
-    propertyCondition: 'Estado:',
+    propertyCondition: 'Estado General de Conservación:',
     propertyTopography: 'Topografía:',
     propertyValuationType: 'Tipo de Valoración:',
     notSpecified: 'No especificada',
@@ -1367,6 +1367,9 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].propertyCondition}: ${propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}`,
         `${translations[selectedLanguage].locationQuality}: ${propertyData.ubicacion}`
       ];
+      
+      // Debug: Verificar que el estado general se está incluyendo
+      console.log('PDF - Estado General de Conservación:', propertyData.estadoGeneral);
 
       generalInfo.forEach(info => {
         checkNewPage(8);
@@ -1537,6 +1540,9 @@ const PropertyValuation = () => {
           titleText = 'VALUACIÓN DE PROPIEDAD';
           subtitleText = 'Avalúo Profesional';
       }
+      
+      // Debug: Verificar que el estado general se está incluyendo en Word
+      console.log('Word - Estado General de Conservación:', propertyData.estadoGeneral);
 
       const doc = new DocxDocument({
         sections: [{
