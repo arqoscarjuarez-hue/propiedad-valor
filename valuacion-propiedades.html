@@ -27,6 +27,11 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
         .card {
             background: white;
             border-radius: 12px;
@@ -56,13 +61,18 @@
             background: white;
             cursor: pointer;
         }
+        .select-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
         .result-card {
             background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
             border: 2px solid #3b82f6;
             border-radius: 12px;
             padding: 24px;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px;
         }
         .grid-2 {
             display: grid;
@@ -74,9 +84,15 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
+        .col-span-2 {
+            grid-column: span 2;
+        }
         @media (max-width: 768px) {
             .grid-2, .grid-4 {
                 grid-template-columns: 1fr;
+            }
+            .col-span-2 {
+                grid-column: span 1;
             }
         }
         .hidden {
@@ -97,6 +113,33 @@
         .loading {
             opacity: 0.6;
             pointer-events: none;
+        }
+        .space-x-4 > * + * {
+            margin-left: 1rem;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .step-indicator .step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .step.inactive {
+            background-color: #e5e7eb;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -228,7 +271,7 @@
             yPosition += 10;
 
             // SECCIÓN 2: UBICACIÓN
-            if (propertyData.direccionCompleta || propertyData.ubicacion) {
+            if (propertyData.direccionCompleta) {
                 doc.setFillColor(245, 245, 245);
                 doc.rect(marginLeft - 2, yPosition - 3, 170, 12, 'F');
                 
@@ -243,8 +286,7 @@
                 doc.setFont("helvetica", "normal");
                 doc.setTextColor(textColor[0], textColor[1], textColor[2]);
                 
-                const direccion = propertyData.direccionCompleta || propertyData.ubicacion;
-                const lines = doc.splitTextToSize(`Dirección: ${direccion}`, 170);
+                const lines = doc.splitTextToSize(`Dirección: ${propertyData.direccionCompleta}`, 170);
                 lines.forEach(line => {
                     doc.text(line, marginLeft, yPosition);
                     yPosition += 6;
@@ -356,8 +398,7 @@
                 areaTerreno: 0,
                 estadoGeneral: '',
                 calidadUbicacion: '',
-                direccionCompleta: '',
-                ubicacion: ''
+                direccionCompleta: ''
             });
 
             const [valuation, setValuation] = useState(null);
@@ -408,8 +449,7 @@
                     areaTerreno: 0,
                     estadoGeneral: '',
                     calidadUbicacion: '',
-                    direccionCompleta: '',
-                    ubicacion: ''
+                    direccionCompleta: ''
                 });
                 setValuation(null);
                 setCurrentStep(1);
@@ -429,15 +469,11 @@
                     {/* Pasos del formulario */}
                     <div className="card mb-8">
                         <div className="mb-6">
-                            <div className="flex justify-between items-center mb-4">
+                            <div className="step-indicator">
                                 {[1, 2, 3, 4, 5].map(step => (
                                     <div 
                                         key={step} 
-                                        className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                                            currentStep >= step 
-                                                ? 'bg-blue-500 text-white' 
-                                                : 'bg-gray-200 text-gray-600'
-                                        }`}
+                                        className={`step ${currentStep >= step ? 'active' : 'inactive'}`}
                                     >
                                         {step}
                                     </div>
@@ -479,7 +515,7 @@
                             <div className="mb-8">
                                 <h3 className="text-xl font-semibold mb-4">2. Áreas de la Propiedad</h3>
                                 
-                                <div className="grid-2 mb-4">
+                                <div className="mb-4">
                                     <div>
                                         <label className="block text-sm font-medium mb-2">
                                             Área de Terreno (m²)
@@ -544,6 +580,18 @@
                                                 placeholder="0"
                                             />
                                         </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">
+                                                Cuarto Nivel (m²)
+                                            </label>
+                                            <input 
+                                                type="number"
+                                                className="input-field"
+                                                value={propertyData.areaCuartoNivel || ''}
+                                                onChange={(e) => handleInputChange('areaCuartoNivel', parseFloat(e.target.value) || 0)}
+                                                placeholder="0"
+                                            />
+                                        </div>
                                     </div>
                                 )}
 
@@ -574,14 +622,12 @@
                                         placeholder="Ej: Calle 123, Colonia Centro, Ciudad, Estado"
                                     />
                                 </div>
-                                {propertyData.direccionCompleta && (
-                                    <button 
-                                        className="btn-primary mt-4"
-                                        onClick={() => setCurrentStep(4)}
-                                    >
-                                        Continuar
-                                    </button>
-                                )}
+                                <button 
+                                    className="btn-primary mt-4"
+                                    onClick={() => setCurrentStep(4)}
+                                >
+                                    Continuar
+                                </button>
                             </div>
                         )}
 
