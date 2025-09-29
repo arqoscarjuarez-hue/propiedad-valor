@@ -371,7 +371,8 @@ interface PropertyData {
   tipoPropiedad: string;
   
   // Características
-  ubicacion: string;
+  ubicacion: string;  // Dirección física de la propiedad
+  calidadUbicacion?: string;  // Estrato social/calidad de la zona
   estadoGeneral: string;
   
   
@@ -460,7 +461,8 @@ const PropertyValuation = () => {
         areaCuartoNivel: 0,
         areaTerreno: 0,
         tipoPropiedad: '',
-        ubicacion: '',
+        ubicacion: '',  // Dirección física
+        calidadUbicacion: '',  // Estrato social/calidad de zona
         estadoGeneral: '',
         latitud: 13.6929, // San Salvador, El Salvador
         longitud: -89.2182,
@@ -694,10 +696,12 @@ const PropertyValuation = () => {
         areaTerreno: 0,
         tipoPropiedad: 'casa',
         ubicacion: '',
+        calidadUbicacion: '',
         estadoGeneral: '',
         latitud: userLocation.lat,
         longitud: userLocation.lng,
-        direccionCompleta: ''
+        direccionCompleta: '',
+        alquiler: 0
       });
       
       // Obtener dirección para las nuevas coordenadas
@@ -858,7 +862,7 @@ const PropertyValuation = () => {
         'estrato-11-marginal': 0.05      // Zona marginal
       };
       
-      const locationFactor = locationFactors[propertyData.ubicacion as keyof typeof locationFactors] || 1.0;
+      const locationFactor = locationFactors[propertyData.calidadUbicacion as keyof typeof locationFactors] || 1.0;
       
       // Factores de condición
       const conditionFactors = {
@@ -1512,8 +1516,8 @@ const PropertyValuation = () => {
       generalInfo.forEach((info, index) => {
         checkNewPage(8);
         
-        // Si es la línea de ubicación (último elemento), usar función de múltiples líneas
-        if (index === generalInfo.length - 1 && info.includes('Ubicación:')) {
+        // Si es la línea de ubicación, usar función de múltiples líneas
+        if (info.includes(translations[selectedLanguage].locationQuality)) {
           yPosition = addMultiLineText(info, marginLeft, yPosition, contentWidth);
         } else {
           doc.text(info, marginLeft, yPosition);
@@ -2586,9 +2590,9 @@ const PropertyValuation = () => {
                          {propertyData.tipoPropiedad === 'terreno' ? translations[selectedLanguage].environmentalFactors : translations[selectedLanguage].locationQuality}
                       </Label>
                        <Select 
-                         value={propertyData.ubicacion} 
+                         value={propertyData.calidadUbicacion || ''} 
                          onValueChange={(value) => {
-                           handleInputChange('ubicacion', value);
+                           handleInputChange('calidadUbicacion', value);
                          }}
                        >
                         <SelectTrigger>

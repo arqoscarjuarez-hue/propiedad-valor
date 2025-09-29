@@ -19,7 +19,8 @@ export interface PropertyData {
   tipoPropiedad: string;
   
   // Characteristics
-  ubicacion: string;
+  ubicacion: string;  // Dirección física de la propiedad
+  calidadUbicacion?: string;  // Estrato social/calidad de la zona
   estadoGeneral: string;
   
   // Land-specific characteristics
