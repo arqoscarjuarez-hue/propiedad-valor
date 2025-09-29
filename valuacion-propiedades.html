@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Valuación de Propiedades</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-saver/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(229, 231, 235, 1);
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .select-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .hidden {
+            display: none;
+        }
+        .text-primary {
+            color: #3b82f6;
+        }
+        .text-green {
+            color: #10b981;
+        }
+        .text-red {
+            color: #ef4444;
+        }
+        .text-blue {
+            color: #3b82f6;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Configuración de constantes
+        const RENTAL_CAP_RATE = 0.05;
+        const RENTAL_EXPENSE_RATE = 0.15;
+
+        // Función para formatear moneda
+        const formatCurrency = (amount, currency = { symbol: '$' }) => {
+            return `${currency.symbol}${amount.toLocaleString('en-US', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            })}`;
+        };
+
+        // Función para calcular valuación
+        const calculatePropertyValuation = (propertyData) => {
+            const areaTotal = (propertyData.areaSotano || 0) + 
+                             (propertyData.areaPrimerNivel || 0) + 
+                             (propertyData.areaSegundoNivel || 0) + 
+                             (propertyData.areaTercerNivel || 0) + 
+                             (propertyData.areaCuartoNivel || 0);
+
+            let basePrice = 800; // USD por m² base
+
+            // Factores de ubicación (estratos sociales)
+            const locationFactors = {
+                'estrato-1-elite': 1.50,
+                'estrato-2-alto-alto': 1.35,
+                'estrato-3-alto-medio': 1.20,
+                'estrato-4-alto-bajo': 1.00,
+                'estrato-5-medio-alto': 0.85,
+                'estrato-6-medio-medio': 0.75,
+                'estrato-7-medio-bajo': 0.60,
+                'estrato-8-bajo-alto': 0.40,
+                'estrato-9-bajo-medio': 0.30,
+                'estrato-10-bajo-bajo': 0.20,
+                'estrato-11-marginal': 0.05
+            };
+
+            // Factores de condición
+            const conditionFactors = {
+                'nuevo': 1.2,
+                'bueno': 1.0,
+                'medio': 0.85,
+                'regular': 0.7,
+                'malo': 0.5
+            };
+
+            const locationFactor = locationFactors[propertyData.calidadUbicacion] || 1.0;
+            const conditionFactor = conditionFactors[propertyData.estadoGeneral] || 1.0;
+
+            // Calcular valor base
+            let valorBase;
+            if (propertyData.tipoPropiedad === 'terreno') {
+                valorBase = propertyData.areaTerreno * basePrice * locationFactor;
+            } else {
+                valorBase = areaTotal * basePrice * locationFactor * conditionFactor;
+                // Agregar valor del terreno
+                valorBase += propertyData.areaTerreno * (basePrice * 0.3) * locationFactor;
+            }
+
+            return Math.round(valorBase);
+        };
+
+        // Función para generar PDF
+        const generatePDF = (propertyData, valuation) => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const areaTotal = (propertyData.areaSotano || 0) + 
+                             (propertyData.areaPrimerNivel || 0) + 
+                             (propertyData.areaSegundoNivel || 0) + 
+                             (propertyData.areaTercerNivel || 0) + 
+                             (propertyData.areaCuartoNivel || 0);
+
+            // Configuración de colores
+            const primaryColor = [37, 99, 235];
+            const textColor = [51, 51, 51];
+
+            let yPosition = 30;
+            const marginLeft = 20;
+
+            // ENCABEZADO
+            doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.rect(0, 0, 210, 25, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text('VALUACIÓN DE PROPIEDAD', 105, 15, { align: 'center' });
+
+            yPosition = 40;
+
+            // SECCIÓN 1: INFORMACIÓN GENERAL
+            doc.setFillColor(245, 245, 245);
+            doc.rect(marginLeft - 2, yPosition - 3, 170, 12, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.text('1. INFORMACIÓN GENERAL', marginLeft, yPosition + 6);
+            
+            yPosition += 20;
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+            
+            const generalInfo = [
+                `Tipo: ${propertyData.tipoPropiedad}`,
+                `Área Total Construida: ${areaTotal} m²`,
+                `Área de Terreno: ${propertyData.areaTerreno} m²`,
+                `Estado General de Conservación: ${propertyData.estadoGeneral || 'No especificado'}`,
+                `Calidad de Ubicación: ${propertyData.calidadUbicacion || 'No especificada'}`
+            ];
+
+            generalInfo.forEach(info => {
+                doc.text(info, marginLeft, yPosition);
+                yPosition += 6;
+            });
+
+            yPosition += 10;
+
+            // SECCIÓN 2: UBICACIÓN
+            if (propertyData.direccionCompleta || propertyData.ubicacion) {
+                doc.setFillColor(245, 245, 245);
+                doc.rect(marginLeft - 2, yPosition - 3, 170, 12, 'F');
+                
+                doc.setFontSize(14);
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+                doc.text('2. UBICACIÓN DEL INMUEBLE', marginLeft, yPosition + 6);
+                
+                yPosition += 20;
+                
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "normal");
+                doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+                
+                const direccion = propertyData.direccionCompleta || propertyData.ubicacion;
+                const lines = doc.splitTextToSize(`Dirección: ${direccion}`, 170);
+                lines.forEach(line => {
+                    doc.text(line, marginLeft, yPosition);
+                    yPosition += 6;
+                });
+
+                yPosition += 10;
+            }
+
+            // SECCIÓN 3: ÁREAS
+            doc.setFillColor(245, 245, 245);
+            doc.rect(marginLeft - 2, yPosition - 3, 170, 12, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.text('3. ÁREAS DE LA PROPIEDAD', marginLeft, yPosition + 6);
+            
+            yPosition += 20;
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+
+            if (propertyData.tipoPropiedad !== 'terreno') {
+                const areas = [
+                    { name: 'Sótano', value: propertyData.areaSotano },
+                    { name: 'Primer Nivel', value: propertyData.areaPrimerNivel },
+                    { name: 'Segundo Nivel', value: propertyData.areaSegundoNivel },
+                    { name: 'Tercer Nivel', value: propertyData.areaTercerNivel },
+                    { name: 'Cuarto Nivel', value: propertyData.areaCuartoNivel }
+                ];
+
+                areas.forEach(area => {
+                    if (area.value && area.value > 0) {
+                        doc.text(`${area.name}: ${area.value} m²`, marginLeft, yPosition);
+                        yPosition += 6;
+                    }
+                });
+
+                doc.text(`Área Total Construida: ${areaTotal} m²`, marginLeft, yPosition);
+                yPosition += 8;
+            }
+
+            doc.text(`Área de Terreno: ${propertyData.areaTerreno} m²`, marginLeft, yPosition);
+            yPosition += 15;
+
+            // SECCIÓN 4: VALOR ESTIMADO
+            doc.setFillColor(245, 245, 245);
+            doc.rect(marginLeft - 2, yPosition - 3, 170, 12, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.text('4. VALOR ESTIMADO', marginLeft, yPosition + 6);
+            
+            yPosition += 20;
+            
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+            doc.text(`VALOR ESTIMADO: ${formatCurrency(valuation)}`, marginLeft, yPosition);
+            
+            yPosition += 15;
+            
+            // Valores adicionales
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            
+            // Alquiler Mensual Estimado
+            const alquilerMensual = Math.round((valuation * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12);
+            doc.text(`ALQUILER MENSUAL ESTIMADO: ${formatCurrency(alquilerMensual)}`, marginLeft, yPosition);
+            yPosition += 8;
+            
+            // Valor Máximo de Venta
+            const valorMaximo = Math.round(valuation * 1.1);
+            doc.text(`VALOR MÁXIMO DE VENTA: ${formatCurrency(valorMaximo)}`, marginLeft, yPosition);
+            yPosition += 8;
+            
+            // Valor Mínimo de Venta
+            const valorMinimo = Math.round(valuation * 0.9);
+            doc.text(`VALOR MÍNIMO DE VENTA: ${formatCurrency(valorMinimo)}`, marginLeft, yPosition);
+            yPosition += 15;
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+            
+            doc.text(`Fecha de valuación: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition);
+
+            // Footer con disclaimer
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Esta valuación es un estimado basado en los datos proporcionados. Se recomienda consultar con un valuador certificado para valuaciones oficiales.', 
+                     105, 280, { align: 'center', maxWidth: 170 });
+
+            // Descargar PDF
+            doc.save(`valuacion_${propertyData.tipoPropiedad}_${new Date().toISOString().split('T')[0]}.pdf`);
+        };
+
+        // Componente principal
+        function PropertyValuationApp() {
+            const [propertyData, setPropertyData] = useState({
+                tipoPropiedad: '',
+                areaSotano: 0,
+                areaPrimerNivel: 0,
+                areaSegundoNivel: 0,
+                areaTercerNivel: 0,
+                areaCuartoNivel: 0,
+                areaTerreno: 0,
+                estadoGeneral: '',
+                calidadUbicacion: '',
+                direccionCompleta: '',
+                ubicacion: ''
+            });
+
+            const [valuation, setValuation] = useState(null);
+            const [isCalculating, setIsCalculating] = useState(false);
+            const [currentStep, setCurrentStep] = useState(1);
+
+            const handleInputChange = (field, value) => {
+                setPropertyData(prev => ({
+                    ...prev,
+                    [field]: value
+                }));
+            };
+
+            const calculateValuation = () => {
+                setIsCalculating(true);
+                
+                // Simular cálculo
+                setTimeout(() => {
+                    const result = calculatePropertyValuation(propertyData);
+                    setValuation(result);
+                    setIsCalculating(false);
+                    setCurrentStep(5);
+                }, 1500);
+            };
+
+            const isFormValid = () => {
+                const areaTotal = (propertyData.areaSotano || 0) + 
+                                 (propertyData.areaPrimerNivel || 0) + 
+                                 (propertyData.areaSegundoNivel || 0) + 
+                                 (propertyData.areaTercerNivel || 0) + 
+                                 (propertyData.areaCuartoNivel || 0);
+
+                return propertyData.tipoPropiedad && 
+                       propertyData.areaTerreno > 0 && 
+                       (propertyData.tipoPropiedad === 'terreno' || areaTotal > 0) &&
+                       propertyData.estadoGeneral &&
+                       propertyData.calidadUbicacion;
+            };
+
+            const startNewValuation = () => {
+                setPropertyData({
+                    tipoPropiedad: '',
+                    areaSotano: 0,
+                    areaPrimerNivel: 0,
+                    areaSegundoNivel: 0,
+                    areaTercerNivel: 0,
+                    areaCuartoNivel: 0,
+                    areaTerreno: 0,
+                    estadoGeneral: '',
+                    calidadUbicacion: '',
+                    direccionCompleta: '',
+                    ubicacion: ''
+                });
+                setValuation(null);
+                setCurrentStep(1);
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto p-6">
+                    <div className="text-center mb-8">
+                        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                            Sistema de Valuación de Propiedades
+                        </h1>
+                        <p className="text-gray-600">
+                            Obtén una valuación profesional de tu propiedad
+                        </p>
+                    </div>
+
+                    {/* Pasos del formulario */}
+                    <div className="card mb-8">
+                        <div className="mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                {[1, 2, 3, 4, 5].map(step => (
+                                    <div 
+                                        key={step} 
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                                            currentStep >= step 
+                                                ? 'bg-blue-500 text-white' 
+                                                : 'bg-gray-200 text-gray-600'
+                                        }`}
+                                    >
+                                        {step}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="text-center text-sm text-gray-600">
+                                Paso {currentStep} de 5
+                            </div>
+                        </div>
+
+                        {/* Paso 1: Tipo de Propiedad */}
+                        {currentStep >= 1 && (
+                            <div className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">1. Tipo de Propiedad</h3>
+                                <select 
+                                    className="select-field"
+                                    value={propertyData.tipoPropiedad}
+                                    onChange={(e) => handleInputChange('tipoPropiedad', e.target.value)}
+                                >
+                                    <option value="">Selecciona el tipo de propiedad</option>
+                                    <option value="casa">Casa</option>
+                                    <option value="departamento">Departamento</option>
+                                    <option value="terreno">Terreno</option>
+                                    <option value="local_comercial">Local Comercial</option>
+                                </select>
+                                {propertyData.tipoPropiedad && (
+                                    <button 
+                                        className="btn-primary mt-4"
+                                        onClick={() => setCurrentStep(2)}
+                                    >
+                                        Continuar
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Paso 2: Áreas */}
+                        {currentStep >= 2 && propertyData.tipoPropiedad && (
+                            <div className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">2. Áreas de la Propiedad</h3>
+                                
+                                <div className="grid-2 mb-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Área de Terreno (m²)
+                                        </label>
+                                        <input 
+                                            type="number"
+                                            className="input-field"
+                                            value={propertyData.areaTerreno || ''}
+                                            onChange={(e) => handleInputChange('areaTerreno', parseFloat(e.target.value) || 0)}
+                                            placeholder="Ej: 200"
+                                        />
+                                    </div>
+                                </div>
+
+                                {propertyData.tipoPropiedad !== 'terreno' && (
+                                    <div className="grid-2">
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">
+                                                Sótano (m²)
+                                            </label>
+                                            <input 
+                                                type="number"
+                                                className="input-field"
+                                                value={propertyData.areaSotano || ''}
+                                                onChange={(e) => handleInputChange('areaSotano', parseFloat(e.target.value) || 0)}
+                                                placeholder="0"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">
+                                                Primer Nivel (m²)
+                                            </label>
+                                            <input 
+                                                type="number"
+                                                className="input-field"
+                                                value={propertyData.areaPrimerNivel || ''}
+                                                onChange={(e) => handleInputChange('areaPrimerNivel', parseFloat(e.target.value) || 0)}
+                                                placeholder="Ej: 120"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">
+                                                Segundo Nivel (m²)
+                                            </label>
+                                            <input 
+                                                type="number"
+                                                className="input-field"
+                                                value={propertyData.areaSegundoNivel || ''}
+                                                onChange={(e) => handleInputChange('areaSegundoNivel', parseFloat(e.target.value) || 0)}
+                                                placeholder="0"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium mb-2">
+                                                Tercer Nivel (m²)
+                                            </label>
+                                            <input 
+                                                type="number"
+                                                className="input-field"
+                                                value={propertyData.areaTercerNivel || ''}
+                                                onChange={(e) => handleInputChange('areaTercerNivel', parseFloat(e.target.value) || 0)}
+                                                placeholder="0"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {propertyData.areaTerreno > 0 && (
+                                    <button 
+                                        className="btn-primary mt-4"
+                                        onClick={() => setCurrentStep(3)}
+                                    >
+                                        Continuar
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Paso 3: Ubicación */}
+                        {currentStep >= 3 && (
+                            <div className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">3. Ubicación</h3>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">
+                                        Dirección Completa
+                                    </label>
+                                    <input 
+                                        type="text"
+                                        className="input-field"
+                                        value={propertyData.direccionCompleta || ''}
+                                        onChange={(e) => handleInputChange('direccionCompleta', e.target.value)}
+                                        placeholder="Ej: Calle 123, Colonia Centro, Ciudad, Estado"
+                                    />
+                                </div>
+                                {propertyData.direccionCompleta && (
+                                    <button 
+                                        className="btn-primary mt-4"
+                                        onClick={() => setCurrentStep(4)}
+                                    >
+                                        Continuar
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Paso 4: Características */}
+                        {currentStep >= 4 && (
+                            <div className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">4. Características</h3>
+                                
+                                <div className="grid-2">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Estado General de Conservación
+                                        </label>
+                                        <select 
+                                            className="select-field"
+                                            value={propertyData.estadoGeneral}
+                                            onChange={(e) => handleInputChange('estadoGeneral', e.target.value)}
+                                        >
+                                            <option value="">Selecciona el estado</option>
+                                            <option value="nuevo">Excelente - Construcción nueva</option>
+                                            <option value="bueno">Buena - Conservación adecuada</option>
+                                            <option value="medio">Medio - Conservación promedio</option>
+                                            <option value="regular">Regular - Desgaste visible</option>
+                                            <option value="malo">Malo - Requiere reparaciones</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium mb-2">
+                                            Calidad de Ubicación
+                                        </label>
+                                        <select 
+                                            className="select-field"
+                                            value={propertyData.calidadUbicacion}
+                                            onChange={(e) => handleInputChange('calidadUbicacion', e.target.value)}
+                                        >
+                                            <option value="">Selecciona el estrato</option>
+                                            <option value="estrato-1-elite">Estrato 1 - Elite</option>
+                                            <option value="estrato-2-alto-alto">Estrato 2 - Alto-Alto</option>
+                                            <option value="estrato-3-alto-medio">Estrato 3 - Alto-Medio</option>
+                                            <option value="estrato-4-alto-bajo">Estrato 4 - Alto-Bajo</option>
+                                            <option value="estrato-5-medio-alto">Estrato 5 - Medio-Alto</option>
+                                            <option value="estrato-6-medio-medio">Estrato 6 - Medio-Medio</option>
+                                            <option value="estrato-7-medio-bajo">Estrato 7 - Medio-Bajo</option>
+                                            <option value="estrato-8-bajo-alto">Estrato 8 - Bajo-Alto</option>
+                                            <option value="estrato-9-bajo-medio">Estrato 9 - Bajo-Medio</option>
+                                            <option value="estrato-10-bajo-bajo">Estrato 10 - Bajo-Bajo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {propertyData.estadoGeneral && propertyData.calidadUbicacion && (
+                                    <div className="text-center mt-6">
+                                        <button 
+                                            className={`btn-primary ${isCalculating ? 'loading' : ''}`}
+                                            onClick={calculateValuation}
+                                            disabled={!isFormValid() || isCalculating}
+                                        >
+                                            {isCalculating ? 'Calculando...' : 'Realizar Valuación'}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Paso 5: Resultados */}
+                        {currentStep >= 5 && valuation && (
+                            <div className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">5. Resultado de Valuación</h3>
+                                
+                                <div className="grid-4">
+                                    <div className="result-card">
+                                        <h4 className="text-lg font-semibold mb-2">Valor Estimado</h4>
+                                        <p className="text-3xl font-bold text-primary">
+                                            {formatCurrency(valuation)}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="result-card">
+                                        <h4 className="text-lg font-semibold mb-2">Alquiler Mensual Estimado</h4>
+                                        <p className="text-3xl font-bold text-green">
+                                            {formatCurrency(Math.round((valuation * RENTAL_CAP_RATE / (1 - RENTAL_EXPENSE_RATE)) / 12))}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="result-card">
+                                        <h4 className="text-lg font-semibold mb-2">Valor Máximo de Venta</h4>
+                                        <p className="text-3xl font-bold text-blue">
+                                            {formatCurrency(Math.round(valuation * 1.1))}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="result-card">
+                                        <h4 className="text-lg font-semibold mb-2">Valor Mínimo de Venta</h4>
+                                        <p className="text-3xl font-bold text-red">
+                                            {formatCurrency(Math.round(valuation * 0.9))}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="text-center mt-6 space-x-4">
+                                    <button 
+                                        className="btn-primary"
+                                        onClick={() => generatePDF(propertyData, valuation)}
+                                    >
+                                        📄 Descargar PDF
+                                    </button>
+                                    <button 
+                                        className="btn-primary"
+                                        onClick={startNewValuation}
+                                    >
+                                        🔄 Nueva Valuación
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Resumen de datos ingresados */}
+                    {(currentStep > 1 || valuation) && (
+                        <div className="card">
+                            <h3 className="text-lg font-semibold mb-4">Resumen de la Propiedad</h3>
+                            <div className="grid-2 text-sm">
+                                <div>
+                                    <strong>Tipo:</strong> {propertyData.tipoPropiedad}
+                                </div>
+                                <div>
+                                    <strong>Área de Terreno:</strong> {propertyData.areaTerreno} m²
+                                </div>
+                                {propertyData.tipoPropiedad !== 'terreno' && (
+                                    <div>
+                                        <strong>Área Construida Total:</strong> {
+                                            (propertyData.areaSotano || 0) + 
+                                            (propertyData.areaPrimerNivel || 0) + 
+                                            (propertyData.areaSegundoNivel || 0) + 
+                                            (propertyData.areaTercerNivel || 0) + 
+                                            (propertyData.areaCuartoNivel || 0)
+                                        } m²
+                                    </div>
+                                )}
+                                {propertyData.estadoGeneral && (
+                                    <div>
+                                        <strong>Estado General:</strong> {propertyData.estadoGeneral}
+                                    </div>
+                                )}
+                                {propertyData.direccionCompleta && (
+                                    <div className="col-span-2">
+                                        <strong>Dirección:</strong> {propertyData.direccionCompleta}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Renderizar la aplicación
+        ReactDOM.render(<PropertyValuationApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>
