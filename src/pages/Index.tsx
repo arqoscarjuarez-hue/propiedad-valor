@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CommentSystem } from "@/components/CommentSystem";
+
 import { ShareButtons } from "@/components/ShareButtons";
 
 import { useLanguage } from "@/hooks/useLanguage";
@@ -22,7 +22,7 @@ const Index = () => {
   const [showValuation, setShowValuation] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  
 
   // Handle scroll to show/hide scroll to top button
   useEffect(() => {
@@ -39,7 +39,6 @@ const Index = () => {
 
   const handleStartValuation = () => {
     setShowValuation(true);
-    setShowComments(false);
     // Scroll to valuation section
     setTimeout(() => {
       document.getElementById('valuation-section')?.scrollIntoView({ 
@@ -56,14 +55,9 @@ const Index = () => {
     setShowDemo(false);
   };
 
-  const handleShowComments = () => {
-    setShowComments(true);
-    setShowValuation(false);
-  };
 
   const handleBackToHome = () => {
     setShowValuation(false);
-    setShowComments(false);
   };
 
   return (
@@ -98,19 +92,6 @@ const Index = () => {
             
             {/* Navigation */}
             <div className="flex items-center space-x-4">
-               
-               {!showComments && !showValuation && (
-                 <div className="hidden lg:block">
-                   <Button 
-                     variant="default" 
-                     size="lg"
-                     onClick={handleShowComments}
-                     className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                   >
-                     {t.viewComments}
-                   </Button>
-                 </div>
-               )}
               
                <div className="hidden lg:block">
                  <ShareButtons />
@@ -140,20 +121,10 @@ const Index = () => {
        <div className="lg:hidden bg-background border-b border-border">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
            <div className="flex flex-col gap-4">
-             {/* Share Button y Ver Comentarios en móviles */}
-             <div className="flex justify-center gap-3">
-               <ShareButtons />
-               {!showComments && !showValuation && (
-                 <Button 
-                   variant="default" 
-                   size="sm"
-                   onClick={handleShowComments}
-                   className="flex items-center gap-2 text-sm font-bold px-4 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                 >
-                   {t.viewComments}
-                 </Button>
-               )}
-             </div>
+              {/* Share Button en móviles */}
+              <div className="flex justify-center gap-3">
+                <ShareButtons />
+              </div>
              
              {/* Statistics */}
              <div className="flex justify-center items-center space-x-6">
@@ -174,38 +145,23 @@ const Index = () => {
          </div>
        </div>
 
-      {/* Comments Section */}
-      {showComments && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-6 flex items-center justify-between">
-            <Button variant="outline" onClick={handleBackToHome}>
-              {t.backToHome}
-            </Button>
-            <ShareButtons 
-              title="Sistema de Comentarios - Avalúos Profesionales"
-              description="Comparte tu experiencia y lee comentarios sobre nuestro sistema de valuación inmobiliaria"
-            />
-          </div>
-          <CommentSystem />
-        </div>
-      )}
 
       {/* Hero Section */}
-      {!showValuation && !showComments && (
+      {!showValuation && (
         <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
           <HeroSection onStartValuation={handleStartValuation} onShowDemo={handleShowDemo} />
         </Suspense>
       )}
       
       {/* Features Section */}
-      {!showValuation && !showComments && (
+      {!showValuation && (
         <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
           <FeaturesSection />
         </Suspense>
       )}
 
       {/* SEO Content Section */}
-      {!showValuation && !showComments && (
+      {!showValuation && (
         <section className="py-16 bg-muted/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -260,14 +216,6 @@ const Index = () => {
             <Button variant="outline" onClick={handleBackToHome}>
               {t.backToHome}
             </Button>
-            <Button 
-              variant="default" 
-              size="lg"
-              onClick={handleShowComments}
-              className="flex items-center gap-3 text-lg font-bold px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-            >
-              {t.viewComments}
-            </Button>
             <ShareButtons 
               title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
               description="Sistema de valuación más avanzado de América. ¡Obtén tu avalúo profesional ahora!"
@@ -290,14 +238,6 @@ const Index = () => {
                 title="Valuación Inmobiliaria Profesional - Sistema de Avalúos"
                 description="Sistema de valuación más avanzado de América. ¡Obtén tu avalúo profesional ahora!"
               />
-              <Button 
-                variant="default" 
-                size="sm"
-                onClick={handleShowComments}
-                className="flex items-center gap-2 text-sm font-bold px-4 py-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                {t.viewComments}
-              </Button>
             </div>
             
             {/* Title section */}
@@ -324,7 +264,7 @@ const Index = () => {
       )}
 
       {/* Call to Action */}
-      {!showValuation && !showComments && (
+      {!showValuation && (
         <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-4">
