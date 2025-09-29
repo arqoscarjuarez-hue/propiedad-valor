@@ -330,9 +330,10 @@ Este es un sistema completo y profesional de valuación inmobiliaria desarrollad
 
         {/* Nota Informativa */}
         <div className="text-xs text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <strong>Nombre recomendado del archivo:</strong> <code>sistema-avaluos-inmobiliarios-completo.txt</code>
+          <br />
           <strong>Nota:</strong> Este exportador incluye la estructura completa del proyecto, 
-          descripción de componentes, tecnologías utilizadas e instrucciones de instalación. 
-          El código fuente completo está disponible en el modo desarrollador de Lovable.
+          descripción de componentes, tecnologías utilizadas e instrucciones de instalación.
         </div>
       </CardContent>
     </Card>
