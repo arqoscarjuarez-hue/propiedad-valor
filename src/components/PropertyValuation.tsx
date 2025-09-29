@@ -1504,20 +1504,22 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].totalBuiltArea}: ${areaTotal} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].landArea}: ${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].propertyCondition}: ${propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}`,
-        `${translations[selectedLanguage].locationQuality}: ${propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada'}`
+        `${translations[selectedLanguage].address}: ${propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada'}`,
+        `${translations[selectedLanguage].locationQuality}: ${propertyData.calidadUbicacion || 'No especificada'}`
       ];
       
       // Debug: Verificar direcciones disponibles
       console.log('PDF - Dirección Completa:', propertyData.direccionCompleta);
       console.log('PDF - Ubicación:', propertyData.ubicacion);
+      console.log('PDF - Calidad de Ubicación:', propertyData.calidadUbicacion);
       console.log('PDF - Estado General de Conservación:', propertyData.estadoGeneral);
 
       // Procesar información general con manejo especial para texto largo
       generalInfo.forEach((info, index) => {
         checkNewPage(8);
         
-        // Si es la línea de ubicación, usar función de múltiples líneas
-        if (info.includes(translations[selectedLanguage].locationQuality)) {
+        // Si es la línea de dirección, usar función de múltiples líneas
+        if (info.includes(translations[selectedLanguage].address)) {
           yPosition = addMultiLineText(info, marginLeft, yPosition, contentWidth);
         } else {
           doc.text(info, marginLeft, yPosition);
@@ -2785,9 +2787,14 @@ const PropertyValuation = () => {
                        </div>
                      </>
                    )}
-                   <div>
-                     <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
-                   </div>
+                    <div>
+                      <span className="font-medium">{translations[selectedLanguage].propertyLocation}</span> {propertyData.ubicacion || translations[selectedLanguage].notSpecified}
+                    </div>
+                    {propertyData.calidadUbicacion && (
+                      <div>
+                        <span className="font-medium">{translations[selectedLanguage].locationQuality}</span> {propertyData.calidadUbicacion}
+                      </div>
+                    )}
                  </div>
                </div>
               </TabsContent>
