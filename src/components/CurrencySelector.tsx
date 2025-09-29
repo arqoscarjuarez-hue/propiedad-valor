@@ -25,46 +25,7 @@ interface CurrencySelectorProps {
 }
 
 const popularCurrencies = [
-  // América del Norte
-  { code: 'USD', name: 'Dólar Estadounidense', symbol: '$' },
-  { code: 'CAD', name: 'Dólar Canadiense', symbol: 'C$' },
-  
-  // América Latina
-  { code: 'MXN', name: 'Peso Mexicano', symbol: '$' },
-  { code: 'BRL', name: 'Real Brasileño', symbol: 'R$' },
-  { code: 'ARS', name: 'Peso Argentino', symbol: '$' },
-  { code: 'COP', name: 'Peso Colombiano', symbol: '$' },
-  { code: 'CLP', name: 'Peso Chileno', symbol: '$' },
-  { code: 'PEN', name: 'Sol Peruano', symbol: 'S/' },
-  { code: 'UYU', name: 'Peso Uruguayo', symbol: '$U' },
-  { code: 'BOB', name: 'Boliviano', symbol: 'Bs.' },
-  { code: 'PYG', name: 'Guaraní Paraguayo', symbol: '₲' },
-  { code: 'CRC', name: 'Colón Costarricense', symbol: '₡' },
-  { code: 'GTQ', name: 'Quetzal Guatemalteco', symbol: 'Q' },
-  { code: 'HNL', name: 'Lempira Hondureño', symbol: 'L' },
-  { code: 'NIO', name: 'Córdoba Nicaragüense', symbol: 'C$' },
-  { code: 'PAB', name: 'Balboa Panameño', symbol: 'B/.' },
-  { code: 'DOP', name: 'Peso Dominicano', symbol: 'RD$' },
-  { code: 'CUP', name: 'Peso Cubano', symbol: '$' },
-  { code: 'JMD', name: 'Dólar Jamaiquino', symbol: 'J$' },
-  { code: 'TTD', name: 'Dólar de Trinidad y Tobago', symbol: 'TT$' },
-  { code: 'BBD', name: 'Dólar de Barbados', symbol: 'Bds$' },
-  { code: 'BSD', name: 'Dólar de Bahamas', symbol: 'B$' },
-  { code: 'BZD', name: 'Dólar de Belice', symbol: 'BZ$' },
-  { code: 'GYD', name: 'Dólar Guyanés', symbol: 'G$' },
-  { code: 'SRD', name: 'Dólar de Suriname', symbol: 'Sr$' },
-  { code: 'HTG', name: 'Gourde Haitiano', symbol: 'G' },
-  
-  // Europa
-  { code: 'EUR', name: 'Euro', symbol: '€' },
-  { code: 'GBP', name: 'Libra Esterlina', symbol: '£' },
-  { code: 'CHF', name: 'Franco Suizo', symbol: 'CHF' },
-  { code: 'SEK', name: 'Corona Sueca', symbol: 'kr' },
-  { code: 'NOK', name: 'Corona Noruega', symbol: 'kr' },
-  { code: 'DKK', name: 'Corona Danesa', symbol: 'kr' },
-  { code: 'PLN', name: 'Zloty Polaco', symbol: 'zł' },
-  { code: 'CZK', name: 'Corona Checa', symbol: 'Kč' },
-  { code: 'HUF', name: 'Forint Húngaro', symbol: 'Ft' }
+  { code: 'USD', name: 'Dólar Estadounidense', symbol: '$' }
 ];
 
 const CurrencySelector: React.FC<CurrencySelectorProps> = ({
@@ -182,24 +143,9 @@ const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       </CardHeader>
       <CardContent className="space-y-3 sm:space-y-4">
         <div className="flex gap-2">
-          <Select value={selectedCurrency.code} onValueChange={handleCurrencySelect}>
-            <SelectTrigger className="flex-1 text-xs sm:text-sm">
-              <SelectValue>
-                <span className="truncate">{selectedCurrency.symbol} {selectedCurrency.name} ({selectedCurrency.code})</span>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent className="max-h-60 z-50">
-              {popularCurrencies.map((currency) => (
-                <SelectItem key={currency.code} value={currency.code}>
-                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-                    <span className="font-mono text-xs sm:text-sm">{currency.symbol}</span>
-                    <span className="truncate">{currency.name}</span>
-                    <span className="text-muted-foreground text-xs">({currency.code})</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex-1 p-2 bg-muted rounded-md text-center">
+            <span className="text-sm font-medium">{selectedCurrency.symbol} {selectedCurrency.name} ({selectedCurrency.code})</span>
+          </div>
         </div>
         
         {/* Mostrar nombre de la moneda seleccionada */}

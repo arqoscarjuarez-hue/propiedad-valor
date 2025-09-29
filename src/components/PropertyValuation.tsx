@@ -28,7 +28,7 @@ import {
 import { saveAs } from 'file-saver';
 
 import { useLanguage } from '@/hooks/useLanguage';
-import { LanguageSelector } from '@/components/LanguageSelector';
+
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
@@ -46,7 +46,7 @@ const translations = {
     // UI Labels principales
     propertyValuator: 'Valuador de Propiedades',
     professionalSystem: 'Sistema profesional de valuación inmobiliaria',
-    languageSelector: 'Idioma / Language',
+    
     propertyData: 'Datos de la Propiedad',
     
     // Pestañas principales
@@ -1763,21 +1763,9 @@ const PropertyValuation = () => {
       </div>
 
       {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        {/* Paso 1: Selector de Idioma */}
-        <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-              ✓
-            </div>
-            <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
-              {translations[selectedLanguage].languageSelector}
-            </Label>
-          </div>
-          <LanguageSelector />
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         
-        {/* Paso 2: Selector de Moneda */}
+        {/* Paso 1: Selector de Moneda */}
         <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
