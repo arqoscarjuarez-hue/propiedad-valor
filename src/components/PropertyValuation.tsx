@@ -609,7 +609,8 @@ const PropertyValuation = () => {
       ...prev,
       latitud: lat,
       longitud: lng,
-      direccionCompleta: address || prev.direccionCompleta
+      direccionCompleta: address || prev.direccionCompleta,
+      ubicacion: address || prev.ubicacion  // Actualizar también el campo ubicacion
     }));
   };
 
