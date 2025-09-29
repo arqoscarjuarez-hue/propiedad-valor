@@ -1434,6 +1434,20 @@ const PropertyValuation = () => {
         }
       };
 
+      // Función helper para manejar texto largo que puede necesitar múltiples líneas
+      const addMultiLineText = (text: string, x: number, startY: number, maxWidth: number = 150): number => {
+        const lines = doc.splitTextToSize(text, maxWidth);
+        let currentY = startY;
+        
+        lines.forEach((line: string) => {
+          checkNewPage(8);
+          doc.text(line, x, currentY);
+          currentY += 6;
+        });
+        
+        return currentY;
+      };
+
       // ENCABEZADO
       doc.setFillColor(config.primaryColor[0], config.primaryColor[1], config.primaryColor[2]);
       doc.rect(0, 0, 210, 25, 'F');
@@ -1494,10 +1508,17 @@ const PropertyValuation = () => {
       console.log('PDF - Ubicación:', propertyData.ubicacion);
       console.log('PDF - Estado General de Conservación:', propertyData.estadoGeneral);
 
-      generalInfo.forEach(info => {
+      // Procesar información general con manejo especial para texto largo
+      generalInfo.forEach((info, index) => {
         checkNewPage(8);
-        doc.text(info, marginLeft, yPosition);
-        yPosition += 6;
+        
+        // Si es la línea de ubicación (último elemento), usar función de múltiples líneas
+        if (index === generalInfo.length - 1 && info.includes('Ubicación:')) {
+          yPosition = addMultiLineText(info, marginLeft, yPosition, contentWidth);
+        } else {
+          doc.text(info, marginLeft, yPosition);
+          yPosition += 6;
+        }
       });
 
       yPosition += 10;
@@ -1518,12 +1539,13 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(config.textColor[0], config.textColor[1], config.textColor[2]);
       
-      // Mostrar dirección completa con fallback
+      // Mostrar dirección completa con fallback usando múltiples líneas
       const direccionParaMostrar = propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada';
-      doc.text(`${translations[selectedLanguage].address}: ${direccionParaMostrar}`, marginLeft, yPosition);
-      yPosition += 6;
+      const direccionTexto = `${translations[selectedLanguage].address}: ${direccionParaMostrar}`;
+      yPosition = addMultiLineText(direccionTexto, marginLeft, yPosition, contentWidth);
       
       if (propertyData.latitud && propertyData.longitud) {
+        checkNewPage(8);
         doc.text(`${translations[selectedLanguage].coordinatesLabel || 'Coordenadas:'} ${propertyData.latitud.toFixed(6)}, ${propertyData.longitud.toFixed(6)}`, marginLeft, yPosition);
         yPosition += 6;
       }
