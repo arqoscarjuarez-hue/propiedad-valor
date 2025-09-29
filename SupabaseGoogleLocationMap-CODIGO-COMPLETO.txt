@@ -1,3 +1,7 @@
+// Archivo: SupabaseGoogleLocationMap.tsx
+// Ubicación: src/components/SupabaseGoogleLocationMap.tsx
+// Componente React con Google Maps integrado a Supabase
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Input } from '@/components/ui/input';
@@ -19,8 +23,8 @@ interface SupabaseGoogleLocationMapProps {
 
 const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 13.6929,  // San Salvador, El Salvador
-  initialLng = -89.2182,
+  initialLat = 19.4326,
+  initialLng = -99.1332,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -31,7 +35,6 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   const [currentAddress, setCurrentAddress] = useState(initialAddress);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
   
 
   // Función para obtener API key desde Supabase Edge Function
@@ -388,3 +391,21 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 };
 
 export default SupabaseGoogleLocationMap;
+
+/* 
+INSTRUCCIONES PARA USO:
+
+1. Guarda este archivo como: SupabaseGoogleLocationMap.tsx
+2. Ubicación en tu proyecto: src/components/SupabaseGoogleLocationMap.tsx
+3. Abre con cualquier editor de texto en Windows (Notepad, VSCode, etc.)
+4. Copia todo el contenido desde la línea "import React..." hasta "export default SupabaseGoogleLocationMap;"
+
+CARACTERÍSTICAS:
+- Integración segura con Google Maps
+- API key protegida via Supabase Edge Functions  
+- Búsqueda de direcciones
+- Geocodificación inversa
+- Marcador arrastrable
+- Responsive design
+- Manejo robusto de errores
+*/

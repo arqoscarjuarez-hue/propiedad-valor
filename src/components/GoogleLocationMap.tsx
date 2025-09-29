@@ -18,8 +18,8 @@ interface GoogleLocationMapProps {
 
 const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 19.4326,
-  initialLng = -99.1332,
+  initialLat = 13.6929,  // San Salvador, El Salvador
+  initialLng = -89.2182,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -41,37 +41,6 @@ const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
     if (savedApiKey) {
       setGoogleMapsApiKey(savedApiKey);
     }
-
-    // Cleanup function to prevent DOM manipulation errors
-    return () => {
-      // Remove event listeners first
-      if (marker.current) {
-        google.maps?.event?.clearInstanceListeners?.(marker.current);
-        marker.current.setMap(null);
-        marker.current = null;
-      }
-      
-      if (map.current) {
-        google.maps?.event?.clearInstanceListeners?.(map.current);
-        map.current = null;
-      }
-      
-      if (geocoder.current) {
-        geocoder.current = null;
-      }
-      
-      // Clear container safely
-      if (mapContainer.current) {
-        try {
-          mapContainer.current.innerHTML = '';
-        } catch (e) {
-          console.warn('Could not clear map container:', e);
-        }
-      }
-      
-      setIsMapReady(false);
-      setLoading(false);
-    };
   }, []);
 
   const initializeGoogleMaps = async (apiKey: string) => {

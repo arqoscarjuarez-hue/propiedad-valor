@@ -17,8 +17,8 @@ interface LocationMapProps {
 
 const LocationMap: React.FC<LocationMapProps> = ({
   onLocationChange,
-  initialLat = 19.4326,
-  initialLng = -99.1332,
+  initialLat = 13.6929,  // San Salvador, El Salvador
+  initialLng = -89.2182,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -79,23 +79,8 @@ const LocationMap: React.FC<LocationMapProps> = ({
       console.error("Error de Mapbox - Verifica tu token");
     }
 
-    // Cleanup function to prevent DOM manipulation errors
     return () => {
-      try {
-        if (marker.current) {
-          marker.current.remove();
-          marker.current = null;
-        }
-        
-        if (map.current) {
-          map.current.remove();
-          map.current = null;
-        }
-        
-        setIsMapReady(false);
-      } catch (e) {
-        console.warn('Could not clean up Mapbox resources:', e);
-      }
+      map.current?.remove();
     };
   }, [mapboxToken, initialLat, initialLng]);
 

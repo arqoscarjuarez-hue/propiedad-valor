@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código: SupabaseGoogleLocationMap.tsx</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .header p {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+        }
+        
+        .code-container {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+            border: 1px solid #333;
+        }
+        
+        .code {
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+            margin: 0;
+        }
+        
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .success-message.show {
+            transform: translateX(0);
+        }
+        
+        .file-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .file-info h3 {
+            margin: 0 0 10px 0;
+            color: #495057;
+        }
+        
+        .file-info p {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .code {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📍 SupabaseGoogleLocationMap.tsx</h1>
+            <p>Componente React con Google Maps integrado a Supabase</p>
+        </div>
+        
+        <div class="file-info">
+            <h3>📂 Información del Archivo</h3>
+            <p><strong>Nombre:</strong> SupabaseGoogleLocationMap.tsx</p>
+            <p><strong>Ubicación:</strong> src/components/</p>
+            <p><strong>Tipo:</strong> Componente React TypeScript</p>
+            <p><strong>Tamaño:</strong> ~390 líneas de código</p>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" onclick="copyCode()">
+                📋 Copiar Código
+            </button>
+            <a class="btn btn-secondary" href="#" download="SupabaseGoogleLocationMap.tsx" onclick="downloadCode()">
+                💾 Descargar .tsx
+            </a>
+        </div>
+        
+        <div class="code-container">
+            <pre class="code" id="codeContent">import React, { useEffect, useRef, useState } from 'react';
+import { Loader } from '@googlemaps/js-api-loader';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Settings, Shield, CheckCircle } from 'lucide-react';
+
+import { supabase } from '@/integrations/supabase/client';
+
+/// &lt;reference types="google.maps" /&gt;
+
+interface SupabaseGoogleLocationMapProps {
+  onLocationChange?: (lat: number, lng: number, address: string) =&gt; void;
+  initialLat?: number;
+  initialLng?: number;
+  initialAddress?: string;
+}
+
+const SupabaseGoogleLocationMap: React.FC&lt;SupabaseGoogleLocationMapProps&gt; = ({
+  onLocationChange,
+  initialLat = 19.4326,
+  initialLng = -99.1332,
+  initialAddress = ''
+}) =&gt; {
+  const mapContainer = useRef&lt;HTMLDivElement | null&gt;(null);
+  const map = useRef&lt;google.maps.Map | null&gt;(null);
+  const marker = useRef&lt;google.maps.Marker | null&gt;(null);
+  
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState(initialAddress);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+  
+
+  // Función para obtener API key desde Supabase Edge Function
+  const getGoogleMapsApiKey = async (): Promise&lt;string&gt; =&gt; {
+    try {
+      const { data, error } = await supabase.functions.invoke('google-maps', {
+        body: { action: 'get-api-key' }
+      });
+
+      if (error) throw error;
+      if (!data?.apiKey) throw new Error('No API key received from server');
+      
+      return data.apiKey;
+    } catch (error) {
+      console.error('Error getting API key:', error);
+      throw new Error('Failed to get Google Maps API key from server');
+    }
+  };
+
+  // Función para geocodificar usando Supabase Edge Function
+  const geocodeAddress = async (address: string) =&gt; {
+    try {
+      const { data, error } = await supabase.functions.invoke('google-maps', {
+        body: { 
+          action: 'geocode',
+          data: { address }
+        }
+      });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error geocoding address:', error);
+      throw error;
+    }
+  };
+
+  // Función para geocodificación inversa usando Supabase Edge Function
+  const reverseGeocode = async (lat: number, lng: number) =&gt; {
+    try {
+      const { data, error } = await supabase.functions.invoke('google-maps', {
+        body: { 
+          action: 'reverse-geocode',
+          data: { lat, lng }
+        }
+      });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error reverse geocoding:', error);
+      throw error;
+    }
+  };
+
+  // Inicializar Google Maps
+  const initializeGoogleMaps = async () =&gt; {
+    // Esperar a que el DOM esté listo y verificar múltiples veces
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    while (!mapContainer.current && attempts &lt; maxAttempts) {
+      await new Promise(resolve =&gt; setTimeout(resolve, 100));
+      attempts++;
+    }
+
+    if (!mapContainer.current) {
+      console.warn('Map container not available after retries');
+      setError('No se pudo inicializar el contenedor del mapa');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Obtener API key desde Supabase
+      const apiKey = await getGoogleMapsApiKey();
+
+      const loader = new Loader({
+        apiKey: apiKey,
+        version: 'weekly',
+        libraries: ['places', 'geometry']
+      });
+
+      await loader.load();
+
+      // Verificar nuevamente que el contenedor existe después de cargar la API
+      if (!mapContainer.current) {
+        throw new Error('Map container is null after loading Google Maps API');
+      }
+
+      // Limpiar cualquier mapa existente
+      if (map.current) {
+        map.current = null;
+      }
+      if (marker.current) {
+        marker.current.setMap(null);
+        marker.current = null;
+      }
+
+      // Inicializar el mapa
+      map.current = new google.maps.Map(mapContainer.current, {
+        center: { lat: initialLat, lng: initialLng },
+        zoom: 15,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        styles: [
+          {
+            featureType: 'poi',
+            elementType: 'labels',
+            stylers: [{ visibility: 'simplified' }]
+          }
+        ]
+      });
+
+      // Crear marcador personalizado
+      marker.current = new google.maps.Marker({
+        position: { lat: initialLat, lng: initialLng },
+        map: map.current,
+        draggable: true,
+        title: 'Ubicación de la propiedad',
+        icon: {
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            &lt;svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+              &lt;path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#ef4444" stroke="#dc2626" stroke-width="2"/&gt;
+              &lt;circle cx="12" cy="10" r="3" fill="white"/&gt;
+            &lt;/svg&gt;
+          `),
+          scaledSize: new google.maps.Size(32, 32),
+          anchor: new google.maps.Point(16, 32)
+        }
+      });
+
+      // Event listeners
+      marker.current.addListener('dragend', () =&gt; {
+        if (marker.current) {
+          const position = marker.current.getPosition();
+          if (position) {
+            handleLocationUpdate(position.lat(), position.lng());
+          }
+        }
+      });
+
+      map.current.addListener('click', (event: google.maps.MapMouseEvent) =&gt; {
+        if (event.latLng && marker.current) {
+          const lat = event.latLng.lat();
+          const lng = event.latLng.lng();
+          
+          marker.current.setPosition({ lat, lng });
+          handleLocationUpdate(lat, lng);
+        }
+      });
+
+      setIsMapReady(true);
+      
+      // Geocodificar dirección inicial si existe
+      if (initialAddress && !currentAddress) {
+        setCurrentAddress(initialAddress);
+      }
+
+      console.log("Google Maps Cargado desde Supabase");
+
+    } catch (error) {
+      console.error('Error loading Google Maps:', error);
+      setError(error instanceof Error ? error.message : 'Error desconocido');
+      
+      console.error("Error al Cargar Google Maps");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Manejar actualizaciones de ubicación
+  const handleLocationUpdate = async (lat: number, lng: number) =&gt; {
+    try {
+      const result = await reverseGeocode(lat, lng);
+
+      if (result.results && result.results[0]) {
+        const address = result.results[0].formatted_address;
+        setCurrentAddress(address);
+        
+        if (onLocationChange) {
+          onLocationChange(lat, lng, address);
+        }
+        
+        console.log("Ubicación Actualizada:", address);
+      }
+    } catch (error) {
+      console.error('Error en geocodificación:', error);
+      const coords = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      setCurrentAddress(coords);
+      
+      if (onLocationChange) {
+        onLocationChange(lat, lng, coords);
+      }
+    }
+  };
+
+  // Buscar dirección
+  const searchAddress = async (address: string) =&gt; {
+    if (!address.trim()) return;
+
+    try {
+      const result = await geocodeAddress(address);
+      
+      if (result.results && result.results[0]) {
+        const location = result.results[0].geometry.location;
+        const lat = location.lat;
+        const lng = location.lng;
+        
+        // Centrar mapa y mover marcador
+        map.current?.setCenter({ lat, lng });
+        marker.current?.setPosition({ lat, lng });
+        
+        handleLocationUpdate(lat, lng);
+      } else {
+        console.error("Dirección no encontrada");
+      }
+    } catch (error) {
+      console.error('Error searching address:', error);
+      console.error("Error al buscar la dirección");
+    }
+  };
+
+  // Cargar mapa al montar el componente
+  useEffect(() =&gt; {
+    // Usar requestAnimationFrame para asegurar que el DOM esté completamente renderizado
+    const initMap = () =&gt; {
+      requestAnimationFrame(() =&gt; {
+        initializeGoogleMaps();
+      });
+    };
+
+    // Delay adicional para asegurar estabilidad
+    const timer = setTimeout(initMap, 100);
+
+    return () =&gt; {
+      clearTimeout(timer);
+      // Limpiar Google Maps al desmontar
+      if (marker.current) {
+        marker.current.setMap(null);
+        marker.current = null;
+      }
+      if (map.current) {
+        map.current = null;
+      }
+    };
+  }, []);
+
+  if (error) {
+    return (
+      &lt;Card className="border-destructive"&gt;
+        &lt;CardHeader&gt;
+          &lt;CardTitle className="flex items-center gap-2 text-destructive"&gt;
+            &lt;Settings className="h-5 w-5" /&gt;
+            Error de Configuración
+          &lt;/CardTitle&gt;
+        &lt;/CardHeader&gt;
+        &lt;CardContent className="space-y-4"&gt;
+          &lt;div className="p-4 bg-destructive/10 rounded-lg"&gt;
+            &lt;p className="text-sm text-destructive mb-2"&gt;
+              &lt;strong&gt;Error:&lt;/strong&gt; {error}
+            &lt;/p&gt;
+            &lt;p className="text-xs text-muted-foreground"&gt;
+              El API key de Google Maps debe estar configurado en los secretos de Supabase.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;Button onClick={initializeGoogleMaps} variant="outline" className="w-full"&gt;
+            Reintentar
+          &lt;/Button&gt;
+        &lt;/CardContent&gt;
+      &lt;/Card&gt;
+    );
+  }
+
+  return (
+    &lt;div className="space-y-4"&gt;
+      {/* Info de seguridad */}
+      &lt;Card className="border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800"&gt;
+        &lt;CardContent className="pt-4"&gt;
+          &lt;div className="flex items-center gap-2 text-green-800 dark:text-green-200"&gt;
+            &lt;Shield className="h-4 w-4" /&gt;
+            &lt;span className="text-sm font-medium"&gt;Conexión Segura&lt;/span&gt;
+            &lt;CheckCircle className="h-4 w-4" /&gt;
+          &lt;/div&gt;
+          &lt;p className="text-xs text-green-700 dark:text-green-300 mt-1"&gt;
+            API key protegido mediante Supabase Edge Functions
+          &lt;/p&gt;
+        &lt;/CardContent&gt;
+      &lt;/Card&gt;
+
+      {isMapReady && (
+        &lt;div className="space-y-4"&gt;
+          &lt;div className="flex gap-2"&gt;
+            &lt;Input
+              placeholder="Buscar dirección..."
+              onKeyPress={(e) =&gt; {
+                if (e.key === 'Enter') {
+                  searchAddress(e.currentTarget.value);
+                }
+              }}
+            /&gt;
+            &lt;Button 
+              variant="outline"
+              onClick={() =&gt; {
+                const input = document.querySelector('input[placeholder="Buscar dirección..."]') as HTMLInputElement;
+                if (input) searchAddress(input.value);
+              }}
+            &gt;
+              Buscar
+            &lt;/Button&gt;
+          &lt;/div&gt;
+
+          &lt;div className="flex items-center gap-2 text-sm text-muted-foreground"&gt;
+            &lt;MapPin className="h-4 w-4" /&gt;
+            &lt;span&gt;Dirección: {currentAddress || 'Selecciona una ubicación en el mapa'}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      )}
+
+      &lt;div 
+        ref={mapContainer} 
+        className="w-full h-96 rounded-lg border"
+        style={{ minHeight: '384px' }}
+      &gt;
+        {!isMapReady && !loading && !error && (
+          &lt;div className="w-full h-96 bg-muted flex items-center justify-center text-center text-muted-foreground"&gt;
+            &lt;div&gt;
+              &lt;MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" /&gt;
+              &lt;p&gt;Inicializando Google Maps...&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        )}
+        {loading && (
+          &lt;div className="w-full h-96 bg-muted flex items-center justify-center text-center text-muted-foreground"&gt;
+            &lt;div&gt;
+              &lt;div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"&gt;&lt;/div&gt;
+              &lt;p&gt;Cargando Google Maps de forma segura...&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        )}
+      &lt;/div&gt;
+
+      {isMapReady && (
+        &lt;div className="text-xs text-muted-foreground"&gt;
+          &lt;p&gt;💡 Tip: Puedes arrastrar el marcador rojo o hacer clic en cualquier parte del mapa para cambiar la ubicación.&lt;/p&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+
+export default SupabaseGoogleLocationMap;</pre>
+        </div>
+    </div>
+    
+    <div class="success-message" id="successMessage">
+        ✅ ¡Código copiado al portapapeles!
+    </div>
+
+    <script>
+        function copyCode() {
+            const codeElement = document.getElementById('codeContent');
+            const codeText = codeElement.textContent;
+            
+            // Convertir entidades HTML de vuelta a caracteres normales
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = codeText;
+            const actualCode = tempDiv.textContent || tempDiv.innerText || '';
+            
+            navigator.clipboard.writeText(actualCode).then(function() {
+                showSuccessMessage();
+            }).catch(function(err) {
+                // Fallback para navegadores que no soportan clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = actualCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showSuccessMessage();
+            });
+        }
+        
+        function downloadCode() {
+            const codeElement = document.getElementById('codeContent');
+            const codeText = codeElement.textContent;
+            
+            // Convertir entidades HTML de vuelta a caracteres normales
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = codeText;
+            const actualCode = tempDiv.textContent || tempDiv.innerText || '';
+            
+            const blob = new Blob([actualCode], { type: 'text/typescript' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'SupabaseGoogleLocationMap.tsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+        
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.add('show');
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
