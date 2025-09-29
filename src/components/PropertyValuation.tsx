@@ -1353,12 +1353,12 @@ const PropertyValuation = () => {
                             (propertyData.direccionCompleta && propertyData.direccionCompleta.trim() !== '');
     const step4Complete = hasValidLocation;
     
-    // Debug para validación de ubicación
-    if (!hasValidLocation) {
-      console.log('Validación de ubicación falló:', {
-        ubicacion: propertyData.ubicacion,
-        direccionCompleta: propertyData.direccionCompleta,
-        hasValidLocation
+    // Solo logear errores de validación cuando el usuario intente continuar sin datos
+    if (!hasValidLocation && (propertyData.ubicacion !== '' || propertyData.direccionCompleta !== '')) {
+      console.info('Validación de ubicación en progreso:', {
+        ubicacion: propertyData.ubicacion || 'pendiente',
+        direccionCompleta: propertyData.direccionCompleta || 'pendiente',
+        status: 'incompleta'
       });
     }
     
