@@ -412,9 +412,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
             <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
-              <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
-              <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
-              <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
+              <li><strong>Decimales:</strong> 13.6929, -89.2182</li>
+              <li><strong>DMS:</strong> 13°41'34.4"N, 89°13'5.5"W</li>
+              <li><strong>Con espacios:</strong> 13° 41' 34.4" N, 89° 13' 5.5" W</li>
               <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
             </ul>
           </div>
@@ -478,9 +478,9 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
               <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
-                <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
-                <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
-                <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
+                <li><strong>Decimales:</strong> 13.6929, -89.2182</li>
+                <li><strong>DMS:</strong> 13°41'34.4"N, 89°13'5.5"W</li>
+                <li><strong>Con espacios:</strong> 13° 41' 34.4" N, 89° 13' 5.5" W</li>
                 <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
               </ul>
             </div>

@@ -422,7 +422,7 @@ const PropertyValuation = () => {
       
       if (!navigator.geolocation) {
         console.log('Geolocalización no disponible');
-        resolve({ lat: 19.4326, lng: -99.1332 });
+        resolve({ lat: 13.6929, lng: -89.2182 });
         return;
       }
 
@@ -437,8 +437,8 @@ const PropertyValuation = () => {
           console.log('Error de geolocalización:', error.message);
           console.log('Código de error:', error.code);
           // Ubicación no disponible, usando referencia silenciosamente
-          console.log("Ubicación no disponible. Usando Ciudad de México como referencia.");
-          resolve({ lat: 19.4326, lng: -99.1332 });
+          console.log("Ubicación no disponible. Usando San Salvador como referencia.");
+          resolve({ lat: 13.6929, lng: -89.2182 });
         },
         {
           enableHighAccuracy: true,
@@ -462,8 +462,8 @@ const PropertyValuation = () => {
         tipoPropiedad: '',
         ubicacion: '',
         estadoGeneral: '',
-        latitud: 19.4326, // Valor inicial, se actualizará con geolocalización
-        longitud: -99.1332,
+        latitud: 13.6929, // San Salvador, El Salvador
+        longitud: -89.2182,
         direccionCompleta: '',
         alquiler: 0
       },
@@ -532,7 +532,7 @@ const PropertyValuation = () => {
         }));
         
         // Ubicación detectada silenciosamente
-        const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+        const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
         if (isUserLocation) {
           console.log(`Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`);
         }
@@ -640,12 +640,12 @@ const PropertyValuation = () => {
       setMultipleValuations([]);
 
       // Mostrar notificación de éxito con las coordenadas
-      const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
+      const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
       
       // Nuevo valúo iniciado silenciosamente
       console.log(isUserLocation 
         ? `Ubicación detectada: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
-        : "Usando ubicación de referencia (Ciudad de México)");
+        : "Usando ubicación de referencia (San Salvador)");
       
     } catch (error) {
       console.error('Error al iniciar nuevo valúo:', error);
