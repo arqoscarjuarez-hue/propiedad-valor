@@ -1,5 +1,4 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -131,10 +130,11 @@ const App = () => (
     <AuthProvider>
       <LanguageProvider>
         <TooltipProvider>
+          
+          
           <BrowserRouter>
             <AppContent />
           </BrowserRouter>
-          <Toaster />
         </TooltipProvider>
       </LanguageProvider>
     </AuthProvider>

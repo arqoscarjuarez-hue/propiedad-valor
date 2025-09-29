@@ -2,7 +2,7 @@ export const indexTranslations = {
   es: {
     systemTitle: 'Sistema profesional de avalúos',
     systemSubtitle: 'Evaluación de propiedades',
-    
+    viewComments: '💬 Ver Comentarios',
     backToHome: '← Volver al inicio',
     properties: 'Propiedades',
     precision: 'Precisión',
@@ -88,7 +88,7 @@ export const indexTranslations = {
   en: {
     systemTitle: 'Professional Appraisal System',
     systemSubtitle: 'Property Evaluation',
-    
+    viewComments: '💬 View Comments',
     backToHome: '← Back to Home',
     properties: 'Properties',
     precision: 'Precision',
@@ -174,7 +174,7 @@ export const indexTranslations = {
   fr: {
     systemTitle: 'Système d\'Évaluation Professionnel',
     systemSubtitle: 'Évaluation de Propriétés',
-    
+    viewComments: '💬 Voir Commentaires',
     backToHome: '← Retour à l\'Accueil',
     properties: 'Propriétés',
     precision: 'Précision',
@@ -260,7 +260,7 @@ export const indexTranslations = {
   de: {
     systemTitle: 'Professionelles Bewertungssystem',
     systemSubtitle: 'Immobilienbewertung',
-    
+    viewComments: '💬 Kommentare Anzeigen',
     backToHome: '← Zurück zur Startseite',
     properties: 'Immobilien',
     precision: 'Genauigkeit',
@@ -346,7 +346,7 @@ export const indexTranslations = {
   it: {
     systemTitle: 'Sistema di Valutazione Professionale',
     systemSubtitle: 'Valutazione Immobiliare',
-    
+    viewComments: '💬 Vedi Commenti',
     backToHome: '← Torna alla Home',
     properties: 'Proprietà',
     precision: 'Precisione',
@@ -432,7 +432,7 @@ export const indexTranslations = {
   pt: {
     systemTitle: 'Sistema de Avaliação Profissional',
     systemSubtitle: 'Avaliação de Propriedades',
-    
+    viewComments: '💬 Ver Comentários',
     backToHome: '← Voltar ao Início',
     properties: 'Propriedades',
     precision: 'Precisão',
@@ -513,6 +513,28 @@ export const indexTranslations = {
     statsProperties: 'Propriedades Avaliadas',
     statsPrecision: 'Precisão Média',
     statsCountries: 'Países Cobertos',
-    statsAvailability: 'Disponibilidade'
+    statsAvailability: 'Disponibilidade',
+    
+    // PropertyValuation translations
+    // UI Labels principales
+    propertyValuator: 'Avaliador de Propriedades',
+    professionalSystem: 'Sistema profissional de avaliação imobiliária',
+    languageSelector: 'Idioma / Language',
+    propertyData: 'Dados da Propriedade',
+    
+    // Pestañas principales
+    areas: 'Áreas',
+    propertyType: 'Tipo',
+    characteristics: 'Características',
+    location: 'Localização',
+    valuation: 'Ajuste de Valor',
+    
+    // Currency selector
+    exchangeRateUpdated: 'Taxas de Câmbio Atualizadas',
+    exchangeRateError: 'Não foi possível atualizar as taxas de câmbio. Serão usadas as taxas anteriores.',
+    exchangeRateNote: 'As taxas de câmbio são obtidas da ExchangeRate-API e atualizadas em tempo real.',
+    exchangeRateLabel: 'Taxa de câmbio',
+    lastUpdateText: 'Última atualização',
+    currencyValuation: 'Moeda de Avaliação'
   }
 };

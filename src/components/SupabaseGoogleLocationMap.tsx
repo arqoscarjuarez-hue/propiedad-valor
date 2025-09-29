@@ -19,8 +19,8 @@ interface SupabaseGoogleLocationMapProps {
 
 const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 13.6929,  // San Salvador, El Salvador
-  initialLng = -89.2182,
+  initialLat = 19.4326,
+  initialLng = -99.1332,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -89,20 +89,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Inicializar Google Maps
   const initializeGoogleMaps = async () => {
-    // Esperar a que el DOM esté listo y verificar múltiples veces
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    while (!mapContainer.current && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      attempts++;
-    }
-
-    if (!mapContainer.current) {
-      console.warn('Map container not available after retries');
-      setError('No se pudo inicializar el contenedor del mapa');
-      return;
-    }
+    if (!mapContainer.current) return;
 
     setLoading(true);
     setError(null);
@@ -118,20 +105,6 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
       });
 
       await loader.load();
-
-      // Verificar nuevamente que el contenedor existe después de cargar la API
-      if (!mapContainer.current) {
-        throw new Error('Map container is null after loading Google Maps API');
-      }
-
-      // Limpiar cualquier mapa existente
-      if (map.current) {
-        map.current = null;
-      }
-      if (marker.current) {
-        marker.current.setMap(null);
-        marker.current = null;
-      }
 
       // Inicializar el mapa
       map.current = new google.maps.Map(mapContainer.current, {
@@ -261,27 +234,7 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
   // Cargar mapa al montar el componente
   useEffect(() => {
-    // Usar requestAnimationFrame para asegurar que el DOM esté completamente renderizado
-    const initMap = () => {
-      requestAnimationFrame(() => {
-        initializeGoogleMaps();
-      });
-    };
-
-    // Delay adicional para asegurar estabilidad
-    const timer = setTimeout(initMap, 100);
-
-    return () => {
-      clearTimeout(timer);
-      // Limpiar Google Maps al desmontar
-      if (marker.current) {
-        marker.current.setMap(null);
-        marker.current = null;
-      }
-      if (map.current) {
-        map.current = null;
-      }
-    };
+    initializeGoogleMaps();
   }, []);
 
   if (error) {
@@ -357,23 +310,20 @@ const SupabaseGoogleLocationMap: React.FC<SupabaseGoogleLocationMapProps> = ({
 
       <div 
         ref={mapContainer} 
-        className="w-full h-96 rounded-lg border"
-        style={{ minHeight: '384px' }}
+        className={`w-full h-96 rounded-lg border ${
+          !isMapReady ? 'bg-muted flex items-center justify-center' : ''
+        }`}
       >
         {!isMapReady && !loading && !error && (
-          <div className="w-full h-96 bg-muted flex items-center justify-center text-center text-muted-foreground">
-            <div>
-              <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>Inicializando Google Maps...</p>
-            </div>
+          <div className="text-center text-muted-foreground">
+            <MapPin className="h-12 w-12 mx-auto mb-2 opacity-50" />
+            <p>Inicializando Google Maps...</p>
           </div>
         )}
         {loading && (
-          <div className="w-full h-96 bg-muted flex items-center justify-center text-center text-muted-foreground">
-            <div>
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p>Cargando Google Maps de forma segura...</p>
-            </div>
+          <div className="text-center text-muted-foreground">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+            <p>Cargando Google Maps de forma segura...</p>
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
 
@@ -29,14 +28,13 @@ import {
 import { saveAs } from 'file-saver';
 
 import { useLanguage } from '@/hooks/useLanguage';
-
+import { LanguageSelector } from '@/components/LanguageSelector';
 import LocationMap from './LocationMap';
 import GoogleLocationMap from './GoogleLocationMap';
 import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
-import { Currency, formatCurrency } from './CurrencySelector';
+import CurrencySelector, { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
-import CodeExporter from './CodeExporter';
 
 
 import { sanitizeNumericInput } from '@/utils/validation';
@@ -48,7 +46,7 @@ const translations = {
     // UI Labels principales
     propertyValuator: 'Valuador de Propiedades',
     professionalSystem: 'Sistema profesional de valuación inmobiliaria',
-    
+    languageSelector: 'Idioma / Language',
     propertyData: 'Datos de la Propiedad',
     
     // Pestañas principales
@@ -200,8 +198,8 @@ const translations = {
      coordinatesNote: 'Las coordenadas del mapa se mantienen sin cambios',
      latitude: 'Latitud',
      longitude: 'Longitud',
-      latitudePlaceholder: 'Ej: 13.6929',
-      longitudePlaceholder: 'Ej: -89.2182',
+     latitudePlaceholder: 'Ej: 19.4326',
+     longitudePlaceholder: 'Ej: -99.1332',
     
     
     // Botones de acción
@@ -269,6 +267,8 @@ const translations = {
     comparables: 'comparables',
     comparativesUpdated: 'Comparativas Actualizadas',
     newComparativesGenerated: 'Se han generado nuevas propiedades cercanas',
+    currencyChanged: 'Moneda Cambiada',
+    valuationNowIn: 'Valuación ahora se muestra en',
       priceAdjusted: 'Precio Ajustado',
       adjustment: 'Ajuste',
       newValue: 'Nuevo valor',
@@ -330,6 +330,16 @@ const translations = {
      propertyValuationResults: 'Resultados de Valuación',
      downloadDocuments: 'Descargar Documentos',
      shareValuation: 'Compartir Valuación',
+     currencyValuation: 'Moneda de Valuación',
+     needHelpSystem: '¿Necesitas ayuda para usar el sistema?',
+     multilingual: 'Multiidioma',
+     interfaceReports: 'Toda la interfaz y reportes se traducen automáticamente',
+     // Currency selector
+     exchangeRateUpdated: 'Tipos de Cambio Actualizados',
+     exchangeRateError: 'No se pudieron actualizar los tipos de cambio. Se usarán las tasas anteriores.',
+     exchangeRateNote: 'Los tipos de cambio se obtienen de ExchangeRate-API y se actualizan en tiempo real.',
+     exchangeRateLabel: 'Tipo de cambio',
+     lastUpdateText: 'Última actualización',
      // Valuation results panel
      valuationResultsTitle: 'Resultado de Valuación',
      basedOnComparablesText: '',
@@ -337,10 +347,16 @@ const translations = {
      adjustmentLabel: 'Ajuste',
       newValueLabel: 'Nuevo valor'
     },
+    en: {
+      // Método de la renta
+      rentalMethodTitle: 'Valuation by Income Method',
+      rentalMethodDescription: 'If you know the rental income of the property you want to value, please enter the amount',
+      rentalAmountPlaceholder: 'Enter monthly rental amount',
+      disclaimerText: 'This valuation is an estimate based on the data provided. It is recommended to consult with a certified appraiser for official valuations.',
+    }
   };
 
-// Solo español - sistema fijo
-type Language = 'es';
+type Language = keyof typeof translations;
 
 interface PropertyData {
   // Áreas
@@ -397,16 +413,16 @@ interface ComparativeProperty {
 }
 
 const PropertyValuation = () => {
-  const { toast } = useToast();
   
-  // Memoized function to get user location
-  const getUserLocation = useCallback((): Promise<{ lat: number; lng: number }> => {
+  
+  // Función para obtener la ubicación del usuario
+  const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
     return new Promise((resolve) => {
       console.log('Iniciando detección de ubicación...');
       
       if (!navigator.geolocation) {
         console.log('Geolocalización no disponible');
-         resolve({ lat: 13.6929, lng: -89.2182 }); // San Salvador, El Salvador
+        resolve({ lat: 19.4326, lng: -99.1332 });
         return;
       }
 
@@ -422,7 +438,7 @@ const PropertyValuation = () => {
           console.log('Código de error:', error.code);
           // Ubicación no disponible, usando referencia silenciosamente
           console.log("Ubicación no disponible. Usando Ciudad de México como referencia.");
-          resolve({ lat: 13.6929, lng: -89.2182 }); // San Salvador por defecto
+          resolve({ lat: 19.4326, lng: -99.1332 });
         },
         {
           enableHighAccuracy: true,
@@ -431,10 +447,10 @@ const PropertyValuation = () => {
         }
       );
     });
-  }, []);
+  };
   
-  // Memoized function to get initial clean data (always new appraisal)
-  const getInitialData = useMemo(() => {
+  // Función para obtener datos iniciales limpios (nuevo avalúo siempre)
+  const getInitialData = () => {
     return {
       propertyData: {
         areaSotano: 0,
@@ -446,8 +462,8 @@ const PropertyValuation = () => {
         tipoPropiedad: '',
         ubicacion: '',
         estadoGeneral: '',
-        latitud: 13.6929, // San Salvador, El Salvador - se actualizará con geolocalización
-        longitud: -89.2182,
+        latitud: 19.4326, // Valor inicial, se actualizará con geolocalización
+        longitud: -99.1332,
         direccionCompleta: '',
         alquiler: 0
       },
@@ -461,9 +477,9 @@ const PropertyValuation = () => {
       baseValuation: null,
       comparativeProperties: []
     };
-  }, []);
+  };
 
-  const initialData = getInitialData;
+  const initialData = getInitialData();
   
   const [propertyData, setPropertyData] = useState<PropertyData>(initialData.propertyData);
   
@@ -482,13 +498,7 @@ const PropertyValuation = () => {
   const [hasBeenCalculated, setHasBeenCalculated] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [activeTab, setActiveTab] = useState('ubicacion');
-  // Fijo en dólares estadounidenses - no permitir cambios
-  const selectedCurrency: Currency = {
-    code: 'USD',
-    name: 'Dólar Estadounidense',
-    symbol: '$',
-    rate: 1
-  };
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
   const [adjustmentPercentage, setAdjustmentPercentage] = useState(0);
   const [finalAdjustedValue, setFinalAdjustedValue] = useState<number | null>(null);
   const [propertyImages, setPropertyImages] = useState<string[]>([]);
@@ -522,7 +532,7 @@ const PropertyValuation = () => {
         }));
         
         // Ubicación detectada silenciosamente
-        const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
+        const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
         if (isUserLocation) {
           console.log(`Sistema configurado en: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`);
         }
@@ -546,7 +556,15 @@ const PropertyValuation = () => {
     return amountInUSD * targetCurrency.rate;
   };
 
-  // Moneda fija en USD - no necesitamos función de cambio
+  const handleCurrencyChange = (currency: Currency) => {
+    setSelectedCurrency(currency);
+    
+    // Los valores internos se mantienen en USD, solo cambiamos la moneda de visualización
+    // La conversión se aplica automáticamente en formatCurrency cuando se muestran los valores
+    
+    // Moneda cambiada silenciosamente
+    console.log(`${translations[selectedLanguage].currencyChanged}: ${currency.name}`);
+  };
 
   const handleInputChange = (field: keyof PropertyData, value: string | number) => {
     setPropertyData(prev => {
@@ -622,7 +640,7 @@ const PropertyValuation = () => {
       setMultipleValuations([]);
 
       // Mostrar notificación de éxito con las coordenadas
-      const isUserLocation = userLocation.lat !== 13.6929 || userLocation.lng !== -89.2182;
+      const isUserLocation = userLocation.lat !== 19.4326 || userLocation.lng !== -99.1332;
       
       // Nuevo valúo iniciado silenciosamente
       console.log(isUserLocation 
@@ -653,24 +671,18 @@ const PropertyValuation = () => {
                        (propertyData.areaTercerNivel || 0) + 
                        (propertyData.areaCuartoNivel || 0);
       
-      // Enhanced validation
+      // Validación mejorada
       if (propertyData.tipoPropiedad !== 'terreno' && areaTotal <= 0) {
-        toast({
-          title: translations[selectedLanguage].errorTitle,
-          description: translations[selectedLanguage].errorMinimumArea,
-          variant: "destructive",
-        });
+        // Error de área mínima - manejo silencioso
+        console.error(translations[selectedLanguage].errorMinimumArea);
         setIsCalculating(false);
         return;
       }
       
-      // For apartments, don't validate land area
-      if (propertyData.tipoPropiedad !== 'departamento' && propertyData.tipoPropiedad !== 'terreno' && propertyData.areaTerreno <= 0) {
-        toast({
-          title: translations[selectedLanguage].errorTitle,
-          description: "Debe ingresar un área de terreno mayor a 0",
-          variant: "destructive",
-        });
+      // Para departamentos, no validar área de terreno
+      if (propertyData.tipoPropiedad !== 'departamento' && propertyData.areaTerreno <= 0) {
+        // Error de área de terreno - manejo silencioso
+        console.error("Debe ingresar un área de terreno mayor a 0");
         setIsCalculating(false);
         return;
       }
@@ -873,13 +885,10 @@ const PropertyValuation = () => {
       setComparativeProperties(comparables);
       setSelectedComparatives(comparables.slice(0, 3));
       
-      // Valuation completed with toast notification
-      toast({
-        title: translations[selectedLanguage].valuationCompleted,
-        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`,
-      });
+      // Valuación completada silenciosamente
+      console.log(`${translations[selectedLanguage].valuationCompleted}: ${formatCurrency(convertCurrency(basePrice, selectedCurrency), selectedCurrency)}`);
       
-      // Auto scroll to valuation results after completion
+      // Scroll automático al resultado de valuación después de completar
       setTimeout(() => {
         const resultElement = document.getElementById('valuation-results');
         if (resultElement) {
@@ -888,25 +897,21 @@ const PropertyValuation = () => {
             block: 'start' 
           });
         }
-      }, 500); // Small delay to ensure DOM has updated
+      }, 500); // Pequeño delay para asegurar que el DOM se haya actualizado
       
     } catch (error) {
-      // Error handling with toast notification
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorCalculatingValuation,
-        variant: "destructive",
-      });
+      // Error en cálculo - manejo silencioso
+      console.error(translations[selectedLanguage].errorCalculatingValuation);
     } finally {
       setIsCalculating(false);
-      setHasBeenCalculated(true); // Mark that valuation has been performed
+      setHasBeenCalculated(true); // Marcar que ya se realizó la valuación
     }
   };
 
   const generateComparativeProperties = async (baseValue: number, numComparables: number = 10): Promise<ComparativeProperty[]> => {
     const areaTotal = propertyData.areaSotano + propertyData.areaPrimerNivel + propertyData.areaSegundoNivel + propertyData.areaTercerNivel + propertyData.areaCuartoNivel;
-    const lat = propertyData.latitud || 13.6929;  // San Salvador por defecto
-    const lng = propertyData.longitud || -89.2182;
+    const lat = propertyData.latitud || 19.4326;
+    const lng = propertyData.longitud || -99.1332;
     
     // Primero intentar buscar propiedades reales
     let nearbyAddresses = await searchNearbyProperties(lat, lng, propertyData.tipoPropiedad, numComparables);
@@ -1240,45 +1245,32 @@ const PropertyValuation = () => {
     setFinalAdjustedValue(newValue);
     setAdjustmentPercentage(percentage);
     
-    toast({
-      title: translations[selectedLanguage].priceAdjusted,
-      description: `${translations[selectedLanguage].adjustment}: ${percentage > 0 ? '+' : ''}${percentage}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(newValue, selectedCurrency)}`,
-    });
+    // Precio ajustado silenciosamente
+    console.log(`${translations[selectedLanguage].priceAdjusted}: ${percentage > 0 ? '+' : ''}${percentage}%`);
   };
 
   const regenerateComparatives = async () => {
     if (!baseValuation) return;
     
     try {
-      toast({
-        title: translations[selectedLanguage].searchingComparables,
-        description: "Generando nuevas propiedades cercanas...",
-      });
+      // Búsqueda de comparables iniciada silenciosamente
+      console.log("Generando nuevas propiedades cercanas...");
       
       const newComparables = await generateComparativeProperties(baseValuation);
       setComparativeProperties(newComparables);
       setSelectedComparatives(newComparables.slice(0, 3));
       
-      toast({
-        title: translations[selectedLanguage].comparativesUpdated,
-        description: translations[selectedLanguage].newComparativesGenerated,
-      });
+      // Comparativas actualizadas silenciosamente
+      console.log(translations[selectedLanguage].newComparativesGenerated);
     } catch (error) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: "Error al generar nuevas comparativas",
-        variant: "destructive",
-      });
+      // Error al generar comparativas - manejo silencioso
+      console.error("Error al generar nuevas comparativas");
     }
   };
 
   const generatePDF = async () => {
     if (!valuation) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorPDFGeneration,
-        variant: "destructive",
-      });
+      console.error(translations[selectedLanguage].errorPDFGeneration);
       return;
     }
 
@@ -1496,11 +1488,7 @@ const PropertyValuation = () => {
 
   const generateWord = async () => {
     if (!valuation) {
-      toast({
-        title: translations[selectedLanguage].errorTitle,
-        description: translations[selectedLanguage].errorWordGeneration,
-        variant: "destructive",
-      });
+      console.error(translations[selectedLanguage].errorWordGeneration);
       return;
     }
 
@@ -1758,9 +1746,9 @@ const PropertyValuation = () => {
     }
   };
 
-  const handleCloseDemo = useCallback(() => {
+  const handleCloseDemo = () => {
     setShowDemo(false);
-  }, []);
+  };
 
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
@@ -1775,8 +1763,42 @@ const PropertyValuation = () => {
       </div>
 
       {/* Pasos 1, 2, Descargar Documentos, Nuevo Valúo y Disclaimer arriba */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {/* Sistema en Español y Dólares USD */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+        {/* Paso 1: Selector de Idioma */}
+        <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ✓
+            </div>
+            <Label className="text-sm font-bold text-blue-900 dark:text-blue-100">
+              {translations[selectedLanguage].languageSelector}
+            </Label>
+          </div>
+          <LanguageSelector />
+        </Card>
+        
+        {/* Paso 2: Selector de Moneda */}
+        <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-6 h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              ✓
+            </div>
+            <Label className="text-sm font-bold text-green-900 dark:text-green-100">
+              {translations[selectedLanguage].currencyValuation}
+            </Label>
+          </div>
+          <CurrencySelector
+            selectedCurrency={selectedCurrency}
+            onCurrencyChange={handleCurrencyChange}
+            title=""
+            exchangeRateUpdated={translations[selectedLanguage].exchangeRateUpdated}
+            exchangeRateError={translations[selectedLanguage].exchangeRateError}
+            errorTitle={translations[selectedLanguage].errorTitle}
+            lastUpdateText={translations[selectedLanguage].lastUpdateText}
+            exchangeRateNote={translations[selectedLanguage].exchangeRateNote}
+            exchangeRateLabel={translations[selectedLanguage].exchangeRateLabel}
+          />
+        </Card>
 
         {/* Botones de Descarga de Documentos */}
         <Card className="p-3 sm:p-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border-orange-200 dark:border-orange-800">
@@ -2694,8 +2716,8 @@ const PropertyValuation = () => {
                       
                        {/* Usar el componente SimpleLocationMap siempre */}
                        <SimpleLocationMap
-                          initialLat={propertyData.latitud || 13.6929}
-                          initialLng={propertyData.longitud || -89.2182}
+                         initialLat={propertyData.latitud || 19.4326}
+                         initialLng={propertyData.longitud || -99.1332}
                          onLocationChange={handleLocationSelect}
                        />
                    </TabsContent>
@@ -2849,11 +2871,6 @@ const PropertyValuation = () => {
           </Card>
         </div>
       )}
-
-      {/* Exportador de Código del Proyecto */}
-      <div className="mt-8">
-        <CodeExporter />
-      </div>
 
       {/* Demo walkthrough */}
       {showDemo && (
