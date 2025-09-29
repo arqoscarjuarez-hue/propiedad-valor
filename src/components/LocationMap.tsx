@@ -79,8 +79,23 @@ const LocationMap: React.FC<LocationMapProps> = ({
       console.error("Error de Mapbox - Verifica tu token");
     }
 
+    // Cleanup function to prevent DOM manipulation errors
     return () => {
-      map.current?.remove();
+      try {
+        if (marker.current) {
+          marker.current.remove();
+          marker.current = null;
+        }
+        
+        if (map.current) {
+          map.current.remove();
+          map.current = null;
+        }
+        
+        setIsMapReady(false);
+      } catch (e) {
+        console.warn('Could not clean up Mapbox resources:', e);
+      }
     };
   }, [mapboxToken, initialLat, initialLng]);
 

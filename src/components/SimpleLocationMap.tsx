@@ -59,11 +59,15 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
 
   // Cargar Leaflet dinámicamente
   useEffect(() => {
+    let mounted = true;
+    
     const loadLeaflet = async () => {
-      if (window.L) {
+      if (window.L && mounted) {
         initMap();
         return;
       }
+      
+      if (!mounted) return;
       
       // Cargar CSS
       const link = document.createElement('link');
@@ -74,11 +78,41 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
       // Cargar JS
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      script.onload = () => initMap();
+      script.onload = () => {
+        if (mounted) initMap();
+      };
       document.head.appendChild(script);
     };
     
     loadLeaflet();
+
+    // Cleanup function to prevent DOM manipulation errors
+    return () => {
+      mounted = false;
+      
+      // Cleanup Leaflet resources
+      if (leafletMapRef.current) {
+        try {
+          leafletMapRef.current.remove();
+          leafletMapRef.current = null;
+        } catch (e) {
+          console.warn('Could not remove Leaflet map:', e);
+        }
+      }
+      
+      if (markerRef.current) {
+        markerRef.current = null;
+      }
+      
+      // Clear map container safely
+      if (mapRef.current) {
+        try {
+          mapRef.current.innerHTML = '';
+        } catch (e) {
+          console.warn('Could not clear map container:', e);
+        }
+      }
+    };
   }, []);
 
   const initMap = () => {
