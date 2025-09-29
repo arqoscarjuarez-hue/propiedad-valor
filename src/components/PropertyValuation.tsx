@@ -36,6 +36,7 @@ import SupabaseGoogleLocationMap from './SupabaseGoogleLocationMap';
 import SimpleLocationMap from './SimpleLocationMap';
 import { Currency, formatCurrency } from './CurrencySelector';
 import { ShareButtons } from './ShareButtons';
+import CodeExporter from './CodeExporter';
 
 
 import { sanitizeNumericInput } from '@/utils/validation';
@@ -2848,6 +2849,11 @@ const PropertyValuation = () => {
           </Card>
         </div>
       )}
+
+      {/* Exportador de Código del Proyecto */}
+      <div className="mt-8">
+        <CodeExporter />
+      </div>
 
       {/* Demo walkthrough */}
       {showDemo && (
