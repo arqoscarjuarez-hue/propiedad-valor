@@ -1364,7 +1364,7 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].type}: ${propertyData.tipoPropiedad}`,
         `${translations[selectedLanguage].totalBuiltArea}: ${areaTotal} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].landArea}: ${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}`,
-        
+        `${translations[selectedLanguage].propertyCondition}: ${propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}`,
         `${translations[selectedLanguage].locationQuality}: ${propertyData.ubicacion}`
       ];
 
@@ -1588,6 +1588,12 @@ const PropertyValuation = () => {
               children: [
                 new TextRun({ text: `${translations[selectedLanguage].landArea}: `, bold: true }),
                 new TextRun({ text: `${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}` })
+              ]
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: `${translations[selectedLanguage].propertyCondition}: `, bold: true }),
+                new TextRun({ text: propertyData.estadoGeneral || translations[selectedLanguage].noSpecified })
               ]
             }),
             new Paragraph({
