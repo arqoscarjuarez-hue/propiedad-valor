@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Calculator, Home, MapPin, Calendar, Star, Shuffle, BarChart3, TrendingUp, FileText, Download, Trash2, Play, Info, Share2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import DemoWalkthrough from '@/components/DemoWalkthrough';
 
@@ -395,10 +396,10 @@ interface ComparativeProperty {
 }
 
 const PropertyValuation = () => {
+  const { toast } = useToast();
   
-  
-  // Función para obtener la ubicación del usuario
-  const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
+  // Memoized function to get user location
+  const getUserLocation = useCallback((): Promise<{ lat: number; lng: number }> => {
     return new Promise((resolve) => {
       console.log('Iniciando detección de ubicación...');
       
@@ -429,10 +430,10 @@ const PropertyValuation = () => {
         }
       );
     });
-  };
+  }, []);
   
-  // Función para obtener datos iniciales limpios (nuevo avalúo siempre)
-  const getInitialData = () => {
+  // Memoized function to get initial clean data (always new appraisal)
+  const getInitialData = useMemo(() => {
     return {
       propertyData: {
         areaSotano: 0,
@@ -459,9 +460,9 @@ const PropertyValuation = () => {
       baseValuation: null,
       comparativeProperties: []
     };
-  };
+  }, []);
 
-  const initialData = getInitialData();
+  const initialData = getInitialData;
   
   const [propertyData, setPropertyData] = useState<PropertyData>(initialData.propertyData);
   
@@ -651,18 +652,24 @@ const PropertyValuation = () => {
                        (propertyData.areaTercerNivel || 0) + 
                        (propertyData.areaCuartoNivel || 0);
       
-      // Validación mejorada
+      // Enhanced validation
       if (propertyData.tipoPropiedad !== 'terreno' && areaTotal <= 0) {
-        // Error de área mínima - manejo silencioso
-        console.error(translations[selectedLanguage].errorMinimumArea);
+        toast({
+          title: translations[selectedLanguage].errorTitle,
+          description: translations[selectedLanguage].errorMinimumArea,
+          variant: "destructive",
+        });
         setIsCalculating(false);
         return;
       }
       
-      // Para departamentos, no validar área de terreno
-      if (propertyData.tipoPropiedad !== 'departamento' && propertyData.areaTerreno <= 0) {
-        // Error de área de terreno - manejo silencioso
-        console.error("Debe ingresar un área de terreno mayor a 0");
+      // For apartments, don't validate land area
+      if (propertyData.tipoPropiedad !== 'departamento' && propertyData.tipoPropiedad !== 'terreno' && propertyData.areaTerreno <= 0) {
+        toast({
+          title: translations[selectedLanguage].errorTitle,
+          description: "Debe ingresar un área de terreno mayor a 0",
+          variant: "destructive",
+        });
         setIsCalculating(false);
         return;
       }
@@ -865,10 +872,13 @@ const PropertyValuation = () => {
       setComparativeProperties(comparables);
       setSelectedComparatives(comparables.slice(0, 3));
       
-      // Valuación completada silenciosamente
-      console.log(`${translations[selectedLanguage].valuationCompleted}: ${formatCurrency(convertCurrency(basePrice, selectedCurrency), selectedCurrency)}`);
+      // Valuation completed with toast notification
+      toast({
+        title: translations[selectedLanguage].valuationCompleted,
+        description: `${translations[selectedLanguage].estimatedValueTitle}: ${formatCurrency(finalAdjustedValue || valuation, selectedCurrency)}`,
+      });
       
-      // Scroll automático al resultado de valuación después de completar
+      // Auto scroll to valuation results after completion
       setTimeout(() => {
         const resultElement = document.getElementById('valuation-results');
         if (resultElement) {
@@ -877,14 +887,18 @@ const PropertyValuation = () => {
             block: 'start' 
           });
         }
-      }, 500); // Pequeño delay para asegurar que el DOM se haya actualizado
+      }, 500); // Small delay to ensure DOM has updated
       
     } catch (error) {
-      // Error en cálculo - manejo silencioso
-      console.error(translations[selectedLanguage].errorCalculatingValuation);
+      // Error handling with toast notification
+      toast({
+        title: translations[selectedLanguage].errorTitle,
+        description: translations[selectedLanguage].errorCalculatingValuation,
+        variant: "destructive",
+      });
     } finally {
       setIsCalculating(false);
-      setHasBeenCalculated(true); // Marcar que ya se realizó la valuación
+      setHasBeenCalculated(true); // Mark that valuation has been performed
     }
   };
 
@@ -1225,32 +1239,45 @@ const PropertyValuation = () => {
     setFinalAdjustedValue(newValue);
     setAdjustmentPercentage(percentage);
     
-    // Precio ajustado silenciosamente
-    console.log(`${translations[selectedLanguage].priceAdjusted}: ${percentage > 0 ? '+' : ''}${percentage}%`);
+    toast({
+      title: translations[selectedLanguage].priceAdjusted,
+      description: `${translations[selectedLanguage].adjustment}: ${percentage > 0 ? '+' : ''}${percentage}% - ${translations[selectedLanguage].newValue}: ${formatCurrency(newValue, selectedCurrency)}`,
+    });
   };
 
   const regenerateComparatives = async () => {
     if (!baseValuation) return;
     
     try {
-      // Búsqueda de comparables iniciada silenciosamente
-      console.log("Generando nuevas propiedades cercanas...");
+      toast({
+        title: translations[selectedLanguage].searchingComparables,
+        description: "Generando nuevas propiedades cercanas...",
+      });
       
       const newComparables = await generateComparativeProperties(baseValuation);
       setComparativeProperties(newComparables);
       setSelectedComparatives(newComparables.slice(0, 3));
       
-      // Comparativas actualizadas silenciosamente
-      console.log(translations[selectedLanguage].newComparativesGenerated);
+      toast({
+        title: translations[selectedLanguage].comparativesUpdated,
+        description: translations[selectedLanguage].newComparativesGenerated,
+      });
     } catch (error) {
-      // Error al generar comparativas - manejo silencioso
-      console.error("Error al generar nuevas comparativas");
+      toast({
+        title: translations[selectedLanguage].errorTitle,
+        description: "Error al generar nuevas comparativas",
+        variant: "destructive",
+      });
     }
   };
 
   const generatePDF = async () => {
     if (!valuation) {
-      console.error(translations[selectedLanguage].errorPDFGeneration);
+      toast({
+        title: translations[selectedLanguage].errorTitle,
+        description: translations[selectedLanguage].errorPDFGeneration,
+        variant: "destructive",
+      });
       return;
     }
 
@@ -1468,7 +1495,11 @@ const PropertyValuation = () => {
 
   const generateWord = async () => {
     if (!valuation) {
-      console.error(translations[selectedLanguage].errorWordGeneration);
+      toast({
+        title: translations[selectedLanguage].errorTitle,
+        description: translations[selectedLanguage].errorWordGeneration,
+        variant: "destructive",
+      });
       return;
     }
 
@@ -1726,9 +1757,9 @@ const PropertyValuation = () => {
     }
   };
 
-  const handleCloseDemo = () => {
+  const handleCloseDemo = useCallback(() => {
     setShowDemo(false);
-  };
+  }, []);
 
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
