@@ -1765,12 +1765,14 @@ const PropertyValuation = () => {
                 new TextRun({ text: propertyData.estadoGeneral || translations[selectedLanguage].noSpecified })
               ]
             }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: `${translations[selectedLanguage].locationQuality}: `, bold: true }),
-                new TextRun({ text: propertyData.ubicacion })
-              ]
-            }),
+            ...(propertyData.calidadUbicacion ? [
+              new Paragraph({
+                children: [
+                  new TextRun({ text: `${translations[selectedLanguage].locationQuality}: `, bold: true }),
+                  new TextRun({ text: propertyData.calidadUbicacion })
+                ]
+              })
+            ] : []),
             new Paragraph({ text: "" }), // Espacio
 
             // 2. UBICACIÓN
