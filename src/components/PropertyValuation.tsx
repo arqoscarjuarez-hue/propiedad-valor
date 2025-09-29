@@ -496,6 +496,7 @@ const PropertyValuation = () => {
   const [selectedComparatives, setSelectedComparatives] = useState<ComparativeProperty[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [hasBeenCalculated, setHasBeenCalculated] = useState(false);
+  const [hasChangedAfterCalculation, setHasChangedAfterCalculation] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [activeTab, setActiveTab] = useState('ubicacion');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(initialData.selectedCurrency);
@@ -570,6 +571,11 @@ const PropertyValuation = () => {
     setPropertyData(prev => {
       const newData = { ...prev, [field]: value };
       
+      // Detectar si ya se realizó un cálculo y ahora se está cambiando un campo
+      if (hasBeenCalculated) {
+        setHasChangedAfterCalculation(true);
+      }
+      
       // Cuando se cambia el tipo de propiedad, limpiar campos específicos
       if (field === 'tipoPropiedad') {
         if (value === 'departamento') {
@@ -594,6 +600,11 @@ const PropertyValuation = () => {
   };
 
   const handleLocationSelect = (lat: number, lng: number, address: string = '') => {
+    // Detectar si ya se realizó un cálculo y ahora se está cambiando la ubicación
+    if (hasBeenCalculated) {
+      setHasChangedAfterCalculation(true);
+    }
+    
     setPropertyData(prev => ({
       ...prev,
       latitud: lat,
@@ -633,6 +644,8 @@ const PropertyValuation = () => {
       setComparativeProperties([]);
       setSelectedComparatives([]);
       setIsCalculating(false);
+      setHasBeenCalculated(false);
+      setHasChangedAfterCalculation(false);
       setActiveTab('ubicacion');
       setAdjustmentPercentage(0);
       setFinalAdjustedValue(null);
@@ -905,6 +918,7 @@ const PropertyValuation = () => {
     } finally {
       setIsCalculating(false);
       setHasBeenCalculated(true); // Marcar que ya se realizó la valuación
+      setHasChangedAfterCalculation(false); // Resetear el estado de cambios
     }
   };
 
@@ -2653,9 +2667,9 @@ const PropertyValuation = () => {
                     disabled={!isFormValid() || isCalculating} 
                     size="lg" 
                     className={`w-full sm:w-auto transition-all duration-300 ${
-                      isFormValid() && !isCalculating && !hasBeenCalculated
+                      isFormValid() && !isCalculating && (!hasBeenCalculated || hasChangedAfterCalculation)
                         ? 'animate-pulse bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25 border-primary' 
-                        : hasBeenCalculated 
+                        : hasBeenCalculated && !hasChangedAfterCalculation
                           ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
                           : ''
                     }`}
