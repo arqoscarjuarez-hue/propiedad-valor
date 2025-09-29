@@ -202,14 +202,14 @@
         <div class="content">
             <div class="file-info">
                 <h2>📁 Archivo para Guardar</h2>
-                <div class="filename">10.html</div>
+                <div class="filename">avaluo-profesional.html</div>
                 <p><strong>Instrucciones:</strong> Guarda este archivo con el nombre de arriba y ábrelo en cualquier navegador</p>
             </div>
 
             <div class="instructions">
                 <h3>📋 Cómo usar este código:</h3>
                 <ul>
-                    <li><strong>Windows:</strong> Guarda como "10.html" y haz doble clic para abrir en tu navegador</li>
+                    <li><strong>Windows:</strong> Guarda como "avaluo-profesional.html" y haz doble clic para abrir en tu navegador</li>
                     <li><strong>Android:</strong> Descarga el archivo, abre con Chrome, Firefox o cualquier navegador</li>
                     <li><strong>Para desarrollo:</strong> Necesitarás Node.js, npm y las dependencias del proyecto</li>
                     <li><strong>API de Google Maps:</strong> Requerirás una clave API válida para las funciones de mapas</li>
@@ -236,10 +236,6 @@
 
             <button class="copy-btn" onclick="copyCode()">
                 📋 Copiar Todo el Código
-            </button>
-
-            <button class="copy-btn" onclick="downloadFile()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); margin-bottom: 20px;">
-                💾 Descargar Archivo Automáticamente
             </button>
 
             <div class="code-container">
@@ -350,67 +346,6 @@ El sistema está listo para usar una vez configurado correctamente.`;
             
             setTimeout(function() {
                 button.innerHTML = '📋 Copiar Todo el Código';
-            }, 3000);
-        }
-        
-        function downloadFile() {
-            const codeContent = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Avalúos Profesionales - Completo</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #2196f3; text-align: center; }
-        .info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🏠 Sistema de Avalúos Profesionales</h1>
-        <div class="info">
-            <h3>✅ Sistema Completamente Limpio</h3>
-            <p><strong>Características eliminadas:</strong></p>
-            <ul>
-                <li>Sistema de comentarios de usuarios</li>
-                <li>Moderación de comentarios</li>
-                <li>Base de datos de comentarios</li>
-                <li>Funciones Edge de comentarios</li>
-            </ul>
-            <p><strong>Funcionalidades incluidas:</strong></p>
-            <ul>
-                <li>Evaluación profesional de propiedades</li>
-                <li>Google Maps integrado</li>
-                <li>Generación de reportes PDF</li>
-                <li>Análisis de mercado comparativo</li>
-                <li>Múltiples idiomas</li>
-                <li>Diseño responsivo</li>
-                <li>Integración con Supabase</li>
-                <li>Sistema de autenticación</li>
-            </ul>
-            <p><strong>Para implementar:</strong> Necesitarás React, TypeScript, Tailwind CSS, Supabase y API Key de Google Maps.</p>
-        </div>
-    </div>
-</body>
-</html>`;
-            
-            const blob = new Blob([codeContent], { type: 'text/html' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = '10.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            // Update button text
-            const button = event.target;
-            button.innerHTML = '✅ ¡Archivo Descargado!';
-            setTimeout(() => {
-                button.innerHTML = '💾 Descargar Archivo Automáticamente';
             }, 3000);
         }
         
