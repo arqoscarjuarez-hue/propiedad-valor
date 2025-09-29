@@ -110,7 +110,7 @@ export default function PropertyValuation() {
   // Validación de datos mínimos
   const validateMinimumData = () => {
     if (!propertyData.tipoPropiedad) {
-      console.error('Debe seleccionar el tipo de propiedad');
+      alert('Debe seleccionar el tipo de propiedad');
       return false;
     }
 
@@ -120,23 +120,34 @@ export default function PropertyValuation() {
                        propertyData.areaCuartoNivel;
       
       if (areaTotal <= 0) {
-        console.error('Debe ingresar al menos un área de construcción');
+        alert('Debe ingresar al menos un área de construcción');
+        return false;
+      }
+    } else {
+      // Para terrenos, validar campos específicos
+      if (!propertyData.topografia) {
+        alert('Debe seleccionar la topografía del terreno');
+        return false;
+      }
+      
+      if (!propertyData.tipoValoracion) {
+        alert('Debe seleccionar el tipo de valoración');
         return false;
       }
     }
 
     if (!propertyData.areaTerreno || propertyData.areaTerreno <= 0) {
-      console.error('Debe ingresar el área del terreno');
+      alert('Debe ingresar el área del terreno');
       return false;
     }
 
     if (!propertyData.ubicacion) {
-      console.error('Debe seleccionar la calidad de ubicación');
+      alert('Debe seleccionar la calidad de ubicación');
       return false;
     }
 
     if (!propertyData.estadoGeneral) {
-      console.error('Debe seleccionar el estado general');
+      alert('Debe seleccionar el estado general');
       return false;
     }
 
@@ -207,8 +218,9 @@ export default function PropertyValuation() {
           <div className="flex gap-3">
             <Button 
               onClick={calculateValuation}
-              disabled={isCalculating || !propertyData.tipoPropiedad}
+              disabled={isCalculating || !propertyData.tipoPropiedad || !propertyData.areaTerreno}
               className="flex-1 lg:flex-initial"
+              size="lg"
             >
               <Calculator className="w-4 h-4 mr-2" />
               {isCalculating ? 'Calculando...' : 'Calcular Valuación'}

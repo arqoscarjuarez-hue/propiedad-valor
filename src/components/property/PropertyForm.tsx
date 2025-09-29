@@ -28,7 +28,8 @@ interface PropertyFormProps {
 export default function PropertyForm({ propertyData, onDataChange }: PropertyFormProps) {
   const handleInputChange = (field: keyof PropertyData, value: string) => {
     if (['areaSotano', 'areaPrimerNivel', 'areaSegundoNivel', 'areaTercerNivel', 'areaCuartoNivel', 'areaTerreno'].includes(field)) {
-      onDataChange(field, sanitizeNumericInput(value));
+      const numericValue = sanitizeNumericInput(value);
+      onDataChange(field, numericValue);
     } else {
       onDataChange(field, value);
     }
@@ -103,6 +104,24 @@ export default function PropertyForm({ propertyData, onDataChange }: PropertyFor
                     placeholder="0"
                   />
                 </div>
+                <div>
+                  <Label>Área del Tercer Nivel (m²)</Label>
+                  <Input
+                    type="number"
+                    value={propertyData.areaTercerNivel || ''}
+                    onChange={(e) => handleInputChange('areaTercerNivel', e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <Label>Área del Cuarto Nivel (m²)</Label>
+                  <Input
+                    type="number"
+                    value={propertyData.areaCuartoNivel || ''}
+                    onChange={(e) => handleInputChange('areaCuartoNivel', e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
               </>
             )}
             <div>
@@ -117,9 +136,17 @@ export default function PropertyForm({ propertyData, onDataChange }: PropertyFor
           </div>
           
           {propertyData.tipoPropiedad !== 'terreno' && areaTotal > 0 && (
-            <div className="mt-4 p-3 bg-muted rounded-lg">
-              <p className="text-sm font-medium">
-                Área Total Construida: {areaTotal.toLocaleString()} m²
+            <div className="mt-4 p-4 bg-primary/10 border border-primary/20 rounded-lg">
+              <p className="text-sm font-medium text-primary">
+                📐 Área Total Construida: {areaTotal.toLocaleString()} m²
+              </p>
+            </div>
+          )}
+          
+          {propertyData.areaTerreno > 0 && (
+            <div className="mt-4 p-4 bg-secondary/10 border border-secondary/20 rounded-lg">
+              <p className="text-sm font-medium text-secondary">
+                🏞️ Área del Terreno: {propertyData.areaTerreno.toLocaleString()} m²
               </p>
             </div>
           )}
@@ -159,9 +186,53 @@ export default function PropertyForm({ propertyData, onDataChange }: PropertyFor
                   <SelectItem value="bueno">Bueno</SelectItem>
                   <SelectItem value="medio">Medio</SelectItem>
                   <SelectItem value="regular">Regular</SelectItem>
+                  <SelectItem value="reparaciones-sencillas">Reparaciones Sencillas</SelectItem>
+                  <SelectItem value="reparaciones-medias">Reparaciones Medias</SelectItem>
+                  <SelectItem value="reparaciones-importantes">Reparaciones Importantes</SelectItem>
+                  <SelectItem value="danos-graves">Daños Graves</SelectItem>
+                  <SelectItem value="en-desecho">En Desecho</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            
+            {propertyData.tipoPropiedad === 'terreno' && (
+              <>
+                <div>
+                  <Label>Topografía</Label>
+                  <Select value={propertyData.topografia || ''} onValueChange={(value) => onDataChange('topografia', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar topografía" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="terreno-plano">Terreno Plano</SelectItem>
+                      <SelectItem value="ondulado-suave">Ondulado Suave</SelectItem>
+                      <SelectItem value="pendiente-leve">Pendiente Leve</SelectItem>
+                      <SelectItem value="pendiente-moderada">Pendiente Moderada</SelectItem>
+                      <SelectItem value="pendiente-fuerte">Pendiente Fuerte</SelectItem>
+                      <SelectItem value="pendiente-escarpada">Pendiente Escarpada</SelectItem>
+                      <SelectItem value="afloramiento-rocoso">Afloramiento Rocoso</SelectItem>
+                      <SelectItem value="topografia-irregular">Topografía Irregular</SelectItem>
+                      <SelectItem value="zona-humeda">Zona Húmeda</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label>Tipo de Valoración</Label>
+                  <Select value={propertyData.tipoValoracion || ''} onValueChange={(value) => onDataChange('tipoValoracion', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="residencial">Residencial</SelectItem>
+                      <SelectItem value="comercial">Comercial</SelectItem>
+                      <SelectItem value="industrial">Industrial</SelectItem>
+                      <SelectItem value="agricola">Agrícola</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
