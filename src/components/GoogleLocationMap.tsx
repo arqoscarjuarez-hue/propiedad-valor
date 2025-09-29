@@ -18,8 +18,8 @@ interface GoogleLocationMapProps {
 
 const GoogleLocationMap: React.FC<GoogleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 13.6929,  // San Salvador, El Salvador
-  initialLng = -89.2182,
+  initialLat = 19.4326,
+  initialLng = -99.1332,
   initialAddress = ''
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);

@@ -4,8 +4,8 @@
 
 // Default coordinates (Mexico City)
 export const DEFAULT_COORDINATES = {
-  lat: 13.6929,  // San Salvador, El Salvador
-  lng: -89.2182
+  lat: 19.4326,
+  lng: -99.1332
 } as const;
 
 // Property types

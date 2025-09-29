@@ -8,20 +8,22 @@
  * @param tipoValoracion - Tipo de valoración del terreno (opcional)
  */
 export const getLandSizeFactor = (
-  areaSqm: number, 
+  areaSqm: number | string, 
   topografia?: string, 
   tipoValoracion?: string
 ): number => {
   console.log('🔍 Land Size Factor Calculation:');
   console.log('📊 Area input:', areaSqm, 'm²');
   
-  if (!areaSqm || areaSqm <= 0) {
+  const area = typeof areaSqm === 'string' ? parseFloat(areaSqm) || 0 : areaSqm;
+  
+  if (!area || area <= 0) {
     console.log('❌ Invalid area, returning factor 1.0');
     return 1;
   }
   
   // For lots under 100 m², no size reduction but still apply characteristics adjustments
-  if (areaSqm < 100) {
+  if (area < 100) {
     let smallLotFactor = 1.0;
     
     // Aplicar ajustes por características incluso en terrenos pequeños - Curva ascendente
@@ -63,14 +65,14 @@ export const getLandSizeFactor = (
     const maxClampSmall = topografia === 'terreno-plano' ? 2.0 : 1.1;
     smallLotFactor = Math.max(minClampSmall, Math.min(maxClampSmall, smallLotFactor));
     
-    console.log(`✅ Area < 100m² (${areaSqm}m²), factor con características: ${smallLotFactor.toFixed(3)}`);
+    console.log(`✅ Area < 100m² (${area}m²), factor con características: ${smallLotFactor.toFixed(3)}`);
     return smallLotFactor;
   }
   
   // Linear reduction from 1.0 (at 100m²) to 0.50 (at 2000m²)
-  if (areaSqm <= 2000) {
+  if (area <= 2000) {
     // Linear interpolation: factor = 1.0 - ((area - 100) / (2000 - 100)) * (1.0 - 0.50)
-    const factor = 1.0 - ((areaSqm - 100) / (2000 - 100)) * 0.50;
+    const factor = 1.0 - ((area - 100) / (2000 - 100)) * 0.50;
     let mediumLotFactor = Math.max(factor, 0.50);
     
     // Aplicar ajustes por características del terreno - Curva ascendente
@@ -112,8 +114,8 @@ export const getLandSizeFactor = (
     const maxClampMedium = topografia === 'terreno-plano' ? 2.0 : 1.1;
     mediumLotFactor = Math.max(minClampMedium, Math.min(maxClampMedium, mediumLotFactor));
     
-    console.log(`📉 Area ${areaSqm}m² - Linear reduction from 1.0 to 0.50`);
-    console.log(`📉 Raw factor calculation: 1.0 - ((${areaSqm} - 100) / 1900) × 0.50 = ${factor}`);
+    console.log(`📉 Area ${area}m² - Linear reduction from 1.0 to 0.50`);
+    console.log(`📉 Raw factor calculation: 1.0 - ((${area} - 100) / 1900) × 0.50 = ${factor}`);
     console.log(`📉 Base factor: ${Math.max(factor, 0.50)}`);
     console.log(`📉 Final factor con características: ${mediumLotFactor.toFixed(3)}`);
     console.log(`📉 Price reduction: ${((1 - mediumLotFactor) * 100).toFixed(1)}% off base price`);
@@ -166,7 +168,7 @@ export const getLandSizeFactor = (
   const maxClampLarge = topografia === 'terreno-plano' ? 2.0 : 1.2;
   adjustedFactor = Math.max(minClampLarge, Math.min(maxClampLarge, adjustedFactor));
   
-  console.log(`📉 Large area ${areaSqm}m² - Fixed at maximum reduction`);
+  console.log(`📉 Large area ${area}m² - Fixed at maximum reduction`);
   console.log(`📉 Base factor: ${finalFactor}`);
   console.log(`📉 Adjusted factor (with characteristics): ${adjustedFactor.toFixed(3)}`);
   console.log(`📉 Total price reduction: ${((1 - adjustedFactor) * 100).toFixed(1)}% off base price`);

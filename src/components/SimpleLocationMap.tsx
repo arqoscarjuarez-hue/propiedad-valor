@@ -21,8 +21,8 @@ interface SimpleLocationMapProps {
 
 const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   onLocationChange,
-  initialLat = 13.6929,  // San Salvador, El Salvador
-  initialLng = -89.2182,
+  initialLat = 19.4326,
+  initialLng = -99.1332,
   initialAddress = ''
 }) => {
   const [position, setPosition] = useState<[number, number]>([initialLat, initialLng]);
@@ -118,18 +118,45 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
   // Actualizar mapa cuando cambia la posición
   useEffect(() => {
     if (leafletMapRef.current && window.L) {
-      leafletMapRef.current.setView([position[0], position[1]], 15);
-      if (markerRef.current) {
-        markerRef.current.setLatLng([position[0], position[1]]);
+      try {
+        leafletMapRef.current.setView([position[0], position[1]], 15);
+        if (markerRef.current) {
+          markerRef.current.setLatLng([position[0], position[1]]);
+        }
+      } catch (e) {
+        console.warn('Error updating map position:', e);
       }
     }
   }, [position]);
 
   // Efecto para asegurar que el mapa se inicialice correctamente
   useEffect(() => {
-    if (window.L && !leafletMapRef.current && mapRef.current) {
+    let mounted = true;
+    
+    const initializeMap = () => {
+      if (!mounted || !window.L || leafletMapRef.current || !mapRef.current) return;
       initMap();
+    };
+    
+    if (window.L) {
+      initializeMap();
     }
+    
+    return () => {
+      mounted = false;
+      // Cleanup leaflet map
+      if (leafletMapRef.current) {
+        try {
+          leafletMapRef.current.remove();
+        } catch (e) {
+          console.warn('Error cleaning up leaflet map:', e);
+        }
+        leafletMapRef.current = null;
+      }
+      if (markerRef.current) {
+        markerRef.current = null;
+      }
+    };
   }, [window.L]);
 
   // Geocodificación gratuita usando Nominatim (OpenStreetMap)
@@ -412,7 +439,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
           <div className="mt-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
             <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
             <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
-              <li><strong>Decimales:</strong> 13.692900, -89.218200</li>
+              <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
               <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
               <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
               <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
@@ -478,7 +505,7 @@ const SimpleLocationMap: React.FC<SimpleLocationMapProps> = ({
             <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 mb-2">Formatos de coordenadas válidos:</p>
               <ul className="list-disc list-inside space-y-1 ml-4 text-blue-700 dark:text-blue-300 text-xs">
-                <li><strong>Decimales:</strong> 13.692900, -89.218200</li>
+                <li><strong>Decimales:</strong> 19.432608, -99.133209</li>
                 <li><strong>DMS:</strong> 19°25'57.39"N, 99°8'0.35"W</li>
                 <li><strong>Con espacios:</strong> 19° 25' 57.39" N, 99° 8' 0.35" W</li>
                 <li>Latitud entre -90 y 90, Longitud entre -180 y 180</li>
