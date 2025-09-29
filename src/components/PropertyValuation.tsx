@@ -1643,14 +1643,6 @@ const PropertyValuation = () => {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(config.textColor[0], config.textColor[1], config.textColor[2]);
       
-      if (propertyData.tipoPropiedad !== 'terreno' && areaTotal > 0) {
-        doc.text(`${translations[selectedLanguage].pricePerSqm}: ${formatCurrency((finalAdjustedValue || valuation) / areaTotal, selectedCurrency)}`, marginLeft, yPosition);
-        yPosition += 6;
-      }
-      
-      doc.text(`${translations[selectedLanguage].basedOnComparables}: ${selectedComparatives.length} comparables`, marginLeft, yPosition);
-      yPosition += 6;
-      
       doc.text(`Fecha de valuación: ${new Date().toLocaleDateString('es-ES')}`, marginLeft, yPosition);
 
       // Footer con disclaimer
@@ -1904,20 +1896,8 @@ const PropertyValuation = () => {
             }),
             new Paragraph({ text: "" }), // Espacio
             
-            ...(propertyData.tipoPropiedad !== 'terreno' && areaTotal > 0 ? [
-              new Paragraph({
-                children: [
-                  new TextRun({ text: `${translations[selectedLanguage].pricePerSqm}: `, bold: true }),
-                  new TextRun({ text: formatCurrency((finalAdjustedValue || valuation) / areaTotal, selectedCurrency) })
-                ]
-              })
-            ] : []),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Método de Valuación: ", bold: true }),
-                new TextRun({ text: `Comparación de mercado con ${selectedComparatives.length} comparables` })
-              ]
-            }),
+            new Paragraph({ text: "" }), // Espacio
+            
             new Paragraph({
               children: [
                 new TextRun({ text: "Fecha de Valuación: ", bold: true }),
