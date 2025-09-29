@@ -43,8 +43,8 @@ serve(async (req) => {
           )
         } catch (e) {
           // Sanitize error message to prevent API key leakage
-          const sanitizedMessage = e.message 
-            ? e.message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
+          const sanitizedMessage = (e as Error).message 
+            ? (e as Error).message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
             : 'Failed to call Geocoding API';
           return new Response(
             JSON.stringify({ results: [], status: 'ERROR', message: sanitizedMessage }),
@@ -72,8 +72,8 @@ serve(async (req) => {
           )
         } catch (e) {
           // Sanitize error message to prevent API key leakage
-          const sanitizedMessage = e.message 
-            ? e.message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
+          const sanitizedMessage = (e as Error).message 
+            ? (e as Error).message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
             : 'Failed to call Reverse Geocoding API';
           return new Response(
             JSON.stringify({ results: [], status: 'ERROR', message: sanitizedMessage }),
@@ -102,8 +102,8 @@ serve(async (req) => {
           )
         } catch (e) {
           // Sanitize error message to prevent API key leakage
-          const sanitizedMessage = e.message 
-            ? e.message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
+          const sanitizedMessage = (e as Error).message 
+            ? (e as Error).message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
             : 'Failed to call Places API';
           return new Response(
             JSON.stringify({ results: [], status: 'ERROR', message: sanitizedMessage }),
@@ -123,8 +123,8 @@ serve(async (req) => {
     console.error('Error in google-maps function:', error)
     
     // Sanitize error message to prevent API key leakage
-    const sanitizedMessage = error.message 
-      ? error.message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
+    const sanitizedMessage = (error as Error).message 
+      ? (error as Error).message.replace(/AIza[a-zA-Z0-9_-]{35}/g, '[API_KEY_REDACTED]').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')
       : 'Internal server error';
     
     return new Response(
