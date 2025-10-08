@@ -71,8 +71,6 @@ function AppContent() {
                 
                 {/* Navigation */}
                 <div className="flex items-center space-x-4">
-                  <UserMenu />
-                  
                   {/* Live stats */}
                   <div className="hidden lg:flex items-center space-x-8" role="region" aria-label="Estadísticas del sistema">
                     <div className="text-center">
