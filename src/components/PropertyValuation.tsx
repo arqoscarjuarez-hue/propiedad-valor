@@ -1953,6 +1953,7 @@ const PropertyValuation = () => {
   };
 
   return (
+    <TooltipProvider>
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
       <div className="text-center mb-4 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-4 flex items-center justify-center gap-2 sm:gap-3">
@@ -2370,16 +2371,14 @@ const PropertyValuation = () => {
                   <div className="mt-6">
                     <div className="flex items-center gap-2 mb-2">
                       <Label htmlFor="areaTerreno" className="text-base font-medium">{translations[selectedLanguage].landArea} ({translations[selectedLanguage].sqm})</Label>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-xs">
-                            <p className="text-sm">{translations[selectedLanguage].landAreaTooltip}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p className="text-sm">{translations[selectedLanguage].landAreaTooltip}</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <Input
                       id="areaTerreno"
@@ -3074,6 +3073,7 @@ const PropertyValuation = () => {
         />
       )}
     </div>
+    </TooltipProvider>
   );
 };
 
