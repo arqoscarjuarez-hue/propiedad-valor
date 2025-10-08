@@ -1,12 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import PropertyValuation from "@/components/PropertyValuation";
 import NotFound from "./pages/NotFound";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <LanguageProvider>
-      <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={
             <div className="min-h-screen bg-background">
@@ -45,8 +49,9 @@ function App() {
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </LanguageProvider>
+        </BrowserRouter>
+      </LanguageProvider>
+    </QueryClientProvider>
   );
 }
 
