@@ -8,6 +8,7 @@ import PropertyValuation from "@/components/PropertyValuation";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { LogOut, User } from "lucide-react";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const queryClient = new QueryClient();
 
@@ -128,8 +129,7 @@ const App = () => (
     <AuthProvider>
       <LanguageProvider>
         <TooltipProvider>
-          
-          
+          <PWAInstallPrompt />
           <BrowserRouter>
             <AppContent />
           </BrowserRouter>
