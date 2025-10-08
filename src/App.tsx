@@ -129,13 +129,11 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <LanguageProvider>
-        <TooltipProvider>
-          
-          
-          <BrowserRouter>
+        <BrowserRouter>
+          <TooltipProvider>
             <AppContent />
-          </BrowserRouter>
-        </TooltipProvider>
+          </TooltipProvider>
+        </BrowserRouter>
       </LanguageProvider>
     </AuthProvider>
   </QueryClientProvider>
