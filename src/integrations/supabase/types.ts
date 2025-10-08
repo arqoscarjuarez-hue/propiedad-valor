@@ -14,92 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      authorized_users: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      comment_rate_limits: {
-        Row: {
-          comment_count: number | null
-          created_at: string | null
-          id: string
-          user_id: string
-          window_start: string | null
-        }
-        Insert: {
-          comment_count?: number | null
-          created_at?: string | null
-          id?: string
-          user_id: string
-          window_start?: string | null
-        }
-        Update: {
-          comment_count?: number | null
-          created_at?: string | null
-          id?: string
-          user_id?: string
-          window_start?: string | null
-        }
-        Relationships: []
-      }
-      comments: {
-        Row: {
-          content: string
-          created_at: string
-          id: string
-          is_approved: boolean
-          moderation_flags: string[] | null
-          moderation_status: string
-          parent_comment_id: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          id?: string
-          is_approved?: boolean
-          moderation_flags?: string[] | null
-          moderation_status?: string
-          parent_comment_id?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          id?: string
-          is_approved?: boolean
-          moderation_flags?: string[] | null
-          moderation_status?: string
-          parent_comment_id?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comments_parent_comment_id_fkey"
-            columns: ["parent_comment_id"]
-            isOneToOne: false
-            referencedRelation: "comments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       market_adjustments: {
         Row: {
           country: string
@@ -136,36 +50,6 @@ export type Database = {
           property_type?: string
           source?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          display_name: string | null
-          email: string | null
-          email_visible: boolean | null
-          id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
-          email_visible?: boolean | null
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
-          email_visible?: boolean | null
-          id?: string
-          updated_at?: string
-          user_id?: string
         }
         Relationships: []
       }
@@ -244,56 +128,14 @@ export type Database = {
         }
         Relationships: []
       }
-      security_audit_logs: {
-        Row: {
-          created_at: string | null
-          details: Json | null
-          event_type: string
-          id: string
-          ip_address: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          details?: Json | null
-          event_type: string
-          id?: string
-          ip_address?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          details?: Json | null
-          event_type?: string
-          id?: string
-          ip_address?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      cleanup_old_audit_logs: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
       detect_country: {
         Args: { center_lat: number; center_lng: number }
         Returns: string
-      }
-      enhanced_security_audit: {
-        Args: {
-          operation_type: string
-          table_affected?: string
-          user_context?: Json
-        }
-        Returns: undefined
       }
       find_area_prioritized_comparables: {
         Args: {
@@ -547,25 +389,6 @@ export type Database = {
           total_area: number
         }[]
       }
-      get_anonymized_comments: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          anonymous_author: string
-          content: string
-          created_at: string
-          id: string
-          is_approved: boolean
-        }[]
-      }
-      get_anonymized_profile: {
-        Args: { profile_user_id: string }
-        Returns: {
-          created_at: string
-          display_name: string
-          id: string
-          updated_at: string
-        }[]
-      }
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
@@ -582,46 +405,6 @@ export type Database = {
           property_type: string
           total_area: number
         }[]
-      }
-      get_visible_profile_data: {
-        Args: { profile_id: string; requesting_user_id: string }
-        Returns: {
-          created_at: string
-          display_name: string
-          email: string
-          id: string
-          updated_at: string
-          user_id: string
-        }[]
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_authorized: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      log_security_event: {
-        Args: {
-          event_details?: Json
-          event_type: string
-          user_id_param?: string
-        }
-        Returns: undefined
-      }
-      log_sensitive_operation: {
-        Args: {
-          additional_data?: Json
-          operation_type: string
-          record_id?: string
-          table_name?: string
-        }
-        Returns: undefined
-      }
-      user_can_comment: {
-        Args: { user_id_param: string }
-        Returns: boolean
       }
       validate_coordinates: {
         Args: { lat: number; lng: number }
