@@ -1504,6 +1504,7 @@ const PropertyValuation = () => {
         `${translations[selectedLanguage].totalBuiltArea}: ${areaTotal} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].landArea}: ${propertyData.areaTerreno} ${translations[selectedLanguage].sqm}`,
         `${translations[selectedLanguage].propertyCondition}: ${propertyData.estadoGeneral || translations[selectedLanguage].noSpecified}`,
+        `${translations[selectedLanguage].address}: ${propertyData.direccionCompleta || propertyData.ubicacion || 'Dirección no especificada'}`,
         `${translations[selectedLanguage].locationQuality}: ${propertyData.calidadUbicacion || 'No especificada'}`
       ];
       
@@ -1517,10 +1518,13 @@ const PropertyValuation = () => {
       generalInfo.forEach((info, index) => {
         checkNewPage(8);
         
-        // Procesar información general normalmente (ya no hay líneas con dirección larga)
-        checkNewPage(8);
-        doc.text(info, marginLeft, yPosition);
-        yPosition += 6;
+        // Si es la línea de dirección, usar función de múltiples líneas
+        if (info.includes(translations[selectedLanguage].address)) {
+          yPosition = addMultiLineText(info, marginLeft, yPosition, contentWidth);
+        } else {
+          doc.text(info, marginLeft, yPosition);
+          yPosition += 6;
+        }
       });
 
       yPosition += 10;
