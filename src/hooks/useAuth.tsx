@@ -22,14 +22,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Create profile if user just signed up
-        if (event === 'SIGNED_IN' && session?.user) {
-          setTimeout(() => {
-            createUserProfile(session.user);
-          }, 0);
-        }
-        
         setLoading(false);
       }
     );
@@ -43,26 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const createUserProfile = async (user: User) => {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          user_id: user.id,
-          display_name: user.user_metadata?.full_name || user.email?.split('@')[0],
-          email: user.email,
-        }, {
-          onConflict: 'user_id'
-        });
-
-      if (error && error.code !== '23505') { // Ignore duplicate key errors
-        console.warn('Profile creation failed:', error.message);
-      }
-    } catch (error) {
-      console.warn('Profile creation failed:', error instanceof Error ? error.message : 'Unknown error');
-    }
-  };
 
   const signOut = async () => {
     await supabase.auth.signOut();
