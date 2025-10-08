@@ -583,6 +583,17 @@ export type Database = {
           total_area: number
         }[]
       }
+      get_visible_profile_data: {
+        Args: { profile_id: string; requesting_user_id: string }
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          id: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
