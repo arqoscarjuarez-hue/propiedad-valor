@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_access_logs: {
+        Row: {
+          created_at: string | null
+          function_name: string
+          id: string
+          ip_address: unknown | null
+          request_params: Json | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          function_name: string
+          id?: string
+          ip_address?: unknown | null
+          request_params?: Json | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          function_name?: string
+          id?: string
+          ip_address?: unknown | null
+          request_params?: Json | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       market_adjustments: {
         Row: {
           country: string
@@ -392,6 +419,26 @@ export type Database = {
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
+      }
+      get_obfuscated_comparables: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          max_results?: number
+          prop_type: string
+          target_area?: number
+        }
+        Returns: {
+          approximate_latitude: number
+          approximate_longitude: number
+          area_range: string
+          distance_category: string
+          general_location: string
+          id: string
+          price_range: string
+          property_type: string
+          sale_period: string
+        }[]
       }
       get_property_comparables_public: {
         Args: { limit_rows?: number; offset_rows?: number }
