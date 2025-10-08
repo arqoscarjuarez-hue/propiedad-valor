@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/hooks/useLanguage";
-import PropertyValuationTest from "@/components/PropertyValuationTest";
+import PropertyValuation from "@/components/PropertyValuation";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
               </header>
 
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <PropertyValuationTest />
+                <PropertyValuation />
               </div>
             </div>
           } />
