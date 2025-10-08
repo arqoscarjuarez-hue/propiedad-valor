@@ -1353,12 +1353,12 @@ const PropertyValuation = () => {
                             (propertyData.direccionCompleta && propertyData.direccionCompleta.trim() !== '');
     const step4Complete = hasValidLocation;
     
-    // Solo logear errores de validación cuando el usuario intente continuar sin datos
-    if (!hasValidLocation && (propertyData.ubicacion !== '' || propertyData.direccionCompleta !== '')) {
-      console.info('Validación de ubicación en progreso:', {
-        ubicacion: propertyData.ubicacion || 'pendiente',
-        direccionCompleta: propertyData.direccionCompleta || 'pendiente',
-        status: 'incompleta'
+    // Debug para validación de ubicación
+    if (!hasValidLocation) {
+      console.log('Validación de ubicación falló:', {
+        ubicacion: propertyData.ubicacion,
+        direccionCompleta: propertyData.direccionCompleta,
+        hasValidLocation
       });
     }
     
@@ -2366,6 +2366,16 @@ const PropertyValuation = () => {
                   <div className="mt-6">
                     <div className="flex items-center gap-2 mb-2">
                       <Label htmlFor="areaTerreno" className="text-base font-medium">{translations[selectedLanguage].landArea} ({translations[selectedLanguage].sqm})</Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p className="text-sm">{translations[selectedLanguage].landAreaTooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                     <Input
                       id="areaTerreno"

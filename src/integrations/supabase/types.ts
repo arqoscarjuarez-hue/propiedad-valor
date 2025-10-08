@@ -14,32 +14,91 @@ export type Database = {
   }
   public: {
     Tables: {
-      api_access_logs: {
+      authorized_users: {
         Row: {
-          created_at: string | null
-          function_name: string
-          id: string
-          ip_address: unknown | null
-          request_params: Json | null
-          user_agent: string | null
+          created_at: string
+          created_by: string | null
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
-          function_name: string
-          id?: string
-          ip_address?: unknown | null
-          request_params?: Json | null
-          user_agent?: string | null
+          created_at?: string
+          created_by?: string | null
+          user_id: string
         }
         Update: {
-          created_at?: string | null
-          function_name?: string
-          id?: string
-          ip_address?: unknown | null
-          request_params?: Json | null
-          user_agent?: string | null
+          created_at?: string
+          created_by?: string | null
+          user_id?: string
         }
         Relationships: []
+      }
+      comment_rate_limits: {
+        Row: {
+          comment_count: number | null
+          created_at: string | null
+          id: string
+          user_id: string
+          window_start: string | null
+        }
+        Insert: {
+          comment_count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id: string
+          window_start?: string | null
+        }
+        Update: {
+          comment_count?: number | null
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          window_start?: string | null
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          moderation_flags: string[] | null
+          moderation_status: string
+          parent_comment_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          moderation_flags?: string[] | null
+          moderation_status?: string
+          parent_comment_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          moderation_flags?: string[] | null
+          moderation_status?: string
+          parent_comment_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       market_adjustments: {
         Row: {
@@ -77,6 +136,36 @@ export type Database = {
           property_type?: string
           source?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          email_visible: boolean | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          email_visible?: boolean | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          email_visible?: boolean | null
+          id?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -155,14 +244,56 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_audit_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       detect_country: {
         Args: { center_lat: number; center_lng: number }
         Returns: string
+      }
+      enhanced_security_audit: {
+        Args: {
+          operation_type: string
+          table_affected?: string
+          user_context?: Json
+        }
+        Returns: undefined
       }
       find_area_prioritized_comparables: {
         Args: {
@@ -416,29 +547,28 @@ export type Database = {
           total_area: number
         }[]
       }
+      get_anonymized_comments: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          anonymous_author: string
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+        }[]
+      }
+      get_anonymized_profile: {
+        Args: { profile_user_id: string }
+        Returns: {
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+        }[]
+      }
       get_market_factor: {
         Args: { detected_country: string; prop_type: string }
         Returns: number
-      }
-      get_obfuscated_comparables: {
-        Args: {
-          center_lat: number
-          center_lng: number
-          max_results?: number
-          prop_type: string
-          target_area?: number
-        }
-        Returns: {
-          approximate_latitude: number
-          approximate_longitude: number
-          area_range: string
-          distance_category: string
-          general_location: string
-          id: string
-          price_range: string
-          property_type: string
-          sale_period: string
-        }[]
       }
       get_property_comparables_public: {
         Args: { limit_rows?: number; offset_rows?: number }
@@ -452,6 +582,35 @@ export type Database = {
           property_type: string
           total_area: number
         }[]
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_authorized: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      log_security_event: {
+        Args: {
+          event_details?: Json
+          event_type: string
+          user_id_param?: string
+        }
+        Returns: undefined
+      }
+      log_sensitive_operation: {
+        Args: {
+          additional_data?: Json
+          operation_type: string
+          record_id?: string
+          table_name?: string
+        }
+        Returns: undefined
+      }
+      user_can_comment: {
+        Args: { user_id_param: string }
+        Returns: boolean
       }
       validate_coordinates: {
         Args: { lat: number; lng: number }

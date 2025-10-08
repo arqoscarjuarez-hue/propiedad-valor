@@ -19,12 +19,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    exclude: ['@radix-ui/react-tooltip'],
-  },
-  build: {
-    commonjsOptions: {
-      include: [/node_modules/],
-    },
-  },
 }));
