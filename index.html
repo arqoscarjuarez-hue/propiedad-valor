@@ -1,129 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none';" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema profesional de avalúos - Evaluación de Propiedades</title>
-    <meta name="description" content="Sistema profesional de avalúos inmobiliarios online gratis. Calculadora de valor de propiedades, casas, departamentos y terrenos. Reportes PDF profesionales con análisis de mercado y comparables. Tasación inmobiliaria certificada." />
-    <meta name="author" content="Sistema profesional de avalúos" />
-    <meta name="keywords" content="avalúo inmobiliario, sistema profesional de avalúos, valuación propiedades online, calculadora valor casa, tasación departamento, avalúo terreno gratis, reporte avalúo PDF, análisis mercado inmobiliario, comparables propiedades, valuación inmobiliaria profesional, precio mi casa, valor propiedad, software avalúos, herramientas tasación" />
-    <link rel="canonical" href="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com" />
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="/src/main.tsx" as="script" />
-    <link rel="preload" href="/src/index.css" as="style" />
-    <link rel="modulepreload" href="/src/main.tsx" />
-    
-    <!-- Critical CSS inline -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-      body { font-family: 'Inter', sans-serif; }
-      .loading { opacity: 0; animation: fadeIn 0.3s ease-in-out forwards; }
-      @keyframes fadeIn { to { opacity: 1; } }
-    </style>
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Sistema profesional de avalúos - Evaluación Profesional" />
-    <meta property="og:description" content="Avalúa tu propiedad gratis con nuestro sistema profesional. Obtén el valor real de casas, departamentos y terrenos con reportes PDF certificados y análisis de mercado." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <meta property="og:locale" content="es_ES" />
-    <meta property="og:site_name" content="Sistema profesional de avalúos" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Sistema profesional de avalúos - Evaluaciones Precisas" />
-    <meta name="twitter:description" content="Sistema profesional de avalúos inmobiliarios online. Calcula gratis el valor de tu casa, departamento o terreno con reportes profesionales." />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": ["WebApplication", "FinancialService"],
-      "name": "Sistema profesional de avalúos",
-      "description": "Sistema profesional de avalúos inmobiliarios online. Calculadora gratuita para valuar casas, departamentos y terrenos con reportes PDF profesionales y análisis de mercado comparativo.",
-      "url": "https://3ec5020c-6e84-4581-8725-0120596969e6.lovableproject.com",
-      "applicationCategory": ["FinanceApplication", "BusinessApplication"],
-      "operatingSystem": "Web Browser",
-      "serviceType": "Avalúo inmobiliario",
-      "areaServed": {
-        "@type": "Place",
-        "name": "América"
-      },
-      "keywords": ["avalúo inmobiliario", "valuación propiedades", "tasación casa", "precio departamento", "valor terreno", "reporte avalúo PDF"],
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Avalúo gratuito de propiedades"
-      },
-      "creator": {
-        "@type": "Organization",
-        "name": "Sistema profesional de avalúos"
-      },
-      "mainEntity": {
-        "@type": "Service",
-        "name": "Calculadora de valor de propiedades",
-        "description": "Servicio profesional de avalúo inmobiliario online para casas, departamentos y terrenos"
-      }
-    }
-    </script>
-
-    <!-- FAQ Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "¿Cómo saber el valor de mi casa?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Usa nuestro sistema profesional de avalúos inmobiliarios online. Ingresa los datos de tu propiedad y obtendrás un reporte PDF con el valor comercial basado en comparables del mercado."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Es gratis el avalúo de propiedades?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sí, nuestro sistema de valuación inmobiliaria es completamente gratuito. Obtienes reportes profesionales sin costo."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Qué tipos de propiedades puedo valuar?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Puedes valuar casas, departamentos, terrenos comerciales y residenciales en toda América con nuestro sistema de tasación inmobiliaria."
-          }
+        :root { --gold: #d4af37; --dark: #0f0f0f; --light: #ffffff; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #ddd;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
         }
-      ]
-    }
-    </script>
+        .card {
+            background: var(--light);
+            width: 100%;
+            max-width: 460px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+        }
+        .header {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            padding: 70px 30px 50px;
+            text-align: center;
+            position: relative;
+        }
+        .header::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: 120px; height: 5px;
+            background: var(--gold); border-radius: 3px;
+        }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            opacity: 0.9;
+            letter-spacing: 1.2px;
+        }
+        .content { padding: 40px 40px 50px; text-align: center; }
+        .info {
+            margin: 22px 0; font-size: clamp(1.05rem, 4vw, 1.2rem);
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+        }
+        .info a { color: #222; text-decoration: none; font-weight: 500; }
+        .info a:hover { color: var(--gold); }
+        .services h2 {
+            font-family: 'Playfair Display', serif;
+            color: #222;
+            margin: 35px 0 25px;
+            font-size: clamp(1.5rem, 4vw, 1.7rem);
+        }
+        .services ul { text-align: left; max-width: 360px; margin: 0 auto; }
+        .services li {
+            padding: 14px 0; border-bottom: 1px solid #eee;
+            font-size: clamp(1rem, 3.5vw, 1.1rem); color: #444;
+        }
+        .services li:before { content: "➤ "; color: var(--gold); font-weight: bold; }
+        .whatsapp-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white; padding: 16px 44px; margin-top: 35px;
+            border-radius: 50px; text-decoration: none; font-weight: 600;
+            font-size: clamp(1.1rem, 4vw, 1.25rem);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+            transition: all 0.3s;
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(37,211,102,0.5);
+        }
+        footer {
+            background: var(--dark); color: #999;
+            text-align: center; padding: 20px; font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            .content { padding: 30px 25px 40px; }
+            .header { padding: 60px 20px 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>Oscar Armando Juárez Zepeda</h1>
+            <p>Sistema profesional de avalúos - Evaluación de Propiedades</p>
+        </div>
 
-    <!-- Performance optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-    <link rel="dns-prefetch" href="//api.exchangerate-api.com" />
-    <link rel="dns-prefetch" href="//maps.googleapis.com" />
-    <link rel="prefetch" href="/manifest.json" />
+        <div class="content">
+            <div class="info">📞 <a href="tel:+50371565455">503 7156-5455</a></div>
+            <div class="info">✉️ <a href="mailto:arqoscarjuarez@gmail.com">arqoscarjuarez@gmail.com</a></div>
 
-    <!-- Theme color for mobile browsers -->
-    <meta name="theme-color" content="#1e7d8c" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Avalúos Pro" />
-  </head>
+            <div class="services">
+                <h2>Servicios Profesionales en El Salvador</h2>
+                <ul>
+                    <li>Avalúos inmobiliarios</li>
+                    <li>Proyectos arquitectónicos y diseño de interiores</li>
+                    <li>Trámites municipales y permisos de construcción</li>
+                    <li>Levantamientos Topográficos para el CNR</li>
+                    <li>Peritajes y dictámenes técnicos</li>
+                </ul>
+            </div>
 
-  <body>
-    <div id="root"></div>
-    <link rel="manifest" href="/manifest.json" />
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+            <a href="https://wa.me/50371565455?text=Hola%20Arq.%20Oscar%2C%20necesito%20informaci%C3%B3n%20sobre%20un%20aval%C3%BAo%20o%20levantamiento%20topogr%C3%A1fico" 
+               class="whatsapp-btn">
+                ✆ Contactar por WhatsApp
+            </a>
+        </div>
+
+        <footer>
+            © 2025 Arq. Oscar Armando Juárez Zepeda • El Salvador
+        </footer>
+    </div>
+</body>
 </html>
