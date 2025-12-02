@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arq. Oscar Armando Juárez Zepeda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; --dark: #0f0f0f; --light: #ffffff; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #ddd;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .card {
+            background: var(--light);
+            width: 100%;
+            max-width: 460px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+        }
+        .header {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            padding: 70px 30px 50px;
+            text-align: center;
+            position: relative;
+        }
+        .header::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: 120px; height: 5px;
+            background: var(--gold); border-radius: 3px;
+        }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            opacity: 0.9;
+            letter-spacing: 1.2px;
+        }
+
+        /* Foto eliminada por completo para que no aparezca ningún círculo */
+        .content { padding: 40px 40px 50px; text-align: center; }
+        .info {
+            margin: 22px 0; font-size: clamp(1.05rem, 4vw, 1.2rem);
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+        }
+        .info a { color: #222; text-decoration: none; font-weight: 500; }
+        .info a:hover { color: var(--gold); }
+
+        .services h2 {
+            font-family: 'Playfair Display', serif;
+            color: #222;
+            margin: 35px 0 25px;
+            font-size: clamp(1.5rem, 4vw, 1.7rem);
+        }
+        .services ul { text-align: left; max-width: 360px; margin: 0 auto; }
+        .services li {
+            padding: 14px 0; border-bottom: 1px solid #eee;
+            font-size: clamp(1rem, 3.5vw, 1.1rem); color: #444;
+        }
+        .services li:before { content: "➤ "; color: var(--gold); font-weight: bold; }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white; padding: 16px 44px; margin-top: 35px;
+            border-radius: 50px; text-decoration: none; font-weight: 600;
+            font-size: clamp(1.1rem, 4vw, 1.25rem);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+            transition: all 0.3s;
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(37,211,102,0.5);
+        }
+        footer {
+            background: var(--dark); color: #999;
+            text-align: center; padding: 20px; font-size: 0.9rem;
+        }
+        @media (max-width: 480px) {
+            .content { padding: 30px 25px 40px; }
+            .header { padding: 60px 20px 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>Oscar Armando Juárez Zepeda</h1>
+            <p>Arquitecto • Perito Valuador Profesional</p>
+        </div>
+
+        <div class="content">
+            <div class="info">📞 <a href="tel:+50371565455">503 7156-5455</a></div>
+            <div class="info">✉️ <a href="mailto:arqoscarjuarez@gmail.com">arqoscarjuarez@gmail.com</a></div>
+
+            <div class="services">
+                <h2>Servicios Profesionales en El Salvador</h2>
+                <ul>
+                    <li>Avalúos inmobiliarios</li>
+                    <li>Proyectos arquitectónicos y diseño de interiores</li>
+                    <li>Trámites municipales y permisos de construcción</li>
+                    <li>Levantamientos Topográficos para el CNR</li>
+                    <li>Peritajes y dictámenes técnicos</li>
+                </ul>
+            </div>
+
+            <a href="https://wa.me/50371565455?text=Hola%20Arq.%20Oscar%2C%20necesito%20informaci%C3%B3n%20sobre%20un%20aval%C3%BAo%20o%20levantamiento%20topogr%C3%A1fico" 
+               class="whatsapp-btn">
+                ✆ Contactar por WhatsApp
+            </a>
+        </div>
+
+        <footer>
+            © 2025 Arq. Oscar Armando Juárez Zepeda • El Salvador
+        </footer>
+    </div>
+</body>
+</html>
